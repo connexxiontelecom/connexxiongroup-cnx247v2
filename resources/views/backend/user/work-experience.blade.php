@@ -1,0 +1,171 @@
+@extends('layouts.app')
+
+@section('title')
+    User > Work Experience
+@endsection
+
+@section('extra-styles')
+<link rel="stylesheet" type="text/css" href="\assets\pages\toolbar\jquery.toolbar.css">
+<link rel="stylesheet" type="text/css" href="\assets\pages\toolbar\custom-toolbar.css">
+@endsection
+
+@section('content')
+    @livewire('backend.user.my-profile')
+    <div class="card" style="margin-top:-25px;">
+        <div class="col-lg-12 col-xl-12">
+            @include('livewire.backend.user.common._user-settings-slab')
+            <div class="tab-content tabs-left-content card-block col-md-12">
+                <div class="tab-pane active"  role="tabpanel">
+                    <form action="{{route('education')}}" method="post">
+                        @if (session()->has('success'))
+                            <div class="alert alert-success background-success mt-3">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <i class="icofont icofont-close-line-circled text-white"></i>
+                                </button>
+                                {!! session()->get('success') !!}
+                            </div>
+                        @endif
+                        @csrf
+                        <div class="form-wrapper">
+                            <div class="row">
+                                <div class="col-md-12 mt-3">
+                                    <button class="btn btn-mini btn-danger float-right remove_section"  type="button"> <i class="ti-trash"></i> </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Organisation</label>
+                                    <input type="text" name="organisation[]" placeholder="Organisation" class="form-control">
+                                    @error('organisation')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Position</label>
+                                    <input type="text" name="position[]" placeholder="Position" class="form-control">
+                                    @error('position')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="">Start Date</label>
+                                    <input type="date" name="start_date[]" placeholder="Start Date" class="form-control">
+                                    @error('start_date')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">End Date</label>
+                                    <input type="date" name="end_date[]" placeholder="End Date" class="form-control">
+                                    @error('end_date')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="">Address</label>
+                                    <input type="address" name="address[]" placeholder="Address" class="form-control">
+                                    @error('address')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="">Job Description</label>
+                                    <textarea name="job_description[]" style="resize: none;" placeholder="Summary of your job description..." class="form-control"></textarea>
+                                    @error('job_description')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mt-3">
+                                <button class="btn btn-mini btn-success" id="add_section" type="button"> <i class="ti-plus"></i> </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="btn-group d-flex justify-content-center">
+                                    <a href="{{url()->previous()}}" class="btn btn-danger btn-mini"> <i class="ti-close mr-2"></i> Cancel</a>
+                                    <button class="btn btn-primary btn-mini" type="submit"> <i class="ti-check mr-2"></i> Save Record</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('dialog-section')
+    <div class="modal fade" id="newResignationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title text-uppercase">New Resignation</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="">Subject</label>
+                            <input type="text" placeholder="Subject" id="subject" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Attachment</label>
+                            <input type="file" id="attachment" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Content</label>
+                            <textarea name="" id="resignation_content" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-default waves-effect btn-mini" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitResignationBtn">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="newComplaintModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">New Complaint</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="">Subject</label>
+                            <input type="text" placeholder="Subject" id="complaint_subject" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Content</label>
+                            <textarea name="" id="complaint_content" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-default waves-effect btn-mini" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitComplaintBtn">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('extra-scripts')
+<script type="text/javascript" src="/assets/pages/accordion/accordion.js"></script>
+<script type="text/javascript" src="/assets/bower_components/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
+<script type="text/javascript" src="/assets/js/cus/profile.js"></script>
+@stack('profile-script')
+@endsection
