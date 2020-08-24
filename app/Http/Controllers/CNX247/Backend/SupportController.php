@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 use App\Ticket;
+use App\TicketCategory;
 use Auth;
 
 
@@ -29,5 +30,14 @@ class SupportController extends Controller
 
     public function adminTicketIndex(){
         return view('backend.crm.support.admin.index');
+    }
+    public function newTicketCategory(Request $request){
+        $this->validate($request,[
+            'category_name'=>'required'
+        ]);
+        $category = new TicketCategory;
+        $category->name = $request->category_name;
+        $category->save();
+        return response()->json(['message'=>'Success! New category saved.'], 200);
     }
 }
