@@ -425,6 +425,11 @@
                         </a>
                     </li>
                     <li class=" ">
+                        <a href="{{route('tenants')}}">
+                            <span class="pcoded-mtext">Subscription</span>
+                        </a>
+                    </li>
+                    <li class=" ">
                         <a href="{{route('plans-n-features')}}">
                             <span class="pcoded-mtext">Plans & Features</span>
                         </a>
