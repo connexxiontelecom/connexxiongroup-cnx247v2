@@ -81,4 +81,13 @@ class ViewTicket extends Component
         $this->getContent();
         return back();
     }
+
+    public function closeTicket(){
+        $ticket = Ticket::where('id', $this->ticket_id)->where('tenant_id', $this->tenant_id)->first();
+        $ticket->status = 0; //closed
+        $ticket->save();
+        session()->flash("success", "<strong>Success!</strong> Ticket closed.");
+        $this->getContent();
+        return back();
+    }
 }

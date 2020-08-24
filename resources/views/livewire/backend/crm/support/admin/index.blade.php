@@ -6,7 +6,7 @@
                     <h4 class="sub-title">Tickets</h4>
                     <div class="btn-group d-flex justify-content-end">
                         <button type="button" data-toggle="modal" data-target="#ticketCategory" class="btn btn-mini btn-primary"><i class="ti-plus"></i> New Ticket Category</button>
-                        <button type="button" class="btn btn-mini btn-danger"><i class="ti-support"></i> Ticket Category</button>
+                        <!--<button type="button" class="btn btn-mini btn-danger"><i class="ti-support"></i> Ticket Category</button> -->
                     </div>
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success mt-3">
@@ -93,7 +93,7 @@
                                                 </td>
                                                 <td>{{$ticket->ticketCategory->name}}</td>
                                                 <td>
-                                                    @if ($ticket->status == 0)
+                                                    @if ($ticket->status == 1)
                                                         <span class="label label-warning">Open</span>
                                                     @else
                                                         <span class="label label-success">Closed</span>

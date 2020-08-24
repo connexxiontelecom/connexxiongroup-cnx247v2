@@ -29,7 +29,7 @@
             <div class="card-block-small">
                 <i class="feather icon-pie-chart bg-c-yellow card1-icon"></i>
                 <span class="text-c-yellow f-w-600">Tenants</span>
-                <h4>900</h4>
+                <h4>{{number_format($overall)}}</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
                         <i class="text-c-yellow f-16 ti-calendar m-r-10"></i>Overall
@@ -43,7 +43,7 @@
             <div class="card-block-small">
                 <i class="feather icon-pie-chart bg-c-pink card1-icon"></i>
                 <span class="text-c-pink f-w-600">Tenants</span>
-                <h4>500</h4>
+                <h4>{{number_format($lastMonth)}}</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
                         <i class="text-c-pink f-16 ti-calendar m-r-10"></i>Last Month
@@ -57,7 +57,7 @@
             <div class="card-block-small">
                 <i class="feather icon-pie-chart bg-c-blue card1-icon"></i>
                 <span class="text-c-blue f-w-600">Tenants</span>
-                <h4>49</h4>
+                <h4>{{number_format($thisMonth)}}</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
                         <i class="text-c-blue f-16 ti-calendar m-r-10"></i>This Month
@@ -71,7 +71,7 @@
             <div class="card-block-small">
                 <i class="feather icon-pie-chart bg-c-green card1-icon"></i>
                 <span class="text-c-green f-w-600">Tenants</span>
-                <h4>49</h4>
+                <h4>{{number_format($thisWeek)}}</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
                         <i class="text-c-green f-16 ti-calendar m-r-10"></i>This Week
@@ -111,7 +111,7 @@
                                                         <div class="card-block">
                                                             <div class="media">
                                                                 <a class="media-left" href="{{route('view-tenant', $tenant->slug)}}">
-                                                                    <img class="img-fluid ml-5 mt-3" src="{{!empty($tenant->logo) ? $tenant->logo : '/assets/images/logo.png'}}" alt="{{!empty($tenant->company_name) ? $tenant->company_name : config('app.name') }}" height="52" width="82">
+                                                                    <img class="img-fluid ml-5 mt-3" src="/assets/images/company-assets/logos/{{!empty($tenant->logo) ? $tenant->logo : 'logo.png'}}" alt="{{!empty($tenant->company_name) ? $tenant->company_name : config('app.name') }}" height="52" width="82">
                                                                 </a>
                                                                 <div class="media-body">
                                                                     <div class="col-xs-12">
