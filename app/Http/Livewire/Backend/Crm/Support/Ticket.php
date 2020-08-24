@@ -45,7 +45,7 @@ class Ticket extends Component
         $ticket->ticket_no = $ticket_no;
         $ticket->slug = substr(sha1(time()), 21,40);
         $ticket->save();
-        session()->flash("success", "<strong>Success!</strong> We've lodged your request. Our smart team will react to this as soon as possible. Thank you.");
-        return back();
+        session()->flash("success", "<strong>Success!</strong> We've lodged your request with <i>ticket no: <strong>".$ticket_no."</strong></i>. Make reference to this ticket number in your follow-up. Thank you.");
+        return redirect()->route('ticket-history');
     }
 }
