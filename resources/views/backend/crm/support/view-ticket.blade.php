@@ -5,8 +5,7 @@
 @endsection
 
 @section('extra-styles')
-    <link rel="stylesheet" type="text/css" href="/assets/pages/j-pro/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/pages/j-pro/css/j-pro-modern.css">
+<link rel="stylesheet" type="text/css" href="/assets/pages/message/message.css">
 @endsection
 
 @section('content')

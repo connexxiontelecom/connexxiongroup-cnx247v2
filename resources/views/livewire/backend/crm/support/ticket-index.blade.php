@@ -29,14 +29,6 @@
                         <div class="card-block">
                             <div class="row mt-3">
                                 <div class="col-md-12 btn-add-task">
-                                    @if (session()->has('success'))
-                                        <div class="alert alert-success background-success mt-3">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <i class="icofont icofont-close-line-circled text-white"></i>
-                                            </button>
-                                            {!! session()->get('success') !!}
-                                        </div>
-                                    @endif
                                     <div class="dt-responsive table-responsive">
                                         <table id="simpletable" class="table table-striped table-bordered nowrap">
                                             <thead>

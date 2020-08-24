@@ -58,7 +58,7 @@
                                         <div class="card-header">
                                             <h5 class="card-header-text">About {{$tenant->company_name ?? ''}}</h5>
                                             <a class="media-left" href="{{route('view-tenant', $tenant->slug)}}">
-                                                <img class="img-fluid ml-5 mt-3" src="{{!empty($tenant->logo) ? $tenant->logo : '/assets/images/logo.png'}}" alt="{{!empty($tenant->company_name) ? $tenant->company_name : config('app.name') }}" height="52" width="82">
+                                                <img class="img-fluid ml-5 mt-3" src="/assets/images/company-assets/logos/{{!empty($tenant->logo) ? $tenant->logo : 'logo.png'}}" alt="{{!empty($tenant->company_name) ? $tenant->company_name : config('app.name') }}" height="52" width="82">
                                             </a>
                                         </div>
                                         <div class="card-block">

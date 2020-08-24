@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CNX247\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Tenant;
+use Carbon\Carbon;
 use App\TransactionReference;
 use Auth;
 class TenantController extends Controller
@@ -20,11 +21,39 @@ class TenantController extends Controller
     public function index()
     {
         $tenants = Tenant::orderBy('id', 'DESC')->get();
-/*         $tenantsOverall = Tenant::orderBy('id', 'DESC')->get();
-        $tenantsThisMonth = Tenant::orderBy('id', 'DESC')->get();
-        $tenantsLastMonth = Tenant::orderBy('id', 'DESC')->get();
-        $tenantsThisWeek = Tenant::orderBy('id', 'DESC')->get(); */
-        return view('backend.admin.tenants.index', ['tenants'=>$tenants]);
+        $now = Carbon::now();
+        $overall = Tenant::count();
+        $thisYear = Tenant::whereYear('created_at', date('Y'))
+                        ->count();
+        $thisMonth = Tenant::whereMonth('created_at', date('m'))
+                        ->whereYear('created_at', date('Y'))
+                        ->count();
+        $thisWeek = Tenant::whereBetween('created_at', [$now->startOfWeek()->format('Y-m-d H:i'), $now->endOfWeek()->format('Y-m-d H:i')])
+                        ->count();
+        $lastMonth = Tenant::whereMonth('created_at', '=', $now->subMonth()->month)
+                        ->count();
+        #Par
+        $previous_week = strtotime("-1 week +1 day");
+        $start_week = strtotime("last sunday midnight",$previous_week);
+        $end_week = strtotime("next saturday",$start_week);
+        $start_week = date("Y-m-d",$start_week);
+        $end_week = date("Y-m-d",$end_week);
+
+        $lastWeek = Tenant::whereBetween('created_at', [$start_week, $end_week])
+                        ->count();
+        $yesterday = Tenant::whereDay('created_at', $now->yesterday())
+                        ->count();
+        $today = Tenant::whereDay('created_at', $now->today())
+                        ->count();
+
+        return view('backend.admin.tenants.index',
+        ['tenants'=>$tenants,
+        'overall'=>$overall,
+        'thisYear'=>$thisYear,
+        'thisMonth'=>$thisMonth,
+        'thisWeek'=>$thisWeek,
+        'lastMonth'=>$lastMonth
+        ]);
     }
 
     /**

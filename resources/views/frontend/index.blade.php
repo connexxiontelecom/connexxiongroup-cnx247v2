@@ -14,7 +14,7 @@
                             <h1 class="heading mb-3">Conduct More Customer In A Better Way</h1>
                             <p class="para-desc mx-auto text-muted">Launch your campaign and benefit from our expertise on designing and managing conversion centered bootstrap4 html page.</p>
                             <div class="mt-4 pt-2">
-                                <a href="#about" class="btn btn-primary">Start Today <i class="mdi mdi-chevron-right"></i></a>
+                                <a href="{{route('pricing')}}" class="btn btn-primary">Start Today <i class="mdi mdi-chevron-right"></i></a>
                             </div>
                         </div>
 

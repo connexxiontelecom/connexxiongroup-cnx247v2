@@ -212,6 +212,7 @@ Route::get('/support/ticket-history', 'CNX247\Backend\SupportController@ticketHi
 Route::get('/support/view-ticket/{slug}', 'CNX247\Backend\SupportController@viewTicket')->name('view-ticket');
 #Admin area support
 Route::get('/crm/support/tickets', 'CNX247\Backend\SupportController@adminTicketIndex')->name('admin-support');
+Route::post('/crm/support/ticket/category/new', 'CNX247\Backend\SupportController@newTicketCategory')->name('new-ticket-category');
 
 #Activity stream routes
 Route::get('/activity-stream', 'CNX247\Backend\ActivityStreamController@index')->name('activity-stream');

@@ -5,8 +5,8 @@
                 <div class="card-block">
                     <h4 class="sub-title">Tickets</h4>
                     <div class="btn-group d-flex justify-content-end">
-                        <a href="{{route('ticket')}}" class="btn btn-mini btn-primary" type="button"><i class="ti-plus"></i> New Support Ticket</a>
-                        <a href="{{route('ticket-history')}}" class="btn btn-mini btn-danger"><i class="ti-support"></i> Ticket History</a>
+                        <button type="button" data-toggle="modal" data-target="#ticketCategory" class="btn btn-mini btn-primary"><i class="ti-plus"></i> New Ticket Category</button>
+                        <!--<button type="button" class="btn btn-mini btn-danger"><i class="ti-support"></i> Ticket Category</button> -->
                     </div>
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success mt-3">
@@ -25,268 +25,120 @@
         <div class="card-block email-card">
             <div class="row">
                 <div class="col-xl-4">
-                    <!-- Overall Progress card start -->
                     <div class="card">
                         <div class="card-block">
-                            <!-- <p>.col-sm-4</p> -->
-                            <div class="issue-list-progress">
-                                <h6>Overall Progress</h6>
-                                <div class="issue-progress">
-                                    <div class="progress">
-                                        <span class="issue-text1 txt-primary"></span>
-                                        <div class="issue-bar1 bg-primary"></div>
-                                    </div>
-                                    <!-- end of progress -->
-                                </div>
-                                <!-- end of issue progress -->
-                            </div>
-                            <!-- end of issue list progress -->
-
-                            <!-- end of matric progress -->
                             <table class="table matrics-table">
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <strong>Assigned Hours</strong>
+                                            <strong>Categories</strong>
                                         </td>
-                                        <td class="txt-primary">70 Hours</td>
+                                        <td class="txt-primary"><small>Overall</small></td>
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Time Consumed</strong>
-                                        </td>
-                                        <td class="txt-danger">49 Hours</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Issues</strong>
-                                        </td>
-                                        <td class="txt-primary">19</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Bugs</strong>
-                                        </td>
-                                        <td class="txt-primary">16</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Health</strong>
-                                        </td>
-                                        <td class="txt-success">75%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Commits</strong>
-                                        </td>
-                                        <td class="txt-primary">280</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Bugs Percentage</strong>
-                                        </td>
-                                        <td class="txt-danger">25%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Assign Date</strong>
-                                        </td>
-                                        <td class="txt-info">02/11/2016</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong>Last closed on</strong>
-                                        </td>
-                                        <td class="txt-info">15/01/2017</td>
-                                    </tr>
+                                    @foreach ($categories as $category)
+                                        <tr>
+                                            <td>
+                                                <strong>{{$category->name}}</strong>
+                                            </td>
+                                            <td class="txt-danger">
+                                                <label for="" class="badge badge-primary">{{count($category->tickets)}}</label>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
-                                <!-- end of tbody -->
                             </table>
-                            <!-- end of table -->
                         </div>
                     </div>
-                    <!-- Overall Progress card stendart -->
                 </div>
                 <div class="col-xl-8">
-                    <!-- New ticket button card start -->
                     <div class="card">
                         <div class="card-block">
                             <div class=" waves-effect waves-light m-r-10 v-middle issue-btn-group">
-                                <button type="button" class="btn btn-sm btn-success btn-new-tickets waves-effect waves-light m-r-15 m-b-5 m-t-5"><i class="icofont icofont-paper-plane"></i><span class="m-l-10">New Tickets</span></button>
-                                <div class="btn-group m-b-5 m-t-5">
-                                    <button type="button" class="btn btn-primary btn-sm waves-effect waves-light"><i class="icofont icofont-ui-user"></i></button>
-                                    <button type="button" class="btn btn-primary btn-sm waves-effect waves-light"><i class="icofont icofont-edit-alt"></i></button>
-                                    <button type="button" class="btn btn-primary btn-sm waves-effect waves-light"><i class="icofont icofont-reply"></i></button>
-                                    <button type="button" class="btn btn-primary btn-sm waves-effect waves-light"><i class="icofont icofont-printer"></i></button>
-                                </div>
                                 <div class="f-right bug-issue-link m-t-5">
                                     <ol class="breadcrumb bg-white m-0 p-t-5 p-b-0">
-                                        <li class="breadcrumb-item"><a href="#">16 Bugs</a></li>
-                                        <li class="breadcrumb-item"><a href="#">19 Issue</a></li>
+                                        <li class="breadcrumb-item"><a href="#">16 Solved</a></li>
+                                        <li class="breadcrumb-item"><a href="#">19 Pending</a></li>
                                     </ol>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- New ticket button card end -->
-                    <!-- bug list card start -->
                     <div class="card">
-                        <div class="card-header">
-                            <h5>Zero Configuration</h5>
-                            <div class="card-header-right">
-                                <i class="icofont icofont-spinner-alt-5"></i>
-                            </div>
-                        </div>
                         <div class="card-block">
                             <div class="table-responsive">
                                 <table id="issue-list-table" class="table dt-responsive width-100">
                                     <thead class="text-left">
                                         <tr>
-                                            <th>Type</th>
-                                            <th>#ID</th>
-                                            <th>Description</th>
-                                            <th>Start date</th>
-                                            <th>Priority</th>
-                                            <th>Assigned</th>
+                                            <th>#</th>
+                                            <th>Ticket No.</th>
+                                            <th>Subject</th>
+                                            <th>Category</th>
                                             <th>Status</th>
+                                            <th>Date</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-left">
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756541080</td>
-                                            <td>Software Run Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-danger">Highest</span></td>
-                                            <td><a href="#">Katerina larson</a></td>
-                                            <td><span class="label label-primary">Open</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756897280</td>
-                                            <td>Server Randering</td>
-                                            <td>2015/04/22</td>
-                                            <td><span class="label label-success">Normal</span></td>
-                                            <td><a href="#">Mitchell Jones</a></td>
-                                            <td><span class="label label-danger">Close</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198773249750</td>
-                                            <td>Cluster Load Balancing</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-info">Slow</span></td>
-                                            <td><a href="#">Michal Marshell</a></td>
-                                            <td><span class="label label-warning">Pending</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:197016541230</td>
-                                            <td>Data Mirroring Error</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-warning">High</span></td>
-                                            <td><a href="#">Tiger Nixon</a></td>
-                                            <td><span class="label label-danger">Close</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:282256541230</td>
-                                            <td>Software Run Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-success">Normal</span></td>
-                                            <td><a href="#">Raghuvinder Singh</a></td>
-                                            <td><span class="label label-primary">Open</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:382906541279</td>
-                                            <td>Package Fatal Error</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-warning">High</span></td>
-                                            <td><a href="#">Alex standoman</a></td>
-                                            <td><span class="label label-warning">Pending</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:497056541220</td>
-                                            <td>Server Authontication Error</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-warning">High</span></td>
-                                            <td><a href="#">Roya Hamad</a></td>
-                                            <td><span class="label label-warning">Pending</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756541230</td>
-                                            <td>Software Run Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-danger">Highest</span></td>
-                                            <td><a href="#">Carry Mathison</a></td>
-                                            <td><span class="label label-primary">Open</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756541230</td>
-                                            <td>Software Run Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-danger">Highest</span></td>
-                                            <td><a href="#">Dugless hole</a></td>
-                                            <td><span class="label label-info">On Hold</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756541230</td>
-                                            <td>Package Security Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-info">slow</span></td>
-                                            <td><a href="#">Tiger Nixon</a></td>
-                                            <td><span class="label label-danger">Close</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756541230</td>
-                                            <td>Software Run Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-warning">High</span></td>
-                                            <td><a href="#">Tiger Nixon</a></td>
-                                            <td><span class="label label-info">On hold</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756541230</td>
-                                            <td>Software Run Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-info">slow</span></td>
-                                            <td><a href="#">Tiger Nixon</a></td>
-                                            <td><span class="label label-warning">Pending</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756541230</td>
-                                            <td>Software Run Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-success">Normal</span></td>
-                                            <td><a href="#">Tiger Nixon</a></td>
-                                            <td><span class="label label-danger">Close</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="txt-primary">Bug</td>
-                                            <td>PI:198756541230</td>
-                                            <td>Software Run Failure</td>
-                                            <td>2015/01/10</td>
-                                            <td><span class="label label-info">slow</span></td>
-                                            <td><a href="#">Tiger Nixon</a></td>
-                                            <td><span class="label label-info">On Hold</span></td>
-                                        </tr>
+                                        @php
+                                            $index = 1;
+                                        @endphp
+                                        @if (count($tickets) > 0)
+                                        @foreach ($tickets as $ticket)
+                                            <tr>
+                                                <td class="txt-primary">{{$index++}}</td>
+                                                <td>
+                                                    <label for="" class="label label-primary">{{$ticket->ticket_no}}</label>
+                                                </td>
+                                                <td>
+                                                    <a href="{{route('view-ticket', $ticket->slug)}}">{{strlen($ticket->subject) > 15 ? substr($ticket->subject,0,15).'...' : $ticket->subject }}</a>
+                                                </td>
+                                                <td>{{$ticket->ticketCategory->name}}</td>
+                                                <td>
+                                                    @if ($ticket->status == 1)
+                                                        <span class="label label-warning">Open</span>
+                                                    @else
+                                                        <span class="label label-success">Closed</span>
+
+                                                    @endif
+                                                </td>
+                                                <td><span class="label label-danger">{{date('d F, Y', strtotime($ticket->created_at))}} @ <small>{{date('h:ia', strtotime($ticket->created_at))}}</small></span></td>
+                                            </tr>
+                                        @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="7"> You're doing well. There're currently no tickets.</td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
-                            <!-- end of table -->
                         </div>
                     </div>
-                    <!-- bug list card end -->
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('ticket-scripts')
+    <script>
+        $(document).ready(function(){
+            $(document).on('click', '#addCategoryBtn', function(e){
+                e.preventDefault();
+                if($('#category_name').val() == ''){
+                    $.notify("Ooops! Something went wrong. Try again.", "error");
+                }else{
+                axios.post('/crm/support/ticket/category/new', {category_name:$('#category_name').val()})
+                .then(response=>{
+                    $.notify(response.data.message, 'success');
+                    $('#ticketCategory').modal('hide');
+                    $('#category_name').val('');
+                })
+                .catch(error=>{
+                    $.notify("Ooops! We couldn't save new category. Try again.", "error");
+                });
+
+                }
+            });
+        });
+    </script>
+@endpush
