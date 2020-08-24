@@ -9,6 +9,7 @@ use App\Client;
 use App\ClientLog;
 use App\Mail\SendInvoice;
 use App\Mail\SendReceipt;
+use App\Ticket;
 use App\Lead;
 use App\Deal;
 use App\Invoice;
@@ -32,6 +33,7 @@ class CRMController extends Controller
         $income = Receipt::where('tenant_id', Auth::user()->tenant_id)->sum('total');
         $invoice = Invoice::where('tenant_id', Auth::user()->tenant_id)->sum('total');
         $client_logs = ClientLog::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->take(5)->get();
+        $tickets = Ticket::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->take(10)->get();
         #Duration stats
             #Leads
                 $leads = Lead::where('tenant_id', Auth::user()->tenant_id)->count();
@@ -73,7 +75,8 @@ class CRMController extends Controller
             'today_clients'=>$today_clients,
             'today_leads'=>$today_leads,
             'month_deals'=>$month_deals,
-            'today_deals'=>$today_deals
+            'today_deals'=>$today_deals,
+            'tickets'=>$tickets
         ]);
     }
 
