@@ -7,6 +7,7 @@
             </div>
             <div class="buy-button">
                 <a href="{{route('pricing')}}" class="btn btn-primary">Sign up</a>
+                <a href="{{route('signin')}}" class="btn btn-outline-primary">Sign in</a>
             </div>
             <div class="menu-extras">
                 <div class="menu-item">
