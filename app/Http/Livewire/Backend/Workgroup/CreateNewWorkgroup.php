@@ -38,17 +38,9 @@ class CreateNewWorkgroup extends Component
             'workgroup_members'=>'required'
         ]);
         if(!empty($this->group_image)){
-            $extension = $this->group_image;
-            $extension = $this->group_image->getClientOriginalExtension(); // getting excel extension
-            $dir = 'assets/uploads/attachments/';
-            $filename = 'group_'.uniqid().'.'.$extension;
-            $this->group_image->move(public_path($dir), $filename);
-        }
-
-/*         if(!empty($this->group_image)){
             $filename = Auth::user()->tenant->company_name.'_'.time().date('Y').'.'.$this->group_image->extension();
             $this->group_image->storeAs('workgroup', $filename);
-        } */
+        }
         $group = new Workgroup;
         $group->group_name = $this->workgroup_name;
         $group->description = $this->description;

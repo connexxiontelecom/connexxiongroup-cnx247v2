@@ -27,7 +27,7 @@
     <div class="col-md-12 col-xl-12">
         <div class="card">
             <div class="card-block">
-                @include('livewire.backend.crm.common._slab-menu')
+                @include('backend.admin.common._nav-slab')
             </div>
         </div>
     </div>

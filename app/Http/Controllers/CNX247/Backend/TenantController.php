@@ -4,9 +4,12 @@ namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Mail\LandlordTenantEmailConversation;
 use App\Tenant;
 use Carbon\Carbon;
 use App\TransactionReference;
+use App\Membership;
+use App\LandlordTenantConversation;
 use Auth;
 class TenantController extends Controller
 {
@@ -20,7 +23,7 @@ class TenantController extends Controller
      */
     public function index()
     {
-        $tenants = Tenant::orderBy('id', 'DESC')->get();
+        $tenants = Tenant::orderBy('id', 'DESC')->paginate(10);
         $now = Carbon::now();
         $overall = Tenant::count();
         $thisYear = Tenant::whereYear('created_at', date('Y'))
@@ -48,6 +51,44 @@ class TenantController extends Controller
 
         return view('backend.admin.tenants.index',
         ['tenants'=>$tenants,
+        'overall'=>$overall,
+        'thisYear'=>$thisYear,
+        'thisMonth'=>$thisMonth,
+        'thisWeek'=>$thisWeek,
+        'lastMonth'=>$lastMonth
+        ]);
+    }
+
+    public function financials(){
+        $now = Carbon::now();
+        $overall = TransactionReference::sum('amount');
+        $thisYear = TransactionReference::whereYear('created_at', date('Y'))
+                        ->sum('amount');
+        $thisMonth = TransactionReference::whereMonth('created_at', date('m'))
+                        ->whereYear('created_at', date('Y'))
+                        ->sum('amount');
+        $thisWeek = TransactionReference::whereBetween('created_at', [$now->startOfWeek()->format('Y-m-d H:i'), $now->endOfWeek()->format('Y-m-d H:i')])
+                        ->sum('amount');
+        $lastMonth = TransactionReference::whereMonth('created_at', '=', $now->subMonth()->month)
+                        ->sum('amount');
+        #Par
+        $previous_week = strtotime("-1 week +1 day");
+        $start_week = strtotime("last sunday midnight",$previous_week);
+        $end_week = strtotime("next saturday",$start_week);
+        $start_week = date("Y-m-d",$start_week);
+        $end_week = date("Y-m-d",$end_week);
+
+        $lastWeek = TransactionReference::whereBetween('created_at', [$start_week, $end_week])
+                        ->sum('amount');
+        $yesterday = TransactionReference::whereDay('created_at', $now->yesterday())
+                        ->sum('amount');
+        $today = TransactionReference::whereDay('created_at', $now->today())
+                        ->sum('amount');
+
+        //$json = TransactionReference::select('created_at', 'amount')->groupBy('created_at', 'amount')->get();
+        //return response()->json(['data'=>$json]);
+        return view('backend.admin.tenants.financials',
+        [
         'overall'=>$overall,
         'thisYear'=>$thisYear,
         'thisMonth'=>$thisMonth,
@@ -87,8 +128,67 @@ class TenantController extends Controller
     {
         $tenant = Tenant::where('slug', $slug)->first();
         $transaction = TransactionReference::where('tenant_id', $tenant->tenant_id)->first();
+        $conversations = LandlordTenantConversation::where('tenant_id', $tenant->tenant_id)->get();
         if(!empty($tenant) ){
-            return view('backend.admin.tenants.view', ['tenant'=>$tenant, 'transaction'=>$transaction]);
+            return view('backend.admin.tenants.view',
+            ['tenant'=>$tenant,
+            'transaction'=>$transaction,
+            'conversations'=>$conversations,
+            ]);
+        }else{
+            return redirect()->route('404');
+        }
+    }
+
+    public function memberships(){
+        $memberships = Membership::orderBy('id', 'DESC')->get();
+        return view('backend.admin.tenants.memberships', ['memberships'=>$memberships]);
+    }
+
+    public function sendReminder(Request $request){
+        $this->validate($request,[
+            'subject'=>'required',
+            'content'=>'required',
+            'tenantId'=>'required'
+        ]);
+        $tenant = Tenant::where('tenant_id', $request->tenantId)->first();
+        $conversation = new LandlordTenantConversation;
+        $conversation->subject = $request->subject;
+        $conversation->content = $request->content;
+        $conversation->tenant_id = $request->tenantId;
+        $conversation->type = 1; //reminder
+        $conversation->slug = substr(sha1(time()), 11,40);
+        $conversation->sender_id = Auth::user()->id;
+        $conversation->save();
+        \Mail::to($tenant)->send(new LandlordTenantEmailConversation($conversation));
+
+        return response()->json(['message'=>'Success! Reminder sent.']);
+    }
+    public function sendMessage(Request $request){
+        $this->validate($request,[
+            'subject'=>'required',
+            'content'=>'required',
+            'tenantId'=>'required'
+        ]);
+        $tenant = Tenant::where('tenant_id', $request->tenantId)->first();
+        $conversation = new LandlordTenantConversation;
+        $conversation->subject = $request->subject;
+        $conversation->content = $request->content;
+        $conversation->tenant_id = $request->tenantId;
+        $conversation->type = 0; //message
+        $conversation->slug = substr(sha1(time()), 11,40);
+        $conversation->sender_id = Auth::user()->id;
+        $conversation->save();
+        \Mail::to($tenant)->send(new LandlordTenantEmailConversation($conversation));
+        return response()->json(['message'=>'Success! Message sent.']);
+    }
+
+    public function viewConversation($slug){
+        $conversation = LandlordTenantConversation::where('slug', $slug)->first();
+        if(!empty($conversation) ){
+            return view('backend.admin.tenants.view-tenant-landlord-conversation',
+            ['conversation'=>$conversation
+            ]);
         }else{
             return redirect()->route('404');
         }

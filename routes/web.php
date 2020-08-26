@@ -66,6 +66,11 @@ Route::get('/admin/constants', 'CNX247\Backend\ConstantController@index')->name(
 #Tenants
 Route::get('/tenants', 'CNX247\Backend\TenantController@index')->name('tenants');
 Route::get('/tenant/{slug}', 'CNX247\Backend\TenantController@view')->name('view-tenant');
+Route::get('/tenant/analytics/financials', 'CNX247\Backend\TenantController@financials')->name('tenant-financials');
+Route::get('/tenants/memberships', 'CNX247\Backend\TenantController@memberships')->name('tenant-memberships');
+Route::post('/tenant/send-reminder', 'CNX247\Backend\TenantController@sendReminder');
+Route::post('/tenant/email/send', 'CNX247\Backend\TenantController@sendMessage');
+Route::get('/tenant/landlord/conversation/{slug}', 'CNX247\Backend\TenantController@viewConversation')->name('tenant-landlord-conversation');
 #General settings
 Route::get('/general-settings', 'CNX247\Backend\GeneralSettingsController@index')->name('general-settings');
 Route::post('/change/company-assets', 'CNX247\Backend\GeneralSettingsController@changeCompanyAssets');
@@ -136,6 +141,7 @@ Route::get('/user/settings', 'CNX247\Backend\UserController@settings')->name('us
 Route::get('/settings/education', 'CNX247\Backend\UserController@education')->name('education');
 Route::post('/settings/education', 'CNX247\Backend\UserController@storeEducation');
 Route::get('/settings/work-experience', 'CNX247\Backend\UserController@workExperience')->name('work-experience');
+Route::get('/p/our-pricing', 'CNX247\Backend\UserController@ourPricing')->name('our-pricing');
 
 
 #HR routes

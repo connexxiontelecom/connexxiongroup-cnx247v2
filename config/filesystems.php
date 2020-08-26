@@ -81,13 +81,14 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
-        public_path('cnxdrive') => storage_path('app/public/uploads/cnxdrive'),
+        public_path('cnx247drive') => storage_path('app/public/cnx247drive'),
+/*         public_path('cnxdrive') => storage_path('app/public/uploads/cnxdrive'),
         public_path('favicons') => storage_path('app/public/uploads/favicon'),
         public_path('logos') => storage_path('app/public/uploads/logos'),
         public_path('avatars') => storage_path('app/public/uploads/avatars'),
         public_path('project') => storage_path('app/public/uploads/project'),
         public_path('task') => storage_path('app/public/uploads/task'),
-        public_path('workgroup') => storage_path('app/public/uploads/workgroup'),
+        public_path('workgroup') => storage_path('app/public/uploads/workgroup'), */
     ],
 
 ];

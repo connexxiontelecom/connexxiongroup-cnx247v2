@@ -389,21 +389,6 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <li class=" ">
-                        <a href="{{route('roles')}}">
-                            <span class="pcoded-mtext">Roles</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('permissions')}}">
-                            <span class="pcoded-mtext">Permissions</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('module-manager')}}">
-                            <span class="pcoded-mtext">Module Manager</span>
-                        </a>
-                    </li>
-                    <li class=" ">
                         <a href="{{route('general-settings')}}">
                             <span class="pcoded-mtext">General Settings</span>
                         </a>
@@ -430,8 +415,33 @@
                         </a>
                     </li>
                     <li class=" ">
+                        <a href="{{route('tenant-financials')}}">
+                            <span class="pcoded-mtext">Financials</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('tenant-memberships')}}">
+                            <span class="pcoded-mtext">Membership</span>
+                        </a>
+                    </li>
+                    <li class=" ">
                         <a href="{{route('constants')}}">
                             <span class="pcoded-mtext">Constants</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('roles')}}">
+                            <span class="pcoded-mtext">Roles</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('permissions')}}">
+                            <span class="pcoded-mtext">Permissions</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('module-manager')}}">
+                            <span class="pcoded-mtext">Module Manager</span>
                         </a>
                     </li>
                     <li class=" ">
