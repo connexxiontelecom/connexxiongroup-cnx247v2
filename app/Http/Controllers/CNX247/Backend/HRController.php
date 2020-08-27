@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Notifications\QueryEmployeeNotification;
 use App\ModuleManager;
+use App\QueryEmployee;
 use Carbon\Carbon;
 use App\Clocker;
 use App\Resignation;
@@ -14,6 +16,7 @@ use App\Department;
 use App\User;
 use Auth;
 use DB;
+
 
 class HRController extends Controller
 {
@@ -190,6 +193,50 @@ class HRController extends Controller
         //$user = User::where('url',$url)->first();
         //$user->giveRoleTo();
 
+    }
+
+    /*
+    * Query employee
+    */
+    public function queryEmployee($url){
+        $employee = User::where('url', $url)->where('tenant_id', Auth::user()->tenant_id)->first();
+        return view('backend.hr.query-employee', ['employee'=>$employee]);
+    }
+
+    public function storeQueryEmployee(Request $request){
+        $this->validate($request,[
+            'subject'=>'required',
+            'query_type'=>'required',
+            'query_content'=>'required',
+            'employee_id'=>'required'
+        ]);
+        $query = new QueryEmployee;
+        $query->subject = $request->subject;
+        $query->query_type = $request->query_type;
+        $query->query_content = $request->query_content;
+        $query->user_id = $request->employee_id;
+        $query->queried_by = Auth::user()->id;
+        $query->tenant_id = Auth::user()->tenant_id;
+        $query->slug = substr(sha1(time()), 23,40);
+        $query->save();
+        $user = User::find($request->employee_id);
+        $user->notify(new QueryEmployeeNotification($query));
+        session()->flash("success", "Query submitted.");
+        return redirect()->route('queries');
+    }
+
+    public function queries(){
+        $queries = QueryEmployee::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
+        return view('backend.hr.queries', ['queries'=>$queries]);
+    }
+
+    public function viewQuery($slug){
+        $query = QueryEmployee::where('tenant_id', Auth::user()->tenant_id)->where('slug', $slug)->first();
+        if(!empty($query) ){
+            return view('backend.hr.view-query');
+        }else{
+            return redirect()->route('404');
+        }
     }
 
 }

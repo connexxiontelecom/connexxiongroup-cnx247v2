@@ -13,9 +13,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-block">
-                <div class="d-inline-block">
-                    <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('tenants')}}"><i class="ti-layout-grid4-alt"></i>  Tenants</a>
-                </div>
+                @include('backend.admin.common._nav-slab')
             </div>
         </div>
 
@@ -46,6 +44,10 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#transaction" role="tab">Transaction Details</a>
+                                        <div class="slide"></div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tenant-landlord" role="tab">Emails & Reminders</a>
                                         <div class="slide"></div>
                                     </li>
                                 </ul>
@@ -114,7 +116,7 @@
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <th scope="row">Industy</th>
-                                                                                    <td>{{$tenant->industry_id ?? ''}}</td>
+                                                                                    <td>{{$tenant->industry->industry ?? ''}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <th scope="row">Website</th>
@@ -346,6 +348,99 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tenant-landlord" role="tabpanel">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="card-header-text">Reminders & Emails</h5>
+                                        </div>
+                                        <div class="card-block">
+                                            <div class="view-info">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="general-info">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="card-header">
+                                                                        @if (session()->has('success'))
+                                                                            <div class="alert alert-success background-success mt-3">
+                                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                    <i class="icofont icofont-close-line-circled text-white"></i>
+                                                                                </button>
+                                                                                {!! session()->get('success') !!}
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12">
+                                                                            <div class="card">
+                                                                                <div class="card-block">
+                                                                                    <div class="dt-responsive table-responsive">
+                                                                                        <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                                                                            <thead>
+                                                                                            <tr>
+                                                                                                <th>#</th>
+                                                                                                <th>Subject</th>
+                                                                                                <th>Content</th>
+                                                                                                <th>Type</th>
+                                                                                                <th>Date</th>
+                                                                                                <th>Action</th>
+                                                                                            </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                @php
+                                                                                                    $serial = 1;
+                                                                                                @endphp
+                                                                                                @if (count($conversations) > 0)
+                                                                                                    @foreach ($conversations as $conversation)
+                                                                                                        <tr>
+                                                                                                            <td>{{$serial++}}</td>
+                                                                                                            <td>{{$conversation->subject}}</td>
+                                                                                                            <td>{!! strlen($conversation->content) > 100 ? substr($conversation->content,0,100).'...' : $conversation->content !!}</td>
+                                                                                                            <td>
+                                                                                                                @if ($conversation->type == 1 )
+                                                                                                                    <label for="" class="label-danger label">Reminder</label>
+                                                                                                                @else
+                                                                                                                    <label for="" class="label-primary label">Email</label>
+                                                                                                                @endif
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                {{date('d F, Y h:ia', strtotime($conversation->created_at))}}
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <a href="{{route('tenant-landlord-conversation', $conversation->slug)}}"> <i class="ti-eye mr-2 text-info"></i> </a>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    @endforeach
+                                                                                                @else
+                                                                                                        <p class="text-center">No records found.</p>
+                                                                                                @endif
+
+                                                                                            </tbody>
+                                                                                            <tfoot>
+                                                                                            <tr>
+                                                                                                <th>#</th>
+                                                                                                <th>Subject</th>
+                                                                                                <th>Content</th>
+                                                                                                <th>Type</th>
+                                                                                                <th>Date</th>
+                                                                                                <th>Action</th>
+                                                                                            </tr>
+                                                                                            </tfoot>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                           </div>
                                                         </div>
                                                     </div>
                                                 </div>

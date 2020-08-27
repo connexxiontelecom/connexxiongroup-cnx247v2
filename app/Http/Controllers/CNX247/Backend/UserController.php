@@ -10,6 +10,7 @@ use App\Resignation;
 use App\Clocker;
 use App\Qualification;
 use App\Education;
+use App\PlanFeature;
 use Auth;
 use Image;
 
@@ -134,6 +135,11 @@ class UserController extends Controller
     */
     public function workExperience(){
          return view('backend.user.work-experience');
+    }
+
+    public function ourPricing(){
+        $plans = PlanFeature::orderBy('price', 'ASC')->get();
+        return view('backend.user.our-pricing', ['plans'=>$plans]);
     }
 
 }

@@ -95,7 +95,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('my-profile')}}"> Documentation
+                                    <a href="{{route('my-profile')}}" target="_blank"> Documentation
                                     </a>
                                 </li>
                             </ul>
@@ -123,6 +123,11 @@
                                 <li>
                                     <a href="{{route('chat-n-calls')}}">
                                         <i class="feather icon-mail"></i> My Messages
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{route('our-pricing')}}">
+                                        <i class="ti-wallet"></i> Our Pricing
                                     </a>
                                 </li>
                                 <li>

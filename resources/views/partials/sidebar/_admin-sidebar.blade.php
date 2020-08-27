@@ -134,8 +134,8 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="button.htm">
-                            <span class="pcoded-mtext">Query</span>
+                        <a href="{{route('queries')}}">
+                            <span class="pcoded-mtext">Queries</span>
                         </a>
                     </li>
                     <li class=" ">
@@ -323,8 +323,41 @@
             </li>
         </ul>
 
-        <div class="pcoded-navigatio-lavel">Accounting</div>
+        <div class="pcoded-navigatio-lavel text-white">Accounting</div>
         <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="feather icon-clipboard"></i></span>
+                    <span class="pcoded-mtext">Setup</span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class=" ">
+                        <a href="form-elements-component.htm">
+                            <span class="pcoded-mtext">Chart of Accounts</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="form-elements-add-on.htm">
+                            <span class="pcoded-mtext">Company Info</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="form-elements-advance.htm">
+                            <span class="pcoded-mtext">Budget</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="form-elements-advance.htm">
+                            <span class="pcoded-mtext">Opening Balance</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="form-elements-advance.htm">
+                            <span class="pcoded-mtext">VAT</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="feather icon-clipboard"></i></span>
@@ -389,21 +422,6 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <li class=" ">
-                        <a href="{{route('roles')}}">
-                            <span class="pcoded-mtext">Roles</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('permissions')}}">
-                            <span class="pcoded-mtext">Permissions</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('module-manager')}}">
-                            <span class="pcoded-mtext">Module Manager</span>
-                        </a>
-                    </li>
-                    <li class=" ">
                         <a href="{{route('general-settings')}}">
                             <span class="pcoded-mtext">General Settings</span>
                         </a>
@@ -430,8 +448,33 @@
                         </a>
                     </li>
                     <li class=" ">
+                        <a href="{{route('tenant-financials')}}">
+                            <span class="pcoded-mtext">Financials</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('tenant-memberships')}}">
+                            <span class="pcoded-mtext">Membership</span>
+                        </a>
+                    </li>
+                    <li class=" ">
                         <a href="{{route('constants')}}">
                             <span class="pcoded-mtext">Constants</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('roles')}}">
+                            <span class="pcoded-mtext">Roles</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('permissions')}}">
+                            <span class="pcoded-mtext">Permissions</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('module-manager')}}">
+                            <span class="pcoded-mtext">Module Manager</span>
                         </a>
                     </li>
                     <li class=" ">

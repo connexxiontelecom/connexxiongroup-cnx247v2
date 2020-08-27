@@ -20,14 +20,20 @@ $(document).ready(function() {
             ["March", 4],
             ["April", 13],
             ["May", 5],
-            ["June", 9]
+            ["June", 9],
+            ["July", 91],
+            ["August", 23],
+            ["September", 29],
+            ["October", 12],
+            ["November", 45],
+            ["December", 9]
         ];
 
         $.plot("#placeholder", [data], {
             series: {
                 bars: {
                     show: true,
-                    barWidth: 0.6,
+                    barWidth: 0.3,
                     align: "center",
                 }
             },
@@ -296,7 +302,7 @@ $(document).ready(function() {
         $("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
     });
 
-    
+
     //Percentiles
     $(function() {
 

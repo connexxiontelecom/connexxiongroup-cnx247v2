@@ -13,11 +13,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-block">
-                <div class="d-inline-block">
-                    <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('clients')}}"><i class="icofont icofont-ui-user"></i>  Plans</a>
-                    <a href="{{ route('leads') }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-thumbs-up"></i> Features</a>
-                    <a href="{{ route('leads') }}" class=" btn btn-danger btn-mini btn-round text-white"><i class="ti-wallet"></i> Financials</a>
-                </div>
+                @include('backend.admin.common._nav-slab')
             </div>
         </div>
 
@@ -102,7 +98,7 @@
                                 <h5 class="card-header-text sub-title">Tenants</h5>
                             </div>
                             <div class="card-block">
-                                <div class="col-md-12">
+                                <div class="col-md-12 ">
                                     <ul class="list-view">
                                         @if (count($tenants) > 0)
                                             @foreach ($tenants as $tenant)
@@ -123,7 +119,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="f-13 text-muted m-b-15">
-                                                                        Software Engineer
+                                                                        {{$tenant->industry->industry}}
                                                                     </div>
                                                                     {!! strlen($tenant->description) > 280 ? substr($tenant->description, 0,280).'...' : $tenant->description !!}
                                                                     <div class="m-t-15">
@@ -150,6 +146,11 @@
                                             <h5 class="text-center">No records found</h5>
                                         @endif
                                     </ul>
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex justify-content-center">
+                                            {{$tenants->links()}}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
