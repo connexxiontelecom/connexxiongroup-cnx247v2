@@ -134,8 +134,8 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="button.htm">
-                            <span class="pcoded-mtext">Query</span>
+                        <a href="{{route('queries')}}">
+                            <span class="pcoded-mtext">Queries</span>
                         </a>
                     </li>
                     <li class=" ">
@@ -323,8 +323,41 @@
             </li>
         </ul>
 
-        <div class="pcoded-navigatio-lavel">Accounting</div>
+        <div class="pcoded-navigatio-lavel text-white">Accounting</div>
         <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="feather icon-clipboard"></i></span>
+                    <span class="pcoded-mtext">Setup</span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class=" ">
+                        <a href="form-elements-component.htm">
+                            <span class="pcoded-mtext">Chart of Accounts</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="form-elements-add-on.htm">
+                            <span class="pcoded-mtext">Company Info</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="form-elements-advance.htm">
+                            <span class="pcoded-mtext">Budget</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="form-elements-advance.htm">
+                            <span class="pcoded-mtext">Opening Balance</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="form-elements-advance.htm">
+                            <span class="pcoded-mtext">VAT</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="feather icon-clipboard"></i></span>

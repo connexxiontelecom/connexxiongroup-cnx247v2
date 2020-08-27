@@ -9,7 +9,7 @@
     </li>
     <li class="nav-item">
         <div class="btn-group">
-            <a href="" data-toggle="tooltip" data-placement="top" title="Query {{$user->first_name}}"> <i class="ti-help-alt mr-4 text-danger"></i></a>
+            <a href="{{route('query-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Query {{$user->first_name}}"> <i class="ti-help-alt mr-4 text-danger"></i></a>
             <a href="" data-toggle="tooltip" data-placement="top" title="Appraise {{$user->first_name}}"> <i class="ti-crown mr-4 text-success"></i></a>
             <a href="{{route('assign-permission-to-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Assign Role to {{$user->first_name}}"> <i class="icofont icofont-chart-flow-alt-1 mr-4 text-warning"></i></a>
             <a href="" data-toggle="tooltip" data-placement="top" title="Deactivate {{$user->first_name}}'s account"> <i class="ti-na mr-4 text-danger"></i></a>

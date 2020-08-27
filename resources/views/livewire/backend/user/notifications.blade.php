@@ -22,6 +22,9 @@
                         @case('chat')
                             <a href="{{$un->data['url']}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
+                        @case('query')
+                            <a href="{{route('view-query',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
                         @case('workgroup')
                         @default
                                 <a href="{{route('view-workgroup-invitation',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">

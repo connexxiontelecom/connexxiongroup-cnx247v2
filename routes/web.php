@@ -169,6 +169,11 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         ->name('assign-permission-to-employee');
         Route::post('/store/user/permission', 'CNX247\Backend\HRController@storeUserPermission')
                ->name('store-user-permission');
+    #Query employee
+        Route::get('/employee/queries', 'CNX247\Backend\HRController@queries')->name('queries');
+        Route::get('/query/employee/{url}', 'CNX247\Backend\HRController@queryEmployee')->name('query-employee');
+        Route::post('/store/query/employee', 'CNX247\Backend\HRController@storeQueryEmployee')->name('store-query-employee');
+        Route::get('/employee/query/view/{slug}', 'CNX247\Backend\HRController@viewQuery')->name('view-query');
 #Customer Relationship Management (CRM)
 Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name('crm-dashboard');
 #Leads
