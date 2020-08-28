@@ -105,6 +105,12 @@ class CRMController extends Controller
     public function viewClient($slug){
         return view('backend.crm.clients.view');
     }
+    /*
+    * view client
+    */
+    public function editClient($slug){
+        return view('backend.crm.clients.edit');
+    }
 
     /*
     * Convert client to lead
@@ -127,7 +133,7 @@ class CRMController extends Controller
     public function raiseAnInvoice(Request $request){
         $this->validate($request,[
             'issue_date'=>'required',
-            'due_date'=>'required',
+            'due_date'=>'required|after_or_equal:issue_date',
             'description.*'=>'required',
             'quantity.*'=>'required'
         ]);
@@ -145,12 +151,13 @@ class CRMController extends Controller
         $invoice->issued_by = Auth::user()->id;
         $invoice->issue_date = $request->issue_date;
         $invoice->due_date = $request->due_date;
-        $invoice->total = $request->invoiceTotal;
-        $invoice->sub_total = $request->invoiceSubtotal;
-        $invoice->tax_rate = $request->taxRate ?? 0;
-        $invoice->discount_rate = $request->discountRate ?? 0;
+        $invoice->total = $request->totalAmount;
+        $invoice->sub_total = $request->subTotal;
+        $invoice->tax_rate = $request->hiddenTaxRate ?? 0;
+        $invoice->discount_rate = $request->hiddenDiscountRate ?? 0;
         $invoice->tax_value = $request->taxValue ?? 0;
         $invoice->discount_value = $request->discountValue ?? 0;
+        $invoice->cash = $request->cash_amount ?? 0;
         $invoice->slug = substr(sha1(time()), 23,40);
         $invoice->save();
         #invoiceId
@@ -175,7 +182,7 @@ class CRMController extends Controller
         $log->log = Auth::user()->first_name.' '.Auth::user()->surname.' Converted contact to lead.';
         $log->save();
         session()->flash("success", "<strong>Success! </strong> Invoice generated. Proceed to print it or send via mail.");
-        return redirect()->back();
+        return redirect()->route('invoice-list');
     }
 
     /*

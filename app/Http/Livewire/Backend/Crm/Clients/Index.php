@@ -8,6 +8,7 @@ use Auth;
 class Index extends Component
 {
     public $clients;
+    public $client_name;
     public function render()
     {
         return view('livewire.backend.crm.clients.index');
@@ -15,5 +16,14 @@ class Index extends Component
 
     public function mount(){
         $this->clients = Client::orderBy('id', 'DESC')->where('tenant_id',Auth::user()->tenant_id)->get();
+    }
+
+    public function searchForClient(){
+        $this->validate([
+            'client_name'=>'required'
+        ]);
+       // $result = Client::where('tenant_id', Auth::user()->tenant_id)
+                          //->where('first_name', 'LIKE')
+                          //->get();
     }
 }

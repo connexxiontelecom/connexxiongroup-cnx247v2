@@ -28,6 +28,7 @@ class CreateInvoicesTable extends Migration
             $table->integer('discount_rate')->nullable();
             $table->double('tax_value')->default(0)->nullable();
             $table->double('discount_value')->default(0)->nullable();
+            $table->double('cash')->default(0)->nullable();
             $table->string('slug')->nullable();
             $table->tinyInteger('status')->default(0); //pending
             $table->timestamps();

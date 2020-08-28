@@ -42,7 +42,6 @@ class WorkgroupController extends Controller
     *show create new workgroup form
     */
     public function showNewWorkgroupForm(){
-        return dd("check");
         return view('backend.workgroup.new');
     }
 
@@ -50,7 +49,6 @@ class WorkgroupController extends Controller
     *View workgroup
     */
     public function viewWorkgroup($url){
-        return dd("check");
         $users = User::where('tenant_id', Auth::user()->tenant_id)->get();
         return view('backend.workgroup.view', ['users'=>$users]);
     }

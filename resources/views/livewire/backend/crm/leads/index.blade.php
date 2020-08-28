@@ -8,6 +8,16 @@
             </div>
         </div>
    </div>
+    <div class="row">
+        <div class="col-md-12 col-xl-12 filter-bar">
+            <nav class="navbar navbar-light bg-faded m-b-30 p-10">
+                <div class="input-group col-md-8 offset-md-1 mt-2">
+                    <input type="text" class="form-control" placeholder="Search for lead">
+                    <span class="input-group-addon btn-mini " id="basic-addon5"><i class="ti-search mr-2"></i> Search lead</span>
+                </div>
+            </nav>
+        </div>
+   </div>
 
    <div class="row">
     <div class="col-lg-12 col-xl-12">

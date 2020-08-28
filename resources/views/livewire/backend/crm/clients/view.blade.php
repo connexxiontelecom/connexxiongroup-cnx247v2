@@ -31,7 +31,6 @@
                                         <div class="card-block user-radial-card">
                                             <div class="btn-group mr-3">
                                                 <a href=""><i class="ti-pencil text-warning p-2"></i></a>
-                                                <a href=""><i class="ti-trash text-danger p-2"></i></a>
                                             </div>
                                             <div data-label="50%" class="radial-bar radial-bar-60 radial-bar-lg radial-bar-primary">
                                                 <img src="\assets\images\avatar-2.jpg" alt="User-Image">
