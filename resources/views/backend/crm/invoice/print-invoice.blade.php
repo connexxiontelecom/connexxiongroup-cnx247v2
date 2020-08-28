@@ -95,8 +95,8 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Invoice Number <span>#{{$invoice->invoice_no}}</span></h6>
-                    <h6 class="text-uppercase text-primary">Total Due :
-                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total,2)}}</span>
+                    <h6 class="text-uppercase text-primary">Balance Due :
+                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total - $invoice->cash,2)}}</span>
                     </h6>
                 </div>
             </div>
@@ -145,6 +145,10 @@
                                 <th>Discount ({{$invoice->discount_rate}}%) :</th>
                                 <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->discount_value,2) ?? 0}}</td>
                             </tr>
+                            <tr>
+                                <th>Cash:</th>
+                                <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->cash,2) ?? 0}}</td>
+                            </tr>
                             <tr class="text-info">
                                 <td>
                                     <hr>
@@ -162,17 +166,21 @@
             <div class="row">
                 <div class="col-sm-12">
                     <h6>Terms And Condition :</h6>
-                    <p>lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor </p>
+                    <p>{!! Auth::user()->tenant->invoice_terms !!}</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row text-center">
-        <div class="col-sm-12 invoice-btn-group text-center">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$invoice->id}}" id="sendInvoiceViaEmail"> <i class="icofont icofont-email mr-2"></i> <span id="sendEmailAddon">Send as Email</span> </button>
-                <button type="button" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" type="button" id="printInvoice"><i class="icofont icofont-printer mr-2"></i> Print</button>
-                <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
+    <div class="card" style="margin-top:-25px;">
+        <div class="card-block">
+            <div class="row text-center">
+                <div class="col-sm-12 invoice-btn-group text-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$invoice->id}}" id="sendInvoiceViaEmail"> <i class="icofont icofont-email mr-2"></i> <span id="sendEmailAddon">Send as Email</span> </button>
+                        <button type="button" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" type="button" id="printInvoice"><i class="icofont icofont-printer mr-2"></i> Print</button>
+                        <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

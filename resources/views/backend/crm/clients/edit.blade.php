@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Clients
+Edit Client
 @endsection
 
 @section('extra-styles')
@@ -23,12 +23,13 @@
 @endsection
 
 @section('content')
-    @livewire('backend.crm.clients.index')
+    @livewire('backend.crm.clients.edit')
 @endsection
 
 @section('dialog-section')
 
 @endsection
 @section('extra-scripts')
-@stack('client-script')
+<script type="text/javascript" src="/assets/bower_components/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
 @endsection

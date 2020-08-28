@@ -8,16 +8,26 @@
             </div>
         </div>
    </div>
-
+   <div class="row">
+    <div class="col-md-12 col-xl-12 filter-bar">
+        <nav class="navbar navbar-light bg-faded m-b-30 p-10">
+            <div class="input-group col-md-8 offset-md-1 mt-2">
+                <input type="text" class="form-control" placeholder="Search for client (Ex. Joseph Name)" wire:model.debounce.90000ms="client_name">
+                <span class="input-group-addon btn-mini " wire:click="searchForClient" id="basic-addon5"><i class="ti-search mr-2"></i> Search client</span>
+            </div>
+            @error('client_name')
+                <i class="text-danger">{{$message}}</i>
+            @enderror
+        </nav>
+    </div>
+</div>
    <div class="row">
     <div class="col-lg-12 col-xl-12">
-        <!-- Draggable Multiple List card start -->
         <div class="card">
             <div class="card-header">
                 <h5 class="card-header-text">Clients</h5>
                 <div class="btn-group float-right">
                     <a href="{{route('new-client')}}" class="btn btn-primary btn-mini"> <i class="ti-plus mr-2"></i> Add New Client</a>
-                    <a href="" class="btn btn-danger btn-mini"> <i class="ti-import mr-2"></i> Import Clients</a>
                 </div>
             </div>
             <div class="card-block p-b-0">
@@ -27,8 +37,10 @@
                             @if (count($clients) > 0)
                                 @foreach ($clients as $client)
                                     <div class="col-md-6">
-                                        <div class="sortable-moves" style="">
+                                        <div class="sortable-moves" style="cursor: auto;">
                                             <img class="img-fluid p-absolute" src="\assets\images\avatar-2.jpg" alt="">
+                                                <span id="clientAvatarBtn" style="cursor: pointer"><i class="ti-camera"></i></span>
+                                                <input type="file" hidden id="clientAvatar">
                                                 <table class="table m-0">
                                                     <tbody>
                                                         <tr>
@@ -52,8 +64,7 @@
                                             <div class="row">
                                                 <div class="col-md-12 d-flex justify-content-end">
                                                     <div class="btn-group mr-3">
-                                                        <a href=""><i class="ti-pencil text-warning p-2"></i></a>
-                                                        <a href=""><i class="ti-trash text-danger p-2"></i></a>
+                                                        <a href="{{route('edit-client', $client->slug)}}"><i class="ti-pencil text-warning p-2"></i></a>
                                                         <a href="{{route('view-client', $client->slug)}}"><i class="ti-eye text-primary p-2"></i></a>
                                                     </div>
                                                 </div>
@@ -71,8 +82,19 @@
                 </div>
             </div>
         </div>
-        <!-- Draggable Multiple List card end -->
     </div>
-    <!-- Container-fluid ends -->
 </div>
 </div>
+@push('client-script')
+<script>
+    $(document).ready(function(){
+        $(document).on('click', '#clientAvatarBtn', function(e){
+            e.preventDefault();
+            $('#clientAvatar').click();
+            $('#clientAvatar').on('change',function(event){
+                alert('changed');
+            });
+        });
+    });
+</script>
+@endpush

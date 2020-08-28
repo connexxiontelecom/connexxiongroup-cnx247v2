@@ -28,7 +28,7 @@ View Client
 
 @section('dialog-section')
 <div class="modal fade" id="sendEmail" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title text-uppercase">Compose mail</h6>

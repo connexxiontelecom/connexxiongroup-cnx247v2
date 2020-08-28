@@ -104,7 +104,7 @@ Convert to Lead
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Invoice Number <span>#INV{{$invoice_no}}</span></h6>
                     <h6 class="text-uppercase text-primary">Balance :
-                        <span class="total">0.00</span>
+                        <span class="balance">0.00</span>
                     </h6>
                 </div>
             </div>
@@ -192,7 +192,7 @@ Convert to Lead
                             <tr>
                                 <th>Cash :</th>
                                 <td>
-                                    <input type="text" placeholder="Cash Amount" class="form-control" id="cash_amount">
+                                    <input type="text" placeholder="Cash Amount" class="form-control" id="cash_amount" name="cash_amount">
                                 </td>
                             </tr>
                             <tr class="text-info">
@@ -244,20 +244,14 @@ Convert to Lead
                     <input type="hidden" name="clientId" value="{{$client->id}}">
                     <input type="hidden" name="invoiceNo" value="{{$invoice_no}}">
 
-                    <input type="hidden" name="amount_total" id="amount_total"/>
-                    <input type="hidden" name="main_amount" id="main_amount"/>
+                    <input type="hidden" name="subTotal" id="subTotal"/>
+                    <input type="hidden" name="totalAmount" id="totalAmount"/>
 
-
-{{--                     <input type="hidden" name="invoiceTotal" value="3400" id="invoiceTotal">
-                    <input type="hidden" name="invoiceSubtotal" value="340" id="invoiceSubtotal">
-                    <input type="hidden" name="taxValue" value="340" id="taxValue">
+                    <input type="hidden" name="taxValue"  id="taxValue">
                     <input type="hidden" name="discountValue"  id="discountValue">
-                    <input type="hidden" name="taxRate" id="taxRate"> --}}
 
                     <input type="hidden" name="hiddenTaxRate"  id="hiddenTaxRate">
                     <input type="hidden" name="hiddenDiscountRate"  id="hiddenDiscountRate">
-{{--
-                    <input type="hidden" name="discountRate" value="2" id="discountRate"> --}}
                     <button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Convert {{$client->first_name ?? ''}} to Lead</button>
                     <a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
                 </div>
@@ -305,9 +299,10 @@ Convert to Lead
             const total = subTotals.reduce((a, v)=> a + Number(v), 0);
             grand_total = total;
             $('.sub-total').text(formatAsCurrency(grand_total));
-            $('#amount_total').val(grand_total);
-            $('#main_amount').val(grand_total);
+            $('#subTotal').val(grand_total);
+            $('#totalAmount').val(grand_total);
             $('.total').text(formatAsCurrency(total));
+            $('.balance').text(formatAsCurrency(total));
         }
 
         //calculate subtotals
@@ -331,17 +326,17 @@ Convert to Lead
                 discount_rate = $('#discount_rate').val();
             }
             var rate = $(this).val();
-            $('#tax_rate').val(rate);
+            //$('#tax_rate').val(rate);
 
-            var tax_value = ($('#main_amount').val() * rate)/100;
-            var discount_value = ($('#amount_total').val() * discount_rate )/100;
-
+            var tax_value = ($('#totalAmount').val() * rate)/100;
+            var discount_value = ($('#subTotal').val() * discount_rate )/100;
+            $('#taxValue').val(tax_value);
             $('#tax_amount').val(tax_value);
             $('#discounted_amount').val(discount_value);
-            var invoice_amount = +$('#main_amount').val()  + +tax_value;
-            $('#main_amount').val(invoice_amount);
-            $('.sub-total').text(formatAsCurrency(invoice_amount));
-            $('.total').text(formatAsCurrency(invoice_amount));
+            var total = +$('#totalAmount').val()  + +tax_value;
+            $('#totalAmount').val(total);
+            $('.total').text(formatAsCurrency(total));
+            $('.balance').text(formatAsCurrency(total));
         });
         //calculate discount
         $(document).on('blur', '#discount_rate', function(e){
@@ -355,18 +350,25 @@ Convert to Lead
             }
 
             var discount_rate = $(this).val();
-            $('#discount_rate').val(discount_rate);
-            var discount_value = ($('#amount_total').val() * discount_rate)/100;
+            var discount_value = ($('#subTotal').val() * discount_rate)/100;
+            $('#discountValue').val(discount_value);
             //discount
             $('#discounted_amount').val(discount_value);
-            $('#main_amount').val(($('#amount_total').val() - discount_value ) - ($('#amount_total').val() * rate)/100);
-            $('.sub-total').text(formatAsCurrency( ($('#amount_total').val() - discount_value ) - ($('#amount_total').val() * rate)/100));
-            $('.total').text(formatAsCurrency( ($('#amount_total').val() - discount_value ) - ($('#amount_total').val() * rate)/100));
+            var total = ($('#subTotal').val() - discount_value ) - ($('#subTotal').val() * rate)/100;
+            $('#totalAmount').val(total);
+            $('.total').text(formatAsCurrency(total));
+            $('.balance').text(formatAsCurrency(total));
         });
         //format as currency
         function formatAsCurrency(amount){
             return "₦"+Number(amount).toFixed(2);
         }
+
+        $(document).on('blur', '#cash_amount', function(e){
+            var cash = $(this).val();
+            var total = $('#totalAmount').val() - cash;
+            $('.balance').text(formatAsCurrency(total));
+        });
     });
 </script>
 @endsection
