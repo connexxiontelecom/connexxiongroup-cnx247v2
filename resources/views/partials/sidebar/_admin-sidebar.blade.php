@@ -478,7 +478,7 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="bs-table-styling.htm">
+                        <a href="{{route('terms-n-conditions')}}">
                             <span class="pcoded-mtext">Terms & Conditions</span>
                         </a>
                     </li>

@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
 use App\ModuleManager;
+use App\TermsNCondition;
 use App\User;
 use Auth;
 
@@ -167,5 +168,31 @@ class AdminController extends Controller
         $module->save();
         session()->flash("success", "<strong>Success!</strong> Module registered.");
         return redirect()->back();
+    }
+
+    /*
+    * Landlord terms and conditions
+    */
+    public function termsAndConditions(){
+        $terms = TermsNCondition::first();
+        return view('backend.admin.terms-n-conditions', ['terms'=>$terms]);
+    }
+
+    public function showEditTermsForm($id){
+        $terms = TermsNCondition::find($id);
+        return view('backend.admin.edit-terms-n-conditions', ['terms'=>$terms]);
+    }
+
+    public function editTermsAndConditions(Request $request){
+        $this->validate($request,[
+            'id'=>'required',
+            'terms'=>'required'
+        ]);
+        $terms = TermsNCondition::find($request->id);
+        $terms->terms = $request->terms;
+        $terms->edited_by = Auth::user()->id;
+        $terms->save();
+        session()->flash("success", "<strong>Success!</strong> Terms and conditions updated.");
+        return redirect()->route('terms-n-conditions');
     }
 }

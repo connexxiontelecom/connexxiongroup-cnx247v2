@@ -299,6 +299,13 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
 Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@connectToQuickBooks')->name('connect-to-quickbooks');
 Route::get('/call-quickbooks', 'CNX247\Backend\QuickBooksController@makeAPICall');
 
+#Tenant terms -n privacy routes
+Route::get('/cnx247/terms-n-conditions', 'CNX247\Backend\TenantController@termsAndConditions')->name('cnx247-terms-n-conditions');
+
+#Administration routes
+Route::get('/terms-n-conditions', 'CNX247\Backend\AdminController@termsAndConditions')->name('terms-n-conditions');
+Route::get('/edit/terms-n-conditions/{id}', 'CNX247\Backend\AdminController@showEditTermsForm')->name('edit-terms-n-conditions');
+Route::post('/update-terms-n-conditions', 'CNX247\Backend\AdminController@editTermsAndConditions')->name('update-terms-n-conditions');
 
 #Error routes
 Route::get('/404', 'CNX247\Backend\ErrorController@error404')->name('404');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CNX247\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\LandlordTenantEmailConversation;
+use App\TermsNCondition;
 use App\Tenant;
 use Carbon\Carbon;
 use App\TransactionReference;
@@ -141,8 +142,18 @@ class TenantController extends Controller
     }
 
     public function memberships(){
+
+        $now = Carbon::now();
+        $expired = Membership::where('status', 0)->count();
+        $expiringThisMonth = Membership::whereMonth('end_date', date('m'))
+                            ->whereYear('created_at', date('Y'))
+                            ->count();
         $memberships = Membership::orderBy('id', 'DESC')->get();
-        return view('backend.admin.tenants.memberships', ['memberships'=>$memberships]);
+        return view('backend.admin.tenants.memberships',
+        ['memberships'=>$memberships,
+        'expired'=>$expired,
+        'expiringThisMonth'=>$expiringThisMonth
+        ]);
     }
 
     public function sendReminder(Request $request){
@@ -192,6 +203,11 @@ class TenantController extends Controller
         }else{
             return redirect()->route('404');
         }
+    }
+
+    public function termsAndConditions(){
+        $terms = TermsNCondition::first();
+        return view('backend.admin.tenants.terms-n-conditions', ['terms'=>$terms]);
     }
 
     /**
