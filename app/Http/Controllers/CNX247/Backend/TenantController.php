@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\LandlordTenantEmailConversation;
 use App\TermsNCondition;
+use App\PrivacyPolicy;
 use App\Tenant;
 use Carbon\Carbon;
 use App\TransactionReference;
@@ -208,6 +209,10 @@ class TenantController extends Controller
     public function termsAndConditions(){
         $terms = TermsNCondition::first();
         return view('backend.admin.tenants.terms-n-conditions', ['terms'=>$terms]);
+    }
+    public function privacyPolicy(){
+        $privacy = PrivacyPolicy::first();
+        return view('backend.admin.tenants.privacy-policy', ['privacy'=>$privacy]);
     }
 
     /**

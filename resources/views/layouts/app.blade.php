@@ -145,7 +145,7 @@
                                     <div class="col-md-9">
                                         <nav class="nav">
                                             <a class="nav-link" href="{{route('cnx247-terms-n-conditions')}}">Terms & Conditions</a>
-                                            <a class="nav-link" href="#">Privacy Policy</a>
+                                            <a class="nav-link" href="{{route('cnx247-privacy-policy')}}">Privacy Policy</a>
                                             <a class="nav-link" href="http://www.connexxiongroup.com" target="_blank">All Rights Reserved &copy; {{date('Y')}} Connexxion Group</a>
                                         </nav>
                                     </div>

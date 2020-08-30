@@ -483,7 +483,7 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="bs-table-styling.htm">
+                        <a href="{{route('privacy-policy')}}">
                             <span class="pcoded-mtext">Privacy Policy</span>
                         </a>
                     </li>

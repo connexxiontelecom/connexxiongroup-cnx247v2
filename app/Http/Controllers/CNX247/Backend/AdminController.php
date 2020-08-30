@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
 use App\ModuleManager;
 use App\TermsNCondition;
+use App\PrivacyPolicy;
 use App\User;
 use Auth;
 
@@ -194,5 +195,27 @@ class AdminController extends Controller
         $terms->save();
         session()->flash("success", "<strong>Success!</strong> Terms and conditions updated.");
         return redirect()->route('terms-n-conditions');
+    }
+    public function privacyPolicy(){
+        $privacy = PrivacyPolicy::first();
+        return view('backend.admin.privacy-policy', ['privacy'=>$privacy]);
+    }
+
+    public function showEditPrivacyPolicyForm($id){
+        $policy = PrivacyPolicy::find($id);
+        return view('backend.admin.edit-privacy-policy', ['policy'=>$policy]);
+    }
+
+    public function editPrivacyPolicy(Request $request){
+        $this->validate($request,[
+            'id'=>'required',
+            'privacy_policy'=>'required'
+        ]);
+        $policy = PrivacyPolicy::find($request->id);
+        $policy->privacy_policy = $request->privacy_policy;
+        $policy->edited_by = Auth::user()->id;
+        $policy->save();
+        session()->flash("success", "<strong>Success!</strong> Privacy policy updated.");
+        return redirect()->route('privacy-policy');
     }
 }

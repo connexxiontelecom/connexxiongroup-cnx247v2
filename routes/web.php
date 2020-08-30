@@ -301,11 +301,15 @@ Route::get('/call-quickbooks', 'CNX247\Backend\QuickBooksController@makeAPICall'
 
 #Tenant terms -n privacy routes
 Route::get('/cnx247/terms-n-conditions', 'CNX247\Backend\TenantController@termsAndConditions')->name('cnx247-terms-n-conditions');
+Route::get('/cnx247/privacy-policy', 'CNX247\Backend\TenantController@privacyPolicy')->name('cnx247-privacy-policy');
 
 #Administration routes
 Route::get('/terms-n-conditions', 'CNX247\Backend\AdminController@termsAndConditions')->name('terms-n-conditions');
 Route::get('/edit/terms-n-conditions/{id}', 'CNX247\Backend\AdminController@showEditTermsForm')->name('edit-terms-n-conditions');
 Route::post('/update-terms-n-conditions', 'CNX247\Backend\AdminController@editTermsAndConditions')->name('update-terms-n-conditions');
+Route::get('/privacy-policy', 'CNX247\Backend\AdminController@privacyPolicy')->name('privacy-policy');
+Route::get('/edit/privacy-policy/{id}', 'CNX247\Backend\AdminController@showEditPrivacyPolicyForm')->name('edit-privacy-policy');
+Route::post('/update-privacy-policy', 'CNX247\Backend\AdminController@editPrivacyPolicy')->name('update-privacy-policy');
 
 #Error routes
 Route::get('/404', 'CNX247\Backend\ErrorController@error404')->name('404');
