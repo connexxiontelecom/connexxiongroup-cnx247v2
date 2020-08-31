@@ -250,6 +250,9 @@ Route::get('/task-calendar', 'CNX247\Backend\TaskController@getTaskCalendarData'
 Route::get('/task/gantt-chart', 'CNX247\Backend\TaskController@taskGanttChart')->name('task-gantt-chart');
 Route::get('/task-gantt-chart', 'CNX247\Backend\TaskController@getTaskGanttChartData');
 Route::get('/task/task-analytics', 'CNX247\Backend\TaskController@taskAnalytics')->name('task-analytics');
+Route::post('/delete/task', 'CNX247\Backend\TaskController@deleteTask');
+Route::get('/task/edit/{url}', 'CNX247\Backend\TaskController@editTask')->name('edit-task');
+Route::post('/task/update', 'CNX247\Backend\TaskController@updateTask')->name('update-task');
 
 #Project routes
 Route::get('/project/project-board', 'CNX247\Backend\ProjectController@projectBoard')->name('project-board');
@@ -299,6 +302,17 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
 Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@connectToQuickBooks')->name('connect-to-quickbooks');
 Route::get('/call-quickbooks', 'CNX247\Backend\QuickBooksController@makeAPICall');
 
+#Tenant terms -n privacy routes
+Route::get('/cnx247/terms-n-conditions', 'CNX247\Backend\TenantController@termsAndConditions')->name('cnx247-terms-n-conditions');
+Route::get('/cnx247/privacy-policy', 'CNX247\Backend\TenantController@privacyPolicy')->name('cnx247-privacy-policy');
+
+#Administration routes
+Route::get('/terms-n-conditions', 'CNX247\Backend\AdminController@termsAndConditions')->name('terms-n-conditions');
+Route::get('/edit/terms-n-conditions/{id}', 'CNX247\Backend\AdminController@showEditTermsForm')->name('edit-terms-n-conditions');
+Route::post('/update-terms-n-conditions', 'CNX247\Backend\AdminController@editTermsAndConditions')->name('update-terms-n-conditions');
+Route::get('/privacy-policy', 'CNX247\Backend\AdminController@privacyPolicy')->name('privacy-policy');
+Route::get('/edit/privacy-policy/{id}', 'CNX247\Backend\AdminController@showEditPrivacyPolicyForm')->name('edit-privacy-policy');
+Route::post('/update-privacy-policy', 'CNX247\Backend\AdminController@editPrivacyPolicy')->name('update-privacy-policy');
 
 #Error routes
 Route::get('/404', 'CNX247\Backend\ErrorController@error404')->name('404');

@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Mail\DeactivateSubscriptionMail;
+use Carbon\Carbon;
+use App\Membership;
 
 class DeactivateSubscription extends Command
 {
@@ -11,14 +14,14 @@ class DeactivateSubscription extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'deactivate:subscription';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Deactivate tenant when subscription reaches expiry date. This is a command that will run at intervals daily.';
 
     /**
      * Create a new command instance.
@@ -37,6 +40,11 @@ class DeactivateSubscription extends Command
      */
     public function handle()
     {
-        //
+        $now = Carbon::now();
+        #Get the first tenant whose subscription will expire this today
+        $expiringToday = Membership::whereDay('created_at', $now->today())
+                        ->get();
+       # \Mail::to()->send(new DeactivateSubscriptionMail());
+        $this->info("Success! Deactivation reminder sent.");
     }
 }

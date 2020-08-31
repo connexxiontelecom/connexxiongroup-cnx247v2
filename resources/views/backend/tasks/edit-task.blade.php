@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    New Task
+    Edit Task
 @endsection
 
 @section('extra-styles')
@@ -23,7 +23,7 @@
     <div class="card-block">
         <div class="row">
             <div class="col-md-10 offset-md-1 btn-add-task">
-                <form method="post" action="{{route('new-task')}}" enctype="multipart/form-data">
+                <form method="post" action="{{route('update-task')}}" enctype="multipart/form-data">
                     @csrf
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success mt-3">
@@ -36,7 +36,7 @@
                     <div class=" row">
                         <div class="form-group col-md-10 offset-md-1">
                             <label class="">Task Title</label>
-                            <input type="text" name="task_title" value="{{old('task_title')}}" class="form-control mb-2" placeholder="Task title">
+                            <input type="text" name="task_title" value="{{old('task_title', $task->post_title)}}" class="form-control mb-2" placeholder="Task title">
                             @error('task_title')
                                 <i class="text-danger">{{$message}}</i>
                             @enderror
@@ -45,7 +45,7 @@
                     <div class=" row">
                         <div class=" form-group col-md-10 offset-md-1">
                             <label class="">Task Description</label>
-                            <textarea name="task_description"  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Task Description">{{old('task_description')}}</textarea>
+                            <textarea name="task_description"  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Task Description">{{old('task_description', $task->post_content)}}</textarea>
                             @error('task_description')
                                 <i class="text-danger">{{$message}}</i>
                             @enderror
@@ -54,14 +54,16 @@
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label class="">Start Date</label>
-                            <input type="datetime-local" name="start_date" value="{{old('start_date')}}" class="form-control form-control-normal" placeholder="Task title">
+                            <input type="datetime-local" name="start_date" value="{{old('start_date', date(Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($task->start_date)))}}" class="form-control form-control-normal" placeholder="Task title">
+                            <label for="" class="label label-info">Started Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($task->start_date))}} @ <small>{{date('h:ia', strtotime($task->start_date))}}</small></label>
                             @error('start_date')
                                 <i class="text-danger">{{$message}}</i>
                             @enderror
                         </div>
                         <div class="form-group col-md-4">
                             <label class="">Due Date</label>
-                            <input type="datetime-local" name="due_date" value="{{old('due_date')}}" class="form-control form-control-normal" placeholder="Due date">
+                            <input type="datetime-local" name="due_date" value="{{old('due_date', $task->end_date)}}" class="form-control form-control-normal" placeholder="Due date">
+                            <label for="" class="label label-danger">Due Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($task->end_date))}} @ <small>{{date('h:ia', strtotime($task->end_date))}}</small></label>
                             @error('due_date')
                                 <i class="text-danger">{{$message}}</i>
                             @enderror
@@ -72,61 +74,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group  col-md-4">
-                            <label class="">Responsible Person(s)</label>
-                            <select name="responsible_persons[]" class="js-example-basic-multiple col-sm-12" multiple="multiple">
-                                <option selected disabled>Add Responsible Person(s)</option>
-                                @foreach($users as $user)
-                                    <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group  col-md-4">
-                            <label class="">Participant(s) <i>(Optional)</i></label>
-                            <select name="participants[]" class="js-example-basic-multiple col-sm-12" multiple="multiple">
-                                <option selected disabled>Add Participant(s)</option>
-                                @foreach($users as $user)
-                                    <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group  col-md-4">
-                            <label class="">Observer(s) <i>(Optional)</i></label>
-                            <select name="observers[]" class="js-example-basic-multiple col-sm-12" multiple="multiple">
-                                <option selected disabled>Add Observer(s)</option>
-                                @foreach($users as $user)
-                                    <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class=" row">
-                        <div class="form-group col-md-4">
-                            <label class="">Attachment</label>
-                            <input type="file" class="form-control-file" name="attachment">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="">Priority</label>
-                                <select name="priority" value="{{old('priority')}}" class="form-control form-control-normal">
-                                    @foreach ($priorities as $priority)
-                                        <option value="{{$priority->id}}">{{$priority->name}}</option>
-                                    @endforeach
-                                </select>
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label class="">Status</label>
-                                <select name="status" value="{{old('status')}}" class="form-control form-control-normal">
-                                    @foreach ($statuses as $status)
-                                        <option value="{{$status->id}}">{{$status->name}}</option>
-                                    @endforeach
-                                </select>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-12 d-flex justify-content-center">
                             <div class="btn-group">
+                                <input type="hidden" name="url" value="{{$task->post_url}}">
                                 <a href="{{route('task-board')}}" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Close</a>
-                                <button class="btn btn-primary btn-mini" type="submit"> <i class="ti-check mr-2"></i> Submit</button>
+                                <button class="btn btn-primary btn-mini" type="submit"> <i class="ti-check mr-2"></i> Save changes</button>
                             </div>
                         </div>
                     </div>

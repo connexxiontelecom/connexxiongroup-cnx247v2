@@ -27,10 +27,10 @@
             <div class="card-block-small">
                 <i class="icofont icofont-diamond bg-c-yellow card1-icon"></i>
                 <span class="text-c-yellow f-w-600">Membership</span>
-                <h4>22</h4>
+                <h4>{{number_format($expiringThisMonth)}}</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 ti-calendar m-r-10"></i>Up-coming (this week)
+                        <i class="text-c-yellow f-16 ti-calendar m-r-10"></i>Expiring this month
                     </span>
                 </div>
             </div>
@@ -41,7 +41,7 @@
             <div class="card-block-small">
                 <i class="icofont icofont-diamond bg-c-pink card1-icon"></i>
                 <span class="text-c-pink f-w-600">Membership</span>
-                <h4>3</h4>
+                <h4>{{number_format($expired)}}</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
                         <i class="text-c-pink f-16 ti-calendar m-r-10"></i>Expired
@@ -58,7 +58,7 @@
                 <h4>3</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-green f-16 ti-calendar m-r-10"></i>Renewed
+                        <i class="text-c-green f-16 ti-calendar m-r-10"></i>Renewal
                     </span>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                 <h4>2</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-blue f-16 ti-calendar m-r-10"></i>This Week
+                        <i class="text-c-blue f-16 ti-calendar m-r-10"></i>Renewals this week
                     </span>
                 </div>
             </div>

@@ -44,6 +44,24 @@ class TaskController extends Controller
             'statuses'=>$statuses
         ]);
     }
+    /*
+    * edit task
+    */
+    public function editTask($url){
+        $users = User::select('first_name', 'surname', 'id')
+                    ->where('account_status',1)->where('verified', 1)
+                    ->where('tenant_id',Auth::user()->tenant_id)
+                    ->orderBy('first_name', 'ASC')->get();
+        $priorities = Priority::all();
+        $statuses = Status::all();
+        $task = Post::where('post_url', $url)->where('tenant_id', Auth::user()->tenant_id)->first();
+        return view('backend.tasks.edit-task',[
+            'users'=>$users,
+            'priorities'=>$priorities,
+            'statuses'=>$statuses,
+            'task'=>$task
+        ]);
+    }
 
     /*
     * store new task
@@ -54,7 +72,8 @@ class TaskController extends Controller
             'task_title'=>'required',
             'responsible_persons'=>'required',
             'task_description'=>'required',
-            'due_date'=>'required'
+            'start_date'=>'required|date',
+            'due_date'=>'required|date|after_or_equal:start_date'
         ]);
 
         $url = substr(sha1(time()), 10, 10);
@@ -74,7 +93,7 @@ class TaskController extends Controller
         $task_id = $task->id;
         if(!empty($request->attachment)){
             $filename = Auth::user()->tenant->company_name.'_'.time().date('Y').'.'.$request->attachment->extension();
-            $request->attachment->storeAs('task', $filename);
+            $request->attachment->storeAs('cnx247drive', $filename);
             $post_attachment = new PostAttachment;
             $post_attachment->attachment = $filename;
             $post_attachment->tenant_id = Auth::user()->tenant_id;
@@ -118,6 +137,32 @@ class TaskController extends Controller
                 $part->save();
             }
         }
+        return redirect()->route('task-board');
+    }
+    /*
+    * update task
+    */
+    public function updateTask(Request $request){
+
+        $this->validate($request, [
+            'task_title'=>'required',
+            'task_description'=>'required',
+            'start_date'=>'required|date',
+            'due_date'=>'required|date|after_or_equal:start_date'
+        ]);
+        $task = Post::where('post_url', $request->url)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $task->post_title = $request->task_title;
+        $task->user_id = Auth::user()->id;
+        $task->post_content = $request->task_description;
+        $task->post_color = $request->color;
+        $task->post_type = 'task';
+        $task->post_url = $request->url;
+        $task->start_date = $request->start_date ?? '';
+        $task->end_date = $request->due_date;
+        $task->tenant_id = Auth::user()->tenant_id;
+        //$task->attachment = $filename;
+        $task->save();
+        session()->flash("success", "<strong>Success!</strong> Task changes saved.");
         return redirect()->route('task-board');
     }
 
@@ -171,5 +216,44 @@ class TaskController extends Controller
     */
     public function taskAnalytics(){
         return view('backend.tasks.task-analytics');
+    }
+
+    public function deleteTask(Request $request){
+        $this->validate($request,[
+            'taskId'=>'required'
+        ]);
+        $task = Post::where('tenant_id', Auth::user()->tenant_id)
+                    ->where('id', $request->taskId)->first();
+        if(!empty($task) ){
+            $task->delete();
+            $responsible = ResponsiblePerson::where('post_id', $request->taskId)
+                                            ->where('tenant_id', Auth::user()->tenant_id)
+                                            ->get();
+            if(!empty($responsible) ){
+                foreach($responsible as $person){
+                    $person->delete();
+                }
+            }
+            #Observers
+            $observers = Observer::where('post_id', $request->taskId)
+                                            ->where('tenant_id', Auth::user()->tenant_id)
+                                            ->get();
+            if(!empty($observers) ){
+                foreach($observers as $observer){
+                    $observer->delete();
+                }
+            }
+            #Participants
+            $participants = Participant::where('post_id', $request->taskId)
+                                            ->where('tenant_id', Auth::user()->tenant_id)
+                                            ->get();
+            if(!empty($participants) ){
+                foreach($participants as $participant){
+                    $participant->delete();
+                }
+            }
+        }
+        session()->flash("success", "<strong>Success!</strong> Task deleted.");
+        return redirect()->back();
     }
 }

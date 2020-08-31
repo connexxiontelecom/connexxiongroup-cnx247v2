@@ -92,15 +92,15 @@
                             data-dropdown-in="fadeIn"
                             data-dropdown-out="fadeOut"
                         >
-                            <a class="dropdown-item waves-light waves-effect" href="#!">
+                            <a wire:click="markAsComplete({{$task->id}})"  class="dropdown-item waves-light waves-effect" href="javascript:void(0);">
                                 <i class="icofont icofont-checked m-r-10"></i>Mark as completed
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item waves-light waves-effect" href="#!">
-                                <i class="icofont icofont-edit-alt m-r-10"></i>Edit task
+                            <a class="dropdown-item waves-light waves-effect" href="{{ route('edit-task', $task->post_url) }}">
+                                <i class="icofont icofont-edit-alt m-r-10 text-warning"></i>Edit task
                             </a>
-                            <a class="dropdown-item waves-light waves-effect" href="#!">
-                                <i class="icofont icofont-close m-r-10"></i>Remove
+                            <a class="dropdown-item waves-light waves-effect" href="{{ route('view-task', $task->post_url) }}">
+                                <i class="ti-eye text-primary m-r-10"></i>View task
                             </a>
                         </div>
                         <!-- end of dropdown menu -->
@@ -253,9 +253,11 @@
                 <h5>
                     <i class="icofont icofont-tasks-alt m-r-5"></i> {{$task->post_title }}
                 </h5>
-                <button class="btn btn-sm btn-primary f-right">
-                    <i class="icofont icofont-ui-alarm"></i>Mark as completed
-                </button>
+                @if ($task->post_status == 'in-progress')
+                    <button class="btn btn-sm btn-primary f-right btn-mini" wire:click="markAsComplete({{$task->id}})" >
+                        <i class="icofont icofont-ui-alarm"></i>Mark as completed
+                    </button>
+                @endif
             </div>
             <div class="card-block">
                 <div class="">
