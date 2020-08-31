@@ -258,6 +258,11 @@
                         <i class="icofont icofont-ui-alarm"></i>Mark as completed
                     </button>
                 @endif
+                @if ($task->post_status == 'complete')
+                    <label for="" class="label label-success">Completed</label>
+                @elseif($task->post_status == 'in-progress')
+                    <label for="" class="label label-warning">in-progress</label>
+                @endif
             </div>
             <div class="card-block">
                 <div class="">
