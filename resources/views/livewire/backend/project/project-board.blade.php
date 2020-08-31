@@ -1,5 +1,5 @@
 <div class="row">
-    @can('view projects')
+
         <div class="col-xl-3 col-lg-12 push-xl-9">
             <div class="card">
                 <div class="card-block p-t-10">
@@ -126,7 +126,7 @@
 
             </div>
         </div>
-    @else
+        @can('view projects')
         <div class="col-md-12">
             <div class="card">
                 <div class="card-block">

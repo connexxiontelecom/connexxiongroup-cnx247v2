@@ -74,5 +74,13 @@ class ViewTask extends Component
         $this->attachments = PostAttachment::where('post_id', $this->task->id)->where('tenant_id', Auth::user()->tenant_id)->get();
     }
 
+    public function markAsComplete($id){
+        $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $task->post_status = 'complete';
+        $task->save();
+        session()->flash("success", "<strong>Success!</strong> Task marked as complete.");
+        return back();
+    }
+
 
 }

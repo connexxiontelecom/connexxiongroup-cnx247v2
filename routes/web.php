@@ -250,6 +250,9 @@ Route::get('/task-calendar', 'CNX247\Backend\TaskController@getTaskCalendarData'
 Route::get('/task/gantt-chart', 'CNX247\Backend\TaskController@taskGanttChart')->name('task-gantt-chart');
 Route::get('/task-gantt-chart', 'CNX247\Backend\TaskController@getTaskGanttChartData');
 Route::get('/task/task-analytics', 'CNX247\Backend\TaskController@taskAnalytics')->name('task-analytics');
+Route::post('/delete/task', 'CNX247\Backend\TaskController@deleteTask');
+Route::get('/task/edit/{url}', 'CNX247\Backend\TaskController@editTask')->name('edit-task');
+Route::post('/task/update', 'CNX247\Backend\TaskController@updateTask')->name('update-task');
 
 #Project routes
 Route::get('/project/project-board', 'CNX247\Backend\ProjectController@projectBoard')->name('project-board');

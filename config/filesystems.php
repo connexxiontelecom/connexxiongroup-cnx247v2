@@ -50,8 +50,8 @@ return [
 
         'public' => [
             'driver' => 'local',
-            //'root' => storage_path('app/public'),
-            'root' => storage_path('storage/'),
+            'root' => storage_path('app/public'),
+            //'root' => storage_path('storage/'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
@@ -82,7 +82,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
         public_path('cnx247drive') => storage_path('app/public/cnx247drive'),
-/*         public_path('cnxdrive') => storage_path('app/public/uploads/cnxdrive'),
+        /*public_path('cnxdrive') => storage_path('app/public/uploads/cnxdrive'),
         public_path('favicons') => storage_path('app/public/uploads/favicon'),
         public_path('logos') => storage_path('app/public/uploads/logos'),
         public_path('avatars') => storage_path('app/public/uploads/avatars'),
