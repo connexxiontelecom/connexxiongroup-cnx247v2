@@ -65,16 +65,6 @@
             </div>
             <div class="card-footer">
                 <div>
-                    <span>
-                        <a href="#!" class="text-muted m-r-10 f-16">
-                            <i class="icofont icofont-random"></i>
-                        </a>
-                    </span>
-                    <span class="m-r-10">
-                        <a href="#!" class="text-muted f-16">
-                            <i class="icofont icofont-options"></i>
-                        </a>
-                    </span>
                     <div class="dropdown-secondary dropdown d-inline-block">
                         <button
                             class="btn btn-sm btn-primary dropdown-toggle waves-light"
@@ -103,7 +93,6 @@
                                 <i class="ti-eye text-primary m-r-10"></i>View task
                             </a>
                         </div>
-                        <!-- end of dropdown menu -->
                     </div>
                 </div>
             </div>
@@ -113,8 +102,8 @@
                 <h5 class="card-header-text">
                     <i class="icofont icofont-attachment"></i> Shared Files
                 </h5>
-                <button class="btn btn-success btn-icon float-right" title="Upload attachment">
-                    <i class="ti-cloud-up"></i>
+                <button class="btn btn-success btn-mini float-right" title="Upload attachment">
+                    <i class="ti-cloud-up mr-2"></i> Upload Attachment
                 </button>
             </div>
             <div class="card-block task-attachment">
@@ -244,27 +233,23 @@
         </div>
 
     </div>
-    <!-- Task-detail-right start -->
-    <!-- Task-detail-left start -->
     <div class="col-xl-8 col-lg-12 pull-xl-4 filter-bar">
             @include('livewire.backend.task.common._task-slab')
         <div class="card">
-            <div class="card-header">
-                <h5>
-                    <i class="icofont icofont-tasks-alt m-r-5"></i> {{$task->post_title }}
-                </h5>
-                @if ($task->post_status == 'in-progress')
-                    <button class="btn btn-sm btn-primary f-right btn-mini" wire:click="markAsComplete({{$task->id}})" >
-                        <i class="icofont icofont-ui-alarm"></i>Mark as completed
-                    </button>
-                @endif
-                @if ($task->post_status == 'complete')
+            <div class="card-block">
+                <h5 class="sub-title">
+                    <i class="icofont icofont-tasks-alt m-r-5"></i> {{$task->post_title }}                @if ($task->post_status == 'complete')
                     <label for="" class="label label-success">Completed</label>
                 @elseif($task->post_status == 'in-progress')
                     <label for="" class="label label-warning">in-progress</label>
                 @endif
-            </div>
-            <div class="card-block">
+                </h5>
+                @if ($task->post_status == 'in-progress')
+                <button class="btn btn-sm btn-primary f-right btn-mini" wire:click="markAsComplete({{$task->id}})" >
+                    <i class="icofont icofont-ui-alarm"></i>Mark as completed
+                </button>
+                @endif
+
                 <div class="">
                     <div class="m-b-20">
                         <h6 class="sub-title m-b-15">Overview</h6>
@@ -315,12 +300,10 @@
             </div>
         </div>
         <div class="card comment-block">
-            <div class="card-header">
-                <h5 class="card-header-text">
+            <div class="card-block">
+                <h5 class="sub-title">
                     <i class="icofont icofont-comment m-r-5"></i> Comments
                 </h5>
-            </div>
-            <div class="card-block">
                 <ul class="media-list">
                     @foreach ($task->postComments as $comment)
                         <li class="media">
@@ -359,5 +342,4 @@
             </div>
         </div>
     </div>
-    <!-- Task-detail-left end -->
 </div>

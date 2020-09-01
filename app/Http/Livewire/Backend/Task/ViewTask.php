@@ -71,7 +71,7 @@ class ViewTask extends Component
         $this->task = Post::where('post_type', 'task')
                             ->where('post_url', $this->link)
                             ->where('tenant_id',Auth::user()->tenant_id)->first();
-        $this->attachments = PostAttachment::where('post_id', $this->task->id)->where('tenant_id', Auth::user()->tenant_id)->get();
+        $this->attachments = PostAttachment::where('post_id', $this->task['id'])->where('tenant_id', Auth::user()->tenant_id)->get();
     }
 
     public function markAsComplete($id){

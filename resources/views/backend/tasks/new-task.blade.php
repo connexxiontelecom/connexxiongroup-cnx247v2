@@ -22,7 +22,8 @@
 <div class="card">
     <div class="card-block">
         <div class="row">
-            <div class="col-md-10 offset-md-1 btn-add-task">
+            <div class="col-md-12 btn-add-task">
+                <h5 class="sub-title">Create New Task</h5>
                 <form method="post" action="{{route('new-task')}}" enctype="multipart/form-data">
                     @csrf
                     @if (session()->has('success'))
@@ -34,7 +35,7 @@
                         </div>
                     @endif
                     <div class=" row">
-                        <div class="form-group col-md-10 offset-md-1">
+                        <div class="form-group col-md-12">
                             <label class="">Task Title</label>
                             <input type="text" name="task_title" value="{{old('task_title')}}" class="form-control mb-2" placeholder="Task title">
                             @error('task_title')
@@ -43,7 +44,7 @@
                         </div>
                     </div>
                     <div class=" row">
-                        <div class=" form-group col-md-10 offset-md-1">
+                        <div class=" form-group col-md-12">
                             <label class="">Task Description</label>
                             <textarea name="task_description"  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Task Description">{{old('task_description')}}</textarea>
                             @error('task_description')

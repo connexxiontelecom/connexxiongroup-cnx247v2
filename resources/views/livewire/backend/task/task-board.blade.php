@@ -9,7 +9,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">At Risk</h6>
-                            <h5 class="m-b-0">379</h5>
+                            <h5 class="m-b-0">{{number_format($atRiskTasks)}}</h5>
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">In Progress</h6>
-                            <h5 class="m-b-0">205</h5>
+                            <h5 class="m-b-0">{{number_format($inprogressTasks)}}</h5>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">Complete</h6>
-                            <h5 class="m-b-0">5984</h5>
+                            <h5 class="m-b-0">{{number_format($completedTasks)}}</h5>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">Cancel</h6>
-                            <h5 class="m-b-0">325</h5>
+                            <h5 class="m-b-0">{{number_format($cancelTask)}}</h5>
                         </div>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                     <div class="card">
                         <div class="card-block">
                             <h5 class="sub-title" id="assignedTask">Assigned Task(s)</h5>
-                            <p class="text-muted">These tasks were either assigned to you by someone or yourself.</p>
+                            <p class="text-muted">These task(s) were assigned to you by someone.</p>
                             <div class="row">
                                 @foreach($tasks as $task)
                                     @if (count($task->responsiblePersons) > 0)

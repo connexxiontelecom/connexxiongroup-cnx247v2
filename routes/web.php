@@ -257,12 +257,17 @@ Route::post('/task/update', 'CNX247\Backend\TaskController@updateTask')->name('u
 #Project routes
 Route::get('/project/project-board', 'CNX247\Backend\ProjectController@projectBoard')->name('project-board');
 Route::get('/project/new', 'CNX247\Backend\ProjectController@newProject')->name('new-project');
+Route::post('/project/new', 'CNX247\Backend\ProjectController@storeProject');
 Route::get('/project/view/{url}', 'CNX247\Backend\ProjectController@viewProject')->name('view-project');
 Route::get('/project/calendar', 'CNX247\Backend\ProjectController@projectCalendar')->name('project-calendar'); //[view]
 Route::get('/project-calendar', 'CNX247\Backend\ProjectController@getProjectCalendarData'); //[Data source]
 Route::get('/project/gantt-chart', 'CNX247\Backend\ProjectController@projectGanttChart')->name('project-gantt-chart');
 Route::get('/project-gantt-chart', 'CNX247\Backend\ProjectController@getProjectGanttChartData');
 Route::get('/project/project-analytics', 'CNX247\Backend\ProjectController@projectAnalytics')->name('project-analytics');
+Route::post('/delete/task', 'CNX247\Backend\ProjectController@deleteProject');
+Route::get('/project/edit/{url}', 'CNX247\Backend\ProjectController@editProject')->name('edit-project');
+Route::post('/project/update', 'CNX247\Backend\ProjectController@updateProject')->name('update-project');
+Route::post('/project/milestone', 'CNX247\Backend\ProjectController@createProjectMilestone');
 #Workgroup routes
 Route::get('/workgroups', 'CNX247\Backend\WorkgroupController@index')->name('workgroups');
 Route::get('/workgroup/new', 'CNX247\Backend\WorkgroupController@showNewWorkgroupForm')->name('new-workgroup');

@@ -7,6 +7,8 @@ use App\Post;
 use App\PostLike;
 use App\PostComment;
 use App\PostRevision;
+use App\PostAttachment;
+use App\Milestone;
 use App\User;
 use Auth;
 
@@ -17,6 +19,8 @@ class ViewProject extends Component
     public $likes;
     public $link;
     public $review;
+    public $attachments;
+    public $milestones;
 
     public function mount($url = ''){
         $this->link = request('url', $url);
@@ -69,5 +73,21 @@ class ViewProject extends Component
     public function getContent(){
         $this->project = Post::where('post_type', 'project')->where('post_url', $this->link)
                         ->where('tenant_id',Auth::user()->tenant_id)->first();
+        $this->attachments = PostAttachment::where('post_id', $this->project['id'])
+                                            ->where('tenant_id', Auth::user()->tenant_id)
+                                            ->get();
+        $this->milestones = Milestone::where('post_id', $this->project['id'])
+                                    ->where('tenant_id', Auth::user()->tenant_id)
+                                    ->orderBy('id', 'DESC')
+                                    ->get();
+    }
+
+    public function markAsComplete($id){
+        $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $task->post_status = 'complete';
+        $task->save();
+        session()->flash("success", "<strong>Success!</strong> Task marked as complete.");
+        $this->getContent();
+        return back();
     }
 }

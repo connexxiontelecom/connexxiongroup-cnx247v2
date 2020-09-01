@@ -126,6 +126,11 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="{{route('chat-n-calls')}}">
+                                        <i class="icofont icofont-brain-alt"></i> My Ideas
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{route('our-pricing')}}">
                                         <i class="ti-wallet"></i> Our Pricing
                                     </a>
