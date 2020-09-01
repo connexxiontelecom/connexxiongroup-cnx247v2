@@ -17,11 +17,12 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id'); //post_author
             $table->unsignedBigInteger('project_manager_id')->nullable(); //post_author
-            $table->unsignedBigInteger('stage_id')->nullable(); 
-            $table->unsignedBigInteger('status_id')->nullable(); 
-            $table->unsignedBigInteger('account_id')->nullable(); 
+            $table->unsignedBigInteger('stage_id')->nullable();
+            $table->unsignedBigInteger('status_id')->nullable();
+            $table->unsignedBigInteger('account_id')->nullable();
             $table->double('budget')->nullable();
             $table->string('currency')->nullable();
+            $table->string('sponsor')->nullable();
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
             $table->string('post_title')->nullable();

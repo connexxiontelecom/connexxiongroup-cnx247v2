@@ -17,7 +17,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger">
-                <h4 class="modal-title bg-danger">Are you sure?</h4>
+                <h6 class="modal-title bg-danger">Are you sure?</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true" class="text-white">&times;</span>
             </button>

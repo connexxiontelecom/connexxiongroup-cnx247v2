@@ -10,6 +10,7 @@ use Auth;
 class TaskBoard extends Component
 {
     public $tasks;
+    public $completedTasks, $atRiskTasks, $inprogressTasks, $cancelTask;
 
     public function render()
     {
@@ -25,5 +26,21 @@ class TaskBoard extends Component
     */
     public function getTasks(){
         $this->tasks = Post::where('post_type', 'task')->where('tenant_id',Auth::user()->tenant_id)->latest()->get();
+        $this->completedTasks = Post::where('post_type', 'task')
+                                ->where('tenant_id',Auth::user()->tenant_id)
+                                ->where('post_status', 'complete')
+                                ->count();
+        $this->inprogressTasks = Post::where('post_type', 'task')
+                                ->where('tenant_id',Auth::user()->tenant_id)
+                                ->where('post_status', 'in-progress')
+                                ->count();
+        $this->atRiskTasks = Post::where('post_type', 'task')
+                                ->where('tenant_id',Auth::user()->tenant_id)
+                                ->where('post_status', 'at-risk')
+                                ->count();
+        $this->cancelTask = Post::where('post_type', 'task')
+                                ->where('tenant_id',Auth::user()->tenant_id)
+                                ->where('post_status', 'cancel')
+                                ->count();
     }
 }
