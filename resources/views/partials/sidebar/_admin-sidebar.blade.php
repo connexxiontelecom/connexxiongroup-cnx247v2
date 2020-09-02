@@ -125,7 +125,7 @@
                     </li>
                     <li class=" ">
                         <a href="button.htm">
-                            <span class="pcoded-mtext">Promotion</span>
+                            <span class="pcoded-mtext">IdeaBox</span>
                         </a>
                     </li>
                     <li class=" ">
@@ -149,24 +149,6 @@
                         </a>
                     </li>
 
-                </ul>
-            </li>
-            <li class="pcoded-hasmenu">
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="ti-wallet"></i></span>
-                    <span class="pcoded-mtext">Payroll</span>
-                </a>
-                <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="{{route('hr-dashboard')}}">
-                            <span class="pcoded-mtext">Set Salary</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('employees')}}">
-                            <span class="pcoded-mtext">Payslip</span>
-                        </a>
-                    </li>
                 </ul>
             </li>
             <li class="pcoded-hasmenu">

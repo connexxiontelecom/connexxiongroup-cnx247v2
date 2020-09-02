@@ -45,6 +45,7 @@ class CreateTenantsTable extends Migration
             $table->string('street_2')->nullable();
             $table->string('city')->nullable();
             $table->string('postal_code')->nullable();
+            $table->string('active_sub_key')->nullable();
             //$table->string('postal')->nullable();
             $table->string('tagline')->nullable();
             $table->string('company_prefix')->nullable(); //example CNX

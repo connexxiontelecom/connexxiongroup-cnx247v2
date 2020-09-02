@@ -11,134 +11,305 @@
 
 @section('content')
     @livewire('backend.user.my-profile')
-    <div class="card" style="margin-top:-25px;">
-        <div class="card-block">
-            <div class="row">
-                <div class="col-md-12 col-lg-12 col-xl-12">
-                    <div class="tab-pane active" id="home" role="tabpanel">
-                        @if(Auth::check())
-                            <div class="table-responsive">
-                                <table class="table m-0">
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
-                                            <td>{{Auth::user()->first_name ?? ''}} {{Auth::user()->surname ?? ''}} </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Gender</th>
-                                            <td>Female</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Birth Date</th>
-                                            <td>October 25th, 1990</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Marital Status</th>
-                                            <td>Single</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
-                                            <td>{{Auth::user()->email ?? ''}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile</th>
-                                            <td>{{Auth::user()->mobile ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Position</th>
-                                            <td>{{Auth::user()->position ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Department</th>
-                                            <td>{{Auth::user()->departmenet_id ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Hire Date</th>
-                                            <td>{{date('d M, Y', strtotime(Auth::user()->hire_date)) ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Confirm Date</th>
-                                            <td>{{date('d M, Y', strtotime(Auth::user()->confirm_date)) ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
-                                            <td>{{Auth::user()->address}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+    <div class="row" style="margin-top:-25px;">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-block accordion-block">
+                    <div id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="accordion-panel">
+                            <div class="accordion-heading" role="tab" id="headingOne">
+                                <h3 class="card-title accordion-title">
+                                <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Personal Info
+                                </a>
+                            </h3>
                             </div>
-                        @else
-                            {{route('signin')}}
-                        @endif
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="accordion-content accordion-desc">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @if(Auth::check())
+                                                <div class="table-responsive">
+                                                    <table class="table m-0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
+                                                                <td>{{Auth::user()->first_name ?? ''}} {{Auth::user()->surname ?? ''}} </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Birth Date</th>
+                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime(Auth::user()->birth_date))}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
+                                                                <td>{{Auth::user()->email ?? ''}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Position</th>
+                                                                <td>{{Auth::user()->position ?? '-'}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Hire Date</th>
+                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime(Auth::user()->hire_date)) ?? '-'}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Start Date</th>
+                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime(Auth::user()->start_date))}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            @else
+                                                {{route('signin')}}
+                                            @endif
 
+                                        </div>
+                                        <div class="col-md-6">
+                                            @if(Auth::check())
+                                                <div class="table-responsive">
+                                                    <table class="table m-0">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Gender</th>
+                                                                <td>-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Marital Status</th>
+                                                                <td>-</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile</th>
+                                                                <td>{{Auth::user()->mobile ?? '-'}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Department</th>
+                                                                <td>{{Auth::user()->department->department_name ?? '-'}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Confirm Date</th>
+                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime(Auth::user()->confirm_date)) ?? '-'}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
+                                                                <td>{{Auth::user()->address}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            @else
+                                                {{route('signin')}}
+                                            @endif
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-panel">
+                            <div class="accordion-heading" role="tab" id="headingTwo">
+                                <h3 class="card-title accordion-title">
+                                <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Work Experience
+                                </a>
+                            </h3>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <div class="accordion-content accordion-desc">
+                                    @php
+                                        $serial = 1;
+                                    @endphp
+                                    
+                                    @foreach(Auth::user()->experience as $exp)
+                                    <div class="col-md-12">
+                                        <ul class="list-view">
+                                            <li>
+                                                <div class="card list-view-media">
+                                                    <div class="card-block">
+                                                        <label class="badge badge-primary float-right">{{$serial++}}</label>
+                                                        <div class="media">
+                                                            <a class="media-left" href="{{route('view-profile', $exp->user->url)}}">
+                                                                <img src="/assets/images/avatars/thumbnails/{{$exp->user->avatar ?? 'avatar.png'}}" class="img-60" alt="{{$exp->user->first_name ?? ''}}">
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <div class="col-xs-12">
+                                                                    <h6 class="d-inline-block">
+                                                                        {{$exp->user->first_name ?? ''}} {{$exp->user->surname ?? ''}}</h6>
+                                                                    <label class="label label-info">{{$exp->user->position ?? '-'}}</label>
+                                                                </div>
+                                                                <div class="f-13 text-muted m-b-15">
+                                                                    {{$exp->organisation ?? ''}}
+                                                                </div>
+                                                                <p>{!! $exp->role_description !!}</p>
+                                                                <div class="m-t-15">
+                                                                    <div class="btn-group">
+                                                                        <label class="label label-primary">Start Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($exp->start_date))}}</label>
+                                                                        <label class="label label-danger">End Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($exp->end_date))}}</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-panel">
+                            <div class=" accordion-heading" role="tab" id="headingThree">
+                                <h3 class="card-title accordion-title">
+                                <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                   Education
+                                </a>
+                            </h3>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                <div class="accordion-content accordion-desc">
+                                    @php
+                                    $index = 1;
+                                @endphp
+                                
+                                @foreach(Auth::user()->education as $edu)
+                                <div class="col-md-12">
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card list-view-media">
+                                                <div class="card-block">
+                                                    <label class="badge badge-primary float-right">{{$index++}}</label>
+                                                    <div class="media">
+                                                        <a class="media-left" href="{{route('view-profile', $edu->user->url)}}">
+                                                            <img src="/assets/images/avatars/thumbnails/{{$edu->user->avatar ?? 'avatar.png'}}" class="img-60" alt="{{$edu->user->first_name ?? ''}}">
+                                                        </a>
+                                                        <div class="media-body">
+                                                            <div class="col-xs-12">
+                                                                <h6 class="d-inline-block">
+                                                                    {{$edu->user->first_name ?? ''}} {{$edu->user->surname ?? ''}}</h6>
+                                                                <label class="label label-info">{{$edu->user->position ?? '-'}}</label>
+                                                            </div>
+                                                            <div class="f-13 text-muted m-b-15">
+                                                                {{$edu->institution ?? ''}}
+                                                            </div>
+                                                            <div class="m-t-15">
+                                                                <div class="btn-group">
+                                                                    <label class="label label-primary">Start Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($edu->start_date))}}</label>
+                                                                    <label class="label label-danger">End Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($edu->end_date))}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-panel">
+                            <div class=" accordion-heading" role="tab" id="headingFour">
+                                <h3 class="card-title accordion-title">
+                                <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                   Emergency Contact
+                                </a>
+                            </h3>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                                <div class="accordion-content accordion-desc">
+                                    <div class="row">
+                                        @php
+                                            $n = 1;
+                                        @endphp
+                                        @foreach(Auth::user()->emergencyContact as $contact)
+                                            <div class="col-md-6" >
+                                                    <label class="badge badge-primary float-right">{{$n++}}</label>
+                                                <table class="table m-0" style="border-left:2px solid #ff000;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
+                                                            <td>{{$contact->full_name ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Relationship</th>
+                                                            <td>{{$contact->relationship ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
+                                                            <td>{{$contact->email ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile No.</th>
+                                                            <td>{{$contact->mobile ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
+                                                            <td>{{$contact->address ?? ''}} </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-panel">
+                            <div class=" accordion-heading" role="tab" id="headingFive">
+                                <h3 class="card-title accordion-title">
+                                <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                   Next of Kin
+                                </a>
+                            </h3>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                                <div class="accordion-content accordion-desc">
+                                    @php
+                                            $n = 1;
+                                        @endphp
+                                        @foreach(Auth::user()->nextKin as $contact)
+                                            <div class="col-md-6" >
+                                                    <label class="badge badge-primary float-right">{{$n++}}</label>
+                                                <table class="table m-0" style="border-left:2px solid #ff000;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
+                                                            <td>{{$contact->full_name ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Relationship</th>
+                                                            <td>{{$contact->relationship ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
+                                                            <td>{{$contact->email ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile No.</th>
+                                                            <td>{{$contact->mobile ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
+                                                            <td>{{$contact->address ?? ''}} </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @endforeach
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('dialog-section')
-<div class="modal fade" id="newResignationModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title text-uppercase">New Resignation</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                <form action="">
-                    <div class="form-group">
-                        <label for="">Subject</label>
-                        <input type="text" placeholder="Subject" id="subject" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Attachment</label>
-                        <input type="file" id="attachment" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Content</label>
-                        <textarea name="" id="resignation_content" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-default waves-effect btn-mini" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitResignationBtn">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="newComplaintModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title">New Complaint</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                <form action="">
-                    <div class="form-group">
-                        <label for="">Subject</label>
-                        <input type="text" placeholder="Subject" id="complaint_subject" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Content</label>
-                        <textarea name="" id="complaint_content" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-default waves-effect btn-mini" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitComplaintBtn">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
+    @include('backend.user.common._user-modals')
 @endsection
 
 @section('extra-scripts')
