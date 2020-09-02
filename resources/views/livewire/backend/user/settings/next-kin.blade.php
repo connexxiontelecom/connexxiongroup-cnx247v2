@@ -2,8 +2,8 @@
     <div class="col-md-5">
         <div class="card">
             <div class="card-block">
-                <h5 class="sub-title">Add New Emergency Contact</h5>
-                <form wire:submit.prevent="addEmergencyContact">
+                <h5 class="sub-title">Add New Next of Kin Contact</h5>
+                <form wire:submit.prevent="addContact">
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success mt-3">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -68,7 +68,7 @@
                         <div class="btn-group">
                             <button class="btn btn-mini btn-danger" wire:click="cancelEdit" type="button"> <i class="ti-close"></i> Cancel</button>
                             <button class="btn btn-mini btn-primary" type="submit"> <i class="ti-check"></i> {{$btn_text}}</button>
-                            <div class="preloader3 loader-block" wire:loading wire.target="addEmergencyContact">
+                            <div class="preloader3 loader-block" wire:loading wire.target="addContact">
                                 <div class="circ1 loader-primary"></div>
                                 <div class="circ2 loader-primary"></div>
                                 <div class="circ3 loader-primary"></div>
@@ -84,7 +84,7 @@
     <div class="col-md-7">
         <div class="card">
             <div class="card-block">
-                <h5 class="sub-title">Emergency Contacts</h5>
+                <h5 class="sub-title">Next of Kin</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>

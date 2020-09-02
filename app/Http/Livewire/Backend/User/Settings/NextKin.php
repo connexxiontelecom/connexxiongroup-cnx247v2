@@ -3,18 +3,18 @@
 namespace App\Http\Livewire\Backend\User\Settings;
 
 use Livewire\Component;
-use App\EmergencyContact;
+use App\NextKin as NextOfKin;
 use Auth;
-
-class Emergency extends Component
+class NextKin extends Component
 {
     public $full_name, $email, $mobile_no, $relationship, $notify, $address;
     public $btn_text = "Submit";
     public $contacts, $contact, $contact_id;
     public $edit_mode;
+
     public function render()
     {
-        return view('livewire.backend.user.settings.emergency');
+        return view('livewire.backend.user.settings.next-kin');
     }
 
     public function mount(){
@@ -22,14 +22,14 @@ class Emergency extends Component
     }
 
     public function getContent(){
-        $this->contacts = EmergencyContact::where('tenant_id', Auth::user()->tenant_id)
+        $this->contacts = NextOfKin::where('tenant_id', Auth::user()->tenant_id)
                                             ->where('user_id', Auth::user()->id)
                                             ->get();
     }
     public function editContact($id){
         $this->edit_mode = 1;
         $this->contact_id = $id;
-        $this->contact = EmergencyContact::where('tenant_id', Auth::user()->tenant_id)
+        $this->contact = NextOfKin::where('tenant_id', Auth::user()->tenant_id)
                                             ->where('user_id', Auth::user()->id)
                                             ->where('id', $id)
                                             ->first();
@@ -40,7 +40,7 @@ class Emergency extends Component
         $this->relationship = $this->contact['relationship'];
         $this->btn_text = "Save changes";
     }
-    public function addEmergencyContact(){
+    public function addContact(){
         $this->validate([
             'full_name'=>'required',
             'email'=>'required|email',
@@ -49,7 +49,7 @@ class Emergency extends Component
             'relationship'=>'required'
         ]);
         if($this->edit_mode == 0){
-            $contact = new EmergencyContact;
+            $contact = new NextOfKin;
             $contact->full_name = $this->full_name;
             $contact->email = $this->email;
             $contact->address = $this->address;
@@ -68,7 +68,7 @@ class Emergency extends Component
             $this->getContent();
             return back();
         }else{
-            $contact = EmergencyContact::where('tenant_id', Auth::user()->tenant_id)
+            $contact = NextOfKin::where('tenant_id', Auth::user()->tenant_id)
                                         ->where('user_id', Auth::user()->id)
                                         ->where('id', $this->contact_id)
                                         ->first();

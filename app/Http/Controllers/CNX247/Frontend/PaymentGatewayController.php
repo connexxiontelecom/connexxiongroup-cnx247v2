@@ -95,7 +95,7 @@ class PaymentGatewayController extends Controller
         $current = Carbon::now();
         $end_date = $current->addDays($duration);// $current_date->addDays($request->cover_days)
         $tenant_id = null;
-        $active_sub_key = "key_".substr(md5(time()),5,19 );
+        $active_sub_key = "key_".substr(sha1(time()),21,40 );
         if($paymentDetails['data']['status'] == 'success'){
             //register new tenant
             $latest_tenant = Tenant::orderBy('id', 'DESC')->first();
@@ -136,7 +136,7 @@ class PaymentGatewayController extends Controller
                 $member->sub_key = $active_sub_key;
                 $member->status = 1; //active;
                 $member->start_date = now();
-                $member->start_date = $end_date;
+                $member->end_date = $end_date;
                 $member->save();
                 #proceed to register new user account
                 $user = new User;
