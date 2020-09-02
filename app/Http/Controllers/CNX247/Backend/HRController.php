@@ -14,6 +14,8 @@ use App\Clocker;
 use App\Resignation;
 use App\Department;
 use App\QuestionSelf;
+use App\QuestionQuantitative;
+use App\QuestionQualitative;
 use App\User;
 use Auth;
 use DB;
@@ -86,9 +88,13 @@ class HRController extends Controller
     * Performance indicator
     */
     public function performanceIndicator(){
-        $selfQuestion = QuestionSelf::all();
+        $selfQuestions = QuestionSelf::all();
+        $quantitativeQuestions = QuestionQuantitative::all();
+        $qualitativeQuestions = QuestionQualitative::all();
         return view('backend.hr.indicator',[
-            'self'=>$selfQuestion
+            'self'=>$selfQuestions,
+            'quantitatives'=>$quantitativeQuestions,
+            'qualitatives'=>$qualitativeQuestions
         ]);
     }
 
@@ -258,6 +264,55 @@ class HRController extends Controller
             'question'=>'required'
         ]);
         $question =  QuestionSelf::where('tenant_id', Auth::user()->tenant_id)->where('id',$request->id)->first();
+        $question->question = $request->question;
+        $question->tenant_id = Auth::user()->tenant_id;
+        $question->added_by = Auth::user()->id;
+        $question->save();
+        return response()->json(['message'=>'Success! Changes saved.'],200);
+    }
+
+    public function quantitativeAssessmentQuestion(Request $request){
+        $this->validate($request,[
+            'question'=>'required'
+        ]);
+        $question = new QuestionQuantitative;
+        $question->question = $request->question;
+        $question->tenant_id = Auth::user()->tenant_id;
+        $question->added_by = Auth::user()->id;
+        $question->save();
+        return response()->json(['message'=>'Success! New question saved.'],200);
+    }
+    public function editQuantitativeAssessmentQuestion(Request $request){
+        $this->validate($request,[
+            'question'=>'required'
+        ]);
+        $question =  QuestionQuantitative::where('tenant_id', Auth::user()->tenant_id)
+                                            ->where('id',$request->id)
+                                            ->first();
+        $question->question = $request->question;
+        $question->tenant_id = Auth::user()->tenant_id;
+        $question->added_by = Auth::user()->id;
+        $question->save();
+        return response()->json(['message'=>'Success! Changes saved.'],200);
+    }
+    public function qualitativeAssessmentQuestion(Request $request){
+        $this->validate($request,[
+            'question'=>'required'
+        ]);
+        $question = new QuestionQualitative;
+        $question->question = $request->question;
+        $question->tenant_id = Auth::user()->tenant_id;
+        $question->added_by = Auth::user()->id;
+        $question->save();
+        return response()->json(['message'=>'Success! New question saved.'],200);
+    }
+    public function editQualitativeAssessmentQuestion(Request $request){
+        $this->validate($request,[
+            'question'=>'required'
+        ]);
+        $question =  QuestionQualitative::where('tenant_id', Auth::user()->tenant_id)
+                                            ->where('id',$request->id)
+                                            ->first();
         $question->question = $request->question;
         $question->tenant_id = Auth::user()->tenant_id;
         $question->added_by = Auth::user()->id;
