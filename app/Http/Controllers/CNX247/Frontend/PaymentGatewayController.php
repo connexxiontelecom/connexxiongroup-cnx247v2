@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use App\User;
 use App\TransactionReference;
 use App\ModuleManager;
+use App\Membership;
 use App\Tenant;
 use App\Industry;
 use Auth;
@@ -94,7 +95,7 @@ class PaymentGatewayController extends Controller
         $current = Carbon::now();
         $end_date = $current->addDays($duration);// $current_date->addDays($request->cover_days)
         $tenant_id = null;
-        #If you want to store payment details to db do like so
+        $active_sub_key = "key_".substr(md5(time()),5,19 );
         if($paymentDetails['data']['status'] == 'success'){
             //register new tenant
             $latest_tenant = Tenant::orderBy('id', 'DESC')->first();
@@ -124,9 +125,19 @@ class PaymentGatewayController extends Controller
                 $tenant->start = now();
                 $tenant->end = $end_date;
                 $tenant->tenant_id = $tenant_id;
+                $tenant->active_sub_key = $active_sub_key;
                 $tenant->slug = substr(sha1(time()),29,40 );
                 $tenant->save();
-                //$id = $tenant_id; //new tenantID
+
+                #membership
+                $member = new Membership;
+                $member->tenant_id = $tenant_id;
+                $member->plan_id = $plan;
+                $member->sub_key = $active_sub_key;
+                $member->status = 1; //active;
+                $member->start_date = now();
+                $member->start_date = $end_date;
+                $member->save();
                 #proceed to register new user account
                 $user = new User;
                 $user->first_name = $first_name ?? 'No First Name';

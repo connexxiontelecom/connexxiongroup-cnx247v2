@@ -17,7 +17,7 @@ class CreateMembershipsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('plan_id');
-            $table->unsignedBigInteger('identifier')->nullable();
+            $table->string('sub_key')->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->tinyInteger('status')->default(1); //1=active; 0=inactive
