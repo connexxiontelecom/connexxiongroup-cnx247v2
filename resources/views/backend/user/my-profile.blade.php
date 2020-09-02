@@ -38,7 +38,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Birth Date</th>
-                                                                <td>October 25th, 1990</td>
+                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime(Auth::user()->birth_date))}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
@@ -50,7 +50,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Hire Date</th>
-                                                                <td>{{date('d M, Y', strtotime(Auth::user()->hire_date)) ?? '-'}}</td>
+                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime(Auth::user()->hire_date)) ?? '-'}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Start Date</th>
@@ -71,11 +71,11 @@
                                                         <tbody>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Gender</th>
-                                                                <td>Female</td>
+                                                                <td>-</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Marital Status</th>
-                                                                <td>Single</td>
+                                                                <td>-</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile</th>
@@ -83,11 +83,11 @@
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Department</th>
-                                                                <td>{{Auth::user()->departmenet_id ?? '-'}}</td>
+                                                                <td>{{Auth::user()->department->department_name ?? '-'}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Confirm Date</th>
-                                                                <td>{{date('d M, Y', strtotime(Auth::user()->confirm_date)) ?? '-'}}</td>
+                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime(Auth::user()->confirm_date)) ?? '-'}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
@@ -115,11 +115,45 @@
                             </div>
                             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                 <div class="accordion-content accordion-desc">
-                                    <p>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                        survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                    </p>
+                                    @php
+                                        $serial = 1;
+                                    @endphp
+                                    
+                                    @foreach(Auth::user()->experience as $exp)
+                                    <div class="col-md-12">
+                                        <ul class="list-view">
+                                            <li>
+                                                <div class="card list-view-media">
+                                                    <div class="card-block">
+                                                        <label class="badge badge-primary float-right">{{$serial++}}</label>
+                                                        <div class="media">
+                                                            <a class="media-left" href="{{route('view-profile', $exp->user->url)}}">
+                                                                <img src="/assets/images/avatars/thumbnails/{{$exp->user->avatar ?? 'avatar.png'}}" class="img-60" alt="{{$exp->user->first_name ?? ''}}">
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <div class="col-xs-12">
+                                                                    <h6 class="d-inline-block">
+                                                                        {{$exp->user->first_name ?? ''}} {{$exp->user->surname ?? ''}}</h6>
+                                                                    <label class="label label-info">{{$exp->user->position ?? '-'}}</label>
+                                                                </div>
+                                                                <div class="f-13 text-muted m-b-15">
+                                                                    {{$exp->organisation ?? ''}}
+                                                                </div>
+                                                                <p>{!! $exp->role_description !!}</p>
+                                                                <div class="m-t-15">
+                                                                    <div class="btn-group">
+                                                                        <label class="label label-primary">Start Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($exp->start_date))}}</label>
+                                                                        <label class="label label-danger">End Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($exp->end_date))}}</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -133,11 +167,44 @@
                             </div>
                             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                                 <div class="accordion-content accordion-desc">
-                                    <p>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                        survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                    </p>
+                                    @php
+                                    $index = 1;
+                                @endphp
+                                
+                                @foreach(Auth::user()->education as $edu)
+                                <div class="col-md-12">
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card list-view-media">
+                                                <div class="card-block">
+                                                    <label class="badge badge-primary float-right">{{$index++}}</label>
+                                                    <div class="media">
+                                                        <a class="media-left" href="{{route('view-profile', $edu->user->url)}}">
+                                                            <img src="/assets/images/avatars/thumbnails/{{$edu->user->avatar ?? 'avatar.png'}}" class="img-60" alt="{{$edu->user->first_name ?? ''}}">
+                                                        </a>
+                                                        <div class="media-body">
+                                                            <div class="col-xs-12">
+                                                                <h6 class="d-inline-block">
+                                                                    {{$edu->user->first_name ?? ''}} {{$edu->user->surname ?? ''}}</h6>
+                                                                <label class="label label-info">{{$edu->user->position ?? '-'}}</label>
+                                                            </div>
+                                                            <div class="f-13 text-muted m-b-15">
+                                                                {{$edu->institution ?? ''}}
+                                                            </div>
+                                                            <div class="m-t-15">
+                                                                <div class="btn-group">
+                                                                    <label class="label label-primary">Start Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($edu->start_date))}}</label>
+                                                                    <label class="label label-danger">End Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($edu->end_date))}}</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @endforeach
                                 </div>
                             </div>
                         </div>
@@ -151,11 +218,40 @@
                             </div>
                             <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
                                 <div class="accordion-content accordion-desc">
-                                    <p>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                        survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                    </p>
+                                    <div class="row">
+                                        @php
+                                            $n = 1;
+                                        @endphp
+                                        @foreach(Auth::user()->emergencyContact as $contact)
+                                            <div class="col-md-6" >
+                                                    <label class="badge badge-primary float-right">{{$n++}}</label>
+                                                <table class="table m-0" style="border-left:2px solid #ff000;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
+                                                            <td>{{$contact->full_name ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Relationship</th>
+                                                            <td>{{$contact->relationship ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
+                                                            <td>{{$contact->email ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile No.</th>
+                                                            <td>{{$contact->mobile ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
+                                                            <td>{{$contact->address ?? ''}} </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -169,11 +265,38 @@
                             </div>
                             <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
                                 <div class="accordion-content accordion-desc">
-                                    <p>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                        survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                    </p>
+                                    @php
+                                            $n = 1;
+                                        @endphp
+                                        @foreach(Auth::user()->nextKin as $contact)
+                                            <div class="col-md-6" >
+                                                    <label class="badge badge-primary float-right">{{$n++}}</label>
+                                                <table class="table m-0" style="border-left:2px solid #ff000;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
+                                                            <td>{{$contact->full_name ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Relationship</th>
+                                                            <td>{{$contact->relationship ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
+                                                            <td>{{$contact->email ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile No.</th>
+                                                            <td>{{$contact->mobile ?? ''}} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
+                                                            <td>{{$contact->address ?? ''}} </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        @endforeach
                                 </div>
                             </div>
                         </div>

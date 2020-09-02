@@ -47,7 +47,16 @@ class User extends Authenticatable
     * Each experience belongs to a user
     */
     public function experience(){
-        $this->hasMany(Experience::class);
+        return $this->hasMany(Experience::class, 'user_id');
+    }
+    public function education(){
+        return $this->hasMany(Education::class, 'user_id');
+    }
+    public function emergencyContact(){
+        return $this->hasMany(EmergencyContact::class, 'user_id');
+    }
+    public function nextKin(){
+        return $this->hasMany(NextKin::class, 'user_id');
     }
 
     //tenant-user relationship
@@ -56,6 +65,12 @@ class User extends Authenticatable
         //2. tenant_id on tenants table
         return $this->belongsTo(Tenant::class, 'tenant_id', 'tenant_id');
     }
+
+    //department - user relationship
+    public function department(){
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+
 
  /*    public function leaveWallet(){
         return $this->belongsTo(LeaveWallet::class);
