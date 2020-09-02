@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Clocker;
 use App\Resignation;
 use App\Department;
+use App\QuestionSelf;
 use App\User;
 use Auth;
 use DB;
@@ -85,8 +86,10 @@ class HRController extends Controller
     * Performance indicator
     */
     public function performanceIndicator(){
-
-        return view('backend.hr.indicator');
+        $selfQuestion = QuestionSelf::all();
+        return view('backend.hr.indicator',[
+            'self'=>$selfQuestion
+        ]);
     }
 
     /*
@@ -237,6 +240,29 @@ class HRController extends Controller
         }else{
             return redirect()->route('404');
         }
+    }
+
+    public function selfAssessmentQuestion(Request $request){
+        $this->validate($request,[
+            'question'=>'required'
+        ]);
+        $question = new QuestionSelf;
+        $question->question = $request->question;
+        $question->tenant_id = Auth::user()->tenant_id;
+        $question->added_by = Auth::user()->id;
+        $question->save();
+        return response()->json(['message'=>'Success! New question saved.'],200);
+    }
+    public function editSelfAssessmentQuestion(Request $request){
+        $this->validate($request,[
+            'question'=>'required'
+        ]);
+        $question =  QuestionSelf::where('tenant_id', Auth::user()->tenant_id)->where('id',$request->id)->first();
+        $question->question = $request->question;
+        $question->tenant_id = Auth::user()->tenant_id;
+        $question->added_by = Auth::user()->id;
+        $question->save();
+        return response()->json(['message'=>'Success! Changes saved.'],200);
     }
 
 }

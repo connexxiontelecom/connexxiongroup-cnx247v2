@@ -162,6 +162,8 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         Route::get('/timesheet', 'CNX247\Backend\HRController@timesheet')->name('timesheet');
     #Performance
         Route::get('/performance-indicator', 'CNX247\Backend\HRController@performanceIndicator')->name('performance-indicator');
+        Route::post('/performance-indicator/self', 'CNX247\Backend\HRController@selfAssessmentQuestion');
+        Route::post('/performance-indicator/self/edit', 'CNX247\Backend\HRController@editSelfAssessmentQuestion');
     #HR Constants
         Route::get('/hr/configurations', 'CNX247\Backend\HRController@hrConfigurations')->name('hr-configurations');
     #Assign permission(s) to employee
