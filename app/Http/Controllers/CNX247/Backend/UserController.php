@@ -11,6 +11,7 @@ use App\Clocker;
 use App\Qualification;
 use App\Education;
 use App\PlanFeature;
+use App\QueryEmployee;
 use Auth;
 use Image;
 
@@ -82,10 +83,11 @@ class UserController extends Controller
     public function administration(){
         $resignations = Resignation::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
         $attendance = Clocker::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
-
+        $queries = QueryEmployee::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
         return view('backend.user.administration',[
             'resignations'=>$resignations,
-            'attendance'=>$attendance
+            'attendance'=>$attendance,
+            'queries'=>$queries
         ]);
     }
     /*

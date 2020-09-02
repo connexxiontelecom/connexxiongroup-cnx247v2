@@ -59,9 +59,9 @@
                                                             <div class="card">
                                                                 <div class="card-block">
                                                                     <h5 class="sub-title">Self-Performance Assessment Questions</h5>
-                                                                    <button class="btn btn-mini btn-primary float-right mb-2" type="button" data-toggle="modal" data-target="#selfQuestionModal"><i class="ti-plus mr-2"></i> Add New Question</button>
+                                                                    <button class="btn btn-mini btn-primary float-right mb-2 selfAssessLauncher" type="button" data-toggle="modal" data-target="#selfQuestionModal"><i class="ti-plus mr-2"></i> Add New Question</button>
                                                                     <div class="table-responsive">
-                                                                        <table class="table table-bordered">
+                                                                        <table class="table table-bordered" id="selfAssessmentTable">
                                                                             <thead>
                                                                                 <th>#</th>
                                                                                 <th>Question</th>
@@ -73,7 +73,19 @@
                                                                                 @php
                                                                                     $i = 1;
                                                                                 @endphp
-                                                                               
+                                                                               @foreach($self as $question)
+                                                                                    <tr>
+                                                                                        <td>{{$i++}}</td>
+                                                                                        <td>{!! strlen($question->question) > 81 ? substr($question->question,0,81).'...' : $question->question !!}</td>
+                                                                                        <td>
+                                                                                            <a href="{{route('view-profile', $question->user->url)}}">{{$question->user->first_name ?? ''}} {{$question->user->surname ?? ''}}</a>
+                                                                                        </td>
+                                                                                        <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($question->created_at))}}</td>
+                                                                                        <td>
+                                                                                            <a href="javascript:void(0);" data-toggle="modal" data-target="#selfQuestionModal" data-self-question="{{$question->question}}" data-sqid="{{$question->id}}" class="selfQuestionLauncherClass"> <i class="text-warning ti-pencil"></i> </a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                               @endforeach
                                                                             </tbody>
                                                                         </table>
                                                                     </div>
@@ -183,7 +195,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Question</label>
-                    <textarea class="form-control content" placeholder="Type question here..." wire:model.debounce.90000ms="question"></textarea>
+                    <textarea class="form-control content" placeholder="Type question here..." name="question" id="selfQuestion"></textarea>
                     @error('question')
                         <i>{{$message}}</i>
                     @enderror
@@ -193,7 +205,8 @@
                 <div class="btn-group d-flex justify-content-center">
                     <input type="hidden" id="projectId">
                     <button type="button" class="btn btn-danger btn-mini waves-effect " data-dismiss="modal"><i class="ti-close mr-2"></i>Close</button>
-                        <button type="submit" class="btn btn-primary btn-mini waves-effect waves-light"><i class="ti-check mr-2"></i>Submit</button>
+                    <button type="button" class="btn btn-warning btn-mini waves-effect waves-light" id="selfAssessChangesBtn"><i class="ti-pencil mr-2"></i>Save changes</button>
+                    <button type="button" class="btn btn-primary btn-mini waves-effect waves-light" id="selfAssessBtn"><i class="ti-check mr-2"></i>Submit</button>
                 </div>
             </div>
         </div>
@@ -259,4 +272,63 @@
 @section('extra-scripts')
 <script type="text/javascript" src="/assets/bower_components/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
+<script>
+    $(document).ready(function(){
+        $(document).on('click', '.selfAssessLauncher', function(e){
+            $('#selfAssessChangesBtn').hide();
+        });
+        $(document).on('click', '#selfAssessBtn', function(e){
+            e.preventDefault();
+            var question = tinymce.get('selfQuestion').getContent();
+            if(question == ''){
+                $.notify("Ooops! Kindly type question before submitting...", "error");
+            }else{
+                axios.post('/performance-indicator/self', {
+                    'question':question
+                })
+                .then(response=>{
+                    $.notify(response.data.message, "success");
+                    $("#selfAssessmentTable").load(location.href + " #selfAssessmentTable");
+                    $('#selfQuestionModal').modal('hide');
+                })
+                .catch(error=>{
+                    $.notify("Ooops! Something went wrong. Try again.", "error");
+
+                });
+            }
+        });
+
+        $(document).on('click', '.selfQuestionLauncherClass', function(e){
+            $('#selfAssessBtn').hide();
+            $('#selfAssessChangesBtn').show();
+            var question = $(this).data('self-question');
+            var id = $(this).data('sqid');
+            tinymce.get("selfQuestion").setContent(question);
+            $('#selfAssessChangesBtn').val(id);
+        });
+
+        $(document).on('click', '#selfAssessChangesBtn', function(e){
+            e.preventDefault();
+            var id = $(this).val();
+            var question = tinymce.get('selfQuestion').getContent();
+            if(question == ''){
+                $.notify("Ooops! Kindly type question before submitting...", "error");
+            }else{
+                axios.post('/performance-indicator/self/edit', {
+                    'question':question,
+                    'id':id
+                })
+                .then(response=>{
+                    $.notify(response.data.message, "success");
+                    $("#selfAssessmentTable").load(location.href + " #selfAssessmentTable");
+                    $('#selfQuestionModal').modal('hide');
+                })
+                .catch(error=>{
+                    $.notify("Ooops! Something went wrong. Try again.", "error");
+
+                });
+            }
+        });
+    });
+</script>
 @endsection
