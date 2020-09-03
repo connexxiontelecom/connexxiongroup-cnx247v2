@@ -168,6 +168,10 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         Route::post('/performance-indicator/quantitative/edit', 'CNX247\Backend\HRController@editQuantitativeAssessmentQuestion');
         Route::post('/performance-indicator/qualitative', 'CNX247\Backend\HRController@qualitativeAssessmentQuestion');
         Route::post('/performance-indicator/qualitative/edit', 'CNX247\Backend\HRController@editQualitativeAssessmentQuestion');
+        Route::get('/employees-appraisal', 'CNX247\Backend\HRController@employeePerformance')->name('employees-appraisal');
+        Route::post('/employee-appraisal', 'CNX247\Backend\HRController@storeAppraisal');
+        Route::post('/bulk/employee-appraisal', 'CNX247\Backend\HRController@storeBulkAppraisal');
+        Route::get('/appraisal-result/{appraisal}', 'CNX247\Backend\HRController@appraisalResult')->name('appraisal-result');
     #HR Constants
         Route::get('/hr/configurations', 'CNX247\Backend\HRController@hrConfigurations')->name('hr-configurations');
     #Assign permission(s) to employee

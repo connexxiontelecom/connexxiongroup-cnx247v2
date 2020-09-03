@@ -16,7 +16,9 @@ use App\Department;
 use App\QuestionSelf;
 use App\QuestionQuantitative;
 use App\QuestionQualitative;
+use App\EmployeeAppraisal;
 use App\User;
+use App\Supervisor;
 use Auth;
 use DB;
 
@@ -318,6 +320,60 @@ class HRController extends Controller
         $question->added_by = Auth::user()->id;
         $question->save();
         return response()->json(['message'=>'Success! Changes saved.'],200);
+    }
+
+    public function employeePerformance(){
+        $employees = User::where('tenant_id', Auth::user()->tenant_id)->get();
+        $supervisors = Supervisor::where('tenant_id', Auth::user()->tenant_id)->get();
+        $appraisals = EmployeeAppraisal::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
+        return view('backend.hr.employee-appraisal',
+        ['employees'=>$employees,
+        'supervisors'=>$supervisors,
+        'appraisals'=>$appraisals
+        ]);
+    }
+
+    public function storeAppraisal(Request $request){
+        $this->validate($request,[
+            'employee'=>'required',
+            'supervisor'=>'required',
+            'start_date'=>'required|date',
+            'end_date'=>'required|date|after_or_equal:start_date'
+        ]);
+        $appraisal = new EmployeeAppraisal;
+        $appraisal->employee = $request->employee;
+        $appraisal->supervisor = $request->supervisor;
+        $appraisal->start_date = $request->start_date;
+        $appraisal->end_date = $request->end_date;
+        $appraisal->appraisal_id = substr(sha1(time()), 25,40);
+        $appraisal->tenant_id = Auth::user()->tenant_id;
+        $appraisal->save();
+        return response()->json(['message'=>'Success! New appraisal registered.']);
+    }
+    public function storeBulkAppraisal(Request $request){
+        $this->validate($request,[
+            'employees'=>'required',
+            'supervisor'=>'required',
+            'start_date'=>'required|date',
+            'end_date'=>'required|date|after_or_equal:start_date'
+        ]);
+        $id = substr(sha1(time()), 25,40);
+        foreach($request->employees as $employee)
+        {
+            $appraisal = new EmployeeAppraisal;
+            $appraisal->employee = $employee;
+            $appraisal->supervisor = $request->supervisor;
+            $appraisal->start_date = $request->start_date;
+            $appraisal->end_date = $request->end_date;
+            $appraisal->appraisal_id = $id;
+            $appraisal->tenant_id = Auth::user()->tenant_id;
+            $appraisal->save();
+        }
+        return response()->json(['message'=>'Success! New appraisal registered.']);
+    }
+
+    public function appraisalResult($appraisal){
+        return view('backend.hr.employee-appraisal-result');
     }
 
 }
