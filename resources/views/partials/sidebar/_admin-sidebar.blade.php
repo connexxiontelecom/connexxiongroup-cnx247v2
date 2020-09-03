@@ -192,12 +192,12 @@
                 <ul class="pcoded-submenu">
                     <li class=" ">
                         <a href="{{route('performance-indicator')}}">
-                            <span class="pcoded-mtext">Indicator</span>
+                            <span class="pcoded-mtext">Performance Indicator</span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('employees')}}">
-                            <span class="pcoded-mtext">Appraisal</span>
+                        <a href="{{route('employees-appraisal')}}">
+                            <span class="pcoded-mtext">Employee Appraisal</span>
                         </a>
                     </li>
                     <li class=" ">
