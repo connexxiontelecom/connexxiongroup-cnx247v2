@@ -67,13 +67,13 @@
                 <div class="card-block p-t-3">
                     <div class="task-right">
                         <div class="task-right-header-users">
-                            <span data-toggle="collapse">Finishers</span>
+                            <span data-toggle="collapse">Top Achievers</span>
                         </div>
                         <div class="user-box assign-user taskboard-right-users">
                             <div class="media">
                                 <div class="media-left media-middle photo-table">
                                     <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-1.jpg" alt="Generic placeholder image">
+                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{Auth::user()->avatar ??'avatar.png'}}" alt="Generic placeholder image">
                                         <div class="live-status bg-danger"></div>
                                     </a>
                                 </div>

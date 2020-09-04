@@ -285,6 +285,7 @@ Route::post('/project/milestone', 'CNX247\Backend\ProjectController@createProjec
 #Workgroup routes
 Route::get('/workgroups', 'CNX247\Backend\WorkgroupController@index')->name('workgroups');
 Route::get('/workgroup/new', 'CNX247\Backend\WorkgroupController@showNewWorkgroupForm')->name('new-workgroup');
+Route::post('/workgroup/new', 'CNX247\Backend\WorkgroupController@storeWorkgroup');
 Route::get('/workgroup/view/{url}', 'CNX247\Backend\WorkgroupController@viewWorkgroup')->name('view-workgroup');
 Route::post('/workgroup/message', 'CNX247\Backend\WorkgroupController@sendMessage');
 Route::post('/workgroup/task/new', 'CNX247\Backend\WorkgroupController@createTask')->name('workgroup-task');
