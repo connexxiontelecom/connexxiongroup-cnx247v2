@@ -17,11 +17,13 @@
 @endsection
 
 @section('dialog-section')
-
 @endsection
 @section('extra-scripts')
 <script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
 <script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
 <script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+
+
+@stack('workgroup-script')
 @endsection

@@ -1,19 +1,17 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="card">
-            <div class="card-header">
-                <h5>Workgroups</h5>
-                <span>You can only access a workgroup to which you're a member. </span>
-                <a href="{{ route('new-workgroup') }}" class="float-right btn btn-primary btn-mini waves-effect waves-light" ><i class="ti-plus mr-2"></i>New Workgroup</a>
-            </div>
             <div class="card-block">
+                <h5 class="sub-title">Workgroups</h5>
+                <span>You can only access a workgroup to which you're a member. </span>
+                <a href="{{route('new-workgroup')}}" class="float-right btn btn-primary btn-mini waves-effect waves-light" ><i class="ti-plus mr-2"></i>New Workgroup</a>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="grid">
                             @if (count($groups) > 0)
                                 @foreach ($groups as $group)
                                     <figure class="effect-winston">
-                                        <img src="\assets\images\light-box\l2.jpg" alt="img30">
+                                        <img src="/assets/images/workgroup/medium/{{$group->group_image ?? 'cnx247.jpg'}}" alt="{{$group->group_name ?? ''}}">
                                         <figcaption>
                                             <h2 style="font-size: 18px; letter-spacing:1px; color:#fff;"> <a href="{{ route('view-workgroup', $group->url) }}" style="color: #fff;">{{ $group->group_name ?? ''}}</a> </h2>
                                             <span style="display:block; font-size:12px; letter-spacing:1px; text-transform:none; margin-top:30px;">{!! $group->description ?? ''!!}</span>
@@ -34,6 +32,25 @@
                 </div>
             </div>
         </div>
-        <!-- Gallery advance card end -->
     </div>
 </div>
+@push('workgroup-script')
+  <script>
+      $(document).ready(function(){
+
+        $(document).on('click', '#createWorkgroupBtn', function(e){
+            e.preventDefault();
+            var workgroup_name = $('#workgroup_name').val();
+            var members = $('#members').val();
+            var moderators = $('#moderators').val();
+            var group_image = $('#group_image').val();
+            var description = tinymce.get('description').getContent();
+           if(workgroup_name == '' && members == '' && moderators == '' && group_image == '' && description == ''){
+                $.notify("Ooops! All fields are required.", "error");
+           }else{
+            alert("okay");
+           }
+        });
+      });
+  </script>
+@endpush

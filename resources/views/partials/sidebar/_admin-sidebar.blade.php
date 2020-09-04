@@ -18,11 +18,6 @@
                             <span class="pcoded-mtext">CRM</span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="dashboard-analytics.htm">
-                            <span class="pcoded-mtext">Analytics</span>
-                        </a>
-                    </li>
                 </ul>
             </li>
             <li class="">
@@ -200,11 +195,11 @@
                             <span class="pcoded-mtext">Employee Appraisal</span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="{{route('employees')}}">
+                    <!--<li class=" ">
+                        <a href="">
                             <span class="pcoded-mtext">Goal Tracking</span>
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
             </li>
         </ul>

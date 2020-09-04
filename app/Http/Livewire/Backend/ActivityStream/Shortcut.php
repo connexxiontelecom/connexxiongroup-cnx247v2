@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Backend\ActivityStream;
 use Livewire\WithPagination;
 use Livewire\Component;
+use Carbon\Carbon;
 use App\Post;
 use App\PostComment;
 use App\PostLike;
@@ -15,6 +16,8 @@ class Shortcut extends Component
     use WithPagination;
     //public $posts = [];
     public $ongoing, $following, $assisting, $set_by_me;
+    public $birthdays;
+    public $events;
     //public $announcements = [];
     public $all_employees = true;
     public $compose_message;
@@ -25,7 +28,26 @@ class Shortcut extends Component
 
     public function render()
     {
-        $this->ongoing = Post::where('post_status',1)->where('tenant_id', Auth::user()->tenant_id)->count();
+        $now = Carbon::now();
+        $this->events = Post::where('tenant_id', Auth::user()->tenant_id)
+                                ->where('post_type', 'event')
+                                ->orderBy('id', 'DESC')
+                                ->take(5)
+                                ->get();
+        $this->ongoing = Post::where('post_status','in-progress')
+                                ->where('tenant_id', Auth::user()->tenant_id)
+                                ->where('post_type', 'task')
+                                ->count();
+        $this->set_by_me = Post::where('user_id',Auth::user()->id)
+                                ->where('tenant_id', Auth::user()->tenant_id)
+                                ->where('post_type', 'task')
+                                ->count();
+        $this->assisting = ResponsiblePerson::where('user_id',Auth::user()->id)
+                                ->where('tenant_id', Auth::user()->tenant_id)
+                                ->count();
+        $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
+                                ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
+                                ->take(5)->get();
         return view('livewire.backend.activity-stream.shortcut',
         ['posts'=> Post::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get(),
         'announcements'=>Post::where('post_type', 'announcement')

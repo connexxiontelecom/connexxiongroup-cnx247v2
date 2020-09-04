@@ -7,7 +7,7 @@
                         <div class="card-block">
                             <h5 class="f-w-400 text-muted mb-3 sub-title">{{ $group->group_name ?? '' }}</h5>
 
-                            <img class="profile-bg-img img-fluid" src="\assets\images\user-profile\bg-img1.jpg" alt="bg-img">
+                            <img class="profile-bg-img img-fluid" src="/assets/images/workgroup/cover/{{$group->group_image ?? 'cnx247.jpg'}}" alt="bg-img">
                             <p class="text-muted">{!! $group->description !!}</p>
                             <div class="team-box p-b-20">
                                 <p class="d-inline-block m-r-20 f-w-400 mr-2">
