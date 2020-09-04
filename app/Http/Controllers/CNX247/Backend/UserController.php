@@ -4,6 +4,9 @@ namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Paystack;
 use App\User;
 use App\Notification;
 use App\Resignation;
@@ -13,8 +16,11 @@ use App\Education;
 use App\PlanFeature;
 use App\QueryEmployee;
 use App\EmployeeAppraisal;
+use App\ModuleManager;
+use App\IdeaBox;
 use Auth;
 use Image;
+use DB;
 
 class UserController extends Controller
 {
@@ -152,5 +158,59 @@ class UserController extends Controller
         $plans = PlanFeature::orderBy('price', 'ASC')->get();
         return view('backend.user.our-pricing', ['plans'=>$plans]);
     }
+
+    public function myIdeas(){
+        $myIdeas = IdeaBox::where('tenant_id', Auth::user()->tenant_id)
+                        ->where('user_id', Auth::user()->id)->get();
+        return view('backend.user.my-ideas',['myIdeas'=>$myIdeas]);
+    }
+    public function submitIdea(Request $request){
+        $this->validate($request,[
+            'subject'=>'required',
+            'content'=>'required',
+            'visibility'=>'required'
+        ]);
+        $idea = new IdeaBox;
+        $idea->tenant_id = Auth::user()->tenant_id;
+        $idea->user_id = Auth::user()->id;
+        $idea->content = $request->content;
+        $idea->subject = $request->subject;
+        $idea->visibility = $request->visibility;
+        $idea->save();
+        session()->flash("success", "<strong>Success!</strong> New idea submitted.");
+        return redirect()->route('my-ideas');
+    }
+
+    public function renewMembership($timestamp, $plan){
+        $chosen_plan = PlanFeature::where('slug', $plan)->first();
+        $permissionObj = DB::table('role_has_permissions')
+        ->select('permission_id')
+        ->where('role_id', $chosen_plan->plan_id)
+        ->distinct()
+        ->get();
+        $permissionIds = array();
+        foreach ($permissionObj as $permit) {
+            array_push($permissionIds,$permit->permission_id);
+        }
+        $moduleObj = Permission::select('module')->whereIn('id', $permissionIds)->distinct()->get();
+        $moduleIds = array();
+        foreach($moduleObj as $mod){
+            array_push($moduleIds, $mod->module);
+        }
+        $modules = ModuleManager::whereIn('id', $moduleIds)->orderBy('module_name', 'ASC')->get();
+        return view('backend.user.preview-membership',
+        ['plan'=>$chosen_plan,
+        'modules'=>$modules
+        ]);
+    }
+
+    public function proceedToPay(Request $request){
+          $this->validate($request,[
+                  'email'=>'required',
+                  'first_name'=>'required',
+                  'amount'=>'required'
+              ]);
+              return Paystack::getAuthorizationUrl()->redirectNow();
+      }
 
 }

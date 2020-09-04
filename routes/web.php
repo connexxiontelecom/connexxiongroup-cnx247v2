@@ -142,8 +142,10 @@ Route::get('/settings/education', 'CNX247\Backend\UserController@education')->na
 Route::post('/settings/education', 'CNX247\Backend\UserController@storeEducation');
 Route::get('/settings/work-experience', 'CNX247\Backend\UserController@workExperience')->name('work-experience');
 Route::get('/p/our-pricing', 'CNX247\Backend\UserController@ourPricing')->name('our-pricing');
-
-
+Route::get('/my-ideas', 'CNX247\Backend\UserController@myIdeas')->name('my-ideas');
+Route::post('/submit-idea', 'CNX247\Backend\UserController@submitIdea');
+Route::get('/renew-membership/{timestamp}/{plan}', 'CNX247\Backend\UserController@renewMembership')->name('renew-membership');
+Route::post('/renew-membership/pay', 'CNX247\Backend\UserController@proceedToPay')->name('pay-membership');
 #HR routes
 Route::get('/hr-dashboard', 'CNX247\Backend\HRController@hrDashboard')->name('hr-dashboard');
 Route::get('/employees', 'CNX247\Backend\HRController@index')->name('employees');
