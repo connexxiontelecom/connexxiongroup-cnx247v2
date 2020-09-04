@@ -126,7 +126,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('chat-n-calls')}}">
+                                    <a href="{{route('my-ideas')}}">
                                         <i class="icofont icofont-brain-alt"></i> My Ideas
                                     </a>
                                 </li>
