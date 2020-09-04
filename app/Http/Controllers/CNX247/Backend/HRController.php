@@ -18,6 +18,9 @@ use App\QuestionQuantitative;
 use App\QuestionQualitative;
 use App\EmployeeAppraisal;
 use App\User;
+use App\AnswerSelf;
+use App\AnswerQuantitative;
+use App\AnswerQualitative;
 use App\Supervisor;
 use Auth;
 use DB;
@@ -357,7 +360,7 @@ class HRController extends Controller
             'start_date'=>'required|date',
             'end_date'=>'required|date|after_or_equal:start_date'
         ]);
-        $id = substr(sha1(time()), 25,40);
+        
         foreach($request->employees as $employee)
         {
             $appraisal = new EmployeeAppraisal;
@@ -365,15 +368,126 @@ class HRController extends Controller
             $appraisal->supervisor = $request->supervisor;
             $appraisal->start_date = $request->start_date;
             $appraisal->end_date = $request->end_date;
-            $appraisal->appraisal_id = $id;
+            $appraisal->appraisal_id = substr(sha1(time()), 25,40);
             $appraisal->tenant_id = Auth::user()->tenant_id;
             $appraisal->save();
         }
         return response()->json(['message'=>'Success! New appraisal registered.']);
     }
 
-    public function appraisalResult($appraisal){
-        return view('backend.hr.employee-appraisal-result');
+    public function selfAppraisal($appraisal_id){
+        $appraisal = EmployeeAppraisal::where('appraisal_id', $appraisal_id)
+                                        ->where('tenant_id', Auth::user()->tenant_id)
+                                        ->first();
+        if(!empty($appraisal) ){
+            $questions = QuestionSelf::where('tenant_id', Auth::user()->tenant_id)->get();
+            return view('backend.hr.employee-appraisal-self', 
+            ['questions'=>$questions, 'type'=>'self', 'appraisal_id'=>$appraisal_id]);
+        }else{
+            return redirect()->route('404');
+        }
+    }
+
+    public function storeSelfAppraisal(Request $request){
+       // return dd($request->all());
+        $this->validate($request,[
+            'questions'=>'required'
+        ]);
+        for($i = 0; $i<count($request->questions); $i++){
+            $self = new AnswerSelf;
+            $self->question_id = $request->questions[$i];
+            $self->answer = $request->answers[$i];
+            $self->appraisal_id = $request->appraisal_id;
+            $self->tenant_id = Auth::user()->tenant_id;
+            $self->user_id = Auth::user()->id;
+            $self->save();
+        }
+        $appraisal = EmployeeAppraisal::where('tenant_id', Auth::user()->tenant_id)
+                                        ->where('appraisal_id', $request->appraisal_id)->first();
+        if(!empty($appraisal) ){
+            $appraisal->employee_status = 1; //done
+            $appraisal->save();             
+        }
+        return redirect()->route('user-administration');
+    }
+    public function supervisorAppraisal($appraisal_id){
+        $appraisal = EmployeeAppraisal::where('appraisal_id', $appraisal_id)
+                                        ->where('tenant_id', Auth::user()->tenant_id)
+                                        ->first();
+        if(!empty($appraisal) ){
+            $quantitatives = QuestionQuantitative::where('tenant_id', Auth::user()->tenant_id)->get();
+            $qualitatives = QuestionQualitative::where('tenant_id', Auth::user()->tenant_id)->get();
+            return view('backend.hr.employee-appraisal-supervisor', 
+            [
+                'quantitatives'=>$quantitatives,
+                'qualitatives'=>$qualitatives,
+                'appraisal'=>$appraisal
+                ]);
+        }else{
+            return redirect()->route('404');
+        }
+    }
+
+    public function storeSupervisorAppraisal(Request $request){
+        //return dd($request->all());
+        $this->validate($request,[
+            'quantitative'=>'required',
+            'qualitative'=>'required',
+            'quantitative_rating'=>'required',
+            'qualitative_rating'=>'required'
+        ]);
+        for($i = 0; $i<count($request->quantitative); $i++){
+            $self = new AnswerQuantitative;
+            $self->question_id = $request->quantitative[$i];
+            $self->rating = $request->quantitative_rating[$i];
+            $self->appraisal_id = $request->appraisal_id;
+            $self->tenant_id = Auth::user()->tenant_id;
+            $self->user_id = $request->user_id;
+            $self->supervisor = Auth::user()->id;
+            $self->save();
+        }
+        for($i = 0; $i<count($request->qualitative); $i++){
+            $self = new AnswerQualitative;
+            $self->question_id = $request->qualitative[$i];
+            $self->rating = $request->qualitative_rating[$i];
+            $self->appraisal_id = $request->appraisal_id;
+            $self->tenant_id = Auth::user()->tenant_id;
+            $self->user_id = $request->user_id;
+            $self->supervisor = Auth::user()->id;
+            $self->save();
+        }
+        $appraisal = EmployeeAppraisal::where('tenant_id', Auth::user()->tenant_id)
+                                        ->where('appraisal_id', $request->appraisal_id)->first();
+        if(!empty($appraisal) ){
+            $appraisal->supervisor_status = 1; //done
+            $appraisal->appraisal_status = 1; //done
+            $appraisal->save();             
+        }
+        return redirect()->route('user-administration');
+    }
+
+    public function appraisalResult($appraisal_id){
+        $appraisal = EmployeeAppraisal::where('tenant_id', Auth::user()->tenant_id)
+                                        ->where('appraisal_id', $appraisal_id)
+                                        ->first();
+        $self = AnswerSelf::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('appraisal_id', $appraisal_id)
+                            ->get();
+        $qualitative = AnswerQualitative::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('appraisal_id', $appraisal_id)
+                            ->get();
+        $quantitative = AnswerQuantitative::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('appraisal_id', $appraisal_id)
+                            ->get();
+        if(!empty($self)  && !empty($qualitative) && !empty($quantitative) && !empty($appraisal) ){
+            return view('backend.hr.employee-appraisal-result',[
+                'appraisal'=>$appraisal,
+                'self'=>$self,
+                'qualitative'=>$qualitative,
+                'quantitative'=>$quantitative
+            ]);
+        }
+         
     }
 
 }

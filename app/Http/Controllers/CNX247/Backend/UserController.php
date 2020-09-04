@@ -12,6 +12,7 @@ use App\Qualification;
 use App\Education;
 use App\PlanFeature;
 use App\QueryEmployee;
+use App\EmployeeAppraisal;
 use Auth;
 use Image;
 
@@ -84,10 +85,18 @@ class UserController extends Controller
         $resignations = Resignation::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
         $attendance = Clocker::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
         $queries = QueryEmployee::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
+        $myAppraisals = EmployeeAppraisal::where('employee', Auth::user()->id)
+                                            ->where('tenant_id',Auth::user()->tenant_id)
+                                            ->get();
+        $supervisors = EmployeeAppraisal::where('supervisor', Auth::user()->id)
+                                            ->where('tenant_id',Auth::user()->tenant_id)
+                                            ->get();
         return view('backend.user.administration',[
             'resignations'=>$resignations,
             'attendance'=>$attendance,
-            'queries'=>$queries
+            'queries'=>$queries,
+            'myAppraisals'=>$myAppraisals,
+            'supervisors'=>$supervisors
         ]);
     }
     /*
