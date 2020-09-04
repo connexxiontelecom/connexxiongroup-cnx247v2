@@ -57,4 +57,18 @@ $(function() {
             content_css: []
         });
     }
+    //Tinymce editor
+    if ($(".inlineContent").length) {
+        tinymce.init({
+            selector: ".inlineContent",
+            inline: true,
+            plugins: [
+                "advlist autolink lists  charmap print preview anchor",
+                "visualblocks code",
+                "insertdatetime contextmenu paste"
+            ],
+            toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent"
+        });
+    }
+
 });

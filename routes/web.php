@@ -171,7 +171,11 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         Route::get('/employees-appraisal', 'CNX247\Backend\HRController@employeePerformance')->name('employees-appraisal');
         Route::post('/employee-appraisal', 'CNX247\Backend\HRController@storeAppraisal');
         Route::post('/bulk/employee-appraisal', 'CNX247\Backend\HRController@storeBulkAppraisal');
-        Route::get('/appraisal-result/{appraisal}', 'CNX247\Backend\HRController@appraisalResult')->name('appraisal-result');
+        Route::get('/employee-self-appraisal/{appraisal_id}', 'CNX247\Backend\HRController@selfAppraisal')->name('employee-self-appraisal');
+        Route::post('/employee-self-appraisal', 'CNX247\Backend\HRController@storeSelfAppraisal')->name('store-self-appraisal');
+        Route::get('/employee-supervisor-appraisal/{appraisal_id}', 'CNX247\Backend\HRController@supervisorAppraisal')->name('employee-supervisor-appraisal');
+        Route::post('/employee-supervisor-appraisal', 'CNX247\Backend\HRController@storeSupervisorAppraisal')->name('store-supervisor-appraisal');
+        Route::get('/appraisal-result/{appraisal_id}', 'CNX247\Backend\HRController@appraisalResult')->name('appraisal-result');
     #HR Constants
         Route::get('/hr/configurations', 'CNX247\Backend\HRController@hrConfigurations')->name('hr-configurations');
     #Assign permission(s) to employee

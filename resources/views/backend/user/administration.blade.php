@@ -249,6 +249,141 @@
                         </div>
                     </div>
                 </div>
+                <div class="accordion-panel">
+                    <div class=" accordion-heading" role="tab" id="supervisorAccordion">
+                        <h3 class="card-title accordion-title">
+                        <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#supervisorCollapse" aria-expanded="false" aria-controls="supervisorCollapse">
+                            Employee Appraisal <i><small>( acting as  Supervisor)</small></i>
+                        </a>
+                    </h3>
+                    </div>
+                    <div id="supervisorCollapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="supervisorAccordion">
+                        <div class="accordion-content accordion-desc">
+                            <table class="table table-bordered mt-3">
+                                <thead>
+                                    <th>#</th>
+                                    <th>Employee</th>
+                                    <th>Appraisal Period</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </thead>
+                                @php
+                                    $app = 1;
+                                @endphp
+                                @foreach ($supervisors as $appraisal)
+                                    <tr>
+                                        <td>{{$app++}}</td>
+                                        <td>
+                                            <a href="{{route('view-profile', $appraisal->takenBy->url)}}">
+                                                <img src="/assets/images/avatars/thumbnails/{{$appraisal->takenBy->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$appraisal->takenBy->surname ?? ''}}">
+                                                {{$appraisal->takenBy->first_name ?? ''}} {{$appraisal->takenBy->surname ?? ''}}
+                                                @if($appraisal->employee_status == 0)
+                                                <sup class="badge badge-warning badge-top-right text-white ml-3">in-progress</sup>
+                                                @else
+                                                    <sup class="badge badge-success badge-top-right ml-3">Done</sup>
+    
+                                                @endif
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{date('M, Y', strtotime($appraisal->start_date))}} <label class="badge badge-info">to</label> 
+                                            {{date( 'M, Y', strtotime($appraisal->end_date))}}
+                                        </td>
+                                        <td>
+                                            @if($appraisal->appraisal_status == 0)
+                                                <label class="label label-warning">Pending</label>
+                                            @else
+                                                <label class="label label-success">Completed</label>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($appraisal->created_at))}}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                @if($appraisal->appraisal_status == 0)
+                                                    <a href="{{route('employee-supervisor-appraisal', $appraisal->appraisal_id)}}" class="btn btn-mini btn-danger"> <i class="ti-key"></i> Start</a>
+                                                @endif
+
+                                                @if($appraisal->appraisal_status == 1)
+                                                    <a href="{{route('appraisal-result', $appraisal->appraisal_id)}}" class="btn btn-mini btn-info"> <i class="icofont icofont-eye-alt"></i> View Result</a>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-panel">
+                    <div class=" accordion-heading" role="tab" id="appraiseeAccordion">
+                        <h3 class="card-title accordion-title">
+                        <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#appraiseeCollapse" aria-expanded="false" aria-controls="appraiseeCollapse">
+                            Employee Appraisal <i><small>(  acting as Appraisee)</small></i>
+                        </a>
+                    </h3>
+                    </div>
+                    <div id="appraiseeCollapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="appraiseeAccordion">
+                        <div class="accordion-content accordion-desc">
+                            <table class="table table-bordered mt-3">
+                                <thead>
+                                    <th>#</th>
+                                    <th>Supervisor</th>
+                                    <th>Appraisal Period</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </thead>
+                                @php
+                                    $app = 1;
+                                @endphp
+                                @foreach ($myAppraisals as $appraisal)
+                                    <tr>
+                                        <td>{{$app++}}</td>
+                                        <td>
+                                            <a href="{{route('view-profile', $appraisal->supervisedBy->url)}}">
+                                                <img src="/assets/images/avatars/thumbnails/{{$appraisal->supervisedBy->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$appraisal->supervisedBy->surname ?? ''}}">
+                                                {{$appraisal->supervisedBy->first_name ?? ''}} {{$appraisal->supervisedBy->surname ?? ''}}
+                                                @if($appraisal->supervisor_status == 0)
+                                                <sup class="badge badge-warning badge-top-right text-white ml-3">in-progress</sup>
+                                                @else
+                                                    <sup class="badge badge-success badge-top-right ml-3">Done</sup>
+    
+                                                @endif
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{date('M, Y', strtotime($appraisal->start_date))}} <label class="badge badge-info">to</label> 
+                                            {{date( 'M, Y', strtotime($appraisal->end_date))}}
+                                        </td>
+                                        <td>
+                                            @if($appraisal->appraisal_status == 0)
+                                                <label class="label label-warning">Pending</label>
+                                            @else
+                                                <label class="label label-success">Completed</label>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($appraisal->created_at))}}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                @if($appraisal->appraisal_status == 1)
+                                                    <a href="{{route('appraisal-result', $appraisal->appraisal_id)}}" class="btn btn-mini btn-info"> <i class="icofont icofont-eye-alt"></i> View Result</a>
+                                                @endif
+                                                @if($appraisal->employee_status == 0)
+                                                    <a href="{{route('employee-self-appraisal', $appraisal->appraisal_id)}}" class="btn btn-mini btn-info"> <i class="icofont icofont-eye-alt"></i> Start</a>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
