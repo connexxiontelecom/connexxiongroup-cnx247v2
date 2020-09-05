@@ -309,6 +309,7 @@ Route::get('/cnx247-drive', 'CNX247\Backend\CNX247DriveController@index')->name(
 Route::get('/cnx247-drive/show', 'CNX247\Backend\CNX247DriveController@show')->name('show-files');
 Route::post('/drive/make-directory', 'CNX247\Backend\CNX247DriveController@createDirectory');
 Route::post('/cnx247-drive/upload', 'CNX247\Backend\CNX247DriveController@uploadFile')->name('upload-file');
+Route::post('/upload-attachment', 'CNX247\Backend\CNX247DriveController@uploadAttachment');
 
 #Event routes
 Route::get('/my-events', 'CNX247\Backend\EventController@myEvents')->name('my-events');

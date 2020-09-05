@@ -19,6 +19,8 @@ class CreateFileModelsTable extends Migration
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('uploaded_by');
             $table->string('filename')->nullable();
+            $table->string('name')->nullable();
+            $table->double('size')->nullable();
             $table->string('password')->nullable();
             $table->timestamps();
         });
