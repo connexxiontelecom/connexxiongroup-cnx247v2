@@ -9,7 +9,6 @@
                 <a class="dropdown-item waves-light waves-effect" href="{{ route('business-trip') }}"><i class="ti-notepad mr-2"></i> Business Trip </a>
                 <a class="dropdown-item waves-light waves-effect" href="{{ route('leave-request') }}"><i class="ti-calendar mr-2"></i> Leave Approval </a>
                 <a class="dropdown-item waves-light waves-effect" href="{{ route('internal-memo') }}"><i class="ti-pin-alt mr-2"></i> Internal Memo </a>
-                <a class="dropdown-item waves-light waves-effect" href="{{ route('internal-memo') }}"><i class="ti-volume mr-2"></i> Announcement </a>
             </div>
         </div>
     </div>

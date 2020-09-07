@@ -1,8 +1,8 @@
 
 <div class="card">
-    <div class="card-header">
-        <h5>Assignments</h5> <br>
-        <div class="dropdown-primary dropdown open mt-2" data-intro="This is Card Header" data-step="1">
+    <div class="card-block">
+        <h5 class="sub-title mb-2">Assignments</h5> <br>
+        <div class="dropdown-primary dropdown open mt-2 mb-3" data-intro="This is Card Header" data-step="1">
             <button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-filter mr-2"></i>Filter</button>
             <div class="dropdown-menu" aria-labelledby="dropdown-2" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 39px, 0px); top: 0px; left: 0px; will-change: transform;">
                 <a class="dropdown-item waves-light waves-effect" href="#">All</a>
@@ -12,8 +12,6 @@
                 <a class="dropdown-item waves-light waves-effect" href="#">Declined</a>
             </div>
         </div>
-    </div>
-    <div class="card-block">
         @if(session()->has('success'))
         <div class="alert alert-success border-success">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

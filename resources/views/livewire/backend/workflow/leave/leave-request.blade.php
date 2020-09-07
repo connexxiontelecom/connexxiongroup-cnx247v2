@@ -30,11 +30,12 @@
                                 @endif
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <form wire:submit.prevent="submitLeaveRequest">
+                                        <form  action="{{route('leave-request')}}" method="post">
+                                            @csrf
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label class="">Reason</label>
-                                                    <input wire:model.lazy="reason" type="text" class="form-control form-control-normal" placeholder="Reason">
+                                                    <input name="reason" type="text" value="{{old('reason')}}" class="form-control form-control-normal" placeholder="Reason">
                                                     @error('reason')
                                                         <span class="mt-3">
                                                             <i class="text-danger">{{ $message }}</i>
@@ -43,7 +44,7 @@
                                                 </div>
                                                 <div class=" form-group col-md-6">
                                                     <label class="">Start Date</label>
-                                                    <input wire:model.lazy="start_date" type="datetime-local" class="form-control form-control-normal" placeholder="Start Date">
+                                                    <input name="start_date" type="datetime-local" class="form-control form-control-normal" placeholder="Start Date">
                                                     @error('start_date')
                                                         <span class="mt-3">
                                                             <i class="text-danger">{{ $message }}</i>
@@ -53,9 +54,9 @@
                                             </div>
                                             <div class="row">
                                                 <div class=" form-group col-md-6">
-                                                    <label class="">Due Date</label>
-                                                    <input wire:model.lazy="due_date" type="datetime-local" class="form-control form-control-normal" placeholder="Due Date">
-                                                    @error('due_date')
+                                                    <label class="">End Date</label>
+                                                    <input name="end_date" type="datetime-local" class="form-control form-control-normal" placeholder="End Date">
+                                                    @error('end_date')
                                                         <span class="mt-3">
                                                             <i class="text-danger">{{ $message }}</i>
                                                         </span>
@@ -102,17 +103,64 @@
                     </div>
                     <div class="tab-pane" id="businessProcessTab" role="tabpanel">
                         <div class="card">
-                            <div class="card-header">
-                                @include('backend.workflow.common._run-business-process')
-                                <strong>Business Process Name: </strong> Expense Report
-                                <p><strong>Business Process Description:</strong> This process sends an expense report for an approval using the Company Structure's hierarchy. When the approval reaches a designated "Final Approver", it is completed. Notifications of the report's progress are sent out at various stages</p>
                             </div>
                             <div class="card-block">
-                                <button class="btn btn-out-dashed btn-inverse btn-square btn-sm waves-effect" class="nav nav-tabs md-tabs" role="tablist" data-toggle="tab" href="#businessProcessConstants" role="tab" type="button">Set Request Constants</button>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="dt-responsive table-responsive">
+                                            <table id="simpletable" class="table table-striped table-bordered nowrap" style="margin-top: 10px;">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Title</th>
+                                                    <th>Description</th>
+                                                    <th>Status</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+                                                        $serial = 1;
+                                                    @endphp
+                                                    @foreach ($leaves as $leave)
+                                                        <tr>
+                                                            <td>{{$serial++}}</td>
+                                                            <td>
+                                                                <a href="{{route('view-workflow-task', $leave->post_url)}}">{{$leave->post_title ?? ''}}</a></td>
+                                                            <td>{!! strlen($leave->post_content) > 75 ? substr($leave->post_content,0,75).'...' : $leave->post_content !!}</td>
+                                                            <td>
+                                                                @switch($leave->post_status)
+                                                                    @case('in-progress')
+                                                                        <label for="" class="label label-warning">in-progress</label>
+                                                                        @break
+                                                                    @case('declined')
+                                                                        <label for="" class="label label-danger">Declined</label>
+                                                                        @break
+                                                                    @case('approved')
+                                                                        <label for="" class="label label-success">Approved</label>
+                                                                        @break
+                                                                    @default
+
+                                                                @endswitch
+                                                            </td>
+                                                            <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($leave->created_at))}}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                <tfoot>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Title</th>
+                                                    <th>Description</th>
+                                                    <th>Status</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- set business constants-->
-                            @livewire('backend.workflow.common.business-constant')
-                            <!--/ set business constants-->
                         </div>
                     </div>
                 </div>

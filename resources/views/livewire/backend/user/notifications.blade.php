@@ -28,6 +28,12 @@
                         @case('expense-request')
                                 <a href="{{route('view-workflow-task',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
+                        @case('leave-request')
+                                <a href="{{route('view-workflow-task',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
+                        @case('memo')
+                                <a href="{{route('view-internal-memo',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
                         @case('workgroup')
                         @default
                                 <a href="{{route('view-workgroup-invitation',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">

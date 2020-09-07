@@ -16,7 +16,7 @@
     .md-content h3{
         border-radius: 0px !important;
     }
-    
+
 </style>
 @endsection
 
@@ -33,6 +33,9 @@
     <script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
     <script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
     <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
-    
+
+    <script type="text/javascript" src="/assets/bower_components/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
+
     @stack('memo-script')
 @endsection

@@ -47,6 +47,12 @@
                                                 @case('expense-request')
                                                         <a href="{{route('view-workflow-task',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                                         @break
+                                                @case('leave-request')
+                                                        <a href="{{route('view-workflow-task',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                                        @break
+                                                @case('memo')
+                                                        <a href="{{route('view-internal-memo',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                                        @break
                                                 @case('workgroup')
                                                 @default
                                                         <a href="{{route('view-workgroup-invitation',$notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>

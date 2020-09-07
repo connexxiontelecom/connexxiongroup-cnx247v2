@@ -1,128 +1,87 @@
 <div class="row">
+    <div class="col-xl-12 col-lg-12  filter-bar">
+        @include('livewire.backend.workflow.common._workflow-slab')
+    </div>
     <div class="col-md-12">
-        <div class="sub-title">Internal Memo</div>
-        <ul class="nav nav-tabs md-tabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#expenseReportTab" role="tab">Internal Memo</a>
-                <div class="slide"></div>
-            </li>
-        </ul>      
+        <div class="card">
+            <div class="card-block">
+                <div class="sub-title">Internal Memo</div>
+                <ul class="nav nav-tabs md-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#expenseReportTab" role="tab">Internal Memo</a>
+                        <div class="slide"></div>
+                    </li>
+                </ul>
+                <div class="tab-content card-block">
+                    <div class="tab-pane active" id="expenseReportTab" role="tabpanel">
 
-        <div class="tab-content card-block">
-            <div class="tab-pane active" id="expenseReportTab" role="tabpanel">
-                
-                 <div class="card">
-                    <div class="card-header">
-                        @include('backend.workflow.common._run-business-process')
-                        <h5>Internal Memo</h5>
-                        <div class="card-header-right"><i class="icofont icofont-spinner-alt-5"></i></div>
-                    </div>
-                    <div class="card-block">
-                        @if(session()->has('success'))
-                            <div class="alert alert-success border-success" style="padding:5px;">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <i class="icofont icofont-close-line-circled"></i>
-                                </button>
-                                <strong>Success!</strong> {!! session('success') !!}
-                            </div>
-                        @endif
+                         <div class="card">
+                            <div class="card-block">
+                                <h5 class="sub-title">Internal Memo</h5>
+                                @if(session()->has('success'))
+                                    <div class="alert alert-success background-success" style="padding:5px;">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <i class="icofont icofont-close-line-circled"></i>
+                                        </button>
+                                        <strong>Success!</strong> {!! session('success') !!}
+                                    </div>
+                                @endif
 
-                    <form wire:submit.prevent="submitInternalMemo">
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Subject</label>
-                            <div class="col-sm-10">
-                                <input wire:model.lazy="subject" type="text" class="form-control form-control-normal" placeholder="Subject">
-                                @error('subject')
-                                    <span class="mt-3">
-                                        <i class="text-danger">{{ $message }}</i>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Content</label>
-                           <div class="col-sm-10">
-                                <textarea wire:model.lazy="content" class="form-control form-control-normal" placeholder="Content"></textarea>
-                                @error('content')
-                                    <span class="mt-3">
-                                        <i class="text-danger">{{ $message }}</i>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">To</label>
-                            <div class="col-sm-10 form-radio" wire:ignore>
-                                    <div class="radio radio-inline">
-                                        <label>
-                                            <input class="target" type="radio" value="all" name="receiver" checked="checked">
-                                            <i class="helper"></i>All employees
-                                        </label>
-                                    </div>
-                                    <div class="radio radio-inline">
-                                        <label>
-                                            <input class="target" type="radio" name="receiver" value="employees">
-                                            <i class="helper"></i>Specific employees
-                                        </label>
-                                    </div>
-                                    <div class="radio radio-inline radio-disable">
-                                        <label>
-                                            <input class="target" type="radio" name="receiver" value="department">
-                                            <i class="helper"></i>Department
-                                        </label>
-                                    </div>
-                                
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-10 col-md-4" wire:ignore>
-                                  <select wire:model.lazy="department" class="form-control form-control-normal">
-                                      <option disabled selected>Select department</option>
-                                      @foreach ($departments as $depart)
-                                        <option value="{{$depart->id}}">{{$depart->department_name}}</option>
-                                      @endforeach
-                                  </select>
-                                
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-10 col-md-4" wire:ignore>
-                                <select  id="employees" class="js-example-basic-multiple col-sm-12" multiple="multiple">
-                                    <option selected disabled>Add person(s)</option>
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
-                                    @endforeach
-                                </select>
-                                
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Attachment <br> <i>(Optional)</i></label>
-                            <div wire:ignore class="col-sm-10 col-md-2">
-                                <button class="btn btn-primary btn-sm" type="button" id="attachFileBtn">
-                                    <i class="ti-cloud-up mr-2"></i>Upload attachment</button>
-                                <input type="file" hidden id="attachFile">
-                            </div>
-                        </div>
-                        <div class=" row m-t-30 d-flex justify-content-center">
-                            <div class="preloader3 loader-block mb-3" wire:loading wire:target="submitExpenseReport">
-                                <div class="circ1 loader-primary"></div>
-                                <div class="circ2 loader-primary"></div>
-                                <div class="circ3 loader-primary"></div>
-                                <div class="circ4 loader-primary"></div>
-                            </div>
-                            <div class="col-sm-10 col-md-12">
-                                <div class="btn-group d-flex justify-content-center">
-                                    <button class="btn btn-default btn-sm"><i class="ti-na text-danger mr-2"></i>Cancel</button>
-                                    <button class="btn btn-primary btn-sm" wire:loading.class="bg-gray" type="submit"><i class="ti-save mr-2"></i>Submit</button>
+                            <form action="{{route('internal-memo')}}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group">
+                                    <label class="">Subject</label>
+                                    <input name="subject" value="{{old('subject')}}" type="text" class="form-control form-control-normal col-md-12" placeholder="Subject">
+                                    @error('subject')
+                                        <span class="mt-3">
+                                            <i class="text-danger">{{ $message }}</i>
+                                        </span>
+                                    @enderror
                                 </div>
-                            </div>
+                                <div class="form-group">
+                                    <label class="">Content</label>
+                                    <textarea name="content" class="form-control form-control-normal content col-md-10" placeholder="Type memo here...">{{old('content')}}</textarea>
+                                    @error('content')
+                                        <span class="mt-3">
+                                            <i class="text-danger">{{ $message }}</i>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label class="">To</label>
+                                    <select name="to" id="to" class="form-control col-md-4">
+                                        <option value="0">All employees</option>
+                                        <option value="1">Department</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="departmentSelection">
+                                    <label class=""> Department</label>
+                                        <select name="department" class="form-control form-control-normal col-md-4">
+                                            <option disabled selected>Select department</option>
+                                            @foreach ($departments as $depart)
+                                            <option value="{{$depart->id}}">{{$depart->department_name}}</option>
+                                            @endforeach
+                                        </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="">Attachment <br> <i>(Optional)</i></label>
+                                    <div  class="col-sm-10 col-md-2">
+                                        <input type="file" id="attachment" name="attachment">
+                                    </div>
+                                </div>
+                                <div class=" row m-t-30 d-flex justify-content-center">
+                                    <div class="col-sm-10 col-md-12">
+                                        <div class="btn-group d-flex justify-content-center">
+                                            <button class="btn btn-danger btn-mini"><i class="ti-close mr-2"></i>Cancel</button>
+                                            <button class="btn btn-primary btn-mini"  type="submit"><i class="ti-check mr-2"></i>Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
@@ -131,9 +90,17 @@
 @push('memo-script')
     <script>
         $(document).ready(function(){
-            $(document).on('click', '.target', function(e){
-                var data = $("[name='receiver']:checked").val();
-                @this.set('target', data);
+            $('#departmentSelection').hide();
+            $(document).on('change', '#to', function(e){
+                var selection = $(this).val();
+                switch(selection){
+                    case '0':
+                    $('#departmentSelection').hide();
+                    break;
+                    case '1':
+                    $('#departmentSelection').show();
+                    break;
+                }
             });
         });
     </script>
