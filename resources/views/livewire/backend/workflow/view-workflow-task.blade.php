@@ -19,18 +19,16 @@
                     </ul>
                 </div>
             </div>
-    
+
             <div class="card">
                     <div class="card-block">
-                        <div class="card-header">
-                            <h5 class="text-uppercase">Processors</h5>
-                        </div>
+                        <h5 class="sub-title text-center">Processors</h5>
                         <div class="row">
                             <div class="col-md-12 d-flex justify-content-center">
                                 <div class="card-block">
                                     <div class="team-box p-b-20">
                                         <div class="team-section d-inline-block">
-                                            <a href="#! "><img src="{{$request->user->avatar ?? '\assets\images\avatar-3.jpg'}}" style="border-radius: 50%; height:64px; width:64px;" data-toggle="tooltip" title="" alt=" " data-original-title="{{$request->user->first_name }} {{$request->user->surname ?? ''}} is the requester"></a>
+                                            <a href="#! "><img src="/assets/images/avatars/thumbnails/{{$request->user->avatar ?? 'avatar.png'}}" style="border-radius: 50%; height:64px; width:64px;" data-toggle="tooltip" title="" alt=" " data-original-title="{{$request->user->first_name }} {{$request->user->surname ?? ''}} is the requester"></a>
                                         </div>
                                     </div>
 
@@ -41,21 +39,21 @@
                                                 <div class="team-section d-inline-block">
                                                     @if($processor->status == 'in-progress')
                                                         <i class="ti-timer mr-1 text-warning"></i>
-                                                    @elseif($processor->status == 'approve')
+                                                    @elseif($processor->status == 'approved')
                                                         <i class="ti-check-box mr-1 text-success"></i>
-                                                    @elseif($processor->status == 'decline')
+                                                    @elseif($processor->status == 'declined')
                                                         <i class="ti-na text-danger"></i>
-                                                    @endif 
-                                                    <a href="#! "><img src="{{$processor->user->avatar ?? '\assets\images\avatar-3.jpg'}}" style="border-radius: 50%; height:64px; width:64px;" data-toggle="tooltip" title="" alt=" " data-original-title="{{$processor->user->first_name }} {{$processor->user->surname ?? ''}} {{$processor->status}} request"></a>
+                                                    @endif
+                                                    <a href="#! "><img src="/assets/images/avatars/thumbnails/{{$processor->user->avatar ?? 'avatar.png'}}" style="border-radius: 50%; height:64px; width:64px;" data-toggle="tooltip" title="" alt=" " data-original-title="{{$processor->user->first_name }} {{$processor->user->surname ?? ''}} {{$processor->status}} request"></a>
                                                     @if (end($processor))
                                                         <i class="zmdi zmdi-long-arrow-right"></i>
-                                                        
+
                                                     @endif
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
-                               
+
                             </div>
                         </div>
                         <div class="row">
@@ -63,10 +61,10 @@
                                 <div class="btn-group">
                                     @if($request->post_status == 'in-progress')
                                         @foreach($request->responsiblePersons as $app)
-                                        
+
                                         @if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
                                                 <button class="btn btn-out-dashed btn-danger btn-square btn-sm" wire:click="declineRequest({{ $request->id }})"><i class="ti-na mr-2"></i> DECLINE</button>
-                                                
+
                                                 <button type="button" class="btn btn-success btn-out-dashed btn-square btn-sm approveBtn" wire:click="approveRequest({{ $request->id }})"> <i class="ti-check-box mr-2"></i>
                                                     APPROVE
                                                 </button>
@@ -78,7 +76,7 @@
                                                     {{-- <button class="btn btn-out-dashed btn-success btn-square btn-sm" disabled><i class="ti-check-box mr-2"></i> APPROVE</button> --}}
                                             @endif
                                         @endforeach
-                                    @endif 
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -108,19 +106,6 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <i class="icofont icofont-spinner-alt-5"></i> Priority:
-                                </td>
-                                <td class="text-right">
-                                    <div class="btn-group">
-                                        <a href="#">
-                                            <i class="icofont icofont-upload m-r-5"></i>
-                                            {{$request->priority}}
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
                                     <i class="icofont icofont-ui-love-add"></i> Created by:
                                 </td>
                                 <td class="text-right">
@@ -135,7 +120,20 @@
                                 <td>
                                     <i class="icofont icofont-washing-machine"></i> Status:
                                 </td>
-                                <td class="text-right">{{$request->status ?? '-'}}</td>
+                                <td class="text-right">
+                                    @switch($request->post_status)
+                                        @case('in-progress')
+                                            <label for="" class="label label-warning">in-progress</label>
+                                            @break
+                                        @case('declined')
+                                            <label for="" class="label label-danger">Declined</label>
+                                            @break
+                                        @case('approved')
+                                            <label for="" class="label label-success">Approved</label>
+                                            @break
+                                        @default
+                                     @endswitch
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -144,83 +142,284 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-header-text">
-                        <i class="icofont icofont-attachment"></i> Shared Files
+                        <i class="icofont icofont-attachment"></i> Attachment(s)
                     </h5>
                 </div>
                 <div class="card-block task-attachment">
                     <ul class="media-list">
-                        <li class="media d-flex m-b-10">
-                            <div class="m-r-20 v-middle">
-                                <i class="icofont icofont-file-word f-28 text-muted"></i>
-                            </div>
-                            <div class="media-body">
-                                <a href="#" class="m-b-5 d-block">Overdrew_scowled.doc</a>
-                                <div class="text-muted">
-                                    <span>Size: 1.2Mb</span>
-                                    <span>
-                                        Added by
-                                        <a href="">Winnie</a>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="f-right v-middle text-muted">
-                                <i class="icofont icofont-download-alt f-18"></i>
-                            </div>
-                        </li>
-                        <li class="media d-flex m-b-10">
-                            <div class="m-r-20 v-middle">
-                                <i class="icofont icofont-file-powerpoint f-28 text-muted"></i>
-                            </div>
-                            <div class="media-body">
-                                <a href="#" class="m-b-5 d-block">And_less_maternally.pdf</a>
-                                <div class="text-muted">
-                                    <span>Size: 0.11Mb</span>
-                                    <span>
-                                        Added by
-                                        <a href="">Eugene</a>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="f-right v-middle text-muted">
-                                <i class="icofont icofont-download-alt f-18"></i>
-                            </div>
-                        </li>
-                        <li class="media d-flex m-b-10">
-                            <div class="m-r-20 v-middle">
-                                <i class="icofont icofont-file-pdf f-28 text-muted"></i>
-                            </div>
-                            <div class="media-body">
-                                <a href="#" class="m-b-5 d-block">The_less_overslept.pdf</a>
-                                <div class="text-muted">
-                                    <span>Size:5.9Mb</span>
-                                    <span>
-                                        Added by
-                                        <a href="">Natalie</a>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="f-right v-middle text-muted">
-                                <i class="icofont icofont-download-alt f-18"></i>
-                            </div>
-                        </li>
-                        <li class="media d-flex m-b-10">
-                            <div class="m-r-20 v-middle">
-                                <i class="icofont icofont-file-exe f-28 text-muted"></i>
-                            </div>
-                            <div class="media-body">
-                                <a href="#" class="m-b-5 d-block">Well_equitably.mov</a>
-                                <div class="text-muted">
-                                    <span>Size:20.9Mb</span>
-                                    <span>
-                                        Added by
-                                        <a href="">Jenny</a>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="f-right v-middle text-muted">
-                                <i class="icofont icofont-download-alt f-18"></i>
-                            </div>
-                        </li>
+                        @foreach ($attachments as $attach)
+
+                        @switch(pathinfo($attach->attachment, PATHINFO_EXTENSION))
+                                    @case('pptx')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$request->postAttachment->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+
+                                        @break
+                                    @case('pdf')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$request->name ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+
+                                    @case('csv')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$file->name ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('xls')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('xlsx')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('doc')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('doc')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('docx')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('jpeg')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('jpg')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('png')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('gif')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('ppt')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                    @case('txt')
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
+                                    @break
+                                @endswitch
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -246,19 +445,15 @@
                             </div>
                             <div class="mt-3">
                                 <label class="tx-11 font-weight-bold mb-0 text-uppercase">Amount:</label>
-                                <p class="text-muted">{{number_format($request->budget,2) ?? '-' }}</p>
+                                <p class="text-muted">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($request->budget,2) ?? '-' }}</p>
                                 @php
                                     $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
                                 @endphp
-                                <p><i>{{ ucfirst($f->format($request->budget))  }} {{ strtolower($request->currency) }} only</i></p>
+                                <p><i>{{ ucfirst($f->format($request->budget))  }} {{ strtolower($request->currency) }} {{Auth::user()->tenant->currency->name ?? 'Naira'}}(s) only</i></p>
                             </div>
                             <div class="mt-3">
                                 <label class="tx-11 font-weight-bold mb-0 text-uppercase">Currency:</label>
-                                <p class="text-muted">{{$request->currency ?? '-' }}</p>
-                            </div>
-                            <div class="mt-3">
-                                <label class="tx-11 font-weight-bold mb-0 text-uppercase">Attachment:</label>
-                                <p class="text-muted"><a href="/assets/request-attachments">{{$request->post_title ?? 'Download attachment'}}</a></p>
+                                <p class="text-muted">{{Auth::user()->tenant->currency->name ?? 'Naira'}}</p>
                             </div>
                         </div>
                     </div>
@@ -282,12 +477,12 @@
                                             <div class="media-annotation">{{$review->created_at->diffForHumans()}}</div>
                                         </div>
                                     </li>
-                                        
+
                                     @endforeach
-    
-                                @else 
+
+                                @else
                                     <p class="ml-4 text-center">There're no reviews for this task.</p>
-                                @endif 
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -296,7 +491,7 @@
                     <div class="col-md-12 btn-add-task">
                         <div class="input-group input-group-button">
                             <input type="text" wire:model.debounce.10000ms="review" class="form-control" placeholder="Leave review...">
-                            
+
                             <span class="input-group-addon btn btn-primary btn-sm" wire:click="leaveReviewBtn({{$request->id }})">
                                 <i class="icofont icofont-plus f-w-600"></i>
                                 Review
@@ -331,14 +526,14 @@
                                     <hr>
                                 </div>
                             </li>
-                            
+
                         @endforeach
                     </ul>
                     <div class="md-float-material d-flex">
                         <div class="col-md-12 btn-add-task">
                             <div class="input-group input-group-button">
                                 <input type="text" wire:model.debounce.10000ms="comment" class="form-control" placeholder="Leave comment...">
-                                
+
                                 <span class="input-group-addon btn btn-primary btn-sm" wire:click="leaveCommentBtn({{$request->id }})">
                                     <i class="icofont icofont-plus f-w-600"></i>
                                     Comment
@@ -348,7 +543,7 @@
                             <i class="text-danger">{{$message}}</i>
                             @enderror
                         </div>
-                       
+
                     </div>
                 </div>
             </div>

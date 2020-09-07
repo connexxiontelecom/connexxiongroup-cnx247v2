@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <div class="card-block">
-                    <h5 class="sub-title">Files</h5>
+                    <h5 class="sub-title">My Files</h5>
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

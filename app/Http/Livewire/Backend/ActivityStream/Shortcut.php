@@ -3,11 +3,13 @@
 namespace App\Http\Livewire\Backend\ActivityStream;
 use Livewire\WithPagination;
 use Livewire\Component;
+use App\Mail\RequisitionVerificationMail;
 use Carbon\Carbon;
 use App\Post;
 use App\PostComment;
 use App\PostLike;
 use App\ResponsiblePerson;
+use App\RequisitionVerification;
 use App\User;
 use Auth;
 
@@ -18,6 +20,9 @@ class Shortcut extends Component
     public $ongoing, $following, $assisting, $set_by_me;
     public $birthdays;
     public $events;
+    public $verificationCode;
+    public $actionStatus = 0;
+    public $verificationPostId;
     //public $announcements = [];
     public $all_employees = true;
     public $compose_message;
@@ -129,14 +134,30 @@ class Shortcut extends Component
     * Approve request
     */
     public function approveRequest($id){
-
+        $now = Carbon::now()->format('Y-m-d H:i');
         $approve = ResponsiblePerson::where('post_id', $id)
                     ->where('user_id', Auth::user()->id)
                     ->where('tenant_id', Auth::user()->tenant_id)
                     ->first();
-        $approve->status = 'approve';
-        $approve->save();
-        session()->flash("success", "<strong>Success!</strong> Your reaction to this request is taken.");
+        $request = Post::where('tenant_id', Auth::user()->tenant_id)
+                        ->where('id', $id)
+                        ->first();
+        if(!empty($approve) ){
+            $code = strtoupper(substr(sha1(time()),32,40));
+            $verify = new RequisitionVerification;
+            $verify->post_id = $id;
+            $verify->tenant_id = Auth::user()->tenant_id;
+            $verify->processor_id = Auth::user()->id;
+            $verify->expires = now(); //$now->addHours(2);
+            $verify->code = $code;
+            $verify->action = 'approved';
+            $verify->save();
+            #mail
+            \Mail::to($approve->user->email)->send(new RequisitionVerificationMail($approve->user, $request, $code));
+        }
+        $this->actionStatus = 1;
+        $this->verificationPostId = $id;
+        session()->flash("success_code", "<strong>Success!</strong> We just sent verification code to your registered email.");
 
     }
 
@@ -144,13 +165,66 @@ class Shortcut extends Component
     * Decline request
     */
     public function declineRequest($id){
-        $decline = ResponsiblePerson::where('post_id', $id)
-                    ->where('user_id', Auth::user()->id)
-                    ->where('tenant_id',Auth::user()->tenant_id)
+            $now = Carbon::now()->format('Y-m-d H:i');
+            $decline = ResponsiblePerson::where('post_id', $id)
+                        ->where('user_id', Auth::user()->id)
+                        ->where('tenant_id', Auth::user()->tenant_id)
+                        ->first();
+            $request = Post::where('tenant_id', Auth::user()->tenant_id)
+                        ->where('id', $id)
+                        ->first();
+            if(!empty($decline) ){
+                $code = strtoupper(substr(sha1(time()),32,40));
+                $verify = new RequisitionVerification;
+                $verify->post_id = $id;
+                $verify->tenant_id = Auth::user()->tenant_id;
+                $verify->processor_id = Auth::user()->id;
+                $verify->expires = now(); //$now->addHours(2);
+                $verify->code = $code;
+                $verify->action = 'declined';
+                $verify->save();
+            }
+            //\Mail::to($decline->user->email)->send(new RequisitionVerificationMail($decline->user, $request, $code));
+            $this->actionStatus = 1;
+            $this->verificationPostId = $id;
+            session()->flash("success_code", "<strong>Success!</strong> We just sent verification code to your registered email.");
+    }
+
+    public function verifyCode($id){
+        $verify = RequisitionVerification::where('post_id', $id)
+                    ->where('processor_id', Auth::user()->id)
+                    ->where('tenant_id', Auth::user()->tenant_id)
+                    ->where('status', 0)//in-progress
+                    ->where('code', $this->verificationCode)//in-progress
                     ->first();
-        $decline->status = 'decline';
-        $decline->save();
-        session()->flash("success", "<strong>Success!</strong> Your reaction to this request is taken.");
+        if(!empty($verify) ){
+            if($verify->code === $this->verificationCode){
+                $approve = ResponsiblePerson::where('post_id', $id)
+                    ->where('user_id', Auth::user()->id)
+                    ->where('tenant_id', Auth::user()->tenant_id)
+                    ->first();
+                    if(!empty($approve) ){
+                        /* $action = RequisitionVerification::where('tenant_id', Auth::user()->tenant_id)
+                                                            ->where('post_id', $id)
+                                                            ->where('processor_id', Auth::user()->id)
+                                                            ->first(); */
+                        $verify->status = 1;//verified
+                        $verify->save();
+                        $approve->status = $verify->action;
+                       $approve->save();
+                       $this->actionStatus = 0;
+                       $this->verificationPostId = null;
+                       $this->getContent();
+
+                       session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+                    }
+            }else{
+                session()->flash("error_code", "<strong>Ooops! Authentication code mis-match. Try again.</strong>");
+            }
+        }else{
+            session()->flash("error_code", "<strong>Ooops! There's no authentication code for this request.</strong>");
+        }
+
     }
 
 }
