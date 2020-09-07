@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration
             $table->unsignedBigInteger('stage_id')->nullable();
             $table->unsignedBigInteger('status_id')->nullable();
             $table->unsignedBigInteger('account_id')->nullable();
+            $table->unsignedBigInteger('attachment_id')->nullable();
             $table->double('budget')->nullable();
             $table->string('currency')->nullable();
             $table->string('sponsor')->nullable();

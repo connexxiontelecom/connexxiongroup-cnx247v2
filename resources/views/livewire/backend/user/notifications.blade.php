@@ -25,6 +25,9 @@
                         @case('query')
                             <a href="{{route('view-query',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
+                        @case('expense-request')
+                                <a href="{{route('view-workflow-task',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
                         @case('workgroup')
                         @default
                                 <a href="{{route('view-workgroup-invitation',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">

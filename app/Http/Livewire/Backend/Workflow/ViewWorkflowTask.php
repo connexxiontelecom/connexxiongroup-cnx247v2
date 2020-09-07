@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Backend\Workflow;
 use Livewire\Component;
 use App\Post;
 use App\PostComment;
+use App\PostAttachment;
 use App\PostRevision;
 use App\ResponsiblePerson;
 use Auth;
@@ -16,6 +17,7 @@ class ViewWorkflowTask extends Component
     public $likes;
     public $review;
     public $request;
+    public $attachments;
 
     public function render()
     {
@@ -32,6 +34,9 @@ class ViewWorkflowTask extends Component
     */
     public function getContent(){
         $this->request = Post::where('post_url', $this->link)->where('tenant_id',Auth::user()->tenant_id)->first();
+        $this->attachments = PostAttachment::where('post_id', $this->request->id)
+                            ->where('tenant_id',Auth::user()->tenant_id)
+                            ->get();
     }
 
     /*

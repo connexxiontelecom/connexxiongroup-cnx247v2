@@ -12,10 +12,13 @@
 @section('content')
 
 <div class="card">
-    <div class="card-header">
-        <h5>Your Notifications</h5>
-    </div>
     <div class="card-block">
+        <h5 class="sub-title">Your Notifications</h5>
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{url()->previous()}}" class="btn btn-mini mb-3 btn-secondary float-right"> <i class="ti-back-left mr-2"></i> Back</a>
+            </div>
+        </div>
         <div class="col-md-12">
             <ul class="list-view">
                 @foreach ($unread as $notification)
@@ -37,6 +40,12 @@
                                                         @break
                                                 @case('chat')
                                                     <a href="{{$notification->data['url']}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                        @break
+                                                @case('query')
+                                                        <a href="{{route('view-query',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                                        @break
+                                                @case('expense-request')
+                                                        <a href="{{route('view-workflow-task',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                                         @break
                                                 @case('workgroup')
                                                 @default

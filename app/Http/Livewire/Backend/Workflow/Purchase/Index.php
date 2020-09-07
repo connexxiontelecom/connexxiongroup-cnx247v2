@@ -12,32 +12,31 @@ use App\Post;
 use Auth;
 class Index extends Component
 {
-    public $title;
-    public $description, $amount, $attachment, $currency;
-
+    public $purchases;
     public function render()
     {
         return view('livewire.backend.workflow.purchase.index');
     }
 
+    public function mount(){
+        $this->getContent();
+    }
+    public function getContent(){
+        $this->purchases = Post::where('user_id', Auth::user()->id)
+                                ->where('tenant_id', Auth::user()->tenant_id)
+                                ->where('post_type', 'purchase-request')
+                                ->orderBy('id', 'DESC')
+                                ->get();
+    }
+
         //submit expense report
-        public function submitPurchaseRequest(){
-            //return dd($this->attachment);
+        /* public function submitPurchaseRequest(){
             $this->validate([
                 'title'=>'required',
                 'amount'=>'required',
                 'currency'=>'required'
             ]);
 
-                /*if(!empty($request->file('attachment'))){
-                $extension = $request->file('attachment');
-                $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
-                $dir = 'assets/request-attachments/';
-                $filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
-                $request->file('attachment')->move(public_path($dir), $filename);
-            }else{
-                $filename = '';
-            } */
             $url = substr(sha1(time()), 10,10);
             $expense = new Post;
             $expense->post_title = $this->title;
@@ -84,5 +83,5 @@ class Index extends Component
 
             session()->flash("success", "Purchase request saved.");
          return response()->json(['message'=>'Success! Purchase request submitted.']);
-        }
+        } */
 }

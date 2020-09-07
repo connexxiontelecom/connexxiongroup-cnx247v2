@@ -5,12 +5,12 @@ namespace App\Http\Controllers\CNX247\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Folder;
+use App\FileModel;
 use Auth;
 use Storage;
 use File;
 class CNX247DriveController extends Controller
 {
-    //public $root = 'public/assets/uploads/cnx247drive';
     public $root = 'assets/uploads/cnxdrive/';
     public function __construct()
     {
@@ -37,8 +37,12 @@ class CNX247DriveController extends Controller
         //$directory = Storage::allDirectories(public_path());
         $files = Storage::allFiles($this->root);
         $directories = Storage::allDirectories($this->root);
+        $myFiles = FileModel::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('uploaded_by', Auth::user()->id)->get();
+        $size = FileModel::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('uploaded_by', Auth::user()->id)->sum('size');
         //return dd($files);
-        return view('backend.cnx247drive.index', ['directories'=>$directories, 'files'=>$files]);
+        return view('backend.cnx247drive.index', ['directories'=>$directories, 'files'=>$files, 'myFiles'=>$myFiles,'size'=>$size]);
     }
 
     /*
@@ -94,6 +98,36 @@ class CNX247DriveController extends Controller
                //2.  Storage::putFile('public', $request->file('attachment')); //use storage function
         }else{
             return 'No file selected.';
+        }
+    }
+
+    public function uploadAttachment(Request $request){
+         $this->validate($request,[
+            'attachment'=>'required'
+        ]);
+        $consumption = FileModel::where('tenant_id', Auth::user()->tenant_id)
+                                ->where('uploaded_by', Auth::user()->id)->sum('size');
+        if($consumption > 50000048){
+            return response()->json(["error"=>"Ooops! You've reached your maximum storage space. Upgrade. ".$consumption], 400);
+        }else{
+            if(!empty($request->file('attachment'))){
+                $extension = $request->file('attachment');
+                $extension = $request->file('attachment')->getClientOriginalExtension();
+                $size = $request->file('attachment')->getSize();
+                $dir = 'assets/uploads/cnxdrive/';
+                $filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+                $request->file('attachment')->move(public_path($dir), $filename);
+            }else{
+                $filename = '';
+            }
+            $file = new FileModel;
+            $file->tenant_id = Auth::user()->tenant_id;
+            $file->uploaded_by = Auth::user()->id;
+            $file->filename = $filename;
+            $file->name = $request->filename;
+            $file->size = $size;
+            $file->save();
+            return response()->json(['message', 'Success! File uploaded.'], 200);
         }
     }
 }

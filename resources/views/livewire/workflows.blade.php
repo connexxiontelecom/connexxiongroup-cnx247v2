@@ -47,7 +47,7 @@
                                         <a href="{{ route('view-workflow-task', $request->post_url) }}">{!! strlen($request->post_title) > 18 ? substr($request->post_title, 0,15).'...' : $request->post_title !!}</a>
                                     </td>
                                     <td>
-                                        {{ strlen($request->post_content ) > 35 ? substr($request->post_content, 0,35).'...' : $request->post_content  }}
+                                        {!! strlen($request->post_content ) > 35 ? substr($request->post_content, 0,35).'...' : $request->post_content  !!}
                                     </td>
                                     <td>
                                         @if($request->post_status == 'in-progress')
@@ -64,12 +64,15 @@
                                         You are assigned to fulfill this request<br/>
                                         <div class="btn-group mt-2">
                                             @if($person->status == 'approved')
-                                                <button type="button" class="btn btn-danger btn-out-dashed btn-square btn-mini waves-effect waves-light declineBtn" wire:click="declineRequest({{ $request->id }})">
-                                                    <i class="icofont icofont-thumbs-down"></i>
-                                                Decline
-                                                </button>
+                                            <button type="button" class="btn btn-success btn-mini btn-out-dashed btn-square waves-effect waves-light" disabled>
+                                                Approved
+                                                <i class="icofont icofont-thumbs-up"></i>
+                                            </button>
                                             @elseif($person->status == 'declined')
-
+                                                <button type="button" class="btn btn-danger btn-mini btn-out-dashed btn-square waves-effect waves-light" disabled>
+                                                    Declined
+                                                    <i class="icofont icofont-thumbs-down"></i>
+                                                </button>
                                             @elseif($person->status == 'in-progress')
                                                 <button type="button" class="btn btn-danger btn-mini btn-out-dashed btn-square waves-effect waves-light declineBtn" wire:click="declineRequest({{ $request->id }})">
                                                     Decline

@@ -38,22 +38,22 @@
                                                                     <a href="{{ route('view-workflow-task', $mine->post_url) }}">{!! strlen($mine->post_title) > 18 ? substr($mine->post_title, 0,15).'...' : $mine->post_title !!}</a>
                                                                 </td>
                                                                 <td>
-                                                                    {{ strlen($mine->post_content ) > 35 ? substr($mine->post_content, 0,35).'...' : $mine->post_content  }}
+                                                                    {!! strlen($mine->post_content ) > 35 ? substr($mine->post_content, 0,35).'...' : $mine->post_content  !!}
                                                                 </td>
                                                                 <td>
                                                                     @if($mine->post_status == 'in-progress')
                                                                         <label class="badge badge-warning text-white special-badge"><small class="text-uppercase">in-progress</small></label>
                                                                     @elseif($mine->post_status == 'approved')
                                                                         <label class="badge badge-success special-badge"><small class="text-uppercase">approved</small></label>
-                                                                        
+
                                                                     @elseif($mine->post_status == 'declined')
                                                                         <label class="badge badge-danger special-badge"><small class="text-uppercase">declined</small></label>
                                                                     @endif
                                                                 </td>
                                                                 <td> <small class="text-uppercase">{{date('d M, Y | h:i a', strtotime($mine->created_at))}}</small> </td>
                                                             </tr>
-                            
-                                                                
+
+
                                                             @endforeach
                                                         </tbody>
                                                     </table>

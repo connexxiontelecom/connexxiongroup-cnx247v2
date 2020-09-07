@@ -12,12 +12,23 @@ use Auth;
 
 class BusinessTrip extends Component
 {
-    public $title, $start_date, $due_date, $destination;
-    public $purpose, $expense, $attachment, $currency;
+    public $trips;
 
     public function render()
     {
         return view('livewire.backend.workflow.business.business-trip');
+    }
+
+    public function mount(){
+        $this->getContent();
+    }
+
+    public function getContent(){
+        $this->trips = Post::where('user_id', Auth::user()->id)
+                                ->where('tenant_id', Auth::user()->tenant_id)
+                                ->where('post_type', 'business-trip')
+                                ->orderBy('id', 'DESC')
+                                ->get();
     }
 
         //submit expense report
@@ -32,16 +43,6 @@ class BusinessTrip extends Component
                 'due_date'=>'required',
                 'currency'=>'required'
             ]);
-
-                /*if(!empty($request->file('attachment'))){
-                $extension = $request->file('attachment');
-                $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
-                $dir = 'assets/request-attachments/';
-                $filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
-                $request->file('attachment')->move(public_path($dir), $filename);
-            }else{
-                $filename = '';
-            } */
             $url = substr(sha1(time()), 10,10);
             $expense = new Post;
             $expense->post_title = $this->title;

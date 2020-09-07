@@ -81,15 +81,19 @@ Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewW
 
 #Expense report route
 Route::get('/expense-report', 'CNX247\Backend\ExpenseController@index')->name('expense-report');
+Route::post('/expense-report', 'CNX247\Backend\ExpenseController@store');
 
 #Purchase request route
 Route::get('/purchase-request', 'CNX247\Backend\PurchaseRequestController@index')->name('purchase-request');
+Route::post('/purchase-request', 'CNX247\Backend\PurchaseRequestController@store');
 
 #General request route
 Route::get('/general-request', 'CNX247\Backend\GeneralRequestController@index')->name('general-request');
+Route::post('/general-request', 'CNX247\Backend\GeneralRequestController@store');
 
 #Business trip route
 Route::get('/business-trip', 'CNX247\Backend\BusinessTripController@index')->name('business-trip');
+Route::post('/business-trip', 'CNX247\Backend\BusinessTripController@store');
 
 #Leave request route
 Route::get('/leave-request', 'CNX247\Backend\LeaveRequestController@index')->name('leave-request');
@@ -309,6 +313,7 @@ Route::get('/cnx247-drive', 'CNX247\Backend\CNX247DriveController@index')->name(
 Route::get('/cnx247-drive/show', 'CNX247\Backend\CNX247DriveController@show')->name('show-files');
 Route::post('/drive/make-directory', 'CNX247\Backend\CNX247DriveController@createDirectory');
 Route::post('/cnx247-drive/upload', 'CNX247\Backend\CNX247DriveController@uploadFile')->name('upload-file');
+Route::post('/upload-attachment', 'CNX247\Backend\CNX247DriveController@uploadAttachment');
 
 #Event routes
 Route::get('/my-events', 'CNX247\Backend\EventController@myEvents')->name('my-events');
