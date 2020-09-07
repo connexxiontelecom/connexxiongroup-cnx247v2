@@ -97,12 +97,15 @@ Route::post('/business-trip', 'CNX247\Backend\BusinessTripController@store');
 
 #Leave request route
 Route::get('/leave-request', 'CNX247\Backend\LeaveRequestController@index')->name('leave-request');
+Route::post('/leave-request', 'CNX247\Backend\LeaveRequestController@store');
 
 #Internal memo routes
 Route::get('/internal-memo', 'CNX247\Backend\InternalMemoController@index')->name('internal-memo');
+Route::post('/internal-memo', 'CNX247\Backend\InternalMemoController@store');
+Route::get('/internal-memo/{url}', 'CNX247\Backend\InternalMemoController@view')->name('view-internal-memo');
 
 #Announcement routes
-Route::get('/announcement', 'CNX247\Backend\AnnouncementController@index')->name('internal-memo');
+Route::get('/announcement', 'CNX247\Backend\AnnouncementController@index')->name('announcement');
 
 #Chat n Calls routes
 Route::get('/conversation/{id}', 'CNX247\Backend\ChatnCallsController@getConversation')->name('conversation');

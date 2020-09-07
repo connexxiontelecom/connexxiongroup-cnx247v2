@@ -49,7 +49,6 @@ class InternalMemo extends Component
         $memo->user_id = Auth::user()->id;
         $memo->post_url = $url;
         $memo->tenant_id = Auth::user()->tenant_id;
-        //$expense->attachment = $filename ?? '';
         $memo->save();
         $id = $memo->id;
 

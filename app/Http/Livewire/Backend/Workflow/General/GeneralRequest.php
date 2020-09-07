@@ -18,17 +18,17 @@ class GeneralRequest extends Component
     {
         return view('livewire.backend.workflow.general.general-request');
     }
-        public function mount(){
-            $this->getContent();
-        }
+    public function mount(){
+        $this->getContent();
+    }
 
-        public function getContent(){
-            $this->general = Post::where('user_id', Auth::user()->id)
-                                    ->where('tenant_id', Auth::user()->tenant_id)
-                                    ->where('post_type', 'general-request')
-                                    ->orderBy('id', 'DESC')
-                                    ->get();
-        }
+    public function getContent(){
+        $this->general = Post::where('user_id', Auth::user()->id)
+                                ->where('tenant_id', Auth::user()->tenant_id)
+                                ->where('post_type', 'general-request')
+                                ->orderBy('id', 'DESC')
+                                ->get();
+    }
 
             //submit expense report
            /*  public function submitGeneralRequest(){

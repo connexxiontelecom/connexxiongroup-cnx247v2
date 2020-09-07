@@ -78,6 +78,14 @@
                     </div>
                 </div>
                 <div class="card-block">
+                    <div id="contextMenu" class="context-menu">
+                        <ul>
+                            <li>Download</li>
+                            <li>Open</li>
+                            <li>Share</li>
+                            <li>Delete</li>
+                        </ul>
+                    </div>
                     <h5 class="sub-title">My Files</h5>
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success">
@@ -101,8 +109,8 @@
 
                                         @break
                                     @case('pdf')
-                                    <div class="col-md-1">
-                                        <a href="button" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}" style="cursor: pointer;">
+                                    <div class="col-md-1" oncontextmenu="return showContextMenu(event);">
+                                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}" style="cursor: pointer;">
                                             <img src="/assets/formats/pdf.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"> <br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
@@ -264,6 +272,36 @@
     </div>
 @endsection
 @section('dialog-section')
+    <style>
+        .context-menu{
+            width: 200px;
+            height: auto;
+            box-shadow: 0 0 20px 0 #ccc;
+            position: absolute;
+            display: none;
+            z-index: 999;
+            background: #fff;
+        }
+        .context-menu ul{
+            list-style: none;
+            padding: 5px 0px 5px 0px;
+        }
+        .context-menu ul li:not(.separator){
+            padding: 10px 5px;
+            border-left: 2px solid transparent;
+            cursor: pointer;
+        }
+        .context-menu ul li:hover{
+            background: #eee;
+            border-left: 4px solid #A8CF45;
+        }
+        .separator{
+            height: 1px;
+            background: #ddd;
+            margin: 2px 0px;
+        }
+    </style>
+
 <div class="modal fade" id="new-folder" tabindex="-1" role="dialog">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
@@ -403,5 +441,24 @@
 
         });
     });
+    window.onclick = hideContextMenu;
+    window.onkeydown = listenKeys;
+    var contextmenu = document.getElementById('contextMenu');
+    //Context menu
+    function showContextMenu(event){
+        contextmenu.style.display = 'block';
+        //contextmenu.style.left = event.pageX + 'px';
+        //contextmenu.style.top = event.pageY + 'px';
+        return false;
+    }
+    function hideContextMenu(){
+        contextmenu.display = 'none';
+    }
+    function listenKeys(event){
+        var keyCode = event.which || event.keyCode;
+        if(keyCode == 27){
+            hideContextMenu();
+        }
+    }
 </script>
 @endsection

@@ -58,12 +58,14 @@ class BusinessTripController extends Controller
         $requisition->post_url = $url;
         $requisition->save();
         $id = $requisition->id;
-        $attachment = new PostAttachment;
-        $attachment->post_id = $id;
-        $attachment->user_id = Auth::user()->id;
-        $attachment->tenant_id = Auth::user()->tenant_id;
-        $attachment->attachment = $filename;
-        $attachment->save();
+        if(!empty($request->file('attachment'))){
+            $attachment = new PostAttachment;
+            $attachment->post_id = $id;
+            $attachment->user_id = Auth::user()->id;
+            $attachment->tenant_id = Auth::user()->tenant_id;
+            $attachment->attachment = $filename;
+            $attachment->save();
+        }
 
         $processors = RequestApprover::select('user_id')
                         ->where('request_type', 'business-trip')
