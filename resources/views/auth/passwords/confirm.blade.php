@@ -1,4 +1,4 @@
-@extends('layouts.auth-layout')
+@extends('layouts.frontend-layout')
 
 @section('title')
     Set New Password
@@ -12,7 +12,7 @@
     </style>
 @endsection
 
-@section('main-content')
+@section('content')
 
     @livewire('frontend.confirm-password')
 

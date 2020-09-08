@@ -1,30 +1,26 @@
-<section class="login-block">
-    <!-- Container-fluid starts -->
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <!-- Authentication card start -->
+<section class="bg-home d-flex align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 col-md-6">
+                <div class="mr-lg-5">
+                    <img src="/frontend/images/user/recovery.svg" class="img-fluid d-block mx-auto" alt="">
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-6">
+                <div class="card login_page shadow rounded border-0">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Recover Account</h4>
 
-                <form class="md-float-material form-material" wire:submit.prevent="setNewPassword">
-                    <div class="text-center">
-                        <img src="/assets/images/logo.png" alt="logo.png" width="120" height="75">
-                    </div>
-                    <div class="auth-box card">
-                        <div class="card-block">
-                            <div class="row m-b-20">
-                                <div class="col-md-12">
-                                    <h3 class="text-left sub-title">Set New Password</h3>
-                                </div>
-                            </div>
+                        <form class="login-form mt-4" wire:submit.prevent="setNewPassword">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     @if(session()->has('error'))
                                         <div class="alert alert-warning border-warning">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <i class="icofont icofont-close-line-circled"></i>
                                             </button>
-                                        
-                                           {!! session('error') !!}  
+
+                                           {!! session('error') !!}
 
                                         </div>
                                     @endif
@@ -33,52 +29,44 @@
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <i class="icofont icofont-close-line-circled"></i>
                                             </button>
-                                        
-                                           {!! session('success') !!}  
+
+                                           {!! session('success') !!}
 
                                         </div>
                                     @endif
+                                    <p class="text-muted">You've successfully verified your account. Enter new password below.</p>
+                                    <div class="form-group position-relative">
+                                        <label>Password <span class="text-danger">*</span></label>
+                                        <input  wire:model.debounce.500000ms="password" type="password"  class="form-control"  placeholder="New Password">
+                                        @error('password')
+                                        <span class="mt-5">
+                                                <i class="text-danger">{{ $message }}</i>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group position-relative">
+                                        <label>Re-type Password <span class="text-danger">*</span></label>
+                                        <input  wire:model.debounce.500000ms="password_confirmation" type="password"  class="form-control"  placeholder="Re-type Password">
+                                        @error('password_confirmation')
+                                        <span class="mt-5">
+                                                <i class="text-danger">{{ $message }}</i>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <input type="hidden" name="token" value="{{$link}}">
+                                    <button class="btn btn-primary btn-block" type="submit">Reset Password</button>
+                                </div>
+                                <div class="mx-auto">
+                                    <p class="mb-0 mt-3"><small class="text-dark mr-2">Remember your password ?</small> <a href="{{route('signin')}}" class="text-dark font-weight-bold">Sign in</a></p>
                                 </div>
                             </div>
-                            
-                            <div class="form-group form-primary">
-                                <label for="">New Password</label>
-                                <input wire:model.debounce.500ms="password" type="password"  class="form-control"  placeholder="New Password">
-                                @error('password')
-                                    <span class="mt-5">
-                                        <i class="text-danger">{{ $message }}</i>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="form-group form-primary">
-                                <label for="">Re-type Password</label>
-                                <input wire:model.debounce.500ms="password_confirmation" type="password"  class="form-control"  placeholder="Re-type Password">
-                                                           </div>
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn-sm btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Set New Password</button>
-                                </div>
-                                <div class="preloader3 loader-block" wire:loading wire.target="setNewPassword">
-                                    <div class="circ1 loader-primary"></div>
-                                    <div class="circ2 loader-primary"></div>
-                                    <div class="circ3 loader-primary"></div>
-                                    <div class="circ4 loader-primary"></div>
-                                </div>
-                            </div>
-                            <p class="f-w-600 text-right">Back to <a href="{{route('signin')}}">Sign in</a></p>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p class="text-inverse text-left m-b-0">Thank you.</p>
-                                    <p class="text-inverse text-left"><a href="{{route('home')}}"><b class="f-w-600">Back to Homepage</b></a></p>
-                                </div>
-                            </div>
-                        </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
-            <!-- end of col-sm-12 -->
         </div>
-        <!-- end of row -->
     </div>
-    <!-- end of container-fluid -->
 </section>
+

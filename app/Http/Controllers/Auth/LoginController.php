@@ -60,6 +60,8 @@ class LoginController extends Controller
         $email = DB::table('password_resets')->where('token', $token);
         if(!empty($email)){
             return view('auth.passwords.confirm');
+        }else{
+            return redirect()->route('404');
         }
     }
 }

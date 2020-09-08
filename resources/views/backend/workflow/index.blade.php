@@ -26,7 +26,7 @@
                             <div class="slide"></div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#workflowInActivityStream" role="tab" aria-expanded="false">Workflow in Activity Stream</a>
+                            <a class="nav-link" data-toggle="tab" href="#workflowInActivityStream" role="tab" aria-expanded="false">Statistics</a>
                             <div class="slide"></div>
                         </li>
                     </ul>
@@ -47,7 +47,7 @@
                         </div>
                         <div class="tab-pane" id="workflowInActivityStream" role="tabpanel" aria-expanded="false">
                             <p class="m-0">
-                                Workflow in Activity Stream
+                                @livewire('backend.workflow.statistics')
                             </p>
                         </div>
                     </div>

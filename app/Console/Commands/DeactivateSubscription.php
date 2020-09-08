@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Mail\DeactivateSubscriptionMail;
 use Carbon\Carbon;
 use App\Membership;
+use App\Tenant;
 
 class DeactivateSubscription extends Command
 {
@@ -42,8 +43,11 @@ class DeactivateSubscription extends Command
     {
         $now = Carbon::now();
         #Get the first tenant whose subscription will expire this today
-        $expiringToday = Membership::whereDay('created_at', $now->today())
+        /* $expiringToday = Membership::whereDay('created_at', $now->today())
                         ->get();
+        $tenants = Tenant::select('active_sub_key')
+                        ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
+                        ->take(5)->get(); */
        # \Mail::to()->send(new DeactivateSubscriptionMail());
         $this->info("Success! Deactivation reminder sent.");
     }

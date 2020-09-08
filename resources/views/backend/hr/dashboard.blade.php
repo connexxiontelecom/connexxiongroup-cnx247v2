@@ -18,7 +18,7 @@
                             <div class="card user-widget-card bg-c-blue">
                                 <div class="card-block">
                                     <i class="feather icon-users bg-simple-c-blue card1-icon"></i>
-                                    <h4>{{ number_format($employees)}}</h4>
+                                    <h4>{{ number_format(count($employees))}}</h4>
                                     <p>Employees</p>
                                     <a href="{{ route('employees') }}" class="more-info">More Info</a>
                                 </div>
@@ -28,7 +28,7 @@
                             <div class="card user-widget-card bg-c-pink">
                                 <div class="card-block">
                                     <i class="icofont icofont-tasks-alt bg-simple-c-pink card1-icon"></i>
-                                    <h4><small>{{ number_format($attendance) }}</small>/{{number_format($employees)}}</h4>
+                                    <h4><small>{{ number_format(count($attendance)) }}</small>/{{number_format(count($employees))}}</h4>
                                     <p>Attendance</p>
                                     <a href="{{ route('attendance') }}" class="more-info">More Info</a>
                                 </div>
@@ -65,131 +65,46 @@
     <div class="col-md-12">
         <div class="card table-card">
             <div class="card-header">
-                <h5>Applications</h5>
-                <div class="card-header-right">
-                    <ul class="list-unstyled card-option">
-                        <li><i class="feather icon-maximize full-card"></i></li>
-                        <li><i class="feather icon-minus minimize-card"></i></li>
-                        <li><i class="feather icon-trash-2 close-card"></i></li>
-                    </ul>
-                </div>
+                <h5>Emplyees</h5>
+                <p class="text-muted">This list of employees is selected at random.</p>
             </div>
             <div class="card-block">
                 <div class="table-responsive">
                     <table class="table table-hover  table-borderless">
                         <thead>
                             <tr>
-                                <th>
-                                    <div class="chk-option">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i class="cr-icon feather icon-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    Applicant</th>
+                                <th>#</th>
+                                <th>Employee</th>
                                 <th>Email</th>
                                 <th>Mobile</th>
-                                <th>Gender</th>
-                                <th>Action</th>
+                                <th>Position</th>
+                                <th>Hire Date</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div class="chk-option">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i class="cr-icon feather icon-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <h6>Able Pro</h6>
-                                        <p class="text-muted m-b-0">Powerful Admin Theme</p>
-                                    </div>
-                                </td>
-                                <td>16,300</td>
-                                <td><canvas id="app-sale1" height="50" width="100"></canvas></td>
-                                <td>$53</td>
-                                <td class="text-c-blue">$15,652</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="chk-option">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i class="cr-icon feather icon-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <h6>Photoshop</h6>
-                                        <p class="text-muted m-b-0">Design Software</p>
-                                    </div>
-                                </td>
-                                <td>26,421</td>
-                                <td><canvas id="app-sale2" height="50" width="100"></canvas></td>
-                                <td>$35</td>
-                                <td class="text-c-blue">$18,785</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="chk-option">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i class="cr-icon feather icon-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <h6>Guruable</h6>
-                                        <p class="text-muted m-b-0">Best Admin Template</p>
-                                    </div>
-                                </td>
-                                <td>8,265</td>
-                                <td><canvas id="app-sale3" height="50" width="100"></canvas></td>
-                                <td>$98</td>
-                                <td class="text-c-blue">$9,652</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="chk-option">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <label class="check-task">
-                                                <input type="checkbox" value="">
-                                                <span class="cr">
-                                                    <i class="cr-icon feather icon-check txt-default"></i>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="d-inline-block align-middle">
-                                        <h6>Flatable</h6>
-                                        <p class="text-muted m-b-0">Admin App</p>
-                                    </div>
-                                </td>
-                                <td>10,652</td>
-                                <td><canvas id="app-sale4" height="50" width="100"></canvas></td>
-                                <td>$20</td>
-                                <td class="text-c-blue">$7,856</td>
-                            </tr>
+                            @php
+                                $n = 1;
+                            @endphp
+                            @foreach ($employees->shuffle()->slice(0,5) as $employee)
+                                <tr>
+                                    <td>{{$n++}}</td>
+                                    <td>
+                                        <a href="{{route('view-profile',$employee->url)}}">
+                                            <img src="/assets/images/avatars/thumbnails/{{$employee->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}">
+                                            {{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}
+                                        </a>
+
+                                    </td>
+                                    <td>{{$employee->email ?? '-'}}</td>
+                                    <td>{{$employee->mobile}} </td>
+                                    <td>{{$employee->position ?? '-'}}</td>
+                                    <td class="text-c-blue">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($employee->hire_date))}}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                     <div class="text-center">
-                        <a href="#!" class=" b-b-primary text-primary">View all Projects</a>
+                        <a href="{{route('employees')}}" class=" b-b-primary text-primary">View all Projects</a>
                     </div>
                 </div>
             </div>
@@ -201,46 +116,31 @@
         <div class="col-xl-8 col-md-12">
             <div class="card latest-activity-card">
                 <div class="card-header">
-                    <h5>Latest Activity</h5>
+                    <h5>Latest Announcement</h5>
                 </div>
                 <div class="card-block">
                     <div class="latest-update-box">
-                        <div class="row p-t-20 p-b-30">
-                            <div class="col-auto text-right update-meta">
-                                <p class="text-muted m-b-0 d-inline">just now</p>
-                                <i class="feather icon-sunrise bg-simple-c-blue update-icon"></i>
+                        @if (count($announcement) > 0)
+                            @foreach ($announcement as $announce)
+                            <table class="table table-hover">
+                                <tr>
+                                    <td>
+                                        <a href="#"><h5>{{$announce->post_title ?? ''}}</h5></a>
+                                        {!! strlen($announce->post_content) > 80 ? substr($announce->post_content,0,80).'...' : $announce->post_content !!}
+                                    </td>
+                                </tr>
+                            </table>
+                            @endforeach
+                        @else
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p class="text-center text-muted">There're no recent announcements</p>
+                                </div>
                             </div>
-                            <div class="col">
-                                <h6>John Deo</h6>
-                                <p class="text-muted m-b-15">The trip was an amazing and a life changing experience!!</p>
-                                <img src="..\files\assets\images\mega-menu\01.jpg" alt="" class="img-fluid img-100 m-r-15 m-b-10">
-                                <img src="..\files\assets\images\mega-menu\03.jpg" alt="" class="img-fluid img-100 m-r-15 m-b-10">
-                            </div>
-                        </div>
-                        <div class="row p-b-30">
-                            <div class="col-auto text-right update-meta">
-                                <p class="text-muted m-b-0 d-inline">5 min ago</p>
-                                <i class="feather icon-file-text bg-simple-c-blue update-icon"></i>
-                            </div>
-                            <div class="col">
-                                <h6>Administrator</h6>
-                                <p class="text-muted m-b-0">Free courses for all our customers at A1 Conference Room - 9:00 am tomorrow!</p>
-                            </div>
-                        </div>
-                        <div class="row p-b-30">
-                            <div class="col-auto text-right update-meta">
-                                <p class="text-muted m-b-0 d-inline">3 hours ago</p>
-                                <i class="feather icon-map-pin bg-simple-c-blue update-icon"></i>
-                            </div>
-                            <div class="col">
-                                <h6>Jeny William</h6>
-                                <p class="text-muted m-b-15">Happy Hour! Free drinks at <span class="text-c-blue">Cafe-Bar all </span>day long!</p>
-                                <div id="markers-map" style="height:200px;width:100%"></div>
-                            </div>
-                        </div>
+                        @endif
                     </div>
                     <div class="text-right">
-                        <a href="#!" class=" b-b-primary text-primary">View all Activity</a>
+                        <a href="{{route('activity-stream')}}" class=" b-b-primary text-primary">View in activity stream</a>
                     </div>
                 </div>
             </div>
@@ -248,89 +148,63 @@
         <div class="col-xl-4 col-md-12">
             <div class="card feed-card">
                 <div class="card-header">
-                    <h5>Upcoming Deadlines</h5>
-                    <div class="card-header-right">
-                        <ul class="list-unstyled card-option">
-                            <li><i class="fa fa fa-wrench open-card-option"></i></li>
-                            <li><i class="fa fa-window-maximize full-card"></i></li>
-                            <li><i class="fa fa-minus minimize-card"></i></li>
-                            <li><i class="fa fa-refresh reload-card"></i></li>
-                            <li><i class="fa fa-trash close-card"></i></li>
-                        </ul>
-                    </div>
+                    <h5>Upcoming Birthdays</h5>
                 </div>
                 <div class="card-block">
-                    <div class="row m-b-25">
-                        <div class="col-auto p-r-0">
-                            <img src="..\files\assets\images\mega-menu\01.jpg" alt="" class="img-fluid img-50">
+                    @if (count($birthdays) > 0)
+                    @foreach ($birthdays as $birthday)
+                        <div class="user-box assign-user taskboard-right-users">
+                            <div class="media">
+                                <div class="media-left media-middle photo-table">
+                                    <a href="{{route('view-profile', $birthday->url)}}">
+                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$birthday->avatar ?? 'avatar.png'}}" alt="{{$birthday->first_name ?? ''}}">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <a href="{{route('view-profile', $birthday->url)}}">{{$birthday->first_name ?? ''}} {{$birthday->surname ?? ''}}</a> <br>
+                                    - {{date('d M', strtotime($birthday->birth_date))}}</small>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col">
-                            <h6 class="m-b-5">New able - Redesign</h6>
-                            <p class="text-c-pink m-b-0">2 Days Remaining</p>
-                        </div>
-                    </div>
-                    <div class="row m-b-25">
-                        <div class="col-auto p-r-0">
-                            <img src="..\files\assets\images\mega-menu\02.jpg" alt="" class="img-fluid img-50">
-                        </div>
-                        <div class="col">
-                            <h6 class="m-b-5">New Admin Dashboard</h6>
-                            <p class="text-c-pink m-b-0">Proposal in 6 Days</p>
-                        </div>
-                    </div>
-                    <div class="row m-b-25">
-                        <div class="col-auto p-r-0">
-                            <img src="..\files\assets\images\mega-menu\03.jpg" alt="" class="img-fluid img-50">
-                        </div>
-                        <div class="col">
-                            <h6 class="m-b-5">Logo Design</h6>
-                            <p class="text-c-green m-b-0">10 Days Remaining</p>
-                        </div>
-                    </div>
+                        <hr>
+                        @endforeach
+                    @else
+                        <p class="text-center text-muted">There're no birthdays</p>
+                    @endif
                     <div class="text-center">
-                        <a href="#!" class="b-b-primary text-primary">View all Feeds</a>
+                        <a href="{{route('employees')}}" class="b-b-primary text-primary">View all employees</a>
                     </div>
                 </div>
             </div>
             <div class="card feed-card">
                 <div class="card-header">
-                    <h5>Feeds</h5>
+                    <h5>Today's Attendance</h5>
                 </div>
                 <div class="card-block">
-                    <div class="row m-b-30">
-                        <div class="col-auto p-r-0">
-                            <i class="feather icon-bell bg-simple-c-blue feed-icon"></i>
+                    @if (count($attendance) > 0)
+                        @foreach ($attendance->take(5) as $attend)
+                            <div class="row m-b-30">
+                                <div class="col-auto p-r-0">
+                                    <a href="{{route('view-profile', $attend->user->url)}}">
+                                        <img src="/assets/images/avatars/thumbnails/{{$attend->user->avatar ?? 'avatar.png'}}" alt="{{$attend->user->first_name ?? ''}}" class="img-30">
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <h6 class="m-b-5">
+                                        <a href="{{route('view-profile', $attend->user->url)}}">
+                                        {{$attend->user->first_name ?? ''}} {{$attend->user->surname ?? ''}}</a> <span class="text-muted f-right f-13">{{$attend->created_at->diffForHumans()}}</span></h6>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="row">
+                            <div class="col-auto p-r-0">
+                                <p class="text-center text-muted">No one has clocked in today.</p>
+                            </div>
                         </div>
-                        <div class="col">
-                            <h6 class="m-b-5">You have 3 pending tasks. <span class="text-muted f-right f-13">Just Now</span></h6>
-                        </div>
-                    </div>
-                    <div class="row m-b-30">
-                        <div class="col-auto p-r-0">
-                            <i class="feather icon-shopping-cart bg-simple-c-pink feed-icon"></i>
-                        </div>
-                        <div class="col">
-                            <h6 class="m-b-5">New order received <span class="text-muted f-right f-13">Just Now</span></h6>
-                        </div>
-                    </div>
-                    <div class="row m-b-30">
-                        <div class="col-auto p-r-0">
-                            <i class="feather icon-file-text bg-simple-c-green feed-icon"></i>
-                        </div>
-                        <div class="col">
-                            <h6 class="m-b-5">You have 3 pending tasks. <span class="text-muted f-right f-13">Just Now</span></h6>
-                        </div>
-                    </div>
-                    <div class="row m-b-20">
-                        <div class="col-auto p-r-0">
-                            <i class="feather icon-shopping-cart bg-simple-c-pink feed-icon"></i>
-                        </div>
-                        <div class="col">
-                            <h6 class="m-b-5">New order received <span class="text-muted f-right f-13">Just Now</span></h6>
-                        </div>
-                    </div>
+                    @endif
                     <div class="text-center">
-                        <a href="#!" class="b-b-primary text-primary">View all Feeds</a>
+                        <a href="{{route('attendance')}}" class="b-b-primary text-primary">View all attendance</a>
                     </div>
                 </div>
             </div>

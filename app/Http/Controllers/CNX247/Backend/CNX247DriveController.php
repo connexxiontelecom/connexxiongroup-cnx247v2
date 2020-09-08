@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Folder;
 use App\FileModel;
+use App\SharedFile;
+use App\User;
 use Auth;
 use Storage;
 use File;
+use Response;
 class CNX247DriveController extends Controller
 {
     public $root = 'assets/uploads/cnxdrive/';
@@ -39,10 +42,20 @@ class CNX247DriveController extends Controller
         $directories = Storage::allDirectories($this->root);
         $myFiles = FileModel::where('tenant_id', Auth::user()->tenant_id)
                             ->where('uploaded_by', Auth::user()->id)->get();
+        $sharedFiles = SharedFile::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('shared_with', Auth::user()->id)->get();
         $size = FileModel::where('tenant_id', Auth::user()->tenant_id)
                             ->where('uploaded_by', Auth::user()->id)->sum('size');
+        $employees = User::where('tenant_id', Auth::user()->tenant_id)->get();
         //return dd($files);
-        return view('backend.cnx247drive.index', ['directories'=>$directories, 'files'=>$files, 'myFiles'=>$myFiles,'size'=>$size]);
+        return view('backend.cnx247drive.index',
+        ['directories'=>$directories,
+        'files'=>$files,
+        'myFiles'=>$myFiles,
+        'size'=>$size,
+        'employees'=>$employees,
+        'sharedFiles'=>$sharedFiles
+        ]);
     }
 
     /*
@@ -129,5 +142,74 @@ class CNX247DriveController extends Controller
             $file->save();
             return response()->json(['message', 'Success! File uploaded.'], 200);
         }
+    }
+
+    public function downloadAttachment(Request $request){
+        $this->validate($request,[
+            'attachment'=>'required'
+        ]);
+
+        $file = public_path("assets/uploads/cnxdrive/".$request->attachment);
+        $headers = array(
+            "Content-Type: application/".$request->extension
+        );
+        return Response::download($file, 'Hello.pdf', $headers);
+    }
+
+    public function shareAttachment(Request $request){
+        $this->validate($request,[
+            'employees'=>'required',
+            'id'=>'required'
+        ]);
+        foreach($request->employees as $employee){
+            $share = new SharedFile;
+            $share->owner = Auth::user()->id;
+            $share->file_id = $request->id;
+            $share->tenant_id = Auth::user()->tenant_id;
+            $share->shared_with = $employee;
+            $share->save();
+        }
+        if($share){
+            return response()->json(['message'=>'Success! File shared.'],200);
+        }else{
+            return response()->json(['error'=>'Ooops File shareing failed.'],400);
+        }
+
+    }
+    public function deleteAttachment(Request $request){
+        $this->validate($request,[
+            'directory'=>'required',
+            'id'=>'required'
+        ]);
+        $file = FileModel::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->id)->first();
+        if(!empty($file) ){
+            $file->delete();
+            unlink(public_path("assets/uploads/cnxdrive/".$request->directory));
+            $shared = SharedFile::where('tenant_id', Auth::user()->tenant_id)
+                                ->where('file_id', $request->id)
+                                ->get();
+            if(!empty($shared) ){
+                foreach($shared as $sh){
+                    $sh->delete();
+                }
+            }
+            return response()->json(['message'=>'Success! File deleted.'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! File does not exist'], 400);
+        }
+        foreach($request->employees as $employee){
+            $share = new SharedFile;
+            $share->owner = Auth::user()->id;
+            $share->file_id = $request->id;
+            $share->tenant_id = Auth::user()->tenant_id;
+            $share->shared_with = $employee;
+            $share->save();
+        }
+        if($share){
+            return response()->json(['message'=>'Success! File shared.'],200);
+        }else{
+            return response()->json(['error'=>'Ooops File shareing failed.'],400);
+        }
+
     }
 }

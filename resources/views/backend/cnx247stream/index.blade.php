@@ -23,7 +23,11 @@
                                     @else
                                         <i class="feather icon-chevrons-down m-r-10 text-c-pink"></i>
                                     @endif
-                                    {{ceil(($lastMonth/($thisMonth+$lastMonth)) * 100)}}%</p>
+                                    @if ($lastMonth > 0 && $thisMonth > 0)
+                                        {{ceil(($lastMonth/($thisMonth+$lastMonth)) * 100)}}%</p>
+                                    @else
+                                        0%</p>
+                                    @endif
                                 <p class="text-muted m-b-0">Last Month</p>
                             </div>
                         </div>
@@ -36,7 +40,12 @@
                                     @else
                                         <i class="feather icon-chevrons-down m-r-10 text-c-pink"></i>
                                     @endif
-                                    {{ceil(($thisMonth/($thisMonth+$lastMonth)) * 100)}}%</p>
+                                    @if ($lastMonth > 0 && $thisMonth > 0)
+                                        {{ceil(($thisMonth/($thisMonth+$lastMonth)) * 100)}}%</p>
+                                    @else
+                                        0%</p>
+                                    @endif
+                                    </p>
                                 <p class="text-muted m-b-0">This Month</p>
                             </div>
                         </div>

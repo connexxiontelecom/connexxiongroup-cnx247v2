@@ -22,6 +22,7 @@ use App\AnswerSelf;
 use App\AnswerQuantitative;
 use App\AnswerQualitative;
 use App\Supervisor;
+use App\Post;
 use Auth;
 use DB;
 
@@ -37,13 +38,22 @@ class HRController extends Controller
     * HR dashboard
     */
     public function hrDashboard(){
-        $employees = User::where('tenant_id', Auth::user()->tenant_id)->count();
+        $now = Carbon::now();
+        $birthdays = User::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
+                            ->take(5)->get();
+        $employees = User::where('tenant_id', Auth::user()->tenant_id)->get();
+        $announcement = Post::where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'announcement')->get();
         $departments = Department::where('tenant_id', Auth::user()->tenant_id)->count();
-        $attendance = Clocker::distinct('user_id')->where('tenant_id', Auth::user()->tenant_id)->whereDate('clock_in', Carbon::today())->count(); //today's attendance
+        $attendance = Clocker::distinct('user_id')->where('tenant_id', Auth::user()->tenant_id)
+                            ->whereDate('clock_in', Carbon::today())->get();
+
         return view('backend.hr.dashboard', [
             'employees'=>$employees,
             'attendance'=>$attendance,
-            'departments'=>$departments
+            'departments'=>$departments,
+            'birthdays'=>$birthdays,
+            'announcement'=>$announcement
         ]);
     }
     /*
@@ -360,7 +370,7 @@ class HRController extends Controller
             'start_date'=>'required|date',
             'end_date'=>'required|date|after_or_equal:start_date'
         ]);
-        
+
         foreach($request->employees as $employee)
         {
             $appraisal = new EmployeeAppraisal;
@@ -381,7 +391,7 @@ class HRController extends Controller
                                         ->first();
         if(!empty($appraisal) ){
             $questions = QuestionSelf::where('tenant_id', Auth::user()->tenant_id)->get();
-            return view('backend.hr.employee-appraisal-self', 
+            return view('backend.hr.employee-appraisal-self',
             ['questions'=>$questions, 'type'=>'self', 'appraisal_id'=>$appraisal_id]);
         }else{
             return redirect()->route('404');
@@ -406,7 +416,7 @@ class HRController extends Controller
                                         ->where('appraisal_id', $request->appraisal_id)->first();
         if(!empty($appraisal) ){
             $appraisal->employee_status = 1; //done
-            $appraisal->save();             
+            $appraisal->save();
         }
         return redirect()->route('user-administration');
     }
@@ -417,7 +427,7 @@ class HRController extends Controller
         if(!empty($appraisal) ){
             $quantitatives = QuestionQuantitative::where('tenant_id', Auth::user()->tenant_id)->get();
             $qualitatives = QuestionQualitative::where('tenant_id', Auth::user()->tenant_id)->get();
-            return view('backend.hr.employee-appraisal-supervisor', 
+            return view('backend.hr.employee-appraisal-supervisor',
             [
                 'quantitatives'=>$quantitatives,
                 'qualitatives'=>$qualitatives,
@@ -461,7 +471,7 @@ class HRController extends Controller
         if(!empty($appraisal) ){
             $appraisal->supervisor_status = 1; //done
             $appraisal->appraisal_status = 1; //done
-            $appraisal->save();             
+            $appraisal->save();
         }
         return redirect()->route('user-administration');
     }
@@ -487,7 +497,7 @@ class HRController extends Controller
                 'quantitative'=>$quantitative
             ]);
         }
-         
+
     }
 
 }
