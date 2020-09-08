@@ -60,7 +60,7 @@
                                     <td>
                                         <a href="{{route('view-profile', $appraisal->takenBy->url)}}">
                                             <img src="/assets/images/avatars/thumbnails/{{$appraisal->takenBy->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$appraisal->takenBy->surname ?? ''}}">
-                                            {{$appraisal->takenBy->first_name ?? ''}} {{$appraisal->takenBy->surname ?? ''}} 
+                                            {{$appraisal->takenBy->first_name ?? ''}} {{$appraisal->takenBy->surname ?? ''}}
                                             @if($appraisal->employee_status == 0)
                                             <sup class="badge badge-warning badge-top-right text-white ml-3">in-progress</sup>
                                             @else
@@ -68,10 +68,10 @@
 
                                             @endif
                                         </a>
-                                       
+
                                     </td>
                                     <td>
-                                        {{date('M, Y', strtotime($appraisal->start_date))}} <label class="badge badge-info">to</label> 
+                                        {{date('M, Y', strtotime($appraisal->start_date))}} <label class="badge badge-info">to</label>
                                         {{date( 'M, Y', strtotime($appraisal->end_date))}}
                                     </td>
                                     </label>
@@ -105,7 +105,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-                           
+
                         </tbody>
                         <tfoot>
                         <tr>
@@ -171,7 +171,7 @@
                                 <div class="form-group col-md-6">
                                     <label>Start Date <sup class="text-danger">*</sup></label>
                                     <input type="date" id="start_date" class="form-control" placeholder="Start Date">
-                                      
+
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>End Date <sup class="text-danger">*</sup></label>
@@ -202,7 +202,7 @@
                                     <div class="form-group col-md-4">
                                         <label>Start Date <sup class="text-danger">*</sup></label>
                                         <input type="date" id="start" class="form-control" placeholder="Start Date">
-                                            
+
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label>End Date <sup class="text-danger">*</sup></label>
@@ -307,8 +307,8 @@
                 }else{
                     error = 0;
                 }
-                
-                
+
+
             }
 
             if(error == 0){
@@ -323,7 +323,7 @@
                     $('#appraisalModal').modal('hide');
                 })
                 .catch(error=>{
-                    
+
                 });
             }
 
@@ -331,39 +331,17 @@
 
         $(document).on('click', '#submitBulkAppraisal', function(e){
             e.preventDefault();
-            
+
             //var employees = $("input[name=employees").val();
             var employees = []
             $("input:checkbox[name=employees]:checked").each(
                 function(){employees.push($(this).val());
                 });
-               /*  $("input:checkbox[name=type]:checked").each(function(){
-                    employees.push($(this).val());
-                }); */
             var supervisor = $('#bulk_supervisor').val();
             var start_date = $('#start').val();
             var end_date = $('#end').val();
             var error = 0;
-            /*if(employee == '' || supervisor == '' || start_date == '' || end_date == ''){
-                $.notify("Ooops! Kindly make complete the form.", "error");
-                error++;
-            }else{
-                if(supervisor == employee){
-                    $.notify("Ooops! Employee cannot appraisal himself/herself.", "error");
-                    error++;
-                }else{
-                    error = 0;
-                }
 
-                if(end_date < start_date){
-                    $.notify("Ooops! End date cannot be later than start date.", "error");
-                    error++;
-                }else{
-                    error = 0;
-                }
-                
-                
-            }*/
             console.log(employees);
             axios.post('/bulk/employee-appraisal', {
                 employees:employees,
@@ -377,8 +355,8 @@
             })
             .catch(error=>{
                 $.notify("Ooops! Something went wrong. Try again.", "error");
-            }); 
-            
+            });
+
 
         });
     });

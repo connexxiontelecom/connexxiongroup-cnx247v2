@@ -78,14 +78,6 @@
                     </div>
                 </div>
                 <div class="card-block">
-                    <div id="contextMenu" class="context-menu">
-                        <ul>
-                            <li>Download</li>
-                            <li>Open</li>
-                            <li>Share</li>
-                            <li>Delete</li>
-                        </ul>
-                    </div>
                     <h5 class="sub-title">My Files</h5>
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success">
@@ -105,15 +97,33 @@
                                             <img src="/assets/formats/ppt.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
 
                                         @break
                                     @case('pdf')
-                                    <div class="col-md-1" oncontextmenu="return showContextMenu(event);">
+                                    <div class="col-md-1 mb-4">
                                         <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}" style="cursor: pointer;">
                                             <img src="/assets/formats/pdf.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"> <br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
 
@@ -123,6 +133,15 @@
                                             <img src="/assets/formats/csv.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('xls')
@@ -131,6 +150,15 @@
                                             <img src="/assets/formats/xls.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('xlsx')
@@ -139,6 +167,15 @@
                                             <img src="/assets/formats/xls.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('doc')
@@ -147,6 +184,15 @@
                                             <img src="/assets/formats/doc.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('doc')
@@ -155,6 +201,15 @@
                                             <img src="/assets/formats/doc.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('docx')
@@ -163,6 +218,15 @@
                                             <img src="/assets/formats/doc.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('jpeg')
@@ -171,6 +235,15 @@
                                             <img src="/assets/formats/jpeg.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('jpg')
@@ -179,6 +252,15 @@
                                                 <img src="/assets/formats/jpg.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                                 {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                             </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     @break
                                     @case('png')
@@ -187,6 +269,15 @@
                                             <img src="/assets/formats/png.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('gif')
@@ -195,6 +286,15 @@
                                             <img src="/assets/formats/gif.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('ppt')
@@ -203,6 +303,15 @@
                                             <img src="/assets/formats/ppt.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('txt')
@@ -211,6 +320,15 @@
                                             <img src="/assets/formats/txt.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('css')
@@ -219,6 +337,15 @@
                                             <img src="/assets/formats/css.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"> <br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('mp3')
@@ -227,6 +354,15 @@
                                             <img src="/assets/formats/mp3.png" height="64" width="64" alt=""><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('mp4')
@@ -235,6 +371,15 @@
                                             <img src="/assets/formats/mp4.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('svg')
@@ -243,6 +388,15 @@
                                             <img src="/assets/formats/svg.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('xml')
@@ -251,6 +405,15 @@
                                             <img src="/assets/formats/xml.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                     @case('zip')
@@ -259,9 +422,382 @@
                                             <img src="/assets/formats/zip.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
                                             {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
                                         </a>
+                                        <div class="dropdown-secondary dropdown float-right">
+                                            <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     @break
                                 @endswitch
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <div class="card-block">
+                    <h5 class="sub-title">Shared Files</h5>
+                    <p class="text-muted">These are files shared with you by someone else.</p>
+                    @if (session()->has('success'))
+                        <div class="alert alert-success background-success">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <i class="icofont icofont-close-line-circled text-white"></i>
+                            </button>
+                            {!! session()->get('success') !!}
+                        </div>
+                    @endif
+                    <div class="card-block " id="fileDirectory">
+                        <div class="row">
+                            @foreach ($sharedFiles as $share)
+                                @foreach ($share->originalFile as $file)
+                                    @switch(pathinfo($file->filename, PATHINFO_EXTENSION))
+                                        @case('pptx')
+                                        <div class="col-md-1">
+                                            <a href="button" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}" style="cursor: pointer;">
+                                                <img src="/assets/formats/ppt.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                            @break
+                                        @case('pdf')
+                                        <div class="col-md-1 mb-4">
+                                            <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}" style="cursor: pointer;">
+                                                <img src="/assets/formats/pdf.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"> <br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+
+                                        @case('csv')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;"  data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/csv.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('xls')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;"  data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/xls.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('xlsx')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;"  data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/xls.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('doc')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;"  data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/doc.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('doc')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/doc.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('docx')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/doc.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('jpeg')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;"  data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/jpeg.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('jpg')
+                                            <div class="col-md-1">
+                                                <a href="button" style="cursor: pointer;"  data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                    <img src="/assets/formats/jpg.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                    {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                                </a>
+                                                <div class="dropdown-secondary dropdown float-right">
+                                                    <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                        <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                        <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @break
+                                        @case('png')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;"  data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/png.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('gif')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/gif.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('ppt')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/ppt.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('txt')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/txt.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('css')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/css.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"> <br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('mp3')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/mp3.png" height="64" width="64" alt=""><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('mp4')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/mp4.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('svg')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/svg.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('xml')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/xml.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                        @case('zip')
+                                        <div class="col-md-1">
+                                            <a href="button" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="{{$file->name ?? 'No name'}}" data-original-title="{{$file->name ?? 'No name'}}">
+                                                <img src="/assets/formats/zip.png" height="64" width="64" alt="{{$file->name ?? 'No name'}}"><br>
+                                                {{strlen($file->name ?? 'No name') > 10 ? substr($file->name ?? 'No name',0,7).'...' : $file->name ?? 'No name'}}
+                                            </a>
+                                            <div class="dropdown-secondary dropdown float-right">
+                                                <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                    <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @break
+                                    @endswitch
+                                @endforeach
                             @endforeach
                         </div>
                     </div>
@@ -302,41 +838,70 @@
         }
     </style>
 
-<div class="modal fade" id="new-folder" tabindex="-1" role="dialog">
+<div class="modal fade" id="shareFileModal" tabindex="-1" role="dialog">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title">New Folder</h6>
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> Share File</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
+                            <p>Share <strong id="fileToShare"></strong> with...</p>
+                            <hr>
                             <div class="form-group">
-                                <label class="">Folder Name</label>
-                                <input type="text" id="folder_name" class="form-control form-control-normal" placeholder="Workgroup Name">
-                                @error('folder_name')
-                                    <i class="text-danger">{{ $message }}</i>
-                                @enderror
+                                @foreach ($employees as $employee)
+                                    <div class="checkbox-fade fade-in-primary">
+                                        <label>
+                                            <input type="checkbox" value="{{$employee->id}}" name="employee" id="employee[]">
+                                            <span class="cr">
+                                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                            </span>
+                                            <span>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</span>
+                                        </label>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="form-group">
-                                <label class="">Password <i>(Optional)</i> </label>
-                                <input type="password" id="password" class="form-control form-control-normal" placeholder="Workgroup Name">
-                                @error('password')
-                                    <i class="text-danger">{{ $message }}</i>
-                                @enderror
-                            </div>
-
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-default waves-effect btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" id="createFolder" class="btn btn-primary waves-effect waves-light btn-sm">Create Folder</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+                    <button type="button" id="shareFileBtn" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Share File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteFileModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>This action cannot be undone. Are you sure you want to delete <strong id="fileToDelete"></strong> ?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+                    <button type="button" id="deleteFileBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete File</button>
+                </div>
             </div>
         </div>
     </div>
@@ -440,25 +1005,67 @@
 
 
         });
+
+        $(document).on('click', '.downloadFile', function(e){
+            e.preventDefault();
+            var directory = $(this).data('directory');
+            var extension = directory.substr(directory.indexOf(".") + 1);
+            var id = $(this).data('unique');
+            axios.post("/cnx247-drive/download",{
+                attachment:directory,
+                extension:extension,
+                id:id
+            })
+            .then(response=>{
+
+            })
+            .catch(error=>{
+
+            });
+        });
+
+        $(document).on('click', '.shareFile', function(e){
+            var name = $(this).data('file');
+            var id = $(this).data('unique');
+            $('#fileToShare').text(name);
+            $(document).on('click', '#shareFileBtn', function(event){
+                var employees = []
+                $("input:checkbox[name=employee]:checked").each(
+                    function(){employees.push($(this).val());
+                    });
+                axios.post('/cnx247-drive/share',{
+                    employees:employees,
+                    id:id
+                })
+                .then(response=>{
+                    $.notify(response.data.message, 'success');
+                    $('#shareFileModal').modal('hide');
+                })
+                .catch(error=>{
+                    $.notify(error.response.data.error, 'error');
+                });
+            });
+        });
+        $(document).on('click', '.deleteFile', function(e){
+            var name = $(this).data('file');
+            var directory = $(this).data('directory');
+            var id = $(this).data('unique');
+            $('#fileToDelete').text(name);
+            $(document).on('click', '#deleteFileBtn', function(event){
+                axios.post('/cnx247-drive/delete',{
+                    id:id,
+                    directory:directory
+                })
+                .then(response=>{
+                    $.notify(response.data.message, 'success');
+                    $('#deleteFileModal').modal('hide');
+                    location.reload();
+                })
+                .catch(error=>{
+                    $.notify(error.response.data.error, 'error');
+                });
+            });
+        });
     });
-    window.onclick = hideContextMenu;
-    window.onkeydown = listenKeys;
-    var contextmenu = document.getElementById('contextMenu');
-    //Context menu
-    function showContextMenu(event){
-        contextmenu.style.display = 'block';
-        //contextmenu.style.left = event.pageX + 'px';
-        //contextmenu.style.top = event.pageY + 'px';
-        return false;
-    }
-    function hideContextMenu(){
-        contextmenu.display = 'none';
-    }
-    function listenKeys(event){
-        var keyCode = event.which || event.keyCode;
-        if(keyCode == 27){
-            hideContextMenu();
-        }
-    }
 </script>
 @endsection

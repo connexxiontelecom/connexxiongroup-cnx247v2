@@ -77,6 +77,7 @@ Route::post('/change/company-assets', 'CNX247\Backend\GeneralSettingsController@
 
 #Workflow Routes
 Route::get('/workflow-tasks', 'CNX247\Backend\WorkflowController@index')->name('workflow-tasks');
+//Route::get('/workflow-statistics', 'CNX247\Backend\WorkflowController@statistics')->name('workflow-statistics');
 Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewWorkflowTask')->name('view-workflow-task');
 
 #Expense report route
@@ -312,11 +313,13 @@ Route::post('/workgroup/invitation/action', 'CNX247\Backend\WorkgroupController@
 
 #CNX247.Drive routes
 Route::get('/cnx247-drive', 'CNX247\Backend\CNX247DriveController@index')->name('cnx247-drive');
-#Tutorial
 Route::get('/cnx247-drive/show', 'CNX247\Backend\CNX247DriveController@show')->name('show-files');
 Route::post('/drive/make-directory', 'CNX247\Backend\CNX247DriveController@createDirectory');
 Route::post('/cnx247-drive/upload', 'CNX247\Backend\CNX247DriveController@uploadFile')->name('upload-file');
 Route::post('/upload-attachment', 'CNX247\Backend\CNX247DriveController@uploadAttachment');
+Route::post('/cnx247-drive/download', 'CNX247\Backend\CNX247DriveController@downloadAttachment');
+Route::post('/cnx247-drive/share', 'CNX247\Backend\CNX247DriveController@shareAttachment');
+Route::post('/cnx247-drive/delete', 'CNX247\Backend\CNX247DriveController@deleteAttachment');
 
 #Event routes
 Route::get('/my-events', 'CNX247\Backend\EventController@myEvents')->name('my-events');

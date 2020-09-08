@@ -65,7 +65,7 @@
                         @if ($clients <= 0)
                             <h5>0%</h5>
                         @else
-                            <h5>{{($leads/$clients)*100}}%</h5>
+                            <h5>{{ceil(($leads/$clients)*100)}}%</h5>
                         @endif
                     </div>
                     <div class="col-4 b-r-default">
@@ -73,7 +73,7 @@
                         @if ($month_clients <= 0)
                             <h5>0%</h5>
                         @else
-                            <h5>{{($month_leads/$month_clients)*100 }}%</h5>
+                            <h5>{{ceil(($month_leads/$month_clients)*100) }}%</h5>
                         @endif
                     </div>
                     <div class="col-4">
@@ -81,7 +81,7 @@
                         @if ($today_clients <= 0)
                             <h5>0%</h5>
                         @else
-                            <h5>{{($today_leads/$today_clients)*100 }}%</h5>
+                            <h5>{{ceil(($today_leads/$today_clients)*100) }}%</h5>
                         @endif
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                         @if ($leads <= 0)
                             <h5>0%</h5>
                         @else
-                            <h5>{{($deals/$leads)*100}}%</h5>
+                            <h5>{{ceil(($deals/$leads)*100)}}%</h5>
                         @endif
                     </div>
                     <div class="col-4 b-r-default">
@@ -143,7 +143,7 @@
                         @if ($clients <=0 )
                             <div data-label="0%" class="radial-bar radial-bar-0 radial-bar-lg radial-bar-primary"></div>
                         @else
-                            <div data-label="{{($deals/$clients)*100}}%" class="radial-bar radial-bar-{{($deals/$clients)*100}} radial-bar-lg radial-bar-primary"></div>
+                            <div data-label="{{ceil(($deals/$clients)*100)}}%" class="radial-bar radial-bar-{{ceil(($deals/$clients)*100)}} radial-bar-lg radial-bar-primary"></div>
                         @endif
                         <h6 class="text-muted">Remaining</h6>
                         <p class="text-muted">{{number_format($clients - $deals)}}</p>
@@ -164,18 +164,23 @@
                     <table class="table table-hover table-borderless">
                         <thead>
                             <tr>
-                                <th>Status</th>
+                                <th>#</th>
                                 <th>Subject</th>
                                 <th>Category</th>
                                 <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @foreach ($tickets as $ticket)
                             <tr>
-                                <td><label class="label label-success">{{$ticket->status}}</label></td>
+                                <td>{{$i++}}</td>
                                 <td>{{$ticket->subject}}</td>
-                                <td>{{$ticket->category}}</td>
+                                <td>
+                                    <label for="" class="label label-warning">{{$ticket->ticketCategory->name ?? ''}}</label>
+                                </td>
                                 <td>{{date('d F, Y', strtotime($ticket->created_at))}} @ {{date('h:ia', strtotime($ticket->created_at))}}</td>
                             </tr>
                             @endforeach
@@ -198,7 +203,7 @@
                     @foreach ($client_logs as $log)
                         <div class="row m-b-30">
                             <div class="col-auto p-r-0">
-                                <a href="{{ route('view-profile', $log->user->url) }}"><img src="\assets\images\user.png" class="img-30" alt="user.png"></a>
+                                <a href="{{ route('view-profile', $log->user->url) }}"><img src="/assets/images/avatars/thumbnails/{{$log->user->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$log->user->first_name ?? ''}} {{$log->user->surname ?? ''}}"></a>
                             </div>
                             <div class="col">
                                 <h6 class="m-b-5">{!! strlen($log->log) > 31 ? substr($log->log, 0,31).'...' : $log->log !!} <span class="text-muted f-right f-13">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($log->created_at))}}</span></h6>

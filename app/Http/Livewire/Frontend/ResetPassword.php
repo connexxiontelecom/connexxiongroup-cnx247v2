@@ -31,9 +31,9 @@ class ResetPassword extends Component
             \Mail::to($user)->send(new PasswordReset($user, $token));
             $data=array('email'=>$user->email,"token"=>$token,"created_at"=>now());
             DB::table('password_resets')->insert($data);
-            $this->success = session()->flash("success", "<strong>Great!</strong> Kindly click on Reset Password in the mail we sent to you.");
+            $this->success = session()->flash("success", "<strong>Great!</strong> Please click on Reset Password in the mail we sent to you.");
         }else{
-            $this->error = session()->flash("error", "<strong>Ooops!</strong> It appears we don't have an account with this email.");
+            $this->error = session()->flash("error", "<strong>Ooops!</strong> It appears there's no account with this email.");
         }
     }
 }

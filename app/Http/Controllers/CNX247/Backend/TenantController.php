@@ -73,6 +73,10 @@ class TenantController extends Controller
                         ->sum('amount');
         $lastMonth = TransactionReference::whereMonth('created_at', '=', $now->subMonth()->month)
                         ->sum('amount');
+        $weekly = TransactionReference::selectRaw("sum(amount) as amount, sum(bin) as amt, DATE_FORMAT(created_at, '%b')  as month")
+                        //->where('transaction_id', $url)
+                        ->groupBy('month')
+                        ->get();
         #Par
         $previous_week = strtotime("-1 week +1 day");
         $start_week = strtotime("last sunday midnight",$previous_week);
@@ -89,13 +93,23 @@ class TenantController extends Controller
 
         //$json = TransactionReference::select('created_at', 'amount')->groupBy('created_at', 'amount')->get();
         //return response()->json(['data'=>$json]);
+        $i = 0;
+        $series = [];
+        $months = [];
+        foreach($weekly as $month){
+            $series[$i++] = $month->amount;
+            $months[$i++] = $month->month;
+        }
         return view('backend.admin.tenants.financials',
         [
         'overall'=>$overall,
         'thisYear'=>$thisYear,
         'thisMonth'=>$thisMonth,
         'thisWeek'=>$thisWeek,
-        'lastMonth'=>$lastMonth
+        'lastMonth'=>$lastMonth,
+        'series'=>$series,
+        'months'=>$months,
+        'weekly'=>json_encode($weekly),
         ]);
     }
 

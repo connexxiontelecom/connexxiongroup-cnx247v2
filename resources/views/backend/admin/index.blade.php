@@ -17,7 +17,7 @@
                 <div class="card-block">
                     <div class="row align-items-end">
                         <div class="col-8">
-                            <h4 class="text-white">$30200</h4>
+                            <h5 class="text-white">$30200</h5>
                             <h6 class="text-white m-b-0">All Earnings</h6>
                         </div>
                         <div class="col-4 text-right">
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <p class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>update : 2:15 am</p>
+                    <p class="text-white m-b-0"><i class="feather icon-clock text-white f-14 m-r-10"></i>Statistics</p>
                 </div>
             </div>
         </div>

@@ -30,6 +30,16 @@
 
                                 </div>
                             @endif
+                            @if(session()->has('success'))
+                                <div class="alert alert-success border-success">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <i class="icofont icofont-close-line-circled"></i>
+                                    </button>
+
+                                {!! session('success') !!}
+
+                                </div>
+                            @endif
                         <form class="login-form mt-4" wire:submit.prevent="loginNow">
                             <div class="row">
                                 <div class="col-lg-12">

@@ -24,4 +24,8 @@ class WorkflowController extends Controller
     public function viewWorkflowTask($url){
         return view('backend.workflow.view');
     }
+
+/*     public function statistics(){
+        return view('backend.workflow.statistics');
+    } */
 }
