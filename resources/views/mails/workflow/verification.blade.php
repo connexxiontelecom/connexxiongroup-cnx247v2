@@ -38,13 +38,13 @@
             </tr>
             <tr>
                 <td align="center" bgcolor="#0073AA " style="padding: 20px 20px 20px 20px; color: #ffffff; font-family: Arial, sans-serif; font-size: 36px; font-weight: bold;">
-                    <img src="/assets/images/logo.png" alt="CNX247 ERP Solution" height="75" width="120" style="display:block;">
+                    <img class="img-fluid ml-5 mt-3" src="{{asset('/assets/images/company-assets/logos/'.Auth::user()->tenant->logo ?? 'logo.png')}}" alt="{{Auth::user()->tenant->company_name ?? 'CNX247 ERP Solution'}}" height="75" width="120" style="display:block;">
                 </td>
             </tr>
             <tr>
                 <td align="center" bgcolor="#ffffff" style="padding: 75px 20px 40px 20px; color: #555555; font-family: Arial, sans-serif; font-size: 20px; line-height: 30px; border-bottom: 1px solid #f6f6f6;">
                     Hi {{ $user->first_name ?? ''}} {{ $user->first_name ?? ''}}<br>
-                    <p>Someone attempted to update the state of the request titled <strong><i>{{$request->post_title ?? ''}}</i></strong>. If this was done by you, use the verification code below to complete the process otherwise ignore it.</p>
+                    <p>Someone attempted to update the state of request titled <strong><i>{{$request->post_title ?? ''}}</i></strong>. If this was done by you, use the verification code below to complete the process otherwise ignore it.</p>
                     <p><strong>Verification Code: </strong>{{$code}}</p>
                 </td>
             </tr>

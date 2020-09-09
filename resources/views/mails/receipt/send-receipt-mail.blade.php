@@ -12,7 +12,7 @@
                             <table class="table table-responsive invoice-table table-borderless">
                                 <tbody>
                                     <tr>
-                                        <td><img src="\assets\images\logo-blue.png" class="m-b-10" alt=""></td>
+                                        <td><img class="img-fluid ml-5 mt-3" src="{{asset('/assets/images/company-assets/logos/'.Auth::user()->tenant->logo ?? 'logo.png')}}" alt="{{Auth::user()->tenant->company_name ?? 'CNX247 ERP Solution'}}" height="75" width="120" style="display:block;"></td>
                                     </tr>
                                     <tr>
                                         <td>{{ Auth::user()->tenant->company_name ?? 'Company Name here'}}</td>
