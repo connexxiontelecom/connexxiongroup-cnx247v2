@@ -8,22 +8,25 @@ use Auth;
 
 class Statistics extends Component
 {
-    public $requests;
+    public $overall;
 
     public function render()
     {
         return view('livewire.backend.workflow.statistics');
     }
 
+    public function mount(){
+        $this->getContent();
+    }
+
     public function getContent(){
-        $this->requests = Post::where('user_id', Auth::user()->id)
-                            ->whereIn('post_type',
+        $this->overall = Post::whereIn('post_type',
                             ['purchase-request', 'expense-request',
                             'leave-request', 'business-trip',
                             'general-request'])
                             ->where('tenant_id',Auth::user()->tenant_id)
                             ->where('post_status', 'approved')
-                            //->orderBy('id', 'DESC')
-                            ->sum();
+                            ->sum('budget');
+
     }
 }

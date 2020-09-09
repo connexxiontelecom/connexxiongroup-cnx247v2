@@ -5,7 +5,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-diamond bg-c-yellow card1-icon"></i>
                     <span class="text-c-yellow f-w-600">Requisition</span>
-                    <h4>{{number_format($requests)}}</h4>
+                    <h4>{{number_format($overall)}}</h4>
                     <div>
                         <span class="f-left m-t-10 text-muted">
                             <i class="text-c-yellow f-16 ti-calendar m-r-10"></i>Overall
@@ -19,7 +19,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-diamond bg-c-pink card1-icon"></i>
                     <span class="text-c-pink f-w-600">Requisition</span>
-                    <h4>4</h4>
+                    <h4>{{number_format($thisYear)}}</h4>
                     <div>
                         <span class="f-left m-t-10 text-muted">
                             <i class="text-c-pink f-16 ti-calendar m-r-10"></i>This Year
@@ -33,7 +33,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-diamond bg-c-green card1-icon"></i>
                     <span class="text-c-green f-w-600">Requisition</span>
-                    <h4>3</h4>
+                    <h4>{{number_format($lastMonth)}}</h4>
                     <div>
                         <span class="f-left m-t-10 text-muted">
                             <i class="text-c-green f-16 ti-calendar m-r-10"></i>Last Month
@@ -47,7 +47,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-diamond bg-c-blue card1-icon"></i>
                     <span class="text-c-blue f-w-600">Requisition</span>
-                    <h4>2</h4>
+                    <h4>{{number_format($thisMonth)}}</h4>
                     <div>
                         <span class="f-left m-t-10 text-muted">
                             <i class="text-c-blue f-16 ti-calendar m-r-10"></i>This Month

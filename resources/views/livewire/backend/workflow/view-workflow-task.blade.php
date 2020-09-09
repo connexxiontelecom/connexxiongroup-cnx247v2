@@ -63,24 +63,59 @@
                                         @foreach($request->responsiblePersons as $app)
 
                                         @if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
-                                                <button class="btn btn-out-dashed btn-danger btn-square btn-sm" wire:click="declineRequest({{ $request->id }})"><i class="ti-na mr-2"></i> DECLINE</button>
+                                                <button class="btn btn-out-dashed btn-danger btn-square btn-mini" wire:click="declineRequest({{ $request->id }})"><i class="ti-na mr-2"></i> DECLINE</button>
 
-                                                <button type="button" class="btn btn-success btn-out-dashed btn-square btn-sm approveBtn" wire:click="approveRequest({{ $request->id }})"> <i class="ti-check-box mr-2"></i>
+                                                <button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn" wire:click="approveRequest({{ $request->id }})"> <i class="ti-check-box mr-2"></i>
                                                     APPROVE
                                                 </button>
                                             @elseif($app->user_id == Auth::user()->id && $app->status == 'decline')
-                                                {{-- <button class="btn btn-out-dashed btn-danger btn-square btn-sm" disabled><i class="ti-na mr-2"></i> DECLINE</button> --}}
                                                 <i>You previously declined this request</i>
                                             @elseif($app->user_id == Auth::user()->id && $app->status == 'approve')
                                                 <i>You previously approved this request</i>
-                                                    {{-- <button class="btn btn-out-dashed btn-success btn-square btn-sm" disabled><i class="ti-check-box mr-2"></i> APPROVE</button> --}}
                                             @endif
                                         @endforeach
                                     @endif
                                 </div>
                             </div>
                         </div>
+                        @if (session()->has('done'))
+                            <div class="col-md-12">
+                                {!! session()->get('done') !!}
+                            </div>
+                        @endif
+                        @if ($actionStatus == 1 && $verificationPostId == $request->id)
+                        <div class="row mt-2">
+                            <div class="col-md-8 offset-md-2">
+                                <div class="card ml-4">
+                                    <div class="card-block">
+                                        <div class="col-sm-12">
+                                            <h5 class="sub-title">Requisition Verification</h5>
+                                            @if (session()->has('error_code'))
+                                                <div class="alert alert-warning background-warning" role="alert">
+                                                    {!! session()->get('error_code') !!}
+                                                </div>
+                                            @endif
 
+                                            <div class="form-group">
+                                                @if (session()->has('success_code'))
+                                                    <div class="alert alert-success background-success" role="alert">
+                                                        {!! session()->get('success_code') !!}
+                                                    </div>
+                                                @endif
+                                            <div class="input-group input-group-primary">
+                                                <input type="text" class="form-control" wire:model.debounce.9900000ms="verificationCode" placeholder="8-digit code">
+                                                    <span class="input-group-addon btn-mini" wire:click="verifyCode({{ $request->id }})">
+                                                    <i class="ti-check mr-2"></i> Verify
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
             </div>
         </div>

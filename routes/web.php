@@ -79,7 +79,8 @@ Route::post('/change/company-assets', 'CNX247\Backend\GeneralSettingsController@
 Route::get('/workflow-tasks', 'CNX247\Backend\WorkflowController@index')->name('workflow-tasks');
 //Route::get('/workflow-statistics', 'CNX247\Backend\WorkflowController@statistics')->name('workflow-statistics');
 Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewWorkflowTask')->name('view-workflow-task');
-
+Route::get('/workflow-business-process', 'CNX247\Backend\WorkflowController@businessProcess')->name('workflow-business-process');
+Route::post('/workflow/business-process', 'CNX247\Backend\WorkflowController@setBusinessProcess');
 #Expense report route
 Route::get('/expense-report', 'CNX247\Backend\ExpenseController@index')->name('expense-report');
 Route::post('/expense-report', 'CNX247\Backend\ExpenseController@store');

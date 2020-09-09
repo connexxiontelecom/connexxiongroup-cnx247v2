@@ -3,7 +3,8 @@
         <div class="d-inline-block">
             <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('workflow-tasks')}}"><i class="icofont icofont-tasks"></i>  Workflow Tasks</a>
             <a href="{{route('workflow-tasks')}}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> My Requests</a>
-            <a href="{{ route('task-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Statistics</a>
+            <a href="{{ route('workflow-tasks') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Statistics</a>
+            <a href="{{ route('workflow-business-process') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="ti-target"></i>  Business Process</a>
         </div>
     </div>
     <div class="nav-item nav-grid">
