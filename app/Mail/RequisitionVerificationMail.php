@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\User;
 use App\Post;
-
+use Auth;
 class RequisitionVerificationMail extends Mailable
 {
     public $user, $request, $code;

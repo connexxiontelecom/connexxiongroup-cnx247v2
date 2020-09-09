@@ -39,6 +39,7 @@ class ConfirmPassword extends Component
         if(!empty($change) ){
             $change->password = bcrypt($this->password);
             $change->save();
+            $reset = DB::table('password_resets')->where('token', $this->link)->delete();
             session()->flash("success", "<strong>Success!</strong> Password reset.");
             return redirect()->route('signin');
         }else{
