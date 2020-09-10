@@ -39,7 +39,7 @@
         <div class="col-md-12 d-flex justify-content-end">
             <div class="btn-group">
                 <a href="javascript:void(0);" class="btn btn-mini btn-danger" data-toggle="modal" data-target="#newResignationModal"><i class="icofont icofont-plus"></i>  New Resignation</a>
-                <a href="javascript:void(0);" class="btn btn-mini btn-warning text-white" data-toggle="modal" data-target="#newComplaintModal"><i class="icofont icofont-plus"></i>  New Complaint</a>
+                <a href="{{route('my-ideas')}}" class="btn btn-mini btn-warning text-white"><i class="icofont icofont-brain-alt"></i>  My Ideas</a>
             </div>
         </div>
     </div>

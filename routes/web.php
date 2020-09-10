@@ -200,6 +200,8 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         Route::get('/query/employee/{url}', 'CNX247\Backend\HRController@queryEmployee')->name('query-employee');
         Route::post('/store/query/employee', 'CNX247\Backend\HRController@storeQueryEmployee')->name('store-query-employee');
         Route::get('/employee/query/view/{slug}', 'CNX247\Backend\HRController@viewQuery')->name('view-query');
+    #IdeaBox
+       // Route::get()->name('ideabox', 'CNX247\Backend\HRController@ideaBox')->name('ideabox');
 #Customer Relationship Management (CRM)
 Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name('crm-dashboard');
 #Leads

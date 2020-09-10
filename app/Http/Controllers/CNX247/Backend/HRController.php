@@ -22,6 +22,7 @@ use App\AnswerSelf;
 use App\AnswerQuantitative;
 use App\AnswerQualitative;
 use App\Supervisor;
+use App\IdeaBox;
 use App\Post;
 use Auth;
 use DB;
@@ -509,6 +510,10 @@ class HRController extends Controller
         }else{
             return redirect()->route('404');
         }
+    }
+
+    public function ideaBox(){
+        //return view();
     }
 
 }

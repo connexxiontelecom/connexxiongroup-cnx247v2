@@ -16,7 +16,7 @@
             <div class="card-block">
                 <div class="sub-title">My Ideas</div>
                 <button class="btn btn-mini btn-primary float-right mb-3" type="button" data-toggle="modal" data-target="#myIdeaModal"><i class="ti-plus mr-2"></i>Submit New Idea</button>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-5">
                         <div class="dt-responsive table-responsive">
                             <table id="simpletable" class="table table-striped table-bordered nowrap">
                                 <thead>
@@ -60,7 +60,7 @@
                                             </td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#viewIdeaModal" data-content="{{$idea->content}}" data-> <i class="ti-eye text-warning mr-2"></i> View</a>
+                                                    <a href="javascript:void(0);" class="viewIdea" data-toggle="modal" data-target="#viewIdeaModal" data-content="{{$idea->content}}" data-subject="{{$idea->subject}}"> <i class="ti-eye text-warning mr-2"></i> View</a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -149,11 +149,10 @@
             </button>
             </div>
             <div class="modal-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            ideal
-                        </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="sub-title" id="ideaSubject"></h5>
+                        <p id="ideaContent"></p>
                     </div>
                 </div>
             </div>
@@ -181,6 +180,7 @@
             if(subject == '' || visibility == '' || content == ''){
                 $.notify("Ooops! Kindly complete the form before submitting.", "error");
             }else{
+                $('#submitIdeaBtn').text('Processing...');
                 axios.post('/submit-idea',{
                     subject:subject,
                     visibility:visibility,
@@ -188,12 +188,21 @@
                 })
                 .then(response=>{
                     $.notify(response.message, "success");
+                    $('#submitIdeaBtn').text('Submit');
                     $('#myIdeaModal').modal('hide');
+                    $('#simpletable').load(href.location + '#simpletable');
                 })
                 .catch(error=>{
+                    $('#submitIdeaBtn').text('Submit');
                     $.notify(error.response.data.error, );
                 });
             }
+        });
+
+        $(document).on('click', '.viewIdea', function(e){
+            e.preventDefault();
+            $('#ideaSubject').text($(this).data('subject'));
+            $('#ideaContent').html($(this).data('content'));
         });
     });
 </script>

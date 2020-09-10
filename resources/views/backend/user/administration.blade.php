@@ -14,7 +14,7 @@
     <div class="card" style="margin-top:-25px;">
         <div class="card-block accordion-block ">
             <div id="accordion" role="tablist" aria-multiselectable="true">
-                <div class="accordion-panel">
+                <!-- <div class="accordion-panel">
                     <div class="accordion-heading" role="tab" id="appreciationAccordion">
                         <h3 class="card-title accordion-title">
                         <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#appreciationCollapse" aria-expanded="true" aria-controls="appreciationCollapse">
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="accordion-panel">
                     <div class=" accordion-heading" role="tab" id="queryAccordion">
                         <h3 class="card-title accordion-title">
@@ -290,7 +290,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion-panel">
+                <!-- <div class="accordion-panel">
                     <div class=" accordion-heading" role="tab" id="complaintsAccordion">
                         <h3 class="card-title accordion-title">
                         <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#complaintsCollapse" aria-expanded="false" aria-controls="complaintsCollapse">
@@ -307,7 +307,7 @@
                             </p>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="accordion-panel">
                     <div class=" accordion-heading" role="tab" id="permissionAccordion">
                         <h3 class="card-title accordion-title">
