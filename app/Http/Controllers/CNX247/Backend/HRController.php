@@ -22,6 +22,7 @@ use App\AnswerSelf;
 use App\AnswerQuantitative;
 use App\AnswerQualitative;
 use App\Supervisor;
+use App\IdeaBox;
 use App\Post;
 use Auth;
 use DB;
@@ -498,6 +499,21 @@ class HRController extends Controller
             ]);
         }
 
+    }
+
+
+    public function viewResignation($url){
+
+        $post = Resignation::where('tenant_id', Auth::user()->tenant_id)->where('slug', $url)->first();
+        if(!empty($post)){
+            return view('backend.hr.view-resignation');
+        }else{
+            return redirect()->route('404');
+        }
+    }
+
+    public function ideaBox(){
+        //return view();
     }
 
 }

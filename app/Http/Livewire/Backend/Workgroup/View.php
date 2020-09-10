@@ -8,6 +8,7 @@ use App\Workgroup;
 use App\WorkgroupPost;
 use App\WorkgroupLike;
 use App\WorkgroupComment;
+use App\WorkgroupMember;
 use Auth;
 
 class View extends Component
@@ -32,10 +33,20 @@ class View extends Component
     */
     public function getContent(){
         $this->group = Workgroup::where('url', $this->link)
-                                ->where('tenant_id',Auth::user()->tenant_id)->first();
-        $this->posts = WorkgroupPost::where('tenant_id', Auth::user()->tenant_id)
-                                    ->where('group_id', $this->group->id)
-                                    ->get();
+        ->where('tenant_id',Auth::user()->tenant_id)->first();
+
+        $check = WorkgroupMember::select('user_id')->where('workgroup_id', $this->group->id)
+                                ->where('user_id', Auth::user()->id)
+                                ->count();
+        if($check > 0){
+            $this->posts = WorkgroupPost::where('tenant_id', Auth::user()->tenant_id)
+                                        ->where('group_id', $this->group->id)
+                                        ->get();
+        }else{
+            $this->posts = [];
+             session()->flash("error", "<strong>Ooops!</strong> You're not a memeber of this workgroup.");
+            return redirect()->route('workgroups');
+        }
     }
 
         /*

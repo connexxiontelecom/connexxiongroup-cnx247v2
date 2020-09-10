@@ -28,7 +28,7 @@
             </div>
         </div>
     </div>
-    <div class="card" id="queryContainer">
+    <div class="card" id="resignContainer">
         <div class="row invoice-contact ">
             <div class="col-md-12 d-flex justify-content-center">
                 <div class="invoice-box row">

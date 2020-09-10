@@ -12,9 +12,9 @@
 @section('content')
     @livewire('backend.user.my-profile')
     <div class="card" style="margin-top:-25px;">
-        <div class="card-block accordion-block color-accordion-block">
+        <div class="card-block accordion-block ">
             <div id="accordion" role="tablist" aria-multiselectable="true">
-                <div class="accordion-panel">
+                <!-- <div class="accordion-panel">
                     <div class="accordion-heading" role="tab" id="appreciationAccordion">
                         <h3 class="card-title accordion-title">
                         <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#appreciationCollapse" aria-expanded="true" aria-controls="appreciationCollapse">
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="accordion-panel">
                     <div class=" accordion-heading" role="tab" id="queryAccordion">
                         <h3 class="card-title accordion-title">
@@ -87,21 +87,98 @@
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="col-sm-4 col-md-4">
-                                            <h2 class="d-inline-block text-c-green m-r-10">897</h2>
+                                            <h2 class="d-inline-block text-c-green m-r-10">{{number_format(count($queries))}}</h2>
                                             <div class="d-inline-block">
                                                 <p class="text-muted m-b-0">All Time</p>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 col-md-4">
-                                            <h2 class="d-inline-block text-c-pink m-r-10">8456</h2>
+                                            <h2 class="d-inline-block text-c-pink m-r-10">{{number_format($queriesLastMonth)}}</h2>
                                             <div class="d-inline-block">
                                                 <p class="text-muted m-b-0">Last Month</p>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 col-md-4">
-                                            <h2 class="d-inline-block text-c-pink m-r-10">8456</h2>
+                                            <h2 class="d-inline-block text-c-pink m-r-10">{{number_format($queriesThisMonth)}}</h2>
                                             <div class="d-inline-block">
                                                 <p class="text-muted m-b-0">This Month</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5>Queries</h5>
+                                                    <span>All queries issued to employees</span>
+
+                                                </div>
+                                                <div class="card-block">
+                                                    <div class="dt-responsive table-responsive">
+                                                        <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Employee</th>
+                                                                <th>Subject</th>
+                                                                <th>Status</th>
+                                                                <th>Issued by</th>
+                                                                <th>Type</th>
+                                                                <th>Date</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @php
+                                                                    $serial = 1;
+                                                                @endphp
+                                                                @if (count($queries) > 0)
+                                                                    @foreach ($queries as $query)
+                                                                        <tr>
+                                                                            <td>{{$serial++}}</td>
+                                                                            <td><a href="{{route('view-profile', $query->queriedEmployee->url)}}"> <img src="/assets/images/avatars/thumbnails/{{$query->queriedEmployee->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$query->queriedEmployee->first_name ?? ''}} {{$query->queriedEmployee->surname ?? ''}}"> {{$query->queriedEmployee->first_name ?? ''}} {{$query->queriedEmployee->surname ?? ''}}</a></td>
+                                                                            <td><a href="{{route('view-query', $query->slug)}}">{{$query->subject}}</a> </td>
+                                                                            <td>
+                                                                                @if ($query->status == 1)
+                                                                                    <label for="" class="label label-success">Open</label>
+                                                                                @else
+                                                                                    <label for="" class="label label-danger">Closed</label>
+
+                                                                                @endif
+                                                                            </td>
+                                                                            <td>
+                                                                               <a href="{{route('view-profile', $query->issuedBy->url)}}"> <img src="/assets/images/avatars/thumbnails/{{$query->issuedBy->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$query->issuedBy->first_name ?? ''}} {{$query->issuedBy->surname ?? ''}}"> {{$query->issuedBy->first_name ?? ''}} {{$query->issuedBy->surname ?? ''}}</a>
+                                                                            </td>
+                                                                            <td>
+                                                                                @if ($query->query_type == 0)
+                                                                                    <label for="" class="label label-warning">Warning</label>
+                                                                                @else
+                                                                                    <label for="" class="label label-danger">Query</label>
+                                                                                @endif
+                                                                            </td>
+                                                                            <td><label for="" class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($query->created_at))}}</label></td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                @else
+                                                                    <tr>
+                                                                        <td colspan="9">There're no queries.</td>
+                                                                    </tr>
+                                                                @endif
+
+                                                            </tbody>
+                                                            <tfoot>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Employee</th>
+                                                                <th>Subject</th>
+                                                                <th>Status</th>
+                                                                <th>Issued by</th>
+                                                                <th>Type</th>
+                                                                <th>Date</th>
+                                                            </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -124,19 +201,19 @@
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="col-sm-4 col-md-4">
-                                            <h2 class="d-inline-block text-c-green m-r-10">897</h2>
+                                            <h2 class="d-inline-block text-c-green m-r-10">{{number_format(count($attendance))}}</h2>
                                             <div class="d-inline-block">
                                                 <p class="text-muted m-b-0">All Time</p>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 col-md-4">
-                                            <h2 class="d-inline-block text-c-pink m-r-10">8456</h2>
+                                            <h2 class="d-inline-block text-c-pink m-r-10">{{number_format($attendanceLastMonth)}}</h2>
                                             <div class="d-inline-block">
                                                 <p class="text-muted m-b-0">Last Month</p>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 col-md-4">
-                                            <h2 class="d-inline-block text-c-pink m-r-10">8456</h2>
+                                            <h2 class="d-inline-block text-c-pink m-r-10">{{number_format($attendanceThisMonth)}}</h2>
                                             <div class="d-inline-block">
                                                 <p class="text-muted m-b-0">This Month</p>
                                             </div>
@@ -192,7 +269,6 @@
                                     <th>Status</th>
                                     <th>Content</th>
                                     <th>Date</th>
-                                    <th>Action</th>
                                 </thead>
                                 @php
                                     $n = 1;
@@ -200,24 +276,21 @@
                                 @foreach ($resignations as $resign)
                                     <tr>
                                         <td>{{$n++}}</td>
-                                        <td>{!! strlen($resign->subject) > 25 ? substr($resign->subject, 0, 25).'...' : $resign->subject !!}</td>
+                                        <td>
+                                            <a href="{{route('view-resignation', $resign->slug)}}">
+                                                {!! strlen($resign->subject) > 25 ? substr($resign->subject, 0, 25).'...' : $resign->subject !!}
+                                            </a>
+                                        </td>
                                         <td> <label for="" class="label label-info">{{$resign->status}}</label> </td>
                                         <td>{!! strlen($resign->content) > 25 ? substr($resign->content, 0, 25).'...' : $resign->content !!}</td>
                                         <td>{{ date('d F, Y', strtotime($resign->created_at)) }}</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <a href="#" class="btn btn-mini btn-info"> <i class="icofont icofont-eye-alt"></i> </a>
-                                                <a href="#" class="btn btn-mini btn-warning text-white"> <i class="icofont icofont-ui-edit"></i> </a>
-                                                <a href="#" class="btn btn-mini btn-danger text-white"> <i class="icofont icofont-trash"></i> </a>
-                                            </div>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </table>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-panel">
+                <!-- <div class="accordion-panel">
                     <div class=" accordion-heading" role="tab" id="complaintsAccordion">
                         <h3 class="card-title accordion-title">
                         <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#complaintsCollapse" aria-expanded="false" aria-controls="complaintsCollapse">
@@ -234,7 +307,7 @@
                             </p>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="accordion-panel">
                     <div class=" accordion-heading" role="tab" id="permissionAccordion">
                         <h3 class="card-title accordion-title">
@@ -282,12 +355,12 @@
                                                 <sup class="badge badge-warning badge-top-right text-white ml-3">in-progress</sup>
                                                 @else
                                                     <sup class="badge badge-success badge-top-right ml-3">Done</sup>
-    
+
                                                 @endif
                                             </a>
                                         </td>
                                         <td>
-                                            {{date('M, Y', strtotime($appraisal->start_date))}} <label class="badge badge-info">to</label> 
+                                            {{date('M, Y', strtotime($appraisal->start_date))}} <label class="badge badge-info">to</label>
                                             {{date( 'M, Y', strtotime($appraisal->end_date))}}
                                         </td>
                                         <td>
@@ -350,12 +423,12 @@
                                                 <sup class="badge badge-warning badge-top-right text-white ml-3">in-progress</sup>
                                                 @else
                                                     <sup class="badge badge-success badge-top-right ml-3">Done</sup>
-    
+
                                                 @endif
                                             </a>
                                         </td>
                                         <td>
-                                            {{date('M, Y', strtotime($appraisal->start_date))}} <label class="badge badge-info">to</label> 
+                                            {{date('M, Y', strtotime($appraisal->start_date))}} <label class="badge badge-info">to</label>
                                             {{date( 'M, Y', strtotime($appraisal->end_date))}}
                                         </td>
                                         <td>

@@ -4,12 +4,13 @@ namespace App\Http\Livewire\Backend\ActivityStream;
 use Livewire\WithPagination;
 use Livewire\Component;
 use App\Mail\RequisitionVerificationMail;
+use App\RequisitionVerification;
 use Carbon\Carbon;
+use App\BusinessLog;
 use App\Post;
 use App\PostComment;
 use App\PostLike;
 use App\ResponsiblePerson;
-use App\RequisitionVerification;
 use App\User;
 use Auth;
 
@@ -68,8 +69,6 @@ class Shortcut extends Component
     * Get content
     */
     public function getContent(){
-        //$this->posts = Post::latest()->get();
-        //$this->announcements = Post::where('post_type', 'announcement')->orderBy('id', 'DESC')->take(5)->get();
         $this->users = User::where('tenant_id', Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->get();
     }
 
@@ -130,7 +129,7 @@ class Shortcut extends Component
         $unlike->delete();
     }
 
-            /*
+    /*
     * Approve request
     */
     public function approveRequest($id){
@@ -184,7 +183,7 @@ class Shortcut extends Component
                 $verify->action = 'declined';
                 $verify->save();
             }
-            //\Mail::to($decline->user->email)->send(new RequisitionVerificationMail($decline->user, $request, $code));
+            \Mail::to($decline->user->email)->send(new RequisitionVerificationMail($decline->user, $request, $code));
             $this->actionStatus = 1;
             $this->verificationPostId = $id;
             session()->flash("success_code", "<strong>Success!</strong> We just sent verification code to your registered email.");
@@ -199,25 +198,76 @@ class Shortcut extends Component
                     ->first();
         if(!empty($verify) ){
             if($verify->code === $this->verificationCode){
-                $approve = ResponsiblePerson::where('post_id', $id)
-                    ->where('user_id', Auth::user()->id)
-                    ->where('tenant_id', Auth::user()->tenant_id)
-                    ->first();
-                    if(!empty($approve) ){
-                        /* $action = RequisitionVerification::where('tenant_id', Auth::user()->tenant_id)
-                                                            ->where('post_id', $id)
-                                                            ->where('processor_id', Auth::user()->id)
-                                                            ->first(); */
-                        $verify->status = 1;//verified
-                        $verify->save();
-                        $approve->status = $verify->action;
-                       $approve->save();
-                       $this->actionStatus = 0;
-                       $this->verificationPostId = null;
-                       $this->getContent();
-
-                       session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-                    }
+                $details = Post::find($id);
+                $verifyStatus = $verify->action;
+                if($verifyStatus == 'approved'){
+                    $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+                    $action->status = $verifyStatus;
+                    $action->save();
+                    //Register business process log
+                    $log = new BusinessLog;
+                    $log->request_id = $id;
+                    $log->user_id = Auth::user()->id;
+                    $log->name = $verifyStatus;
+                    $log->note = str_replace('-', ' ',$details->post_type)." ".$verifyStatus." by ".Auth::user()->first_name." ".Auth::user()->surname;
+                    $log->save();
+                    //search for supervisor
+                    $find = ResponsiblePerson::select('user_id')
+                                            ->where('post_id', $id)
+                                            ->where('status','in-progress')
+                                            ->first();
+                    //identify next supervisor
+                    $supervise = new BusinessLog;
+                    $supervise->request_id = $id;
+                    $supervise->user_id = Auth::user()->id;
+                    $supervise->name = 'Log entry';
+                    $supervise->note = "Identifying next supervisor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
+                    $supervise->save();
+                        if(!empty($find)){
+                            //identify supervisor
+                            $supervise = new BusinessLog;
+                            $supervise->request_id = $id;
+                            $supervise->user_id = Auth::user()->id;
+                            $supervise->name = 'Log entry';
+                            $supervise->note = "New supervisor identified for ".str_replace('-', ' ',$details->post_type)." ".$details->post_title;
+                            $supervise->save();
+                        }else{
+                            //there's no more supervisor
+                            $supervise = new BusinessLog;
+                            $supervise->request_id = $id;
+                            $supervise->user_id = Auth::user()->id;
+                            $supervise->name = 'Log entry';
+                            $supervise->note = "There're no more supervisors for ".str_replace('-', ' ',$details->post_type)." ".$details->post_title;
+                            $supervise->save();
+                            //update request table finally
+                            $status = Post::find($id);
+                            $status->post_status = $verifyStatus;
+                            $status->save();
+                        }
+                        $this->actionStatus = 0;
+                        $this->verificationPostId = null;
+                        $this->getContent();
+                        session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+                }else{
+                    $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+                    $action->status = $verifyStatus;
+                    $action->save();
+                    //Register business process log
+                    $log = new BusinessLog;
+                    $log->request_id = $id;
+                    $log->user_id = Auth::user()->id;
+                    $log->name = $verifyStatus;
+                    $log->note = str_replace('-', ' ',$details->post_type)." ".$verifyStatus." by ".Auth::user()->first_name." ".Auth::user()->surname;
+                    $log->save();
+                     //update request table finally
+                     $status = Post::find($id);
+                     $status->post_status = $verifyStatus;
+                     $status->save();
+                        $this->actionStatus = 0;
+                        $this->verificationPostId = null;
+                        $this->getContent();
+                        session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+                }
             }else{
                 session()->flash("error_code", "<strong>Ooops! Authentication code mis-match. Try again.</strong>");
             }

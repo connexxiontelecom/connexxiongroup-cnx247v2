@@ -1077,9 +1077,6 @@
                                                                                             @endif
                                                                                             <input type="text" placeholder="8-digit code" wire:model.debounce.9900000ms="verificationCode" class="form-control">
                                                                                         </div>
-                                                                                        <p>
-                                                                                            <a href="">Re-send the code</a>
-                                                                                        </p>
                                                                                         <div class="form-group d-flex justify-content-center">
                                                                                             <button class="btn-mini btn btn-primary" wire:click="verifyCode({{ $post->id }})"> <i class="ti-check mr-2"></i> Verify</button>
                                                                                         </div>
@@ -1245,9 +1242,6 @@
                                                                                                 @endif
                                                                                                 <input type="text" placeholder="8-digit code" wire:model.debounce.9900000ms="verificationCode" class="form-control">
                                                                                             </div>
-                                                                                            <p>
-                                                                                                <a href="">Re-send the code</a>
-                                                                                            </p>
                                                                                             <div class="form-group d-flex justify-content-center">
                                                                                                 <button class="btn-mini btn btn-primary" wire:click="verifyCode({{ $post->id }})"> <i class="ti-check mr-2"></i> Verify</button>
                                                                                             </div>
@@ -1413,9 +1407,6 @@
                                                                                                 @endif
                                                                                                 <input type="text" placeholder="8-digit code" wire:model.debounce.9900000ms="verificationCode" class="form-control">
                                                                                             </div>
-                                                                                            <p>
-                                                                                                <a href="">Re-send the code</a>
-                                                                                            </p>
                                                                                             <div class="form-group d-flex justify-content-center">
                                                                                                 <button class="btn-mini btn btn-primary" wire:click="verifyCode({{ $post->id }})"> <i class="ti-check mr-2"></i> Verify</button>
                                                                                             </div>
@@ -1590,9 +1581,6 @@
                                                                                                 @endif
                                                                                                 <input type="text" placeholder="8-digit code" wire:model.debounce.9900000ms="verificationCode" class="form-control">
                                                                                             </div>
-                                                                                            <p>
-                                                                                                <a href="">Re-send the code</a>
-                                                                                            </p>
                                                                                             <div class="form-group d-flex justify-content-center">
                                                                                                 <button class="btn-mini btn btn-primary" wire:click="verifyCode({{ $post->id }})"> <i class="ti-check mr-2"></i> Verify</button>
                                                                                             </div>
@@ -1728,7 +1716,7 @@
                                                                                     @if($post->post_status == 'in-progress')
                                                                                         @foreach($post->responsiblePersons as $app)
 
-                                                                                        @if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
+                                                                                            @if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
                                                                                                 <button class="btn btn-out-dashed btn-danger btn-square btn-mini" wire:click="declineRequest({{ $post->id }})"><i class="ti-na mr-2"></i> DECLINE</button>
 
                                                                                                 <button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn" wire:click="approveRequest({{ $post->id }})"> <i class="ti-check-box mr-2"></i>
@@ -1766,9 +1754,6 @@
                                                                                                 @endif
                                                                                                 <input type="text" placeholder="8-digit code" wire:model.debounce.9900000ms="verificationCode" class="form-control">
                                                                                             </div>
-                                                                                            <p>
-                                                                                                <a href="">Re-send the code</a>
-                                                                                            </p>
                                                                                             <div class="form-group d-flex justify-content-center">
                                                                                                 <button class="btn-mini btn btn-primary" wire:click="verifyCode({{ $post->id }})"> <i class="ti-check mr-2"></i> Verify</button>
                                                                                             </div>

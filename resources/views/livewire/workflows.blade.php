@@ -61,28 +61,60 @@
                                     <td>
                                         You are assigned to fulfill this request<br/>
                                         <div class="btn-group mt-2">
-                                            @if($person->status == 'approved')
-                                            <button type="button" class="btn btn-success btn-mini btn-out-dashed btn-square waves-effect waves-light" disabled>
-                                                Approved
-                                                <i class="icofont icofont-thumbs-up"></i>
-                                            </button>
-                                            @elseif($person->status == 'declined')
-                                                <button type="button" class="btn btn-danger btn-mini btn-out-dashed btn-square waves-effect waves-light" disabled>
-                                                    Declined
-                                                    <i class="icofont icofont-thumbs-down"></i>
-                                                </button>
-                                            @elseif($person->status == 'in-progress')
-                                                <button type="button" class="btn btn-danger btn-mini btn-out-dashed btn-square waves-effect waves-light declineBtn" wire:click="declineRequest({{ $request->id }})">
-                                                    Decline
-                                                    <i class="icofont icofont-thumbs-down"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-success btn-mini btn-out-dashed btn-square waves-effect waves-light approveBtn" wire:click="approveRequest({{ $request->id }})">
-                                                    Approve
-                                                    <i class="icofont icofont-thumbs-up"></i>
-                                                </button>
+                                            @if($request->post_status == 'in-progress')
+                                                    @foreach($request->responsiblePersons as $app)
+
+                                                        @if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
+                                                            <button class="btn btn-out-dashed btn-danger btn-square btn-mini" wire:click="declineRequest({{ $request->id }})"><i class="ti-na mr-2"></i> DECLINE</button>
+
+                                                            <button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn" wire:click="approveRequest({{ $request->id }})"> <i class="ti-check-box mr-2"></i>
+                                                                APPROVE
+                                                            </button>
+                                                        @elseif($app->user_id == Auth::user()->id && $app->status == 'decline')
+                                                            <i>You previously declined this request</i>
+                                                        @elseif($app->user_id == Auth::user()->id && $app->status == 'approve')
+                                                            <i>You previously approved this request</i>
+                                                        @endif
+                                                    @endforeach
                                             @endif
 
                                         </div>
+                                        @if (session()->has('done'))
+                                            <div class="col-md-12">
+                                                {!! session()->get('done') !!}
+                                            </div>
+                                        @endif
+                                        @if ($actionStatus == 1 && $verificationPostId == $request->id)
+                                            <div class="row mt-2">
+                                                <div class="card ml-4">
+                                                    <div class="card-block">
+                                                        <div class="col-sm-12">
+                                                            <h5 class="sub-title">Requisition Verification</h5>
+                                                            @if (session()->has('error_code'))
+                                                                <div class="alert alert-warning background-warning" role="alert">
+                                                                    {!! session()->get('error_code') !!}
+                                                                </div>
+                                                            @endif
+
+                                                            <div class="form-group">
+                                                                @if (session()->has('success_code'))
+                                                                    <div class="alert alert-success background-success" role="alert">
+                                                                        {!! session()->get('success_code') !!}
+                                                                    </div>
+                                                                @endif
+                                                            <div class="input-group input-group-primary">
+                                                                <input type="text" class="form-control" wire:model.debounce.9900000ms="verificationCode" placeholder="8-digit code">
+                                                                    <span class="input-group-addon btn-mini" wire:click="verifyCode({{ $request->id }})">
+                                                                    <i class="ti-check mr-2"></i> Verify
+                                                                    </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </td>
                                 </tr>
 
