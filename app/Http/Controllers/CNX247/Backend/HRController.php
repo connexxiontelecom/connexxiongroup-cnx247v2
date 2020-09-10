@@ -500,4 +500,15 @@ class HRController extends Controller
 
     }
 
+
+    public function viewResignation($url){
+
+        $post = Resignation::where('tenant_id', Auth::user()->tenant_id)->where('slug', $url)->first();
+        if(!empty($post)){
+            return view('backend.hr.view-resignation');
+        }else{
+            return redirect()->route('404');
+        }
+    }
+
 }

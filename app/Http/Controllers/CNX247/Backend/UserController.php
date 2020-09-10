@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Paystack;
 use App\User;
+use Carbon\Carbon;
 use App\Notification;
 use App\Resignation;
 use App\Clocker;
@@ -88,9 +89,32 @@ class UserController extends Controller
     * User administrative report
     */
     public function administration(){
+        $now = Carbon::now();
         $resignations = Resignation::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
-        $attendance = Clocker::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
-        $queries = QueryEmployee::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
+        #Attendance
+            $attendance = Clocker::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
+            $attendanceThisMonth = Clocker::where('user_id', Auth::user()->id)
+                                            ->where('tenant_id',Auth::user()->tenant_id)
+                                            ->whereMonth('created_at', date('m'))
+                                            ->whereYear('created_at', date('Y'))
+                                            ->count();
+            $attendanceLastMonth = Clocker::where('user_id', Auth::user()->id)
+                                            ->where('tenant_id',Auth::user()->tenant_id)
+                                            ->whereMonth('created_at', '=', $now->subMonth()->month)
+                                            ->count();
+        #Queries
+            $queries = QueryEmployee::where('user_id', Auth::user()->id)
+                                    ->where('tenant_id',Auth::user()->tenant_id)
+                                    ->get();
+            $queriesThisMonth = QueryEmployee::where('user_id', Auth::user()->id)
+                                              ->where('tenant_id',Auth::user()->tenant_id)
+                                              ->whereMonth('created_at', date('m'))
+                                              ->whereYear('created_at', date('Y'))
+                                              ->count();
+            $queriesLastMonth = QueryEmployee::where('user_id', Auth::user()->id)
+                                              ->where('tenant_id',Auth::user()->tenant_id)
+                                              ->whereMonth('created_at', '=', $now->subMonth()->month)
+                                              ->count();
         $myAppraisals = EmployeeAppraisal::where('employee', Auth::user()->id)
                                             ->where('tenant_id',Auth::user()->tenant_id)
                                             ->get();
@@ -102,7 +126,9 @@ class UserController extends Controller
             'attendance'=>$attendance,
             'queries'=>$queries,
             'myAppraisals'=>$myAppraisals,
-            'supervisors'=>$supervisors
+            'supervisors'=>$supervisors,
+            'attendanceThisMonth'=>$attendanceThisMonth,'queriesThisMonth'=>$queriesThisMonth,
+            'attendanceLastMonth'=>$attendanceLastMonth, 'queriesLastMonth'=>$queriesLastMonth
         ]);
     }
     /*

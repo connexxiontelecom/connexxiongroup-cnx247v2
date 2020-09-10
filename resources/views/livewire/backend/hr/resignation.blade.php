@@ -140,11 +140,11 @@
                                                             @foreach ($resignations as $resign)
                                                                 <tr>
                                                                     <td>{{$index++}}</td>
-                                                                    <td><img src="{{$resign->user->avatar ?? '\assets\images\user.png'}}" class="img-30" alt="{{$resign->user->first_name}}">
+                                                                    <td><img src="/assets/images/avatars/thumbnails/{{$resign->user->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$resign->user->first_name}}">
                                                                         <a href="/activity-stream/profile/{{$resign->user->url}}">{{$resign->user->first_name}} {{$resign->user->surname ?? ''}}</a>
                                                                     </td>
                                                                     <td>
-                                                                        <a href="#">{!! strlen($resign->subject) > 25 ? substr($resign->subject, 0, 25).'...' : $resign->subject !!}</a>
+                                                                        <a href="{{route('view-resignation', $resign->slug)}}">{!! strlen($resign->subject) > 25 ? substr($resign->subject, 0, 25).'...' : $resign->subject !!}</a>
                                                                     </td>
                                                                     <td>
                                                                         @if ($resign->status == 'in-progress')
@@ -159,7 +159,7 @@
                                                                     <td>{{date('d M, Y', strtotime($resign->created_at))}}</td>
                                                                 </tr>
                                                             @endforeach
-                                                           
+
                                                         </table>
 
                                                     </div>

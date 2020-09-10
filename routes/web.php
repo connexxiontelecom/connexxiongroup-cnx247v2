@@ -163,6 +163,7 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
     #Resignation
         Route::get('/resignation', 'CNX247\Backend\HRController@resignation')->name('resignation');
         Route::post('/resignation', 'CNX247\Backend\HRController@submitResignation');
+        Route::get('/view-resignation/{url}', 'CNX247\Backend\HRController@viewResignation')->name('view-resignation');
     #Complaint
         Route::get('/complaints', 'CNX247\Backend\HRController@complaints')->name('complaints');
     #Timesheet

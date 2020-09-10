@@ -22,6 +22,7 @@ class CreateResignationsTable extends Migration
             $table->string('status')->default('in-progress'); //0=in-progress; 1=approved; 2=declined
             $table->unsignedBigInteger('action_by')->nullable(); //i.e the user who approved or declined the request
             $table->string('slug')->nullable();
+            $table->dateTime('effective_date')->nullable();
             $table->bigInteger('tenant_id')->nullable();
             $table->timestamps();
         });
