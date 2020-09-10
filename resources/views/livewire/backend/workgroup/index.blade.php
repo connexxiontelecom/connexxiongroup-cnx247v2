@@ -6,6 +6,13 @@
                 <span>You can only access a workgroup to which you're a member. </span>
                 <a href="{{route('new-workgroup')}}" class="float-right btn btn-primary btn-mini waves-effect waves-light" ><i class="ti-plus mr-2"></i>New Workgroup</a>
                 <div class="row">
+                    @if (session()->has('error'))
+                        <div class="col-md-12">
+                            <div class="alert alert-warning background-warning" role="alert">
+                                {!! session()->get('error') !!}
+                            </div>
+                        </div>
+                    @endif
                     <div class="col-sm-12">
                         <div class="grid">
                             @if (count($groups) > 0)
