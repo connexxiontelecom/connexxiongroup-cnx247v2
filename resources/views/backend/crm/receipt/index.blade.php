@@ -38,39 +38,25 @@
                 <div class="card-block p-t-10">
                     <div class="task-right">
                         <div class="task-right-header-status">
-                            <span data-toggle="collapse">Top Issuers</span>
+                            <span data-toggle="collapse">Top Converters</span>
                         </div>
+                        @foreach ($receipts as $receipt)
                         <div class="user-box assign-user taskboard-right-users">
                             <div class="media">
                                 <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-1.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
+                                    <a href="{{route('view-profile', $receipt->converter->url)}}">
+                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$receipt->converter->avatar ?? 'avatar.png'}}" alt="{{$receipt->converter->first_name ?? ''}}">
                                     </a>
                                 </div>
                                 <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Santa Ana,CA</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="task-right-header-users">
-                            <span data-toggle="collapse">Upcoming</span>
-                        </div>
-                        <div class="user-box assign-user taskboard-right-users">
-                            <div class="media">
-                                <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-1.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
+                                    <a href="{{route('view-profile', $receipt->converter->url)}}">
+                                        <h6>{{$receipt->converter->first_name ?? ''}} {{$receipt->converter->surname ?? ''}}</h6>
                                     </a>
-                                </div>
-                                <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Santa Ana,CA</p>
+                                    <p>{{$receipt->converter->position ?? ''}} <br> <label for="" class="label label-primary">on</label> <small>{{date('d F, Y', strtotime($receipt->created_at))}}</small> <label for="" class="label label-primary">@</label> <small>{{date('h:ia', strtotime($receipt->created_at))}}</small></p>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -86,7 +72,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <h6 class="text-muted m-b-10">This Year</h6>
-                                    <h2 class="m-b-0">379</h2>
+                                    <h5 class="m-b-0">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($thisYear,2)}}</h5>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +87,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <h6 class="text-muted m-b-10">Last Month</h6>
-                                    <h2 class="m-b-0">379</h2>
+                                    <h5 class="m-b-0">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($last_month,2)}}</h5>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +102,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <h6 class="text-muted m-b-10">This Month</h6>
-                                    <h2 class="m-b-0">379</h2>
+                                    <h5 class="m-b-0">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($monthly,2)}}</h5>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +117,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <h6 class="text-muted m-b-10">This Week</h6>
-                                    <h2 class="m-b-0">379</h2>
+                                    <h5 class="m-b-0">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($this_week,2)}}</h5>
                                 </div>
                             </div>
                         </div>
@@ -175,18 +161,10 @@
                                         <button class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown14" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
                                         <div class="dropdown-menu" aria-labelledby="dropdown14" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                             <a class="dropdown-item waves-light waves-effect" href="{{route('print-receipt', $receipt->slug)}}"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
-                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-attachment"></i> Download invoice</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-spinner-alt-5"></i> Edit Invoice</a>
-                                            <a class="dropdown-item waves-light waves-effect" href="#!"><i class="icofont icofont-ui-edit"></i> Remove Invoice</a>
                                         </div>
-                                        <!-- end of dropdown menu -->
                                     </div>
-                                    <!-- end of seconadary -->
                                 </div>
-                                <!-- end of pull-right class -->
                             </div>
-                            <!-- end of card-footer -->
                         </div>
                     </div>
                 @endforeach

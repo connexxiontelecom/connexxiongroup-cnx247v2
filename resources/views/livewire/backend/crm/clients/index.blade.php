@@ -38,7 +38,7 @@
                                 @foreach ($clients as $client)
                                     <div class="col-md-6">
                                         <div class="sortable-moves" style="cursor: auto;">
-                                            <img class="img-fluid p-absolute" src="\assets\images\avatar-2.jpg" alt="">
+                                            <img class="img-fluid p-absolute" src="/assets/images/avatars/thumbnails/avatar.png" alt="">
                                                 <span id="clientAvatarBtn" style="cursor: pointer"><i class="ti-camera"></i></span>
                                                 <input type="file" hidden id="clientAvatar">
                                                 <table class="table m-0">

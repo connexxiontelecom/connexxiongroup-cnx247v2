@@ -90,7 +90,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td><a href="email-read.htm" class="email-name">{{$message->email}}</a></td>
+                                                        <td><a href="#" class="email-name">{{$message->email}}</a></td>
                                                         <td>{!! strlen($message->content) > 81 ? substr($message->content, 0,81).'...' : $message->content ?? ''!!}</td>
                                                         <td class="email-attch">
                                                             @if ($message->status == 0)
