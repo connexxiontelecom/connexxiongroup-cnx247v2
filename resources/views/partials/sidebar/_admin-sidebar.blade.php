@@ -252,7 +252,7 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('admin-support')}}">
+                        <a href="{{route('feedbacks')}}">
                             <span class="pcoded-mtext">Feedback</span>
                         </a>
                     </li>

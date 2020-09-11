@@ -155,6 +155,9 @@ Route::get('/my-ideas', 'CNX247\Backend\UserController@myIdeas')->name('my-ideas
 Route::post('/submit-idea', 'CNX247\Backend\UserController@submitIdea');
 Route::get('/renew-membership/{timestamp}/{plan}', 'CNX247\Backend\UserController@renewMembership')->name('renew-membership');
 Route::post('/renew-membership/pay', 'CNX247\Backend\UserController@proceedToPay')->name('pay-membership');
+Route::get('/my-feedback', 'CNX247\Backend\UserController@myFeedback')->name('my-feedback');
+Route::post('/my-feedback', 'CNX247\Backend\UserController@submitFeedback');
+
 #HR routes
 Route::get('/hr-dashboard', 'CNX247\Backend\HRController@hrDashboard')->name('hr-dashboard');
 Route::get('/employees', 'CNX247\Backend\HRController@index')->name('employees');
@@ -253,7 +256,8 @@ Route::get('/support/view-ticket/{slug}', 'CNX247\Backend\SupportController@view
 #Admin area support
 Route::get('/crm/support/tickets', 'CNX247\Backend\SupportController@adminTicketIndex')->name('admin-support');
 Route::post('/crm/support/ticket/category/new', 'CNX247\Backend\SupportController@newTicketCategory')->name('new-ticket-category');
-
+Route::get('/feedbacks', 'CNX247\Backend\CRMController@feedbacks')->name('feedbacks');
+Route::post('/feedback-status', 'CNX247\Backend\CRMController@feedbackStatus');
 #Activity stream routes
 Route::get('/activity-stream', 'CNX247\Backend\ActivityStreamController@index')->name('activity-stream');
 Route::post('/activity-stream/message', 'CNX247\Backend\ActivityStreamController@sendMessage');

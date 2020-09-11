@@ -17,6 +17,7 @@ use App\InvoiceItem;
 use App\Receipt;
 use App\ReceiptItem;
 use App\Product;
+use App\Feedback;
 use App\ProductCategory;
 use Auth;
 
@@ -533,5 +534,21 @@ class CRMController extends Controller
         }else{
             return redirect()->route('404');
         }
+    }
+
+    public function feedbacks(){
+        $feedbacks = Feedback::orderBy('id', 'DESC')->get();
+        return view('backend.crm.feedback.index', ['feedbacks'=>$feedbacks]);
+    }
+
+    public function feedbackStatus(Request $request){
+        $this->validate($request,[
+            'id'=>'required',
+            'value'=>'required'
+        ]);
+        $feed = Feedback::find($request->id);
+        $feed->favourite = $request->value;
+        $feed->save();
+        return response()->json(['message'=>'Success! Feedback updated.']);
     }
 }
