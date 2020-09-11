@@ -20,4 +20,8 @@ class Receipt extends Model
         public function clients(){
             return $this->hasMany(Client::class, 'client_id');
         }
+
+        public function converter(){
+            return $this->belongsTo(User::class, 'issued_by');
+        }
 }

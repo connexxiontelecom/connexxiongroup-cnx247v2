@@ -196,16 +196,28 @@ class CRMController extends Controller
     * Invoice list [index]
     */
     public function invoiceList(){
+        $now = Carbon::now();
         $invoices = Invoice::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
-        $monthly = Invoice::where('tenant_id', Auth::user()->tenant_id)->whereMonth('issue_date', Carbon::now()->isCurrentMonth())->sum('total');
-        $last_month = Invoice::where('tenant_id', Auth::user()->tenant_id)->whereMonth('issue_date', Carbon::now()->isLastMonth())->sum('total');
-        $this_week = Invoice::where('tenant_id', Auth::user()->tenant_id)->whereMonth('issue_date', Carbon::now()->isLastMonth())->sum('total');
+        $monthly = Invoice::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereMonth('created_at', date('m'))
+                            ->whereYear('created_at', date('Y'))
+                            ->sum('total');
+        $last_month = Invoice::where('tenant_id', Auth::user()->tenant_id)
+                             ->whereMonth('created_at', '=', $now->subMonth()->month)
+                            ->sum('total');
+        $thisYear = Invoice::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereYear('created_at', date('Y'))
+                            ->sum('total');
+        $this_week = Invoice::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereBetween('created_at', [$now->startOfWeek()->format('Y-m-d H:i'), $now->endOfWeek()->format('Y-m-d H:i')])
+                            ->sum('total');
         return view('backend.crm.invoice.index',
         [
             'invoices'=>$invoices,
             'monthly'=>$monthly,
             'last_month'=>$last_month,
-            'this_week'=>$this_week
+            'this_week'=>$this_week,
+            'thisYear'=>$thisYear
         ]);
     }
 
@@ -283,6 +295,7 @@ class CRMController extends Controller
         $receipt->client_id = $request->clientId;
         $receipt->tenant_id = Auth::user()->tenant_id;
         $receipt->issue_date = $request->issue_date;
+        $receipt->issued_by = Auth::user()->id;
         $receipt->due_date = $request->due_date;
         $receipt->total = $request->receiptTotal;
         $receipt->sub_total = $request->receiptSubtotal;
@@ -322,8 +335,28 @@ class CRMController extends Controller
     * Receipt list [index]
     */
     public function receiptList(){
+        $now = Carbon::now();
         $receipts = Receipt::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
-        return view('backend.crm.receipt.index', ['receipts'=>$receipts]);
+        $monthly = Receipt::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereMonth('created_at', date('m'))
+                            ->whereYear('created_at', date('Y'))
+                            ->sum('total');
+        $last_month = Receipt::where('tenant_id', Auth::user()->tenant_id)
+                             ->whereMonth('created_at', '=', $now->subMonth()->month)
+                            ->sum('total');
+        $thisYear = Receipt::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereYear('created_at', date('Y'))
+                            ->sum('total');
+        $this_week = Receipt::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereBetween('created_at', [$now->startOfWeek()->format('Y-m-d H:i'), $now->endOfWeek()->format('Y-m-d H:i')])
+                            ->sum('total');
+        return view('backend.crm.receipt.index',
+        ['receipts'=>$receipts,
+        'monthly'=>$monthly,
+        'last_month'=>$last_month,
+        'this_week'=>$this_week,
+        'thisYear'=>$thisYear
+        ]);
     }
 
     /*

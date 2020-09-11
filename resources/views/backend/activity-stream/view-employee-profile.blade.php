@@ -49,76 +49,130 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-xl-12 col-md-12">
-            @include('backend.activity-stream.common._profile-slab')
-        </div>
-    </div>
-</div>
-
-    <div class="card" style="margin-top:-25px;">
-        <div class="card-block">
-            <div class="row">
-                <div class="col-md-12 col-lg-12 col-xl-12">
-                    <div class="tab-pane active" id="home" role="tabpanel">
-                        @if(Auth::check())
-                            <div class="table-responsive">
-                                <table class="table m-0">
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
-                                            <td>{{$user->first_name ?? ''}} {{$user->surname ?? ''}} </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Gender</th>
-                                            <td>Female</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Birth Date</th>
-                                            <td>October 25th, 1990</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Marital Status</th>
-                                            <td>Single</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
-                                            <td>{{$user->email ?? ''}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile</th>
-                                            <td>{{$user->mobile ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Position</th>
-                                            <td>{{$user->position ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Department</th>
-                                            <td>{{$user->departmenet_id ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Hire Date</th>
-                                            <td>{{date('d M, Y', strtotime($user->hire_date)) ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Confirm Date</th>
-                                            <td>{{date('d M, Y', strtotime($user->confirm_date)) ?? '-'}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
-                                            <td>{{$user->address}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs md-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#personalInfo" role="tab">Personal Info</a>
+                    <div class="slide"></div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#administration" role="tab">Contacts</a>
+                    <div class="slide"></div>
+                </li>
+                <li class="nav-item">
+                    <div class="btn-group">
+                        <a href="{{route('query-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Query {{$user->first_name}}"> <i class="ti-help-alt mr-4 text-danger"></i></a>
+                        <a href="{{route('assign-permission-to-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Assign Role to {{$user->first_name}}"> <i class="icofont icofont-chart-flow-alt-1 mr-4 text-warning"></i></a>
+                        <a href="" data-toggle="tooltip" data-placement="top" title="Terminate {{$user->first_name}}'s employement"> <i class="ti-na mr-4 text-danger"></i></a>
+                    </div>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content card-block">
+                <div class="tab-pane active" id="personalInfo" role="tabpanel">
+                    @if(Auth::check())
+                    <div class="table-responsive">
+                        <table class="table m-0">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
+                                        <td>{{$user->first_name ?? ''}} {{$user->surname ?? ''}} </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Gender</th>
+                                        <td>Female</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Birth Date</th>
+                                        <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($user->birth_date)) ?? ''}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Marital Status</th>
+                                        <td>Single</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
+                                        <td>{{$user->email ?? ''}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile</th>
+                                        <td>{{$user->mobile ?? '-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Position</th>
+                                        <td>{{$user->position ?? '-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Department</th>
+                                        <td>{{$user->department->departmenet_name ?? '-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Hire Date</th>
+                                        <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime($user->hire_date)) ?? '-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Confirm Date</th>
+                                        <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime($user->confirm_date)) ?? '-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
+                                        <td>{{$user->address}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        {{route('signin')}}
+                    @endif
+                </div>
+                <div class="tab-pane mt-3" id="administration" role="tabpanel">
+                    <div class="card" style="margin-top:-25px;">
+                        <div class="card-block accordion-block ">
+                            <div id="accordion" role="tablist" aria-multiselectable="true">
+                                <div class="accordion-panel">
+                                    <div class="accordion-heading" role="tab" id="nextOfKin">
+                                        <h3 class="card-title accordion-title">
+                                        <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapsenextOfKin" aria-expanded="true" aria-controls="collapsenextOfKin">
+                                            Next of Kin
+                                        </a>
+                                    </h3>
+                                    </div>
+                                    <div id="collapsenextOfKin" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="nextOfKin">
+                                        <div class="accordion-content accordion-desc">
+                                            <p>
+                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
+                                                survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+                                                sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-panel">
+                                    <div class="accordion-heading" role="tab" id="emergencyContact">
+                                        <h3 class="card-title accordion-title">
+                                        <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseemergencyContact" aria-expanded="true" aria-controls="collapseemergencyContact">
+                                           Emergency Contact
+                                        </a>
+                                    </h3>
+                                    </div>
+                                    <div id="collapseemergencyContact" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="emergencyContact">
+                                        <div class="accordion-content accordion-desc">
+                                            <p>
+                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
+                                                survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+                                                sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        @else
-                            {{route('signin')}}
-                        @endif
-
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @section('dialog-section')

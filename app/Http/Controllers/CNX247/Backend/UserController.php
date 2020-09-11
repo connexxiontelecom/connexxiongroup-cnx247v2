@@ -121,12 +121,13 @@ class UserController extends Controller
         $supervisors = EmployeeAppraisal::where('supervisor', Auth::user()->id)
                                             ->where('tenant_id',Auth::user()->tenant_id)
                                             ->get();
+        $modules = ModuleManager::orderBy('module_name', 'ASC')->get();
         return view('backend.user.administration',[
             'resignations'=>$resignations,
             'attendance'=>$attendance,
             'queries'=>$queries,
             'myAppraisals'=>$myAppraisals,
-            'supervisors'=>$supervisors,
+            'supervisors'=>$supervisors,'modules'=>$modules,
             'attendanceThisMonth'=>$attendanceThisMonth,'queriesThisMonth'=>$queriesThisMonth,
             'attendanceLastMonth'=>$attendanceLastMonth, 'queriesLastMonth'=>$queriesLastMonth
         ]);

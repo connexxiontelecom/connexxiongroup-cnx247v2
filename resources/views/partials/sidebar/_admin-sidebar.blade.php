@@ -195,11 +195,6 @@
                             <span class="pcoded-mtext">Employee Appraisal</span>
                         </a>
                     </li>
-                    <!--<li class=" ">
-                        <a href="">
-                            <span class="pcoded-mtext">Goal Tracking</span>
-                        </a>
-                    </li>-->
                 </ul>
             </li>
         </ul>
@@ -252,11 +247,6 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="button.htm">
-                            <span class="pcoded-mtext">Newsletter</span>
-                        </a>
-                    </li>
-                    <li class=" ">
                         <a href="{{route('admin-support')}}">
                             <span class="pcoded-mtext">Support Ticket</span>
                         </a>
@@ -269,7 +259,7 @@
                 </ul>
             </li>
         </ul>
-        <ul class="pcoded-item pcoded-left-item">
+        <!-- <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="icofont icofont-users-social"></i></span>
@@ -277,7 +267,7 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <li class=" ">
-                        <a href="{{route('facebook-timeline')}}">
+                        <a href="facebook-timeline')}}">
                             <span class="pcoded-mtext">Facebook</span>
                         </a>
                     </li>
@@ -298,7 +288,7 @@
                     </li>
                 </ul>
             </li>
-        </ul>
+        </ul> -->
 
         <div class="pcoded-navigatio-lavel text-white">Accounting</div>
         <ul class="pcoded-item pcoded-left-item">

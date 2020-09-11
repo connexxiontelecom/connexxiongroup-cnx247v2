@@ -17,6 +17,7 @@ class CreateReceiptsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('tenant_id');
+            $table->unsignedBigInteger('issued_by')->nullable();
             $table->integer('receipt_no');
             $table->tinyInteger('tax_inclusive')->nullable(); //1=yes; 0=no
             $table->dateTime('issue_date');

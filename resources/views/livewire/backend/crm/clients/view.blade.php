@@ -10,7 +10,6 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-xl-12 col-md-12">
-            <!-- Draggable Multiple List card start -->
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-header-text"> {{ $client->first_name ?? ''}} {{$client->surname ?? ''}}</h5>
@@ -33,7 +32,7 @@
                                                 <a href=""><i class="ti-pencil text-warning p-2"></i></a>
                                             </div>
                                             <div data-label="50%" class="radial-bar radial-bar-60 radial-bar-lg radial-bar-primary">
-                                                <img src="\assets\images\avatar-2.jpg" alt="User-Image">
+                                                <img src="/assets/images/avatars/thumbnails/avatar.png" alt="" class="img-100">
                                             </div>
                                             <div style="text-align: left;" class="mt-2">
                                                 <p><label class="label label-primary">Full Name</label></p>
@@ -86,7 +85,7 @@
                                                                         <div class="accordion-heading" role="tab" id="headingOne_{{$convo->id}}">
                                                                             <h3 class="card-title accordion-title">
                                                                             <a class="accordion-msg scale_active collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne_{{$convo->id}}" aria-expanded="false" aria-controls="collapseOne_{{$convo->id}}">
-                                                                                <img src="\assets\images\user.png" class="img-30" alt="user.png">  {{$convo->subject ?? ''}} <sup><i class="ti-comment-alt text-success"></i></sup> <span class="float-right"><small>{{date('d F, Y', strtotime($convo->created_at))}} @ {{date('h:i a', strtotime($convo->created_at))}}</small></span>
+                                                                                <img src="/assets/images/avatars/thumbnails/{{$convo->user->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$convo->user->first_name ?? ''}}">  {{$convo->subject ?? ''}} <sup><i class="ti-comment-alt text-success"></i></sup> <span class="float-right"><small>{{date('d F, Y', strtotime($convo->created_at))}} @ {{date('h:i a', strtotime($convo->created_at))}}</small></span>
                                                                             </a>
                                                                         </h3>
                                                                         </div>

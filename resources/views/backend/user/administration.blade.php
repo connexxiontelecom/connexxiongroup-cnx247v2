@@ -309,20 +309,6 @@
                     </div>
                 </div> -->
                 <div class="accordion-panel">
-                    <div class=" accordion-heading" role="tab" id="permissionAccordion">
-                        <h3 class="card-title accordion-title">
-                        <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#permissionCollapse" aria-expanded="false" aria-controls="permissionCollapse">
-                            User Permission(s)
-                        </a>
-                    </h3>
-                    </div>
-                    <div id="permissionCollapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="permissionAccordion">
-                        <div class="accordion-content accordion-desc">
-                            user permission
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-panel">
                     <div class=" accordion-heading" role="tab" id="supervisorAccordion">
                         <h3 class="card-title accordion-title">
                         <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#supervisorCollapse" aria-expanded="false" aria-controls="supervisorCollapse">

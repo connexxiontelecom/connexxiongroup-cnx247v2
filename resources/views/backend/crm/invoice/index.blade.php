@@ -52,13 +52,14 @@
                         <div class="user-box assign-user taskboard-right-users">
                             <div class="media">
                                 <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-1.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
+                                    <a href="{{route('view-profile', $invoice->converter->url)}}">
+                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$invoice->converter->avatar ?? 'avatar.png'}}" alt="{{$invoice->converter->first_name ?? ''}}">
                                     </a>
                                 </div>
                                 <div class="media-body">
-                                    <h6>{{$invoice->converter->first_name ?? ''}} {{$invoice->converter->surname ?? ''}}</h6>
+                                    <a href="{{route('view-profile', $invoice->converter->url)}}">
+                                        <h6>{{$invoice->converter->first_name ?? ''}} {{$invoice->converter->surname ?? ''}}</h6>
+                                    </a>
                                     <p>{{$invoice->converter->position ?? ''}} <br> <label for="" class="label label-primary">on</label> <small>{{date('d F, Y', strtotime($invoice->created_at))}}</small> <label for="" class="label label-primary">@</label> <small>{{date('h:ia', strtotime($invoice->created_at))}}</small></p>
                                 </div>
                             </div>
@@ -79,7 +80,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <h6 class="text-muted m-b-10">This Year</h6>
-                                    <h5 class="m-b-0">379</h5>
+                                    <h5 class="m-b-0">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($thisYear,2)}}</h5>
                                 </div>
                             </div>
                         </div>
@@ -124,7 +125,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <h6 class="text-muted m-b-10">This Week</h6>
-                                    <h5 class="m-b-0">379</h5>
+                                    <h5 class="m-b-0">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($this_week,2)}}</h5>
                                 </div>
                             </div>
                         </div>
@@ -152,7 +153,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <ul class="list list-unstyled text-right">
-                                            <li>{{number_format($invoice->total,2)}}</li>
+                                            <li>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}</li>
                                             <li>: <span class="text-semibold">cc</span></li>
                                         </ul>
                                     </div>

@@ -386,6 +386,7 @@ class ActivityStreamController extends Controller
     * View profile
     */
     public function viewProfile($url){
+
         $user = User::where('url', $url)->where('tenant_id', Auth::user()->tenant_id)->first();
       return view('backend.activity-stream.view-employee-profile', ['user'=>$user]);
     }
