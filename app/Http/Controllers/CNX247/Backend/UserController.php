@@ -19,6 +19,7 @@ use App\QueryEmployee;
 use App\EmployeeAppraisal;
 use App\ModuleManager;
 use App\IdeaBox;
+use App\Feedback;
 use Auth;
 use Image;
 use DB;
@@ -238,6 +239,28 @@ class UserController extends Controller
                   'amount'=>'required'
               ]);
               return Paystack::getAuthorizationUrl()->redirectNow();
+      }
+
+      public function myFeedback(){
+          return view('backend.user.my-feedback');
+      }
+
+      public function submitFeedback(Request $request){
+          $this->validate($request,[
+              'full_name'=>'required',
+              'email'=>'required|email',
+              'feedback'=>'required',
+              'rating'=>'required',
+          ]);
+          $feedback = new Feedback;
+          $feedback->full_name = $request->full_name;
+          $feedback->email = $request->email;
+          $feedback->content = $request->feedback;
+          $feedback->rating = $request->rating;
+          $feedback->tenant_id = Auth::user()->tenant_id;
+          $feedback->save();
+          session()->flash("success", "<strong>Thanks for letting us know.</strong><p>Your feedback helps us serve you better.</p>");
+          return back();
       }
 
 }

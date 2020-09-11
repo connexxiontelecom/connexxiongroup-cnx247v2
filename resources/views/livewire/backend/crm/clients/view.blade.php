@@ -29,7 +29,7 @@
                                     <div class="card">
                                         <div class="card-block user-radial-card">
                                             <div class="btn-group mr-3">
-                                                <a href=""><i class="ti-pencil text-warning p-2"></i></a>
+                                                <a href="{{route('edit-client', $client->slug)}}"><i class="ti-pencil text-warning p-2"></i></a>
                                             </div>
                                             <div data-label="50%" class="radial-bar radial-bar-60 radial-bar-lg radial-bar-primary">
                                                 <img src="/assets/images/avatars/thumbnails/avatar.png" alt="" class="img-100">

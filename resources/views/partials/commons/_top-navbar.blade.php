@@ -91,7 +91,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{route('logout')}}">Give Feedback
+                                    <a href="{{route('my-feedback')}}">Give Feedback
                                     </a>
                                 </li>
                                 <li>
