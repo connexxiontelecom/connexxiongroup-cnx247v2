@@ -5,7 +5,7 @@
                 <a href="#" class="logo-footer">
                     <img src="images/logo-light.png" height="24" alt="">
                 </a>
-                <p class="mt-4">Start working with Landrick that can provide everything you need to generate awareness, drive traffic, connect.</p>
+                <p class="mt-4">{{config('app.name')}} offers you the opportunity to remotely collaborate on tasks, monitor daily activities within your organization as they occur in real-time.</p>
                 <ul class="list-unstyled social-icon social mb-0 mt-4">
                     <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i data-feather="facebook" class="fea icon-sm fea-social"></i></a></li>
                     <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i data-feather="instagram" class="fea icon-sm fea-social"></i></a></li>
@@ -18,13 +18,10 @@
                 <h4 class="text-light footer-head">Company</h4>
                 <ul class="list-unstyled footer-list mt-4">
                     <li><a href="page-aboutus.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> About us</a></li>
-                    <li><a href="page-services.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Services</a></li>
-                    <li><a href="page-team.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Team</a></li>
+                    <li><a href="page-services.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Products</a></li>
                     <li><a href="page-pricing.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Pricing</a></li>
-                    <li><a href="page-work-modern.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Project</a></li>
-                    <li><a href="page-jobs.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Careers</a></li>
-                    <li><a href="page-blog-grid.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Blog</a></li>
-                    <li><a href="auth-cover-login.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Login</a></li>
+                    <li><a href="page-work-modern.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Support</a></li>
+                    <li><a href="page-jobs.html" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> FAQs</a></li>
                 </ul>
             </div>
 
@@ -40,19 +37,12 @@
             </div>
 
             <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                <h4 class="text-light footer-head">Newsletter</h4>
-                <p class="mt-4">Sign up and receive the latest tips via email.</p>
+                <h4 class="text-light footer-head">Start today</h4>
+                <p class="mt-4">Get your team on board and start collaborating.</p>
                 <form>
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="foot-subscribe form-group position-relative">
-                                <label>Write your email <span class="text-danger">*</span></label>
-                                <i data-feather="mail" class="fea icon-sm icons"></i>
-                                <input type="email" name="email" id="emailsubscribe" class="form-control pl-5 rounded" placeholder="Your email : " required>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <input type="submit" id="submitsubscribe" name="send" class="btn btn-soft-primary btn-block" value="Subscribe">
+                            <a href="{{route('signup')}}" class="btn btn-soft-primary btn-block">Signup</a>
                         </div>
                     </div>
                 </form>
@@ -65,18 +55,8 @@
         <div class="row align-items-center">
             <div class="col-sm-6">
                 <div class="text-sm-left">
-                    <p class="mb-0">© {{date('Y')}} All Rights Reserved <a href="http://www.shreethemes.in/" target="_blank" class="text-reset">{{config('app.name')}}</a>.</p>
+                    <p class="mb-0">© {{date('Y')}} All Rights Reserved <a href="http://connexxiongroup.com" target="_blank" class="text-reset">Connexxiong Group</a>.</p>
                 </div>
-            </div>
-
-            <div class="col-sm-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                <ul class="list-unstyled text-sm-right mb-0">
-                    <li class="list-inline-item"><a href="javascript:void(0)"><img src="images/payments/american-ex.png" class="avatar avatar-ex-sm" title="American Express" alt=""></a></li>
-                    <li class="list-inline-item"><a href="javascript:void(0)"><img src="images/payments/discover.png" class="avatar avatar-ex-sm" title="Discover" alt=""></a></li>
-                    <li class="list-inline-item"><a href="javascript:void(0)"><img src="images/payments/master-card.png" class="avatar avatar-ex-sm" title="Master Card" alt=""></a></li>
-                    <li class="list-inline-item"><a href="javascript:void(0)"><img src="images/payments/paypal.png" class="avatar avatar-ex-sm" title="Paypal" alt=""></a></li>
-                    <li class="list-inline-item"><a href="javascript:void(0)"><img src="images/payments/visa.png" class="avatar avatar-ex-sm" title="Visa" alt=""></a></li>
-                </ul>
             </div>
         </div>
     </div>
@@ -91,7 +71,6 @@
 <script src="{{asset('/frontend/js/owl.carousel.min.js')}}"></script>
 <script src="{{asset('/frontend/js/owl.init.js')}}"></script>
 <script src="{{asset('/frontend/js/feather.min.js')}}"></script>
-<script src="https://unicons.iconscout.com/release/v2.1.9/script/monochrome/bundle.js"></script>
 @livewireScripts
 @yield('extra-scripts')
 <script src="{{asset('/frontend/js/app.js')}}"></script>

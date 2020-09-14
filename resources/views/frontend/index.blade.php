@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-        <!-- Hero Start -->
         <section class="bg-home d-flex align-items-center" style="background: url('images/saas/home-shape.png') center center; height: auto;" id="home">
             <div class="container">
                 <div class="row justify-content-center">
@@ -21,13 +20,10 @@
                         <div class="home-dashboard">
                             <img src="{{asset('/frontend/images/saas/home.png')}}" alt="" class="img-fluid">
                         </div>
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!--end container-->
-        </section><!--end section-->
-        <!-- Hero End -->
-
-        <!-- Partners start -->
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="section bg-light mt-0 mt-md-5">
             <div class="container">
                 <div class="row justify-content-center">
@@ -58,17 +54,14 @@
 
                     <div class="col-lg-2 col-md-2 col-6 text-center mt-4 pt-2">
                         <img src="{{asset('/frontend/images/client/shopify.svg')}}" class="avatar avatar-ex-sm" alt="">
-                    </div><!--end col-->
+                    </div>
 
                     <div class="col-lg-2 col-md-2 col-6 text-center mt-4 pt-2">
                         <img src="{{asset('/frontend/images/client/spotify.svg')}}" class="avatar avatar-ex-sm" alt="">
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!--end container-->
-        </section><!--end section-->
-        <!-- Partners End -->
-
-        <!-- Feature Start -->
+                    </div>
+                </div>
+            </div>
+        </section>
         <section class="section">
             <div class="container">
                 <div class="row">
@@ -83,7 +76,7 @@
                                 <p class="text-muted mb-0">Nisi aenean vulputate eleifend tellus vitae eleifend enim a Aliquam eleifend aenean elementum semper.</p>
                             </div>
                         </div>
-                    </div><!--end col-->
+                    </div>
 
                     <div class="col-md-4 col-12 mt-5 mt-sm-0">
                         <div class="features">
@@ -109,9 +102,9 @@
                                 <p class="text-muted mb-0">It seems that only fragments of the original text remain in only fragments the Lorem Ipsum texts used today.</p>
                             </div>
                         </div>
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!--end container-->
+                    </div>
+                </div>
+            </div>
 
             <div class="container mt-100 mt-60">
                 <div class="row align-items-center">
@@ -145,23 +138,23 @@
                             </ul>
                             <a href="javascript:void(0)" class="mt-3 h6 text-primary">Find Out More <i class="mdi mdi-chevron-right"></i></a>
                         </div>
-                    </div><!--end col-->
+                    </div>
 
                     <div class="col-lg-5 col-md-6 order-1 order-md-2">
                         <img src="{{asset('/frontend/images/illustrator/app_development_SVG.svg')}}" alt="">
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!--end container-->
+                    </div>
+                </div>
+            </div>
 
             <div class="container mt-100 mt-60">
                 <div class="row justify-content-center">
                     <div class="col-12 text-center">
                         <div class="section-title mb-4 pb-2">
-                            <h4 class="title mb-4">Whats Our Clients Said About <span class="text-primary">Landrick</span> Project</h4>
+                            <h4 class="title mb-4">Satisfied  <span class="text-primary">Clients</span></h4>
                             <p class="text-muted para-desc mx-auto mb-0">Start working with <span class="text-primary font-weight-bold">Landrick</span> that can provide everything you need to generate awareness, drive traffic, connect.</p>
                         </div>
-                    </div><!--end col-->
-                </div><!--end row-->
+                    </div>
+                </div>
 
                 <div class="row justify-content-center">
                     <div class="col-lg-12 mt-4">
@@ -256,25 +249,25 @@
                                 </div>
                             </div>
                         </div>
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!--end container-->
+                    </div>
+                </div>
+            </div>
             <div class="container pb-lg-4 mb-md-5 mb-4 mt-100 mt-60">
                 <div class="row justify-content-center">
                     <div class="col-12 text-center">
                         <div class="section-title">
-                            <h4 class="title mb-4">See everything about your employee at one place.</h4>
-                            <p class="text-muted para-desc mx-auto mb-0">Start working with <span class="text-primary font-weight-bold">Landrick</span> that can provide everything you need to generate awareness, drive traffic, connect.</p>
+                            <h4 class="title mb-4">See everything about your employee in one place.</h4>
+                            <p class="text-muted para-desc mx-auto mb-0">Start working with <span class="text-primary font-weight-bold">{{config('app.name')}}</span>. The application provides everything you need to keep tabs on your staff or colleagues, get update on recent happenings and much more.</p>
 
                             <div class="mt-4">
-                                <a href="javascript:void(0)" class="btn btn-primary mt-2 mr-2">Get Started Now</a>
-                                <a href="javascript:void(0)" class="btn btn-outline-primary mt-2">Free Trial</a>
+                                <a href="{{route('signup')}}" class="btn btn-primary mt-2 mr-2">Get Started Now</a>
+                                <a href="{{route('faqs')}}" class="btn btn-outline-primary mt-2">Learn more</a>
                             </div>
                         </div>
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!--end container-->
-        </section><!--end sectipn-->
+                    </div>
+                </div>
+            </div>
+        </section>
         <div class="position-relative">
             <div class="shape overflow-hidden text-footer">
                 <svg viewBox="0 0 2880 250" fill="none" xmlns="http://www.w3.org/2000/svg">
