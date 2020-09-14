@@ -338,6 +338,14 @@ Route::get('/my-event/calendar', 'CNX247\Backend\EventController@eventCalendar')
 Route::get('/my-event-calendar', 'CNX247\Backend\EventController@getEventCalendarData');
 Route::get('/company-calendar', 'CNX247\Backend\EventController@companyCalendar')->name('company-calendar');
 Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompanyEventData');
+
+#Procurement routes
+    #Supplier routes
+    Route::get('/suppliers', 'CNX247\Backend\SupplierController@index')->name('suppliers');
+    Route::get('/supplier/new', 'CNX247\Backend\SupplierController@create')->name('new-supplier');
+    Route::post('/supplier/new', 'CNX247\Backend\SupplierController@store');
+
+
 #QuickBooks routes
 //Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@analyzeBusiness');
 Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@connectToQuickBooks')->name('connect-to-quickbooks');

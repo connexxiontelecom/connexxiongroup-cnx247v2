@@ -119,7 +119,7 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="button.htm">
+                        <a href="#">
                             <span class="pcoded-mtext">IdeaBox</span>
                         </a>
                     </li>
@@ -170,11 +170,6 @@
                     <li class=" ">
                         <a href="{{ route('leave-type') }}">
                             <span class="pcoded-mtext">Leave Types</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{ route('leave-wallet') }}">
-                            <span class="pcoded-mtext">Leave Wallet</span>
                         </a>
                     </li>
                 </ul>
@@ -359,22 +354,27 @@
                 <ul class="pcoded-submenu">
                     <li class=" ">
                         <a href="bs-basic-table.htm">
-                            <span class="pcoded-mtext">Basic Table</span>
+                            <span class="pcoded-mtext">Catalog</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('suppliers')}}">
+                            <span class="pcoded-mtext">Suppliers</span>
                         </a>
                     </li>
                     <li class=" ">
                         <a href="bs-table-sizing.htm">
-                            <span class="pcoded-mtext">Sizing Table</span>
+                            <span class="pcoded-mtext">Purchase Orders</span>
                         </a>
                     </li>
                     <li class=" ">
                         <a href="bs-table-border.htm">
-                            <span class="pcoded-mtext">Border Table</span>
+                            <span class="pcoded-mtext">Requisition</span>
                         </a>
                     </li>
                     <li class=" ">
                         <a href="bs-table-styling.htm">
-                            <span class="pcoded-mtext">Styling Table</span>
+                            <span class="pcoded-mtext">Invoice</span>
                         </a>
                     </li>
                 </ul>
