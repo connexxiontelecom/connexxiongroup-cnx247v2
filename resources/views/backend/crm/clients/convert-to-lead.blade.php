@@ -266,8 +266,6 @@ Convert to Lead
 
 @endsection
 @section('extra-scripts')
-<script type="text/javascript" src="/assets/bower_components/tinymce/tinymce.min.js"></script>
-<script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
 
 <script>
     $(document).ready(function(){

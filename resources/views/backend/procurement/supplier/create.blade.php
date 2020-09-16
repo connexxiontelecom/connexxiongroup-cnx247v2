@@ -81,8 +81,9 @@
                                                 <label for="">Industry</label>
                                                 <select name="industry" id="" class="form-control">
                                                     <option selected disabled >Select industry</option>
-                                                    <option value="1">Housing</option>
-                                                    <option value="2">Information Technology</option>
+                                                    @foreach ($industries as $industry)
+                                                        <option value="{{$industry->id}}">{{$industry->industry ?? ''}}</option>
+                                                    @endforeach
                                                 </select>
                                                 @error('industry')
                                                     <i class="text-danger">{{$message}}</i>

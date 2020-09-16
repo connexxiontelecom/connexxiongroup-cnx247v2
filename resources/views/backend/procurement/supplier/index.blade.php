@@ -64,12 +64,17 @@
                                                     <td>{{$supplier->company_name}}</td>
                                                     <td>{{$supplier->company_email}}</td>
                                                     <td>{{$supplier->company_phone}}</td>
-                                                    <td>{{$supplier->industry}}</td>
+                                                    <td>{{$supplier->supplierIndustry->industry}}</td>
                                                     <td>{{$supplier->first_name}}</td>
                                                     <td>{{$supplier->email_address}}</td>
                                                     <td>{{$supplier->mobile_no}}</td>
                                                     <td>
-                                                        <a href=""><i class="ti-eye mr-2 text-primary"></i></a>
+                                                        <div class="btn-group">
+                                                            <a href="{{route('view-supplier', $supplier->slug)}}" data-toggle="tooltip" data-placement="top" title="" data-original-title="View Supplier Account"><i class="ti-eye mr-2 text-info"></i></a>
+                                                            <a href="{{route('new-purchase-order', $supplier->slug)}}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add New Purchase Order"><i class="ti-shopping-cart mr-2 text-warning"></i></a>
+                                                            <a href="{{route('view-purchase-order', $supplier->slug)}}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add New Purchase Order"><i class="ti-shopping-cart mr-2 text-warning"></i></a>
+
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
