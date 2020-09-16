@@ -8,54 +8,23 @@
                             <span data-toggle="collapse">Assign Users</span>
                         </div>
                         <div class="user-box assign-user taskboard-right-users">
+                            @php
+                            $users = ['CJ', 'Oki-Peter', 'Vivian', 'Adesua', 'Rotimi'];
+                        @endphp
+                        @for($i = 0; $i<count($users); $i++)
                             <div class="media">
                                 <div class="media-left media-middle photo-table">
                                     <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-1.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
+                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/avatar.png" alt="User">
                                     </a>
                                 </div>
+
                                 <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Santa Ana,CA</p>
+                                    <h6>{{$users[$i]}}</h6>
+                                    <p>-</p>
                                 </div>
                             </div>
-                            <div class="media">
-                                <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-2.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Huntingston, NJ</p>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-3.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Willingstion, WA</p>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-2.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Illions, IL</p>
-                                </div>
-                            </div>
+                        @endfor
                         </div>
                     </div>
                 </div>

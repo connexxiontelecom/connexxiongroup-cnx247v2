@@ -23,6 +23,14 @@ class Supplier extends Model
         'added_by',
         'slug'
     ];
+    public function orderSupplier(){
+        return $this->hasMany(PurchaseOrder::class, 'supplier_id');
+    }
+    public function supplierIndustry(){
+        return $this->belongsTo(Industry::class, 'industry');
+    }
+
+
 
 /*     public function setSlugAttribute($value)
     {

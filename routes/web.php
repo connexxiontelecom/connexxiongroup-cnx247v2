@@ -344,6 +344,10 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::get('/suppliers', 'CNX247\Backend\SupplierController@index')->name('suppliers');
     Route::get('/supplier/new', 'CNX247\Backend\SupplierController@create')->name('new-supplier');
     Route::post('/supplier/new', 'CNX247\Backend\SupplierController@store');
+    Route::get('/supplier/view/{slug}', 'CNX247\Backend\SupplierController@view')->name('view-supplier');
+    Route::get('/purchase-order/new/{slug}', 'CNX247\Backend\SupplierController@purchaseOrder')->name('new-purchase-order');
+    Route::post('/purchase-order/new', 'CNX247\Backend\SupplierController@storePurchaseOrder')->name('store-purchase-order');
+    Route::get('/purchase-order/view/{slug}', 'CNX247\Backend\SupplierController@viewPurchaseOrder')->name('view-purchase-order');
 
 
 #QuickBooks routes
