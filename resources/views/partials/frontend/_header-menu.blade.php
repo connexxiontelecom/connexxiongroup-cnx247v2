@@ -5,10 +5,12 @@
                     <img src="{{asset('/frontend/images/logo.png')}}" height="52" width="82" alt="{{config('app.name')}}">
                 </a>
             </div>
-            <div class="buy-button">
-                <a href="{{route('pricing')}}" class="btn btn-primary">Sign up</a>
-                <a href="{{route('signin')}}" class="btn btn-outline-primary">Sign in</a>
-            </div>
+            @if (!Auth::check())
+                <div class="buy-button">
+                    <a href="{{route('pricing')}}" class="btn btn-primary">Sign up</a>
+                    <a href="{{route('signin')}}" class="btn btn-outline-primary">Sign in</a>
+                </div>
+            @endif
             <div class="menu-extras">
                 <div class="menu-item">
                     <a class="navbar-toggle">
@@ -28,9 +30,11 @@
                     <li><a href="{{route('support')}}">Support</a></li>
                     <li><a href="{{route('faqs')}}">FAQs</a></li>
                 </ul>
-                <div class="buy-menu-btn d-none">
-                    <a href="{{route('pricing')}}"  class="btn btn-primary">Sign up</a>
-                </div>
+                @if (!Auth::check())
+                    <div class="buy-menu-btn d-none">
+                        <a href="{{route('pricing')}}"  class="btn btn-primary">Sign up</a>
+                    </div>
+                @endif
             </div>
         </div>
     </header>

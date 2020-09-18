@@ -70,9 +70,9 @@
                                              <tr>
                                                  <td>
                                                      <div class="form-group">
-                                                         <label for="">Issue Date</label>
-                                                         <input type="date" placeholder="Issue Date" class="form-control" name="issue_date">
-                                                         @error('issue_date')
+                                                         <label for="">Latest Delivery Date:</label>
+                                                         <input type="date" placeholder="Delivery Date" class="form-control" name="delivery_date">
+                                                         @error('delivery_date')
                                                              <i class="text-danger mt-2">{{$message}}</i>
                                                          @enderror
                                                      </div>

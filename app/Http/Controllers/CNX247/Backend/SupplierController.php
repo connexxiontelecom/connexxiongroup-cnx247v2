@@ -102,7 +102,7 @@ class SupplierController extends Controller
         //return dd($request->all());
         $this->validate($request,[
             'purchase_order_no'=>'required',
-            'issue_date'=>'required',
+            'delivery_date'=>'required',
             'supplier'=>'required',
             'totalAmount'=>'required'
         ]);
@@ -113,6 +113,7 @@ class SupplierController extends Controller
         $purchaseOrder->supplier_id = $request->supplier;
         $purchaseOrder->total = $request->totalAmount;
         $purchaseOrder->instruction = $request->instruction;
+        $purchaseOrder->delivery_date = $request->delivery_date;
         $purchaseOrder->slug = substr(sha1(time()), 21,40);
         $purchaseOrder->save();
         $poId = $purchaseOrder->id;

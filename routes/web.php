@@ -348,8 +348,14 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::get('/purchase-order/new/{slug}', 'CNX247\Backend\SupplierController@purchaseOrder')->name('new-purchase-order');
     Route::post('/purchase-order/new', 'CNX247\Backend\SupplierController@storePurchaseOrder')->name('store-purchase-order');
     Route::get('/purchase-order/view/{slug}', 'CNX247\Backend\SupplierController@viewPurchaseOrder')->name('view-purchase-order');
-
-
+    Route::get('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@login')->name('supplier.login');
+    Route::post('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@loginNow');
+    #Procurement supplier account
+    Route::get('/procurement/supplier-account', 'CNX247\Frontend\ProcurementController@myAccount')->name('supplier-account');
+    Route::get('/procurement/supplier/my-purchase-orders', 'CNX247\Frontend\ProcurementController@myPurchaseOrders')->name('supplier-purchase-orders');
+    Route::get('/procurement/supplier/my-purchase-orders/learn/{slug}', 'CNX247\Frontend\ProcurementController@viewMyPurchaseOrders')->name('my-purchase-orders');
+    Route::post('/procurement/supplier/take-action', 'CNX247\Frontend\ProcurementController@takeAction');
+    Route::get('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@settings')->name('supplier-settings');
 #QuickBooks routes
 //Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@analyzeBusiness');
 Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@connectToQuickBooks')->name('connect-to-quickbooks');

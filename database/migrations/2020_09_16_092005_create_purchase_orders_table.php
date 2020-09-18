@@ -25,6 +25,8 @@ class CreatePurchaseOrdersTable extends Migration
             $table->string('instruction')->nullable();
             $table->string('status')->default('in-progress');
             $table->string('slug')->nullable();
+            $table->dateTime('delivery_date')->nullable();
+            $table->dateTime('date_delivered')->nullable();
             $table->timestamps();
         });
     }

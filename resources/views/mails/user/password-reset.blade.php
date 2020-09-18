@@ -33,7 +33,7 @@
             </tr>
             <tr>
                 <td align="center" bgcolor="#0073AA" style="padding: 20px 20px 20px 20px; color: #ffffff; font-family: Arial, sans-serif; font-size: 36px; font-weight: bold;">
-                    <img class="img-fluid ml-5 mt-3" src="{{asset('/assets/images/company-assets/logos/'.Auth::user()->tenant->logo ?? 'logo.png')}}" alt="{{Auth::user()->tenant->company_name ?? 'CNX247 ERP Solution'}}" height="75" width="120" style="display:block;">
+                    <img class="img-fluid ml-5 mt-3" src="{{asset('/assets/images/company-assets/logos/'.$user->tenant->logo ?? 'logo.png')}}" alt="{{$user->tenant->company_name ?? 'CNX247 ERP Solution'}}" height="75" width="120" style="display:block;">
                 </td>
             </tr>
             <tr>
