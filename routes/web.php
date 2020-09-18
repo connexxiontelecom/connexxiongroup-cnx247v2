@@ -356,6 +356,9 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::get('/procurement/supplier/my-purchase-orders/learn/{slug}', 'CNX247\Frontend\ProcurementController@viewMyPurchaseOrders')->name('my-purchase-orders');
     Route::post('/procurement/supplier/take-action', 'CNX247\Frontend\ProcurementController@takeAction');
     Route::get('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@settings')->name('supplier-settings');
+    Route::post('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@storeChanges');
+    Route::post('/procurement/supplier/contact-person', 'CNX247\Frontend\ProcurementController@updateContactPerson')->name('supplier-update-contact-person');
+    Route::post('/procurement/supplier/change-password', 'CNX247\Frontend\ProcurementController@changePassword')->name('supplier-change-password');
 #QuickBooks routes
 //Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@analyzeBusiness');
 Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@connectToQuickBooks')->name('connect-to-quickbooks');
