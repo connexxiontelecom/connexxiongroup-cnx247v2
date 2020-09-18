@@ -18,9 +18,21 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (Auth::guard($guard)->check()) {
+/*         if (Auth::guard($guard)->check()) {
             return redirect(RouteServiceProvider::ACTIVITY_STREAM);
-        }
+        } */
+        switch ($guard) {
+            case 'supplier':
+              if (Auth::guard($guard)->check()) {
+                return redirect()->route('supplier-account');
+              }
+
+            default:
+              if (Auth::guard($guard)->check()) {
+                  return redirect()->route('activity-stream');
+              }
+              break;
+          }
 
         return $next($request);
     }

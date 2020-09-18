@@ -71,6 +71,8 @@
 <script src="{{asset('/frontend/js/owl.carousel.min.js')}}"></script>
 <script src="{{asset('/frontend/js/owl.init.js')}}"></script>
 <script src="{{asset('/frontend/js/feather.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('/assets/js/cus/axios.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('/assets/js/cus/notify.js')}}"></script>
 @livewireScripts
 @yield('extra-scripts')
 <script src="{{asset('/frontend/js/app.js')}}"></script>

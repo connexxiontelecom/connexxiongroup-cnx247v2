@@ -40,7 +40,7 @@ class PersonalInfo extends Component
         $this->confirm_date = Auth::user()->confirm_date ?? '';
         $this->birth_date = Auth::user()->birth_date ?? '';
         $this->start_date = Auth::user()->start_date ?? '';
-        $this->department = Auth::user()->department ?? '';
+        $this->department = Auth::user()->department_id ?? '';
         $this->employee_id = Auth::user()->employee_id ?? '';
         $this->address = Auth::user()->address ?? '';
         $this->departments = Department::where('tenant_id', Auth::user()->tenant_id)->get();
@@ -69,6 +69,7 @@ class PersonalInfo extends Component
         $user->hire_date = $this->hire_date;
         $user->confirm_date = $this->confirm_date;
         $user->start_date = $this->start_date;
+        $user->birth_date = $this->birth_date;
         $user->department_id = $this->department;
         $user->address = $this->address;
         $user->email = $this->email;

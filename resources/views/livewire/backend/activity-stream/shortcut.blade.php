@@ -1821,13 +1821,13 @@
                                     @endforeach
                                 @elseif($post->post_type == 'memo')
                                     @foreach ($post->responsiblePersons as $person)
-                                        @if($person->user_id == Auth::user()->id)
+                                        @if($person->user_id == Auth::user()->id || $post->user_id == Auth::user()->id )
 
                                             <div class="social-timelines p-relative">
                                                 <div class="row timeline-right p-t-35">
                                                     <div class="col-2 col-sm-2 col-xl-1">
                                                         <div class="social-timelines-left">
-                                                            <img class="img-radius timeline-icon" src="/assets/images/avatars/thumbnails/{{ $post->user->avatar ?? 'avatar.png' }}" alt="">
+                                                            <img class="img-radius timeline-icon" src="/assets/images/avatars/thumbnails/{{ $post->user->avatar ?? $post->user->avatar }}" alt="">
                                                         </div>
                                                     </div>
                                                     <div class="col-10 col-sm-10 col-xl-11 p-l-5 p-b-35">

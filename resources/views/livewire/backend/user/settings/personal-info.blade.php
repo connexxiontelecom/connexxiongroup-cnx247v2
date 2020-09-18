@@ -123,8 +123,9 @@
                     <div class="form-group">
                         <label>Department</label>
                         <select wire:model.debounce.9000ms="department" class="form-control">
-                            @foreach($departments as $department)
-                             <option value="{{$department->id}}">{{$department->department_name}}</option>
+                            <option disabled selected>Select Department</option>
+                            @foreach($departments as $depart)
+                             <option value="{{$depart->id}}">{{$depart->department_name}}</option>
                             @endforeach
                         </select>
                         @if (count($departments) <= 0)

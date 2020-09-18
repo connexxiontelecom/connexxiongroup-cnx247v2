@@ -71,7 +71,12 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong for="">Date: </strong> {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($purchase->created_at))}}
+                                        <strong for="">Date Submitted: </strong> {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($purchase->created_at))}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong for="">Due Date: </strong> <span class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($purchase->delivery_date))}}</span>
                                     </td>
                                 </tr>
                                 <tr>

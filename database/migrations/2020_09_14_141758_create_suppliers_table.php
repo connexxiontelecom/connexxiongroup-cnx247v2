@@ -27,6 +27,10 @@ class CreateSuppliersTable extends Migration
             $table->string('email_address');
             $table->string('position')->nullable();
             $table->string('mobile_no');
+            $table->string('password')->nullable();
+            $table->string('logo')->default('logo.png')->nullable();
+            $table->string('website')->default('https://www.cnx247.com')->nullable();
+            $table->string('tagline')->default('Thrive with us...')->nullable();
             $table->text('comment')->nullable();
             $table->string('slug');
             $table->timestamps();
