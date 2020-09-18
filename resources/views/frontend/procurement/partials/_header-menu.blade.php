@@ -21,8 +21,8 @@
                                     <div class="col-md-5 text-md-right text-center">
                                         <ul class="list-unstyled social-icon social mb-0 mt-4">
                                             <li class="list-inline-item"><a href="{{route('supplier-account')}}" class="rounded" data-toggle="tooltip" data-placement="bottom" title="My Account"><i data-feather="user" class="fea icon-sm fea-social"></i></a></li>
-                                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Messages"><i data-feather="message-circle" class="fea icon-sm fea-social"></i></a></li>
-                                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i data-feather="bell" class="fea icon-sm fea-social"></i></a></li>
+                                            <!--<li class="list-inline-item"><a href="javascript:void(0)" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Messages"><i data-feather="message-circle" class="fea icon-sm fea-social"></i></a></li>
+                                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i data-feather="bell" class="fea icon-sm fea-social"></i></a></li> -->
                                             <li class="list-inline-item"><a href="{{route('supplier-settings')}}" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Settings"><i data-feather="tool" class="fea icon-sm fea-social"></i></a></li>
                                             <li class="list-inline-item"><a href="{{route('supplier-purchase-orders')}}" class="rounded" data-toggle="tooltip" data-placement="bottom" title="Purchase Orders"><i data-feather="shopping-cart" class="fea icon-sm fea-social"></i></a></li>
                                         </ul>
