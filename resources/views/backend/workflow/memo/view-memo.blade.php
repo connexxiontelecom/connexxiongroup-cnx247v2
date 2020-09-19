@@ -61,6 +61,53 @@
                 <div class="col-sm-12">
                     <h5 class="sub-title">{{$memo->post_title ?? ''}}</h5>
                     {!! $memo->post_content ?? '' !!}
+                    @foreach ($memo->postAttachment as $attach)
+                    @switch(pathinfo($attach->attachment, PATHINFO_EXTENSION))
+                        @case('pptx')
+                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
+                            <img src="/assets/formats/ppt.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
+                            {{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
+                        </a>
+                        @break
+                        @case('xls')
+                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
+                            <img src="/assets/formats/xls.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
+                            {{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
+                        </a>
+                        @break
+                        @case('xlsx')
+                            <a href="/assets/uploads/attachments/{{$attach->attachment}}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
+                                <img src="/assets/formats/xls.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
+                                {{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
+                            </a>
+                        @break
+                        @case('pdf')
+                            <a href="/assets/uploads/attachments/{{$attach->attachment}}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
+                                <img src="/assets/formats/pdf.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
+                                {{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
+                            </a>
+                        @break
+                        @case('doc')
+                            <a href="/assets/uploads/attachments/{{$attach->attachment}}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
+                                <img src="/assets/formats/doc.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
+                                {{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
+                            </a>
+                        @break
+                        @case('docx')
+                            <a href="/assets/uploads/attachments/{{$attach->attachment}}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
+                                <img src="/assets/formats/doc.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
+                                {{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
+                            </a>
+                        @break
+                        @default
+                            <a href="/assets/uploads/attachments/{{$attach->attachment}}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
+                                <img src="/assets/formats/file.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
+                                {{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
+                            </a>
+                        @break
+
+                    @endswitch
+                @endforeach
                 </div>
             </div>
 

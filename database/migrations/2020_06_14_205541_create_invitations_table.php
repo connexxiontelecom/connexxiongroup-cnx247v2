@@ -16,6 +16,7 @@ class CreateInvitationsTable extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
             $table->string('email');
+            $table->string('first_name')->nullable();
             $table->string('message')->nullable();
             $table->string('url')->nullable();
             $table->tinyInteger('status')->default(0)->nullable(); //0=not sent

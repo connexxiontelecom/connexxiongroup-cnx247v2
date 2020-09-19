@@ -11,8 +11,11 @@
                     $('#avatar-preview').attr('src', avatar);
                     axios.post('/upload/avatar',{avatar:avatar})
                     .then(response=>{
+                        $.notify('Success! Profile image updated.', 'success');
                     })
                     .catch(error=>{
+                        var errs = Object.values(error.response.data.errors);
+                        $.notify(errs, "error");
                         });
                     }
                     reader.readAsDataURL(file);
@@ -31,10 +34,12 @@
                     $('#cover-preview').attr('src', cover);
                     axios.post('/upload/cover',{cover:cover})
                     .then(response=>{
+                        $.notify('Success! Cover photo changed.', 'success');
                         location.reload();
                     })
                     .catch(error=>{
-                            //$.notify("Error! Couldn't upload profile try again.");
+                        var errs = Object.values(error.response.data.errors);
+                        $.notify(errs, "error");
                         });
                     }
                     reader.readAsDataURL(file);
@@ -48,7 +53,7 @@
             var content = tinymce.get('resignation_content').getContent();
             axios.post('/resignation', {subject:subject, content:content})
             .then(response=>{
-                alert(response.data.message);
+                $.notify(response.data.message, 'success');
             })
             .catch(error=>{
 

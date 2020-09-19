@@ -267,7 +267,7 @@ Route::post('/event/new', 'CNX247\Backend\ActivityStreamController@createEvent')
 Route::post('/announcement/new', 'CNX247\Backend\ActivityStreamController@createAnnouncement');
 Route::post('/file/new', 'CNX247\Backend\ActivityStreamController@shareFile');
 Route::post('/appreciation/new', 'CNX247\Backend\ActivityStreamController@createAppreciation');
-Route::post('/invitation/email', 'CNX247\Backend\ActivityStreamController@sendInvitationByEmail');
+Route::post('/send/invitation/by-email', 'CNX247\Backend\ActivityStreamController@inviteUser');
 
 #View an employee's profile
 Route::get('/activity-stream/profile/{url}', 'CNX247\Backend\ActivityStreamController@viewProfile')
@@ -317,7 +317,7 @@ Route::post('/workgroup/remove-moderator', 'CNX247\Backend\WorkgroupController@r
 Route::post('/workgroup/send-invitation', 'CNX247\Backend\WorkgroupController@sendWorkgroupInvitation');
 Route::get('/workgroup/invitation/{slug}', 'CNX247\Backend\WorkgroupController@viewWorkgroupInvite')->name('view-workgroup-invitation');
 Route::post('/workgroup/invitation/action', 'CNX247\Backend\WorkgroupController@workgroupAction')->name('workgroup-action');
-//Route::post('/invitation/email', 'CNX247\Backend\ActivityStreamController@sendInvitationByEmail');
+Route::post('/invitation/email', 'CNX247\Backend\ActivityStreamController@sendInvitationByEmail');
 
 
 #CNX247.Drive routes

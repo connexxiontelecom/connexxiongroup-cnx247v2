@@ -52,16 +52,27 @@
                                     <select name="to" id="to" class="form-control col-md-4">
                                         <option value="0">All employees</option>
                                         <option value="1">Department</option>
+                                        <option value="2">Specific employee(s)</option>
                                     </select>
                                 </div>
                                 <div class="form-group" id="departmentSelection">
-                                    <label class=""> Department</label>
+                                    <label class="">Department</label>
                                         <select name="department" class="form-control form-control-normal col-md-4">
                                             <option disabled selected>Select department</option>
                                             @foreach ($departments as $depart)
                                             <option value="{{$depart->id}}">{{$depart->department_name}}</option>
                                             @endforeach
                                         </select>
+                                </div>
+                                <div class="form-group" id="employeeSelection">
+                                    <label class="">Employee(s)</label>
+                                    <select id="employees" name="employees[]" class="js-example-responsive col-sm-12 col-md-8" multiple="multiple" style="width:75%;">
+                                        <option selected disabled>Select person(s)</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->first_name}} {{ $user->surname ?? '' }}</option>
+
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="">Attachment <br> <i>(Optional)</i></label>
@@ -91,15 +102,21 @@
     <script>
         $(document).ready(function(){
             $('#departmentSelection').hide();
+            $('#employeeSelection').hide();
             $(document).on('change', '#to', function(e){
                 var selection = $(this).val();
                 switch(selection){
                     case '0':
                     $('#departmentSelection').hide();
+                    $('#employeeSelection').hide();
                     break;
                     case '1':
                     $('#departmentSelection').show();
+                    $('#employeeSelection').hide();
                     break;
+                    case '2':
+                    $('#departmentSelection').hide();
+                    $('#employeeSelection').show();
                 }
             });
         });
