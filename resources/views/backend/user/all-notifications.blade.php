@@ -38,6 +38,15 @@
                                                 @case('task')
                                                     <a href="{{route('view-task', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
+                                                @case('message')
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                        @break
+                                                @case('event')
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                        @break
+                                                @case('announcement')
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                        @break
                                                 @case('chat')
                                                     <a href="{{$notification->data['url']}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break

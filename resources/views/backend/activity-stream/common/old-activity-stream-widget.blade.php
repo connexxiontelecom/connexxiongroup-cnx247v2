@@ -28,13 +28,13 @@
                 <a class="nav-link" data-toggle="tab" href="#appreciation" role="tab">Appreciation</a>
                 <div class="slide" style="width:120px;"></div>
             </li>
-            
+
         </ul>
-        
+
         <!-- Tab panes -->
         <div class="tab-content card-block tabContentArea" style="display: none;">
             <div class="tab-pane active" id="message" role="tabpanel">
-                
+
                 <div class="card-block">
                     <form>
                         <div class="form-group row">
@@ -56,7 +56,7 @@
                                     <label for="checkbox18">
                                         To all employees
                                     </label>
-                                </div> 
+                                </div>
                                 <span><strong>OR</strong></span>
                                 <p>To specific person(s)
                                 </p>
@@ -64,7 +64,7 @@
                                     <option selected disabled>Select person(s)</option>
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->first_name}} {{ $user->surname ?? '' }}</option>
-                                        
+
                                     @endforeach
                                 </select>
                             </div>

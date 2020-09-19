@@ -88,22 +88,28 @@ class TaskController extends Controller
         $task->end_date = $request->due_date;
         $task->post_priority = $request->priority;
         $task->tenant_id = Auth::user()->tenant_id;
-        //$task->attachment = $filename;
         $task->save();
         $task_id = $task->id;
-        if(!empty($request->attachment)){
-            $filename = Auth::user()->tenant->company_name.'_'.time().date('Y').'.'.$request->attachment->extension();
-            $request->attachment->storeAs('cnx247drive', $filename);
-            $post_attachment = new PostAttachment;
-            $post_attachment->attachment = $filename;
-            $post_attachment->tenant_id = Auth::user()->tenant_id;
-            $post_attachment->post_id = $task_id;
-            $post_attachment->user_id = Auth::user()->id;
-            $post_attachment->save();
+        if(!empty($request->file('attachment'))){
+            $extension = $request->file('attachment');
+            $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
+            $dir = 'assets/uploads/attachments/';
+            $filename = 'task_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+            $request->file('attachment')->move(public_path($dir), $filename);
+        }else{
+            $filename = '';
+        }
+        if(!empty($request->file('attachment'))){
+            $attach = new PostAttachment;
+            $attach->post_id = $task_id;
+            $attach->user_id = Auth::user()->id;
+            $attach->attachment = $filename;
+            $attach->tenant_id = Auth::user()->tenant_id;
+            $attach->save();
         }
         //responsible persons
         if(!empty($request->responsible_persons)){
-            foreach($request->responsible_persons as $participant){
+            foreach(json_decode($request->responsible_persons) as $participant){
                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new ResponsiblePerson;
@@ -115,7 +121,7 @@ class TaskController extends Controller
         }
         //participants
         if(!empty($request->participants)){
-            foreach($request->participants as $person){
+            foreach(json_decode($request->participants) as $person){
                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new Participant;
@@ -127,7 +133,7 @@ class TaskController extends Controller
         }
         //observers
         if(!empty($request->observers)){
-            foreach($request->observers as $observe){
+            foreach(json_decode($request->observers) as $observe){
                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new Observer;

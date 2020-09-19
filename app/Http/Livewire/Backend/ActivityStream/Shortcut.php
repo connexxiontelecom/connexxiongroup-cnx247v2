@@ -8,6 +8,7 @@ use App\RequisitionVerification;
 use Carbon\Carbon;
 use App\BusinessLog;
 use App\Post;
+use App\PostView;
 use App\PostComment;
 use App\PostLike;
 use App\ResponsiblePerson;
@@ -20,7 +21,7 @@ class Shortcut extends Component
     //public $posts = [];
     public $ongoing, $following, $assisting, $set_by_me;
     public $birthdays;
-    public $events;
+    //public $events;
     public $verificationCode;
     public $actionStatus = 0;
     public $verificationPostId;
@@ -35,7 +36,7 @@ class Shortcut extends Component
     public function render()
     {
         $now = Carbon::now();
-        $this->events = Post::where('tenant_id', Auth::user()->tenant_id)
+        $events = Post::where('tenant_id', Auth::user()->tenant_id)
                                 ->where('post_type', 'event')
                                 ->orderBy('id', 'DESC')
                                 ->take(5)
@@ -54,11 +55,20 @@ class Shortcut extends Component
         $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
                                 ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
                                 ->take(5)->get();
+/*         $responsiblePersons = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)
+                                ->where('user_id', Auth::user()->id)->get();
+        $getResponsiblePersonsId = [];
+        foreach($responsiblePersons as $res){
+            array_push($getResponsiblePersonsId, $res->user_id);
+        } */
         return view('livewire.backend.activity-stream.shortcut',
-        ['posts'=> Post::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get(),
-        'announcements'=>Post::where('post_type', 'announcement')
+                                ['posts'=> Post::where('tenant_id', Auth::user()->tenant_id)
+                                ->orderBy('id', 'DESC')
+                                ->paginate(10),
+                    'announcements'=>Post::where('post_type', 'announcement')
                                 ->where('tenant_id', Auth::user()->tenant_id)
                                 ->orderBy('id', 'DESC')->take(5)->get(),
+                                'events'=>$events
         ]);
     }
 

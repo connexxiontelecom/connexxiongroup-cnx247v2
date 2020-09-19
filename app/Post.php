@@ -48,6 +48,9 @@ class Post extends Model
     public function postReviews(){
         return $this->hasMany(PostRevision::class, 'post_id');
     }
+    public function postViews(){
+        return $this->hasMany(PostView::class, 'post_id');
+    }
 
     /*
     * One post may have N number of participants
