@@ -353,23 +353,34 @@
         /*
         * Send invitation by email
         */
-        $(document).on('click', '#sendInvitationByEmail', function(e){
-           e.preventDefault();
-           invitation_form = new FormData;
-           //app_form.append('emails', JSON.stringify($('#appreciating').val()));
-           invitation_form.append('emails', JSON.stringify($('#invitation_emails').val()));
-           invitation_form.append('message', $('#invitation_message').val());
-           $('.invitation-cus-preloader').show();
-            $('#sendInvitationByEmail').attr('disabled', 'disabled');
-           axios.post('/invitation/email', invitation_form)
-           .then(response=>{
-                $('.invitation-cus-preloader').hide();
-                $('#sendInvitationByEmail').removeAttr('disabled');
-           })
-           .catch(error=>{
-                $('.invitation-cus-preloader').hide();
-                $('#sendInvitationByEmail').removeAttr('disabled');
-           });
-       });
+       $('#invitationDialogForm').parsley().on('field:validated', function() {
+
+
+        }).on('form:submit', function() {
+            var config = {
+                        onUploadProgress: function(progressEvent) {
+                        var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                        }
+                };
+                invitation_form = new FormData;
+                invitation_form.append('first_name', $('#invitation_first_name').val());
+                invitation_form.append('email', $('#invitation_email').val());
+                invitation_form.append('message', $('#invitation_message').val());
+                $('.invitation-cus-preloader').show();
+                 $('#sendInvitationByEmail').attr('disabled', 'disabled');
+                axios.post('/invitation/email', invitation_form)
+                .then(response=>{
+                    $.notify(response.data.message, 'success');
+                     $('.invitation-cus-preloader').hide();
+                     $('#sendInvitationByEmail').removeAttr('disabled');
+                })
+                .catch(error=>{
+                    var errs = Object.values(error.response.data.errors);
+                    $.notify(errs, "error");
+                     $('.invitation-cus-preloader').hide();
+                     $('#sendInvitationByEmail').removeAttr('disabled');
+                });
+                return false;
+            });
 
     });

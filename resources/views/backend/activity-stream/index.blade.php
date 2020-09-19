@@ -24,92 +24,41 @@
 <div class="modal fade" id="inviteUserModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-primary">
                 <h6 class="modal-title text-uppercase">Invite Users</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             </div>
             <div class="modal-body">
-                <div class="col-lg-12 col-xl-12 col-md-12">
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs md-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#shareLink" role="tab">Share Link</a>
-                            <div class="slide"></div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#byEmail" role="tab">By Email</a>
-                            <div class="slide"></div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#bySms" role="tab">By SMS</a>
-                            <div class="slide"></div>
-                        </li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content card-block">
-                        <div class="tab-pane active" id="shareLink" role="tabpanel">
-                            <p class="m-0">Okay... Let's get more people to join you. Simply copy this link and share it with the persons you intend to invite.</p>
-                            <div class="container mt-3">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="input-group">
-                                            <input type="text" value="{{ config('app.url')."token/".sha1(time()) }}" class="form-control" placeholder="Right add-on">
-                                            <span class="input-group-addon"><i class="ti-files"></i></span>
-                                        </div>
-                                    </div>
+            <div class="tab-pane active" id="byEmail" role="tabpanel">
+                <p class="m-0">Okay... Let's get more people to join you. Simply fill the form below. We'll send an email to the concerned person informing him/her of this action.</p>
+                <div class="container mt-3">
+                    <form id="invitationDialogForm" data-parsley-validate>
+                    <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">First Name</label>
+                                    <input type="text" class="form-control" id="invitation_first_name" required placeholder="First Name">
                                 </div>
                             </div>
-                        </div>
-                        <div class="tab-pane" id="byEmail" role="tabpanel">
-                            <p class="m-0">Enter the list of emails in the box provided below. Separate with a comma.</p>
-                            <div class="container mt-3">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="">Email address</label> <br>
-                                            <div class="tags_add ">
-                                                <input type="text" class="form-control w-100 p-1" id="invitation_emails" placeholder="Email address" data-role="tagsinput">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Message <i>(Optional)</i> </label>
-                                            <textarea name="invitation_message" id="invitation_message" rows="5" class="form-control" placeholder="Compose message" style="resize: none;"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 d-flex justify-content-center">
-                                        <button class="btn btn-mini btn-primary" id="sendInvitationByEmail">Send Invitation</button>
-                                    </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Email address</label>
+                                    <input type="email" class="form-control" id="invitation_email" required placeholder="Email address">
                                 </div>
                             </div>
-                        </div>
-                        <div class="tab-pane" id="bySms" role="tabpanel">
-                            <p class="m-0">Enter the list of phone numbers in the box provided below. Separate with a comma.</p>
-                            <div class="container mt-3">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="">Phone number</label> <br>
-                                            <div class="tags_add ">
-                                                <input type="number" class="form-control w-100 p-1" id="invitation_numbers" placeholder="Phone number" data-role="tagsinput">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Text message <i>(Optional)</i> </label>
-                                            <textarea name="invitation_text" id="invitation_text" rows="5" class="form-control" placeholder="Compose message" style="resize: none;"></textarea>
-                                        </div>
-                                    </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="">Message <i>(Optional)</i> </label>
+                                    <textarea name="invitation_message" id="invitation_message" rows="5" class="form-control" placeholder="Compose message" style="resize: none;"></textarea>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12 d-flex justify-content-center">
-                                        <button class="btn btn-mini btn-primary" id="sendInvitationBySms">Send Invitation</button>
-                                    </div>
-                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3 d-flex justify-content-center">
+                                <button class="btn btn-mini btn-primary" id="sendInvitationByEmail"><i class="ti-check mr-2"></i>Send Invitation</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">

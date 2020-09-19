@@ -367,21 +367,24 @@ class ActivityStreamController extends Controller
     /*
     * Send invitation by email
     */
-    public function sendInvitationByEmail(Request $request){
+    public function inviteUser(Request $request){
         $this->validate($request,[
-            'emails'=>'required'
+            'email'=>'required'
         ]);
-        $emails = explode(",", $request->emails);
-        //return response()->json(['message'=>$emails]);
-        foreach ($emails as $mail) {
+
             $invite = new Invitation;
-            $invite->email = $mail;
+            $invite->email = $request->email;
+            $invite->first_name = $request->first_name;
+            $invite->tenant_id = Auth::user()->tenant_id;
             $invite->url = config('app.url')."token/".sha1(time());
             $invite->status = 0;
             $invite->message = $request->message ?? "You're invited by ".Auth::user()->first_name." ".Auth::user()->surname." to join ".config('app.name');
             $invite->save();
-        }
-        return response()->json(['message'=>'Success!']);
+            if($invite){
+                return response()->json(['message'=>'Success! Invitation sent.'],200);
+            }else{
+                return response()->json(['error'=>'Ooops! Something went wrong.'],400);
+            }
     }
 
     /*
