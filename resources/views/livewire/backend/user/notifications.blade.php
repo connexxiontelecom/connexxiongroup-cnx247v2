@@ -19,6 +19,21 @@
                         @case('task')
                             <a href="{{route('view-task', $un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
+                        @case('message')
+                            <a href="{{route('view-post-activity-stream', $un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
+                        @case('event')
+                            <a href="{{route('view-post-activity-stream', $un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
+                        @case('announcement')
+                            <a href="{{route('view-post-activity-stream', $un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
+                        @case('file')
+                            <a href="{{route('view-post-activity-stream', $un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
+                        @case('appreciation')
+                            <a href="{{route('view-post-activity-stream', $un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
                         @case('chat')
                             <a href="{{$un->data['url']}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break

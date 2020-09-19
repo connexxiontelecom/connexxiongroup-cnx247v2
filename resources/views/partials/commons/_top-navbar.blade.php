@@ -67,14 +67,6 @@
                         </div>
                     </li>
                     @livewire('backend.user.notifications')
-                    <!--<li class="header-notification" >
-                        <div class="dropdown-primary dropdown">
-                            <div class="displayChatbox dropdown-toggle" data-toggle="dropdown">
-                                <i class="feather icon-message-square"></i>
-                                <span class="badge bg-c-green">12</span>
-                            </div>
-                        </div>
-                    </li> -->
                     <li class="header-notification">
                         <div class="dropdown-primary dropdown">
                             <div class="dropdown-toggle" data-toggle="dropdown">

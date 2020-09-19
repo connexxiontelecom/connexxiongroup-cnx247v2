@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Notifications\NewPostNotification;
 use App\Post;
+use App\PostView;
 use App\PostAttachment;
 use App\ResponsiblePerson;
 use App\Participant;
@@ -37,7 +38,6 @@ class ActivityStreamController extends Controller
         $this->validate($request,[
             'message'=>'required'
         ]);
-        //return response()->json($request->message_persons);
         $message = new Post;
         $message->post_content = $request->message;
         $message->user_id = Auth::user()->id;
@@ -59,156 +59,83 @@ class ActivityStreamController extends Controller
         }else{
             $filename = '';
         }
-
-/*      $files = null;
-        $paths = [];
-        if(!empty($request->file('attachment')) ){
-            $files = $request->file('attachment');
-            foreach($files as $file){
-                $extension = $file->getClientOriginalExtension();
-                $file_name = 'message_'.time().'.'.$extension;
-                $paths[] = $file->storeAs('post-attachments', $file_name);
-                //database record
-                $attach = new PostAttachment;
-                $attach->post_id = $message_id;
-                $attach->user_id = Auth::user()->id;
-                $attach->file_name = $filename;
-                $attach->save();
-            }
-
-        } */
+        if($request->target == 1){
             foreach(json_decode($request->message_persons) as $person){
                 $receiver = new ResponsiblePerson;
                 $receiver->user_id = $person;
                 $receiver->post_id = $message_id;
                 $receiver->tenant_id = Auth::user()->tenant_id;
                 $receiver->save();
-                //notification
                 $user = User::find($person);
                 $user->notify(new NewPostNotification($message));
 
             }
-            /* foreach($message->responsiblePersons as $per){
-                $per
-            } */
-            //save attachment
-            if(!empty($request->file('attachment'))){
-                $attach = new PostAttachment;
-                $attach->post_id = $message_id;
-                $attach->user_id = Auth::user()->id;
-                $attach->attachment = $filename;
-                $attach->tenant_id = Auth::user()->tenant_id;
-                $attach->save();
-            }
-
-        return response()->json(['message'=>'Success! Message sent.']);
-    }
-
-
-
-        /*
-    * Create task
-    */
-    public function createTask(Request $request){
-        //return dd($this->responsible_persons);
-        $this->validate($request, [
-            'task_title'=>'required',
-            'responsible_persons'=>'required',
-            'task_description'=>'required',
-            'due_date'=>'required'
-        ]);
-
-         if(!empty($request->file('attachment'))){
-            $extension = $request->file('attachment');
-            $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
-            $dir = 'assets/uploads/attachments/';
-            $filename = 'task_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
-            $request->file('attachment')->move(public_path($dir), $filename);
-        }else{
-            $filename = '';
+        }else if($request->target == 0){
+            $receiver = new ResponsiblePerson;
+            $receiver->user_id = 32; //a
+            $receiver->post_id = $message_id;
+            $receiver->tenant_id = Auth::user()->tenant_id;
+            $receiver->save();
         }
-        $url = substr(sha1(time()), 10, 10);
-        $task = new Post;
-        $task->post_title = $request->task_title;
-        $task->user_id = Auth::user()->id;
-        $task->post_content = $request->task_description;
-        $task->post_color = $request->color;
-        $task->post_type = 'task';
-        $task->post_url = $url;
-        $task->start_date = $request->start_date ?? '';
-        $task->end_date = $request->due_date;
-        $task->post_priority = $request->priority;
-        $task->tenant_id = Auth::user()->tenant_id;
-        $task->save();
-        $task_id = $task->id;
-        //notify
-        $user = $task->user;
-        $user->notify(new NewPostNotification($task));
-          //save attachment
-          if(!empty($request->file('attachment'))){
+        if(!empty($request->file('attachment'))){
             $attach = new PostAttachment;
-            $attach->post_id = $task_id;
+            $attach->post_id = $message_id;
             $attach->user_id = Auth::user()->id;
             $attach->attachment = $filename;
             $attach->tenant_id = Auth::user()->tenant_id;
             $attach->save();
         }
-
-        //responsible persons
-        if(!empty(json_decode($request->responsible_persons))){
-            foreach(json_decode($request->responsible_persons) as $person){
-
-               /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
-                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
-                $part = new ResponsiblePerson;
-                $part->post_id = $task_id;
-                $part->user_id = $person;
-                $part->tenant_id = Auth::user()->tenant_id;
-                $part->save();
-                //send notification
-                $user = User::find($person);
-                $user->notify(new NewPostNotification($task));
-            }
+        if($message ){
+            return response()->json(['message'=>'Success! Message sent.'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! Message sent.'], 400);
         }
-        //participants
-        if(!empty(json_decode($request->participants))){
-            foreach(json_decode($request->participants) as $participant){
 
-               /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
-                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
-                $part = new Participant;
-                $part->post_id = $task_id;
-                $part->user_id = $participant;
-                $part->tenant_id = Auth::user()->tenant_id;
-                $part->save();
-            }
-        }
-        //observers
-        if(!empty(json_decode($request->observers))){
-            foreach(json_decode($request->observers) as $observer){
 
-               /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
-                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
-                $part = new Observer;
-                $part->post_id = $task_id;
-                $part->user_id = $observer;
-                $part->tenant_id = Auth::user()->tenant_id;
-                $part->save();
-            }
-        }
-        return response()->json(['message'=>'Success!'], 200);
     }
+
+    public function postView(Request $request){
+        $this->validate($request,[
+            'live'=>'required'
+        ]);
+        $post = PostView::where('tenant_id', Auth::user()->tenant_id)
+                        ->where('post_id', $request->live)
+                        ->where('user_id', Auth::user()->id)
+                        ->first();
+        if(empty($post)){
+            $view = new PostView;
+            $view->user_id = Auth::user()->id;
+            $view->tenant_id = Auth::user()->tenant_id;
+            $view->post_id = $request->live;
+            $view->save();
+        }
+    }
+
+    public function viewPost($slug){
+        $post = Post::where('tenant_id', Auth::user()->tenant_id)
+                        ->where('post_url', $slug)
+                        ->first();
+        if(!empty($post) ){
+            return view('backend.activity-stream.view-post', ['post'=>$post]);
+        }else{
+            return redirect()->route('404');
+        }
+    }
+    /*
+    * Create task
+    */
+
 
     /*
     * Create event
     */
     public function createEvent(Request $request){
-        //return dd($this->responsible_persons);
         $this->validate($request, [
             'event_name'=>'required',
             'attendees'=>'required',
             'event_description'=>'required',
-            'event_start_date'=>'required'
+            'event_start_date'=>'required|date',
+            'event_end_date'=>'required|date|after_or_equal:event_start_date'
         ]);
         $url = substr(sha1(time()), 10, 10);
         $event = new Post;
@@ -217,6 +144,7 @@ class ActivityStreamController extends Controller
         $event->post_content = $request->event_description;
         $event->post_type = 'event';
         $event->post_url = $url;
+        $event->tenant_id = Auth::user()->tenant_id;
         $event->start_date = $request->event_start_date ?? '';
         $event->end_date = $request->event_end_date ?? '';
         $event->save();
@@ -225,28 +153,41 @@ class ActivityStreamController extends Controller
         $user = $event->user;
         $user->notify(new NewPostNotification($event));
         //responsible persons
-        if(!empty(json_decode($request->attendees))){
-            foreach(json_decode($request->attendees) as $attendee){
+        if($request->target == 0){
+            $part = new ResponsiblePerson;
+            $part->post_id = $event_id;
+            $part->user_id = 32;
+            $part->tenant_id = Auth::user()->tenant_id;
+            $part->save();
+        }else{
+            if(!empty(json_decode($request->attendees))){
+                foreach(json_decode($request->attendees) as $attendee){
 
-               /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
-                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
-                $part = new ResponsiblePerson;
-                $part->post_id = $event_id;
-                $part->user_id = $attendee;
-                $part->save();
-                //send notification
-                $user = User::find($attendee);
-                $user->notify(new NewPostNotification($event));
+                   /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
+                    \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
+                    $part = new ResponsiblePerson;
+                    $part->post_id = $event_id;
+                    $part->user_id = $attendee;
+                    $part->tenant_id = Auth::user()->tenant_id;
+                    $part->save();
+                    //send notification
+                    $user = User::find($attendee);
+                    $user->notify(new NewPostNotification($event));
+                }
             }
         }
-        return response()->json(['message'=>'Success!'], 200);
+        if($event){
+            return response()->json(['message'=>'Success! Event registered.'], 200);
+        }else{
+            return response()->json(['error'=>'Success! Ooops! Something went wrong. Try again.'], 400);
+
+        }
     }
 
     /*
     * Create announcement
     */
     public function createAnnouncement(Request $request){
-        //return dd($this->responsible_persons);
         $this->validate($request, [
             'subject'=>'required',
             'content'=>'required'
@@ -265,6 +206,7 @@ class ActivityStreamController extends Controller
         $announcement = new Post;
         $announcement->post_title = $request->subject;
         $announcement->user_id = Auth::user()->id;
+        $announcement->tenant_id = Auth::user()->tenant_id;
         $announcement->post_content = $request->content;
         $announcement->post_type = 'announcement';
         $announcement->post_url = $url;
@@ -278,11 +220,18 @@ class ActivityStreamController extends Controller
             $attach = new PostAttachment;
             $attach->post_id = $announcement_id;
             $attach->user_id = Auth::user()->id;
+            $attach->tenant_id = Auth::user()->tenant_id;
             $attach->attachment = $filename;
             $attach->save();
         }
         //responsible persons
-        if(!empty(json_decode($request->to))){
+        if($request->target == 0){
+            $part = new ResponsiblePerson;
+            $part->post_id = $announcement_id;
+            $part->user_id = 32;
+            $part->tenant_id = Auth::user()->tenant_id;
+            $part->save();
+        }else{
             foreach(json_decode($request->to) as $person){
 
                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
@@ -290,41 +239,82 @@ class ActivityStreamController extends Controller
                 $part = new ResponsiblePerson;
                 $part->post_id = $announcement_id;
                 $part->user_id = $person;
+                $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
                 //send notification
                 $user = User::find($person);
                 $user->notify(new NewPostNotification($announcement));
             }
         }
-        return response()->json(['message'=>'Success!'], 200);
+        if($announcement){
+            return response()->json(['message'=>'Success!'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! Something went wrong. Try again.'], 400);
+        }
     }
 
     /*
     * Share file within the activity stream
     */
     public function shareFile(Request $request){
-        $this->validate($request,[
-            'attachment.*'=>'required'
+        $this->validate($request, [
+            'attachment'=>'required'
         ]);
         if(!empty($request->file('attachment'))){
-            foreach ($request->file('attachment') as $file) {
-                dump($file);
-               /*  $extension = $file;
-                $extension = $file->getClientOriginalExtension();
-                $dir = 'assets/uploads/attachments/';
-                $filename = 'file_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
-                $file->move(public_path($dir), $filename); */
-            }
-        }
-        /* if(!empty($request->file('attachment'))){
             $extension = $request->file('attachment');
             $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
             $dir = 'assets/uploads/attachments/';
-            $filename = 'announcement_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+            $filename = 'file_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
             $request->file('attachment')->move(public_path($dir), $filename);
         }else{
             $filename = '';
-        }  */
+        }
+
+        $url = substr(sha1(time()), 10, 10);
+        $file = new Post;
+        $file->post_title = $request->file_name;
+        $file->user_id = Auth::user()->id;
+        $file->tenant_id = Auth::user()->tenant_id;
+        $file->post_content = Auth::user()->first_name.' '.Auth::user()->surname.' shared a file titled <strong>'.$request->file_name.' </strong>.';
+        $file->post_type = 'file';
+        $file->post_url = $url;
+        $file->save();
+        $file_id = $file->id;
+        if(!empty($request->file('attachment'))){
+            $attach = new PostAttachment;
+            $attach->post_id = $file_id;
+            $attach->user_id = Auth::user()->id;
+            $attach->tenant_id = Auth::user()->tenant_id;
+            $attach->attachment = $filename;
+            $attach->save();
+        }
+        //responsible persons
+        if($request->target == 0){
+            $part = new ResponsiblePerson;
+            $part->post_id = $file_id;
+            $part->user_id = 32;
+            $part->tenant_id = Auth::user()->tenant_id;
+            $part->save();
+        }else{
+            foreach(json_decode($request->share_with) as $person){
+
+               /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
+                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
+                $part = new ResponsiblePerson;
+                $part->post_id = $file_id;
+                $part->user_id = $person;
+                $part->tenant_id = Auth::user()->tenant_id;
+                $part->save();
+                //send notification
+                $user = User::find($person);
+                $user->notify(new NewPostNotification($announcement));
+            }
+        }
+        if($file){
+            return response()->json(['message'=>'Success! File shared.'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! Something went wrong. Try again.'], 400);
+        }
     }
 
     /*
@@ -339,27 +329,39 @@ class ActivityStreamController extends Controller
         $url = substr(sha1(time()), 10, 10);
         $app = new Post;
         $app->user_id = Auth::user()->id;
+        $app->post_title = Auth::user()->first_name." ".Auth::user()->surname." sent in appreciation.";
         $app->post_content = $request->content;
         $app->post_type = 'appreciation';
         $app->post_url = $url;
+        $app->tenant_id = Auth::user()->tenant_id;
         $app->save();
         $app_id = $app->id;
-        //notify
-        $user = $app->user;
-        $user->notify(new NewPostNotification($app));
-        //responsible persons
-        if(!empty(json_decode($request->persons))){
-            foreach(json_decode($request->persons) as $person){
-                $part = new ResponsiblePerson;
-                $part->post_id = $app_id;
-                $part->user_id = $person;
-                $part->save();
-                 //send notification
-                 $user = User::find($person);
-                 $user->notify(new NewPostNotification($app));
+        if($request->target == 0){
+            $part = new ResponsiblePerson;
+            $part->post_id = $app_id;
+            $part->user_id = 32;
+            $part->tenant_id = Auth::user()->tenant_id;
+            $part->save();
+        }else{
+            //responsible persons
+            if(!empty(json_decode($request->persons))){
+                foreach(json_decode($request->persons) as $person){
+                    $part = new ResponsiblePerson;
+                    $part->post_id = $app_id;
+                    $part->user_id = $person;
+                    $part->tenant_id = Auth::user()->tenant_id;
+                    $part->save();
+                     //send notification
+                     $user = User::find($person);
+                     $user->notify(new NewPostNotification($app));
+                }
             }
         }
-        return response()->json(['message'=>'Success!'], 200);
+        if($app){
+            return response()->json(['message'=>'Success! Appreciation sent.'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! Something went wrong. Try again.'], 400);
+        }
     }
 
     /*

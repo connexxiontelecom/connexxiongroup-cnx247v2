@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/assets/pages/chart/radial/css/radial.css" type="text/css" media="all">
     <link rel="stylesheet" type="text/css" href="\assets\bower_components\switchery\css\switchery.min.css">
     <link rel="stylesheet" type="text/css" href="\assets\bower_components\bootstrap-tagsinput\css\bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="{{asset('assets/css/cus/parsley.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/cus/progressBar.css')}}">
 @endsection
 
 @section('content')
@@ -132,6 +134,8 @@
 
 <script type="text/javascript" src="\assets\pages\advance-elements\swithces.js"></script>
 <script type="text/javascript" src="\assets\bower_components\bootstrap-tagsinput\js\bootstrap-tagsinput.js"></script>
+<script src="{{asset('/assets/js/cus/parsley.min.js')}}"></script>
+<script src="{{asset('/assets/js/cus/progressBar.js')}}"></script>
 @stack('activity-stream-exception')
 
 @endsection
