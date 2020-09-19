@@ -44,6 +44,12 @@
                                                 @case('event')
                                                     <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
+                                                @case('file')
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                        @break
+                                                @case('appreciation')
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                        @break
                                                 @case('announcement')
                                                     <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break

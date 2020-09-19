@@ -9,6 +9,8 @@
         $('#message-persons-wrap').hide();
         $('#event-persons-wrap').hide();
         $('#announcement-persons-wrap').hide();
+        $('#file-persons-wrap').hide();
+        $('#appreciating-persons-wrap').hide();
         //processing files
         var message_attachments = null;
         var task_attachments = null;
@@ -41,6 +43,22 @@
                 $('#announcement-persons-wrap').show();
             }else{
                 $('#announcement-persons-wrap').hide();
+            }
+        });
+        $(document).on('change', '#target_file', function(e){
+            e.preventDefault();
+            if($(this).val() == 1){
+                $('#file-persons-wrap').show();
+            }else{
+                $('#file-persons-wrap').hide();
+            }
+        });
+        $(document).on('change', '#target_appreciating', function(e){
+            e.preventDefault();
+            if($(this).val() == 1){
+                $('#appreciating-persons-wrap').show();
+            }else{
+                $('#appreciating-persons-wrap').hide();
             }
         });
         /*
@@ -266,41 +284,71 @@
         /*
         * Upload new file(s)
         */
-        $(document).on('click', '#uploadFilesBtn', function(e){
-           e.preventDefault();
-           file_form = new FormData;
-           file_form.append('attachment', share_files);
-           file_form.append('share_with', JSON.stringify($('#share_with').val()));
-           $('.file-cus-preloader').show();
-            $('#uploadFilesBtn').attr('disabled', 'disabled');
-           axios.post('/file/new', file_form)
-           .then(response=>{
-                $('.file-cus-preloader').hide();
-                $('#uploadFilesBtn').removeAttr('disabled');
-           })
-           .catch(error=>{
+       $('#fileUploadForm').parsley().on('field:validated', function() {
 
-           });
-       });
+
+    }).on('form:submit', function() {
+        var config = {
+                    onUploadProgress: function(progressEvent) {
+                    var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                    }
+            };
+                file_form = new FormData;
+                file_form.append('file_name', $('#fileName').val());
+                file_form.append('attachment', share_files);
+                file_form.append('target', $('#target_file').val());
+                file_form.append('share_with', JSON.stringify($('#share_with').val()));
+                $('.file-cus-preloader').show();
+                $('#uploadFilesBtn').attr('disabled', 'disabled');
+                axios.post('/file/new', file_form)
+                .then(response=>{
+                    $('.file-cus-preloader').hide();
+                    $('#uploadFilesBtn').removeAttr('disabled');
+                    $.notify(response.data.message, 'success');
+                    location.reload();
+                })
+                .catch(error=>{
+                    var errs = Object.values(error.response.data.errors);
+                    $.notify(errs, "error");
+                    $('.file-cus-preloader').hide();
+                    $('#uploadFilesBtn').removeAttr('disabled');
+                });
+            return false;
+        });
+
         /*
         * Create new appreciation
         */
-        $(document).on('click', '#submitAppreciation', function(e){
-           e.preventDefault();
-           app_form = new FormData;
-           app_form.append('content', tinymce.get('appreciation_text').getContent());
-           app_form.append('persons', JSON.stringify($('#appreciating').val()));
-           $('.appreciation-cus-preloader').show();
-            $('#submitAppreciation').attr('disabled', 'disabled');
-           axios.post('/appreciation/new', app_form)
-           .then(response=>{
+       $('#appreciationForm').parsley().on('field:validated', function() {
+
+
+    }).on('form:submit', function() {
+        var config = {
+                    onUploadProgress: function(progressEvent) {
+                    var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                    }
+            };
+            app_form = new FormData;
+            app_form.append('content', tinymce.get('appreciation_text').getContent());
+            app_form.append('persons', JSON.stringify($('#appreciating').val()));
+            app_form.append('target', $('#target_appreciating').val());
+            $('.appreciation-cus-preloader').show();
+             $('#submitAppreciation').attr('disabled', 'disabled');
+            axios.post('/appreciation/new', app_form)
+            .then(response=>{
+                 $('.appreciation-cus-preloader').hide();
+                 $('#submitAppreciation').removeAttr('disabled');
+                 $.notify(response.data.message, 'success');
+                 location.reload();
+            })
+            .catch(error=>{
+                var errs = Object.values(error.response.data.errors);
+                $.notify(errs, "error");
                 $('.appreciation-cus-preloader').hide();
                 $('#submitAppreciation').removeAttr('disabled');
-           })
-           .catch(error=>{
-
-           });
-       });
+            });
+            return false;
+        });
 
         /*
         * Send invitation by email

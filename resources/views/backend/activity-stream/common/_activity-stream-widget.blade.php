@@ -395,28 +395,47 @@
                 <div class="tab-pane" id="file" role="tabpanel">
                     <div class="row">
                         <div class="col-md-12 btn-add-task">
-                            <form >
-                                <div class="row form-group">
-                                    <label class="col-sm-2 col-form-label">Attachment</label>
-                                    <div class="col-sm-10">
-                                        <input type="file" name="shareFile" id="shareFile" multiple>
+                            <form id="fileUploadForm" data-parsley-validate>
+                                <div class="row">
+                                    <div class="col-md-6 offset-md-3">
+                                        <div class="form-group">
+                                            <label for="">File Name</label>
+                                            <input type="text" placeholder="File Name" required id="fileName"  class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 offset-md-3">
+                                        <div class="form-group">
+                                            <label>Attachment</label>
+                                            <input type="file" name="shareFile" required id="shareFile">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 offset-md-3">
+                                        <div class="mb-3">
+                                            Share with:
+                                            <select name="" required id="target_file" class="form-control">
+                                                <option disabled selected>Select person(s)</option>
+                                                <option value="0">To All Employees</option>
+                                                <option value="1">To Specific Employee(s)</option>
+                                            </select>
+                                        </div>
+                                        <div id="file-persons-wrap">
+                                            <select id="share_with" class="js-example-basic-multiple col-sm-12" multiple="multiple">
+                                                <option value="32 " selected>To all employees</option>
+                                                @foreach($users as $user)
+                                                    <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
 
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Share with:</label>
-                                    <div class="col-sm-10 col-md-4">
-                                        <select id="share_with" class="js-example-basic-multiple col-sm-12" multiple="multiple">
-                                            <option value="32 " selected>To all employees</option>
-                                            @foreach($users as $user)
-                                                <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+                                <hr>
                                 <div class="row">
                                     <div class="col-md-12 d-flex justify-content-center">
-                                        <button class="btn btn-primary btn-sm" type="submit" id="uploadFilesBtn">Share File(s)</button>
+                                        <div class="btn-group">
+                                            <a href="{{url()->previous()}}" class="btn btn-danger btn-mini"><i class="ti-close mr-2"></i>Cancel</a>
+                                            <button class="btn btn-primary btn-mini" type="submit" id="uploadFilesBtn"><i class="ti-check mr-2"></i>Share Attachment(s)</button>
+                                        </div>
 
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-center mt-1 ">
@@ -435,26 +454,43 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="appreciation" role="tabpanel">
-                    <form >
-                        <div class="form-group">
-                            <label class="">Content</label>
-                                <textarea id="appreciation_text"  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Type content here..."></textarea>
-                                @error('appreciation_text')
-                                    <i class="text-danger">{{$message}}</i>
-                                @enderror
+                    <form id="appreciationForm" data-parsley-validate>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="">Content</label>
+                                        <textarea id="appreciation_text" required  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Type content here..."></textarea>
+                                        @error('appreciation_text')
+                                            <i class="text-danger">{{$message}}</i>
+                                        @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    Person(s):
+                                    <select name="" required id="target_appreciating" class="form-control">
+                                        <option disabled selected>Select person(s)</option>
+                                        <option value="0">To All Employees</option>
+                                        <option value="1">To Specific Employee(s)</option>
+                                    </select>
+                                </div>
+                                <div id="appreciating-persons-wrap">
+                                    <select id="appreciating" class="js-example-basic-multiple col-sm-8 col-md-8" multiple="multiple">
+                                        <option value="32 " selected>To all employees</option>
+                                        @foreach($users as $user)
+                                            <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="">Persons:</label>
-                                <select id="appreciating" class="js-example-basic-multiple col-sm-8 col-md-8" multiple="multiple">
-                                    <option value="32 " selected>To all employees</option>
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
-                                    @endforeach
-                                </select>
-                        </div>
+                        <hr>
                         <div class="row">
                             <div class="col-md-12 d-flex justify-content-center">
-                                <button class="btn btn-primary btn-sm" type="submit" id="submitAppreciation">Submit</button>
+                                <div class="btn-group">
+                                    <a href="{{url()->previous()}}" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Cancel</a>
+                                    <button class="btn btn-primary btn-mini" type="submit" id="submitAppreciation"><i class="ti-check mr-2"></i>Submit</button>
+                                </div>
 
                             </div>
                             <div class="col-md-12 d-flex justify-content-center mt-1 ">
