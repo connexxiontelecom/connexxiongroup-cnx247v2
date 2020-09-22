@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{{Auth::user()->tenant->company_name}} | @yield('title')</title>
+    <title>{{Auth::user()->tenant->company_name ?? ''}} | @yield('title')</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -18,7 +18,7 @@
     <meta name="author" content="Connexxion Group">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Favicon icon -->
-    <link rel="icon" href="/assets/images/company-assets/favicons/{{Auth::user()->tenant->favicon ?? '/assets/images/favicon.ico' }} " type="image/x-icon">
+    <link rel="icon" href="/assets/images/company-assets/favicons/{{Auth::user()->tenant->favicon ?? 'favicon.ico' }} " type="image/x-icon">
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet">
     <!-- Required Fremwork -->

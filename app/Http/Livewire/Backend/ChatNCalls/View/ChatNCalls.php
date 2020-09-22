@@ -6,14 +6,16 @@ use Livewire\Component;
 use App\Notifications\ChatNotification;
 use Twilio\Exceptions\ConfigurationException;
 use Twilio\Rest\Client;
+use Pusher\Pusher;
 use App\User;
 use App\Message;
 use Auth;
+use DB;
 
 class ChatNCalls extends Component
 {
     public $users;
-    public $friend = null; //selected user
+    public $friend = []; //selected user
     public $messages = null;
     public $message = '';
     public $selectedUserId = null;
@@ -31,26 +33,37 @@ class ChatNCalls extends Component
     *
     */
     public function getUsers(){
-        $this->users = User::where('account_status', 1)
+       $this->users = User::where('account_status', 1)
                             ->where('verified', 1)
                             ->where('id', '!=', Auth::user()->id)
                             ->where('tenant_id', Auth::user()->tenant_id)
                             ->orderBy('first_name', 'ASC')
                             ->get();
+       /* $this->users = DB::select("select users.id, users.first_name, users.surname, users.avatar,
+                        users.email, users.tenant_id, count(is_read) as unread
+                        FROM users
+                        LEFT JOIN messages
+                        ON users.id = messages.from_id
+                        AND is_read = 0
+                        AND messages.to_id = ".Auth::user()->id. "
+                        WHERE users.id != ".Auth::user()->id."
+                        WHERE users.tenant_id = ".Auth::user()->tenant_id."
+                        GROUP BY users.id, users.first_name, users.surname, users.avatar, users.email, users.tenant_id");*/
     }
 
     /*
     * Select user
     */
     public function getConversation($id){
-        /* $this->friend = User::select('first_name', 'surname', 'avatar', 'position')
+
+        $this->messages = Message::where('from_id', Auth::id())->where('to_id', $id)
+                                ->orWhere('from_id', $id)->where('to_id', Auth::id())
+                                ->where('tenant_id', Auth::user()->tenant_id)
+                                ->get();
+        $this->selectedUserId = $id;
+/*         $this->friend = User::select('first_name', 'surname', 'avatar', 'position', 'mobile')
                         ->where('id', $id)
                         ->where('tenant_id', Auth::user()->tenant_id)->first(); */
-        $this->selectedUserId = $id;
-         $this->messages = Message::where('from_id', Auth::id())->where('to_id', $id)
-                ->orWhere('from_id', $id)->where('to_id', Auth::id())
-                ->where('tenant_id', Auth::user()->tenant_id)
-                ->get();
     }
 
     /*
@@ -69,6 +82,18 @@ class ChatNCalls extends Component
         //notify this user
         $user = User::find($this->selectedUserId);
         $user->notify(new ChatNotification($message));
+        $options = array(
+                'cluster' => 'eu',
+                'useTLS' => true
+            );
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            $options
+        );
+        $data = ['from'=>Auth::user()->id, 'to'=>$this->selectedUserId];
+        $pusher->trigger('my-channel', 'my-event', $data);
         $this->message = '';
         $this->getConversation($this->selectedUserId);
     }

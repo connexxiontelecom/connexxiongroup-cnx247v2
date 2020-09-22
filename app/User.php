@@ -58,8 +58,6 @@ class User extends Authenticatable
     public function nextKin(){
         return $this->hasMany(NextKin::class, 'user_id');
     }
-
-    //tenant-user relationship
     public function tenant(){
         //1. tenant_id on users table
         //2. tenant_id on tenants table
@@ -72,7 +70,12 @@ class User extends Authenticatable
     }
 
 
-
+    public function tenantBankDetails(){
+        return $this->belongsTo(TenantBankDetail::class, 'tenant_id', 'tenant_id');
+    }
+    public function supplier(){
+        return $this->belongsTo(Supplier::class, 'tenant_id');
+    }
  /*    public function leaveWallet(){
         return $this->belongsTo(LeaveWallet::class);
     } */

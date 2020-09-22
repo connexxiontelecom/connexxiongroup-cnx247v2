@@ -204,7 +204,7 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         Route::post('/store/query/employee', 'CNX247\Backend\HRController@storeQueryEmployee')->name('store-query-employee');
         Route::get('/employee/query/view/{slug}', 'CNX247\Backend\HRController@viewQuery')->name('view-query');
     #IdeaBox
-       // Route::get()->name('ideabox', 'CNX247\Backend\HRController@ideaBox')->name('ideabox');
+        Route::get('/hr/idea-box', 'CNX247\Backend\HRController@ideaBox')->name('hr-ideabox');
 #Customer Relationship Management (CRM)
 Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name('crm-dashboard');
 #Leads
@@ -265,7 +265,7 @@ Route::post('/activity-stream/live-update', 'CNX247\Backend\ActivityStreamContro
 Route::get('/activity-stream/post/{slug}', 'CNX247\Backend\ActivityStreamController@viewPost')->name('view-post-activity-stream');
 Route::post('/event/new', 'CNX247\Backend\ActivityStreamController@createEvent');
 Route::post('/announcement/new', 'CNX247\Backend\ActivityStreamController@createAnnouncement');
-Route::post('/file/new', 'CNX247\Backend\ActivityStreamController@shareFile');
+Route::post('/activity-stream/upload/attachment', 'CNX247\Backend\ActivityStreamController@shareFile');
 Route::post('/appreciation/new', 'CNX247\Backend\ActivityStreamController@createAppreciation');
 Route::post('/send/invitation/by-email', 'CNX247\Backend\ActivityStreamController@inviteUser');
 

@@ -513,7 +513,9 @@ class HRController extends Controller
     }
 
     public function ideaBox(){
-        //return view();
+        $ideas = IdeaBox::where('tenant_id', Auth::user()->tenant_id)
+                        ->where('user_id', Auth::user()->id)->get();
+        return view('backend.hr.idea-box',['ideas'=>$ideas]);
     }
 
 }

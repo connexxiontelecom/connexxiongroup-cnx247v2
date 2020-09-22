@@ -21,7 +21,7 @@ class Workgroup extends Model
     * Workgroup moderators
     */
     public function workgroupModerators(){
-        return $this->hasMany(workgroupModerator::class, 'workgroup_id');
+        return $this->hasMany(WorkgroupModerator::class, 'workgroup_id');
     }
     /*
     * Workgroup posts

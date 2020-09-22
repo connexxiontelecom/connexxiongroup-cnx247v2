@@ -1,29 +1,50 @@
 <div class="row">
-    <!-- Message section start -->
-    <div class="col-sm-12">
+    <div class="col-sm-12" style="font-family: Segoe UI; margin-top:-30px;">
         <div class="card">
-            <div class="card-header bg-primary">
+            <div class="card-header" style="background: #EDEDED; padding-top:10px!important; padding-bottom:10px!important;">
                 <div class="media">
-                    <a class="media-left">
-                        <img class="media-object img-radius msg-img-h" src="/assets/images/avatars/medium/{{Auth::user()->avatar ?? 'avatar.png'}}" alt="{{Auth::user()->first_name ?? ''}}">
-                    </a>
                     <div class="media-body">
-                        <div class="txt-white">{{Auth::user()->first_name ?? ''}} {{Auth::user()->surname ?? ''}}
-                            <button class="btn btn-success btn-icon ml-4" type="button" wire:click="makeCall"><i class="icofont icofont-ui-call"></i></button>
+                       <div class="row">
+                        <div class="col-md-5">
+                            <div class="media contact-wrapper">
+                                <div class="media-left media-middle photo-table">
+                                    <a href="javascript:void(0)">
+                                        <img class="media-object img-radius msg-img-h float-right img-30" src="/assets/images/avatars/medium/{{Auth::user()->avatar ?? 'avatar.png'}}" alt="{{Auth::user()->first_name ?? ''}}">
+                                    </a>
+                                </div>
+                                <div class="media-body" style="cursor: pointer;">
+                                    <strong>{{Auth::user()->first_name ?? ''}} {{Auth::user()->surname ?? ''}}</strong>
+                                    <p>{{Auth::user()->position ?? ''}}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="txt-white">{{Auth::user()->position ?? ''}}</div>
+                        @if ($selectedUserId != null)
+                            <div class="col-md-5">
+                                <div class="media contact-wrapper">
+                                    <div class="media-left media-middle photo-table">
+                                        <a href="javascript:void(0)">
+                                            <img class="media-object img-radius msg-img-h float-right img-30" src="/assets/images/avatars/medium/{{Auth::user()->avatar ?? 'avatar.png'}}" alt="{{Auth::user()->first_name ?? ''}}">
+                                        </a>
+                                    </div>
+                                    <div class="media-body" style="cursor: pointer;">
+                                        <strong>{{$friend->first_name ?? ''}} </strong>   <i class="icofont icofont-phone text-danger ml-3 call" data-user="Gbudu Joseph" data-mobile="2348032404359"  data-toggle="modal" data-target="#call-screen"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                       </div>
                     </div>
                 </div>
             </div>
-            <div class="card-block">
-                <div class="row" style=" min-height:100px; max-height:408px;">
-                    <div class="col-lg-3 col-md-4 message-left">
-                        <div class="card-block user-box contact-box assign-user" style="overflow-y: scroll; height:408px;">
+            <div class="card-block" style="background:url('/assets/images/chat-bg.png'); background-repeat: no-repeat; background-size:cover; border-bottom:3px solid #52A94F;">
+                <div class="row" style=" min-height:410px; max-height:auto;">
+                    <div class="col-lg-3 col-md-4 message-left" style="background: #FFF;">
+                        <div class="card-block user-box contact-box assign-user scrollList" style="overflow-y: scroll; height:470px;">
                             @foreach ($users as $user)
                                 <div class="media contact-wrapper" wire:click="getConversation({{$user->id}})">
                                     <div class="media-left media-middle photo-table">
                                         <a href="javascript:void(0)">
-                                            <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$user->avatar ?? '/assets/images/avatars/avatar.png'}}" alt="{{$user->first_name}} {{$user->surname ?? ''}}">
+                                            <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$user->avatar ?? 'avatar.png'}}" alt="{{$user->first_name}} {{$user->surname ?? ''}}">
                                         </a>
                                     </div>
                                     <div class="media-body" style="cursor: pointer;">
@@ -35,10 +56,10 @@
                             @endforeach
                         </div>
                     </div>
-                    <div class="col-lg-9 col-md-12 messages-content ">
-                        <div style="overflow-y: scroll; height:250px;">
+                    <div class="col-lg-9 col-md-12 messages-content " style="background:url('/assets/images/chat-bg.png'); background-repeat: no-repeat; background-size:cover;">
+                        <div style="overflow-y: scroll; height:390px;">
                             @if ($selectedUserId == null )
-                                <h5 class="text-center text-muted">Kindly select a contact to start conversation...</h5>
+                                <p class="text-center text-muted" style="margin-top: 200px;">Kindly select a contact to start conversation...</p>
                             @else
                                 @foreach ($messages as $message)
                                     @if ($message->from_id == Auth::user()->id)
@@ -71,8 +92,8 @@
                                     @else
                                         <div class="media">
                                             <div class="media-left friend-box">
-                                                <a href="#">
-                                                    <img class="media-object img-radius" src="\assets\images\avatar-1.jpg" alt="">
+                                                <a href="javascript:void(0);">
+                                                    <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$message->from_id->avatar ?? 'avatar.png'}}" alt="">
                                                 </a>
                                             </div>
                                             <div class="media-body">
@@ -125,3 +146,49 @@
     </div>
 </div>
 
+@push('chat-calls-script')
+
+<script>
+    var activeUser = "{{ Auth::user()->id }}";
+    var receiver = "{{ $selectedUserId }}";
+    $(document).ready(function(){
+        // Enable pusher logging - don't include this in production
+            Pusher.logToConsole = true;
+            var pusher = new Pusher('4becc02b3fce153a2f45', {
+            cluster: 'eu'
+            });
+
+            var channel = pusher.subscribe('my-channel');
+            channel.bind('my-event', function(data) {
+                if(activeUser == data.from){
+
+                }else if(activeUser == data.to){
+                    var audio = new Audio('/assets/sounds/s1.mp3');
+                    audio.play();
+                    if(receiver == data.from){
+
+                    }else{
+
+                    }
+                }
+            });
+/*         var element = document.querySelectorAll('.slimScroll');
+        var instance = new slimScroll(element, {
+            'scrollList': 'scroll-wrapper unselectable mac',
+            'scrollList': 'scrollBarContainer',
+            'scrollList': 'animate',
+            'scrollList': 'scroll'
+        }); */
+        $(document).on('click', '.call', function(e){
+            e.preventDefault();
+            var audio = new Audio('/assets/sounds/s1.mp3');
+                    audio.play();
+            var mobile = $(this).data('mobile');
+            var user = $(this).data('user');
+            $('#userName').text(user);
+            $('#mobileNo').text(mobile);
+        });
+
+    });
+</script>
+@endpush

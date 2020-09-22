@@ -14,7 +14,7 @@
                             @foreach($posts as $post)
                                 @if($post->post_type == 'message')
                                     @foreach ($post->responsiblePersons as $person)
-                                        @if ($person->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $person->user_id == 32)
+                                        @if ($person->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $person->user_id == 32)
                                             <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                 <div class="row timeline-right p-t-35">
                                                     <div class="col-2 col-sm-2 col-xl-1">
@@ -106,7 +106,7 @@
                                                                 @endif
                                                                 <a href="javascript:void(0);"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments  ({{ count($post->postComments) }})</span></a>
                                                                 <a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                                         @foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
                                                                             <a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
                                                                                 <img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>
@@ -161,7 +161,7 @@
                                     @endforeach
                                 @elseif($post->post_type == 'task')
                                     @foreach ($post->responsiblePersons as $person)
-                                        @if ($person->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $person->user_id == 32)
+                                        @if ($person->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $person->user_id == 32)
                                             <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                 <div class="row timeline-right p-t-35">
                                                     <div class="col-2 col-sm-2 col-xl-1">
@@ -254,7 +254,7 @@
                                                                 @endif
                                                                 <a href="javascript:void(0);"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments  ({{ count($post->postComments) }})</span></a>
                                                                 <a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                                         @foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
                                                                             <a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
                                                                                 <img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>
@@ -309,7 +309,7 @@
                                     @endforeach
                                 @elseif($post->post_type == 'event')
                                         @foreach ($post->responsiblePersons as $res)
-                                            @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                                            @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
 
                                                 <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                     <div class="row timeline-right p-t-35">
@@ -339,7 +339,13 @@
                                                                         <a href="{{route('view-post-activity-stream', $post->post_url)}}">
                                                                             <h5 class="sub-title">{{ $post->post_title ?? '' }}</h5>
                                                                         </a>
-                                                                        <p class="text-muted">{!! $post->post_content ?? '' !!}</p>
+                                                                        <div class="row" style="overflow: hidden">
+                                                                            <div class="col-md-12">
+                                                                                {!! $post->post_content ?? '' !!}
+                                                                            </div>
+                                                                        </div>
+
+
                                                                         <div>
                                                                             <div class="btn-group">
                                                                                 <strong>Start Date: </strong><label for="" class="label label-primary">{{ date('d F, Y', strtotime($post->start_date)) ?? '' }}</label>
@@ -364,7 +370,7 @@
                                                                     @endif
                                                                     <a href="#"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
                                                                     <a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
-                                                                        <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                                             @foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
                                                                                 <a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
                                                                                     <img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>
@@ -419,7 +425,7 @@
                                         @endforeach
                                 @elseif($post->post_type == 'announcement')
                                     @foreach ($post->responsiblePersons as $res)
-                                                @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                                                @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
                                                     <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                         <div class="row timeline-right p-t-35">
                                                             <div class="col-2 col-sm-2 col-xl-1">
@@ -511,7 +517,7 @@
                                                                         @endif
                                                                         <a href="#"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
                                                                         <a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                            <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                                                 @foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
                                                                                     <a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
                                                                                         <img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>
@@ -566,7 +572,7 @@
                                      @endforeach
                                 @elseif($post->post_type == 'file')
                                     @foreach ($post->responsiblePersons as $res)
-                                        @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                                        @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
                                             <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                 <div class="row timeline-right p-t-35">
                                                     <div class="col-2 col-sm-2 col-xl-1">
@@ -658,7 +664,7 @@
                                                                 @endif
                                                                 <a href="#"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
                                                                 <a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                                         @foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
                                                                             <a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
                                                                                 <img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>
@@ -713,7 +719,7 @@
                                     @endforeach
                                 @elseif($post->post_type == 'appreciation')
                                     @foreach ($post->responsiblePersons as $res)
-                                        @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                                        @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
                                             <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                 <div class="row timeline-right p-t-35">
                                                     <div class="col-2 col-sm-2 col-xl-1">
@@ -805,7 +811,7 @@
                                                                 @endif
                                                                 <a href="#"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
                                                                 <a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                                         @foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
                                                                             <a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
                                                                                 <img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>
@@ -860,7 +866,7 @@
                                     @endforeach
                                 @elseif($post->post_type == 'project')
                                     @foreach ($post->responsiblePersons as $res)
-                                        @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                                        @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
                                             <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                 <div class="row timeline-right p-t-35">
                                                     <div class="col-2 col-sm-2 col-xl-1">
@@ -952,7 +958,7 @@
                                                                 @endif
                                                                 <a href="#"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
                                                                 <a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                                         @foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
                                                                             <a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
                                                                                 <img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>
@@ -1173,7 +1179,7 @@
                                 @elseif($post->post_type == 'purchase-request')
                                     @foreach ($post->responsiblePersons as $person)
                                             @if($person->user_id == Auth::user()->id || $post->user_id == Auth::user()->id)
-                                                <div class="social-timelines p-relative">
+                                                <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                     <div class="row timeline-right p-t-35">
                                                         <div class="col-2 col-sm-2 col-xl-1">
                                                             <div class="social-timelines-left">
@@ -1294,23 +1300,28 @@
                                                                     @endif
 
                                                                     <a href="#"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
-                                                                    <a href="#"> <i class="ti-eye text-muted"></i> <span>View (1110)</span></a>
+                                                                    <a href="#"> <i class="ti-eye text-muted"></i> <span>View ({{ count($post->postComments) }})</span></a>
                                                                 </div>
                                                                 <div class="card-block user-box">
                                                                     <div class="p-b-30"> <span class="f-14"><a href="#">Comments ({{ count($post->postComments) }})</a></span>
                                                                     </div>
 
-                                                                    @foreach($post->postComments as $comment)
-                                                                        <div class="media m-b-20">
+                                                                      @foreach($post->postComments()->orderBy('id', 'DESC')->take(5)->get() as $comment)
+                                                                        <div class="media m-b-2">
                                                                             <a class="media-left" href="{{ route('view-profile', $comment->user->url) }}">
                                                                                 <img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
                                                                             </a>
                                                                             <div class="media-body b-b-muted social-client-description">
-                                                                                <div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+                                                                                <div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
                                                                                 <p class="text-muted"> {!! $comment->comment !!} </p>
                                                                             </div>
                                                                         </div>
                                                                     @endforeach
+                                                                    @if (count($post->postComments) > 5 )
+                                                                        <a href="{{route('view-post-activity-stream', $post->post_url)}}">
+                                                                            <p class="text-center">+{{count($post->postComments) - 5}} others</p>
+                                                                        </a>
+                                                                    @endif
 
                                                                     <div class="media">
                                                                         <a class="media-left" href="{{ route('view-profile', Auth::user()->url) }}">
@@ -1334,6 +1345,7 @@
                                                     </div>
                                                 </div>
                                             @endif
+                                            @break
                                     @endforeach
                                 @elseif($post->post_type == 'general-request')
                                     @foreach ($post->responsiblePersons as $person)
@@ -1849,7 +1861,7 @@
                                     @endforeach
                                 @elseif($post->post_type == 'memo')
                                     @foreach ($post->responsiblePersons as $res)
-                                            @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                                            @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
                                                 <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                                     <div class="row timeline-right p-t-35">
                                                         <div class="col-2 col-sm-2 col-xl-1">
@@ -1941,7 +1953,7 @@
                                                                     @endif
                                                                     <a href="#"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
                                                                     <a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
-                                                                        <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                                             @foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
                                                                                 <a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
                                                                                     <img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>

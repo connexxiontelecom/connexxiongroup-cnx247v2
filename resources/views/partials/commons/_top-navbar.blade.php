@@ -98,7 +98,7 @@
                         <div class="dropdown-primary dropdown">
                             <div class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="/assets/images/avatars/thumbnails/{{Auth::user()->avatar ?? 'avatar.png'}}" height="30" width="30" class="img-radius" alt="User-Profile-Image">
-                                <span>{{Auth::user()->first_name}}</span>
+                                <span>{{Auth::user()->first_name}} {{Auth::user()->surname ?? ''}}</span>
                                 <i class="feather icon-chevron-down"></i>
                             </div>
                             <ul class="show-notification profile-notification dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">

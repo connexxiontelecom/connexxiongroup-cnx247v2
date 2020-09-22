@@ -67,57 +67,25 @@
                 <div class="card-block p-t-3">
                     <div class="task-right">
                         <div class="task-right-header-users">
-                            <span data-toggle="collapse">Top Achievers</span>
+                            <span class=" sub-title">Recent Creators</span>
                         </div>
                         <div class="user-box assign-user taskboard-right-users">
-                            <div class="media">
-                                <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{Auth::user()->avatar ??'avatar.png'}}" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
+                            @foreach($tasks->take(5) as $proj)
+                                <div class="media">
+                                    <div class="media-left media-middle photo-table">
+                                        <a href="{{route('view-profile',$proj->user->url )}}">
+                                            <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$proj->user->avatar ?? 'avatar.png'}}" alt="User">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="{{route('view-profile',$proj->user->url )}}">
+                                            <h6>{{$proj->user->first_name ?? ''}} {{$proj->user->surname ?? ''}}</h6>
+                                        </a>
+                                        <p>{{$proj->user->position ?? ''}}</p>
+                                    </div>
                                 </div>
-                                <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Santa Ana,CA</p>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-2.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Huntingston, NJ</p>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-3.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Willingstion, WA</p>
-                                </div>
-                            </div>
-                            <div class="media">
-                                <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="\assets\images\avatar-2.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h6>Josephin Doe</h6>
-                                    <p>Illions, IL</p>
-                                </div>
-                            </div>
+                                <hr>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -145,7 +113,7 @@
                                                         <div class="card-block">
                                                             <div class="row">
                                                                 <div class="col-sm-12">
-                                                                    <p class="task-detail">{!! strlen($task->post_content) > 110 ? substr($task->post_content, 0, 110).'...' : $task->post_content !!}</p>
+                                                                    <p class="task-detail">{{ strlen($task->post_content) > 110 ? substr($task->post_content, 0, 110).'...' : $task->post_content }}</p>
                                                                     <p class="task-due">
                                                                         <strong> Due :</strong>
                                                                         <strong class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->end_date) )}}</strong>
@@ -225,7 +193,7 @@
                                                     <div class="card-block">
                                                         <div class="row">
                                                             <div class="col-sm-12">
-                                                                <p class="task-detail">{!! strlen($task->post_content) > 110 ? substr($task->post_content, 0, 110).'...' : $task->post_content !!}</p>
+                                                                <p class="task-detail">{{ strlen($task->post_content) > 110 ? substr($task->post_content, 0, 110).'...' : $task->post_content }}</p>
                                                                 <p class="task-due">
                                                                     <strong> Due :</strong>
                                                                     <strong class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->end_date) )}}</strong>
@@ -304,7 +272,7 @@
                                                     <div class="card-block">
                                                         <div class="row">
                                                             <div class="col-sm-12">
-                                                                <p class="task-detail">{!! strlen($task->post_content) > 110 ? substr($task->post_content, 0, 110).'...' : $task->post_content !!}</p>
+                                                                <p class="task-detail">{{ strlen($task->post_content) > 110 ? substr($task->post_content, 0, 110).'...' : $task->post_content }}</p>
                                                                 <p class="task-due">
                                                                     <strong> Due :</strong>
                                                                     <strong class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->end_date) )}}</strong>

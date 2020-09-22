@@ -73,24 +73,6 @@
                                             </div>
                                         </div>
                                         <div class="accordion-panel">
-                                            <div class=" accordion-heading" role="tab" id="headingLeaveType">
-                                                <h3 class="card-title accordion-title">
-                                                <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseLeaveType" aria-expanded="true" aria-controls="collapseLeaveType">
-                                                   Leave Type
-                                                </a>
-                                            </h3>
-                                            </div>
-                                            <div id="collapseLeaveType" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingLeaveType" style="">
-                                                <div class="accordion-content accordion-desc">
-                                                    <p>
-                                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                                        survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="accordion-panel">
                                             <div class=" accordion-heading" role="tab" id="headingJobRole">
                                                 <h3 class="card-title accordion-title">
                                                 <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseJobRole" aria-expanded="true" aria-controls="collapseJobRole">
@@ -101,24 +83,6 @@
                                             <div id="collapseJobRole" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingJobRole" style="">
                                                 <div class="accordion-content accordion-desc">
                                                     @livewire('backend.hr.common.job-role')
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="accordion-panel">
-                                            <div class=" accordion-heading" role="tab" id="headingBank">
-                                                <h3 class="card-title accordion-title">
-                                                <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseBank" aria-expanded="false" aria-controls="collapseBank">
-                                                    Bank
-                                                </a>
-                                            </h3>
-                                            </div>
-                                            <div id="collapseBank" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingBank" style="">
-                                                <div class="accordion-content accordion-desc">
-                                                    <p>
-                                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                                        survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
