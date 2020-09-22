@@ -24,8 +24,8 @@ class CreateInvoicesTable extends Migration
             $table->dateTime('due_date');
             $table->double('total');
             $table->double('sub_total');
-            $table->integer('tax_rate')->nullable();
-            $table->integer('discount_rate')->nullable();
+            $table->double('tax_rate')->nullable();
+            $table->double('discount_rate')->nullable();
             $table->double('tax_value')->default(0)->nullable();
             $table->double('discount_value')->default(0)->nullable();
             $table->double('cash')->default(0)->nullable();

@@ -132,6 +132,20 @@
             <div class="row">
                 <div class="col-sm-12">
                     <table class="table table-responsive invoice-table invoice-total">
+                        <tbody class="float-left pl-3">
+                            <tr>
+                                <th class="text-left"> <strong>Account Name:</strong> </th>
+                                <td>{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left"><strong>Account Number:</strong> </th>
+                                <td>{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left"><strong>Bank:</strong> </th>
+                                <td>{{Auth::user()->tenant->tenantBankDetails->bank_name ?? ''}}</td>
+                            </tr>
+                        </tbody>
                         <tbody>
                             <tr>
                                 <th>Sub Total :</th>

@@ -300,7 +300,7 @@
                 file_form.append('share_with', JSON.stringify($('#share_with').val()));
                 $('.file-cus-preloader').show();
                 $('#uploadFilesBtn').attr('disabled', 'disabled');
-                axios.post('/file/new', file_form)
+                axios.post('/activity-stream/upload/attachment', file_form)
                 .then(response=>{
                     $('.file-cus-preloader').hide();
                     $('#uploadFilesBtn').removeAttr('disabled');

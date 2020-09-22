@@ -65,6 +65,9 @@
                                                 @case('leave-request')
                                                         <a href="{{route('view-workflow-task',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                                         @break
+                                                @case('purchase-request')
+                                                        <a href="{{route('view-workflow-task',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                                        @break
                                                 @case('memo')
                                                         <a href="{{route('view-internal-memo',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                                         @break

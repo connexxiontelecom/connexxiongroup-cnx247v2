@@ -112,14 +112,7 @@ class ActivityStreamController extends Controller
     }
 
     public function viewPost($slug){
-        $post = Post::where('tenant_id', Auth::user()->tenant_id)
-                        ->where('post_url', $slug)
-                        ->first();
-        if(!empty($post) ){
-            return view('backend.activity-stream.view-post', ['post'=>$post]);
-        }else{
-            return redirect()->route('404');
-        }
+        return view('backend.activity-stream.view-post');
     }
     /*
     * Create task

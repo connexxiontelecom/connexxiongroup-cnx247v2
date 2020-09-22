@@ -24,7 +24,8 @@ class SupplierController extends Controller
     public function index()
     {
         $suppliers = Supplier::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
-        return view('backend.procurement.supplier.index', ['suppliers'=>$suppliers]);
+        $purchase_orders = PurchaseOrder::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
+        return view('backend.procurement.supplier.index', ['suppliers'=>$suppliers,'purchase_orders'=>$purchase_orders]);
     }
 
     /**

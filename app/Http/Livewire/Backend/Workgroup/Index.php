@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Backend\Workgroup;
 use Livewire\Component;
 use App\Workgroup;
 use App\WorkgroupMember;
+use App\workgroupModerator;
 use Auth;
 
 class Index extends Component

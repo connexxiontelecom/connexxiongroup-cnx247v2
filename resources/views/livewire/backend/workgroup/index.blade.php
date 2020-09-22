@@ -32,7 +32,7 @@
                                     </figure>
                                 @endforeach
                             @else
-                                <h5 class="text-center text-danger">Ooops! You do not have the permission to view the profile of this group.</h5>
+                            <h5 class="text-center text-danger">Ooops! There's no existing workgroup</h5>
                             @endif
                         </div>
                     </div>

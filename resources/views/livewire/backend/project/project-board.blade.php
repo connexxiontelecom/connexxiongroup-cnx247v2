@@ -5,26 +5,25 @@
                 <div class="card-block p-t-10">
                     <div class="task-right">
                         <div class="task-right-header-users">
-                            <span data-toggle="collapse">Assign Users</span>
+                            <span class=" sub-title">Recent Creators</span>
                         </div>
                         <div class="user-box assign-user taskboard-right-users">
-                            @php
-                            $users = ['CJ', 'Oki-Peter', 'Vivian', 'Adesua', 'Rotimi'];
-                        @endphp
-                        @for($i = 0; $i<count($users); $i++)
+                        @foreach($projects->take(5) as $proj)
                             <div class="media">
                                 <div class="media-left media-middle photo-table">
-                                    <a href="#">
-                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/avatar.png" alt="User">
+                                    <a href="{{route('view-profile',$proj->user->url )}}">
+                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$proj->user->avatar ?? 'avatar.png'}}" alt="User">
                                     </a>
                                 </div>
-
                                 <div class="media-body">
-                                    <h6>{{$users[$i]}}</h6>
-                                    <p>-</p>
+                                    <a href="{{route('view-profile',$proj->user->url )}}">
+                                        <h6>{{$proj->user->first_name ?? ''}} {{$proj->user->surname ?? ''}}</h6>
+                                    </a>
+                                    <p>{{$proj->user->position ?? ''}}</p>
                                 </div>
                             </div>
-                        @endfor
+                            <hr>
+                        @endforeach
                         </div>
                     </div>
                 </div>

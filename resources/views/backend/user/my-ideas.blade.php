@@ -39,7 +39,7 @@
                                             <td>{{$serial++}}</td>
                                             <td>{{$idea->subject ?? ''}}</td>
                                             <td>
-                                                @if ($idea->visibility == 0)
+                                                @if ($idea->visibility == 1)
                                                     <label for="" class="label label-danger">Anonymous</label>
                                                 @else
                                                     <label for="" class="label label-primary">{{$idea->user->first_name ?? ''}} {{$idea->user->surname ?? ''}}</label>
@@ -187,14 +187,15 @@
                     content:content
                 })
                 .then(response=>{
-                    $.notify(response.message, "success");
+                    $.notify(response.data.message, "success");
                     $('#submitIdeaBtn').text('Submit');
                     $('#myIdeaModal').modal('hide');
-                    $('#simpletable').load(href.location + '#simpletable');
+                    $('#simpletable').load(href.location + ' #simpletable');
                 })
                 .catch(error=>{
                     $('#submitIdeaBtn').text('Submit');
-                    $.notify(error.response.data.error, );
+                    var errs = Object.values(error.response.data.errors);
+                    $.notify(errs, 'error');
                 });
             }
         });

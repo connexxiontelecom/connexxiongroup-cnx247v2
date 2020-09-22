@@ -119,7 +119,7 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="#">
+                        <a href="{{route('hr-ideabox')}}">
                             <span class="pcoded-mtext">IdeaBox</span>
                         </a>
                     </li>
