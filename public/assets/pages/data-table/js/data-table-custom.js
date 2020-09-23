@@ -504,6 +504,7 @@ $(document).ready(function() {
 
 
     $('#simpletable').DataTable();
+    $('.portableTables').DataTable();
 
     $('#order-table').DataTable({
         "order": [

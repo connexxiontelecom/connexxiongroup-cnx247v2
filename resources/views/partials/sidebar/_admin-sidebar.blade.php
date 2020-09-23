@@ -294,7 +294,7 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <li class=" ">
-                        <a href="form-elements-component.htm">
+                        <a href="{{route('chart-of-accounts')}}">
                             <span class="pcoded-mtext">Chart of Accounts</span>
                         </a>
                     </li>
