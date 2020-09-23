@@ -76,6 +76,9 @@ class User extends Authenticatable
     public function supplier(){
         return $this->belongsTo(Supplier::class, 'tenant_id');
     }
+    public function userTheme(){
+        return $this->belongsTo(Theme::class, 'active_theme');
+    }
  /*    public function leaveWallet(){
         return $this->belongsTo(LeaveWallet::class);
     } */

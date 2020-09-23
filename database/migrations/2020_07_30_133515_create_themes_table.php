@@ -15,11 +15,12 @@ class CreateThemesTable extends Migration
     {
         Schema::create('themes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('theme');
-            $table->string('thumbnail'); //
+            $table->string('theme_name')->nullable();
+            $table->string('thumbnail');
             $table->string('text_color')->default('#FFFFFF');
             $table->string('caption_color')->default('#FFFFFF');
+            $table->string('color_scheme')->default('#FFFFFF'); //default
             $table->timestamps();
         });
     }

@@ -20,7 +20,7 @@
 @section('dialog-section')
 <div class="modal fade" id="call-screen" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content" style="height: 400px; background:#000; border-radius:5%!important;">
+        <div class="modal-content" style="height: 400px; background:#110022; border-radius:5%!important;">
             <div class="modal-body">
                 <div class="row d-flex justify-content-center" style="margin-top:100px;">
                     <div class="col-md-3">

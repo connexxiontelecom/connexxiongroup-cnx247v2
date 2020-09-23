@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Plan;
+use App\Faq;
 use App\PlanFeature;
 use App\ModuleManager;
 use DB;
@@ -89,6 +90,7 @@ class BaseController extends Controller
     * faqs
     */
     public function faqs(){
-        return view('frontend.faqs');
+        $faqs = Faq::orderBy('id', 'DESC')->get();
+        return view('frontend.faqs', ['faqs'=>$faqs]);
     }
 }

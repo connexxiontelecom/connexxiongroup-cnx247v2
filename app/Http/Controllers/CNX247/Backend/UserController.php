@@ -263,4 +263,19 @@ class UserController extends Controller
           return back();
       }
 
+      public function switchTheme(Request $request){
+        $this->validate($request,[
+            'theme'=>'required'
+        ]);
+        $theme = User::find(Auth::user()->id);
+        $theme->active_theme = $request->theme;
+        $theme->save();
+        if($theme){
+            return response()->json(['message'=>'Success! Background theme changed.'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! Could not change background theme.'], 400);
+
+        }
+      }
+
 }

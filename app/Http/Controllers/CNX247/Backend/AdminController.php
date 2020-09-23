@@ -11,7 +11,10 @@ use App\ModuleManager;
 use App\TermsNCondition;
 use App\PrivacyPolicy;
 use App\User;
+use App\Theme;
+use App\Faq;
 use Auth;
+use Image;
 
 class AdminController extends Controller
 {
@@ -217,5 +220,69 @@ class AdminController extends Controller
         $policy->save();
         session()->flash("success", "<strong>Success!</strong> Privacy policy updated.");
         return redirect()->route('privacy-policy');
+    }
+
+    public function themeGallery(){
+        $themes = Theme::orderBy('theme_name', 'ASC')->get();
+        return view('backend.admin.themes.index', ['themes'=>$themes]);
+    }
+
+    public function themeGalleryUpload(Request $request){
+        $this->validate($request,[
+            'name'=>'required',
+            'attachment'=>'required|image'
+        ]);
+        if(!empty($request->file('attachment'))){
+            $extension = $request->file('attachment');
+            $extension = $request->file('attachment')->getClientOriginalExtension();
+            $size = $request->file('attachment')->getSize();
+            $dir = 'assets/uploads/themes/';
+            $filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+            $request->file('attachment')->move(public_path($dir), $filename);
+        }else{
+            $filename = '';
+        }
+        $theme = new Theme;
+        $theme->theme = $filename;
+        $theme->theme_name = $request->name;
+        $theme->color_scheme =  $request->scheme == 1 ? '#8B9198' : '#FFFFFF';
+        $theme->save();
+        $themeId = $theme->id;
+        if($request->custom == 'yes'){
+            $user = User::find(Auth::user()->id);
+            $user->active_theme = $themeId;
+            $user->save();
+        }
+        if($theme){
+            return response()->json(['message'=>'Success! Theme uploaded'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! We could not upload theme. Try again.'], 400);
+        }
+
+    }
+
+    public function accessFaqs(){
+        $faqs = Faq::orderBy('id', 'DESC')->get();
+        return view('backend.admin.faqs.index', ['faqs'=>$faqs]);
+    }
+
+    public function storeFaq(Request $request){
+        $this->validate($request,[
+            'question'=>'required',
+            'answer'=>'required'
+        ]);
+
+        $faq = new Faq;
+        $faq->answer = $request->answer;
+        $faq->question = $request->question;
+        $faq->category = $request->category;
+        $faq->user_id = Auth::user()->id;
+        $faq->save();
+
+        if($faq){
+            return response()->json(['message'=>'Success! New FAQ added.'],200);
+        }else{
+            return response()->json(['error'=>'Ooops! Could not add FAQ.'],400);
+        }
     }
 }
