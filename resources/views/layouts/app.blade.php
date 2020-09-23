@@ -41,7 +41,8 @@
 
     <link rel="stylesheet" type="text/css" href="/assets/bower_components/offline/css/offline-theme-slide.css">
     <link rel="stylesheet" type="text/css" href="/assets/bower_components/offline/css/offline-language-english.css">
-
+    <link rel="stylesheet" href="{{asset('assets/css/cus/parsley.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/cus/progressBar.css')}}">
     <style>
         .card{
             border-radius: 0px !important;
@@ -64,6 +65,7 @@
         .theme-border{
             border: 2px solid #0AC282;
         }
+
     </style>
     @yield('extra-styles')
     @livewireStyles
@@ -117,7 +119,7 @@
 
         @livewire('backend.chat-n-calls.messenger-list')
 
-        <div class="pcoded-main-container" id="pcoded-background" style="background: url('/assets/uploads/wallpapers/paper2.jpg'); background-size:cover; background-repeat: no-repeat;">
+        <div class="pcoded-main-container" id="pcoded-background" style="background: url('/assets/uploads/themes/{{Auth::user()->userTheme->theme}}'); background-size:cover; background-repeat: no-repeat;">
             <div class="pcoded-wrapper">
 
                 @include('partials.sidebar._admin-sidebar')
@@ -139,26 +141,28 @@
                         {{-- <div id="styleSelector">
 
                         </div> --}}
-                        <footer class="footer" style="position: relative; bottom:0px; width:100%; margin-top:30px; background:none;">
+                        <footer class="footer" style="position: relative; bottom:0px; width:100%; margin-top:3px; background:#404E67;">
                             <div class="container">
-                                <div class="row">
+                                <div class="row text-white">
                                     <div class="col-md-9">
                                         <nav class="nav">
-                                            <a class="nav-link" href="{{route('cnx247-terms-n-conditions')}}">Terms & Conditions</a>
-                                            <a class="nav-link" href="{{route('cnx247-privacy-policy')}}">Privacy Policy</a>
-                                            <a class="nav-link" href="http://www.connexxiongroup.com" target="_blank">All Rights Reserved &copy; {{date('Y')}} Connexxion Group</a>
+                                            <a class="nav-link text-white" href="{{route('cnx247-terms-n-conditions')}}">Terms & Conditions</a>
+                                            <a class="nav-link text-white" href="{{route('cnx247-privacy-policy')}}">Privacy Policy</a>
+                                            <a class="nav-link text-white" href="http://www.connexxiongroup.com" target="_blank">All Rights Reserved &copy; {{date('Y')}} Connexxion Group</a>
                                         </nav>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-inline">
-                                            <div class="form-group mr-1">
-                                                <select name="" class="form-control" id="">
-                                                    <option value="en">English</option>
-                                                    <option value="fr">French</option>
-                                                    <option value="es">Spanish</option>
-                                                </select>
-                                            </div>
-                                            <button class="btn btn-out-dashed btn-primary btn-square" data-toggle="modal" data-target="#themeModal" style="background: none;">Themes</button>
+                                                <div id="google_translate_element"></div>
+                                                <script>
+                                                    function googleTranslateElementInit() {
+                                                        new google.translate.TranslateElement({
+                                                            pageLanguage: 'en'
+                                                        }, 'google_translate_element');
+                                                    }
+                                                </script>
+                                                <script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                                            <button class="btn btn-out-dashed btn-primary btn-square ml-1" data-toggle="modal" data-target="#themeModal">Themes</button>
                                         </div>
                                     </div>
                                 </div>
@@ -175,79 +179,16 @@
 <div class="modal fade" id="themeModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="sub-title">Themes</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
             <div class="modal-body">
-                <div class="row" style="height: 500px; overflow-y: scroll;" id="theme-collection">
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="thumbnail">
-                            <div class="thumb" style="cursor: pointer;">
-                                <img src="\assets\images\gallery-grid\1.png" alt="" class="img-fluid img-thumbnail theme-wrapper" data-themeid="23">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="thumbnail">
-                            <div class="thumb" style="cursor: pointer;">
-                                <img src="\assets\images\gallery-grid\1.png" alt="" class="img-fluid img-thumbnail theme-wrapper">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="thumbnail">
-                            <div class="thumb" style="cursor: pointer;">
-                                <img src="\assets\images\gallery-grid\1.png" alt="" class="img-fluid img-thumbnail theme-wrapper">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="thumbnail">
-                            <div class="thumb" style="cursor: pointer;">
-                                <img src="\assets\images\gallery-grid\1.png" alt="" class="img-fluid img-thumbnail theme-wrapper">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="thumbnail">
-                            <div class="thumb" style="cursor: pointer;">
-                                <img src="\assets\images\gallery-grid\1.png" alt="" class="img-fluid img-thumbnail theme-wrapper">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="thumbnail">
-                            <div class="thumb" style="cursor: pointer;">
-                                <img src="\assets\images\gallery-grid\1.png" alt="" class="img-fluid img-thumbnail theme-wrapper">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="thumbnail">
-                            <div class="thumb" style="cursor: pointer;">
-                                <img src="\assets\images\gallery-grid\1.png" alt="" class="img-fluid img-thumbnail theme-wrapper">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="thumbnail">
-                            <div class="thumb" style="cursor: pointer;">
-                                <img src="\assets\images\gallery-grid\1.png" alt="" class="img-fluid img-thumbnail theme-wrapper">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h5 class="sub-title">Background Theme</h5>
+                @livewire('backend.themes.theme')
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <div class="btn-group ">
                     <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close text-white mr-2"></i> Close</button>
-                    <button type="button" class="btn btn-success waves-effect btn-mini waves-light" id="saveTheme"> <i class="ti-check text-white mr-2"></i> Save</button>
+                    <button type="button" class="btn btn-success waves-effect btn-mini waves-light" id="saveThemeChangesBtn"> <i class="ti-check text-white mr-2"></i> Save Changes</button>
                 </div>
-                <button type="button" class="btn btn-secondary waves-effect btn-mini waves-light float-right" data-toggle="modal" data-target="#customModal" id="custome">Custom Theme</button>
-
+                <button type="button" class="btn btn-secondary waves-effect btn-mini waves-light float-right" data-toggle="modal" data-target="#customModal" id="custome"> <i class="ti-user text-white mr-2"></i> Custom Theme</button>
             </div>
         </div>
     </div>
@@ -255,39 +196,36 @@
 <div class="modal fade" id="customModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="sub-title">Use Your Own Theme</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-lg-12 col-sm-12">
                         <div class="card">
                             <div class="card-block" style="background: #EEF2F4;">
-                                <div class="form-group">
-                                    <label for="">Background Image</label> <br>
-                                    <img src="\assets\images\gallery-grid\1.png" class="mb-2" height="48" width="48" alt="">
-                                    <input type="file" name="background_image" class="form-control-file">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Text Color</label>
-                                    <input type="color" name="text_color" class="form-control col-md-2">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Caption Color</label>
-                                    <input type="color" name="text_color" class="form-control col-md-2">
-                                </div>
+                                <h6 class="sub-title">Use Your Own Theme</h6>
+                                <form id="customeThemeForm" data-parsley-validate>
+                                    <div class="form-group">
+                                        <label for="">Background Image</label> <br>
+                                        <img src="/assets/uploads/themes/{{Auth::user()->userTheme->theme ?? ''}}" class="mb-2" height="48" width="48" alt="">
+                                        <input type="file" required name="custom_background_image" id="custom_background_image" class="form-control-file">
+                                    </div>
+                                    <div class="checkbox-fade fade-in-primary">
+                                        <label>
+                                            <input type="checkbox"  name="custom_color_scheme" id="custom_color_scheme">
+                                            <span class="cr">
+                                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                            </span>
+                                            <span>Dark Color Scheme</span>
+                                        </label>
+                                    </div>
+                                    <p><strong class="text-danger">Note:</strong> The default color scheme is light.</p>
+                                    <div class="btn-group d-flex justify-content-center">
+                                        <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close text-white mr-2"></i> Close</button>
+                                        <button type="submit" class="btn btn-success waves-effect btn-mini waves-light" id="customBackgroundBtn"> <i class="ti-check text-white mr-2"></i> Use Mine</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <div class="btn-group ">
-                    <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close text-white mr-2"></i> Close</button>
-                    <button type="button" class="btn btn-success waves-effect btn-mini waves-light" id="useMine"> <i class="ti-check text-white mr-2"></i> Use Mine</button>
                 </div>
             </div>
         </div>
@@ -320,16 +258,104 @@
 <script type="text/javascript" src="{{asset('/assets/js/cus/notify.js')}}"></script>
 <script type="text/javascript" src="/assets/bower_components/intro.js/js/intro.js"></script>
 <script src="https://js.pusher.com/6.0/pusher.min.js"></script>
+<script src="{{asset('/assets/js/cus/parsley.min.js')}}"></script>
+<script src="{{asset('/assets/js/cus/progressBar.js')}}"></script>
 <script>
+    var theme = null;
+    var themeId = null;
+    var scheme = "{{ Auth::user()->userTheme->color_scheme }} !important";
+    var customTheme = null;
     $(document).ready(function(){
-        $(document).on('click', '.theme-wrapper', function(e){
-            e.preventDefault();
-            $(this).closest('#theme-collection').removeClass('theme-border');
-            $(this).addClass('theme-border');
-            var image = $(this).attr('src');
-            var id = $(this).data('themeid');
-            //$('#pcoded-background').css("background","url(" + image + ")");
+        $('.pcoded-mtext').css("color",scheme);
+        $('.pcoded-navigatio-lavel').css("color",scheme);
+        $('input[name="backgroundTheme"]').click(function(){
+            if($(this).prop("checked") == true){
+                theme = $(this).data('background');
+                scheme = $(this).data('scheme');
+                themeId = $(this).val();
+                var location = "/assets/uploads/themes/"+theme;
+                $('#pcoded-background').css("background","url(" + location + ")");
+                $('#pcoded-background').css("background-size","cover");
+                $('#pcoded-background').css("background-repeat","no-repeat");
+                $('.pcoded-mtext').css("color",scheme);
+                $('.pcoded-navigatio-lavel').css("color",scheme);
+            }
+
         });
+
+        $(document).on('click', '#saveThemeChangesBtn', function(e){
+            e.preventDefault();
+            if(theme == null){
+                $.notify("Ooops! You haven't chosen a theme.", "error");
+            }else{
+                $('#saveThemeChangesBtn').text("Processing...");
+                axios.post('/switch-theme',{theme:themeId})
+                .then(response=>{
+                    $('#themeModal').modal('hide');
+                    $.notify(response.data.message, "success");
+                    $('#saveThemeChangesBtn').text("Save changes");
+                })
+                .catch(error=>{
+                    $.notify("Ooops! Something went wrong. Try again", "error");
+                });
+            }
+        });
+        $(document).on('change', '#custom_background_image', function(e){
+            e.preventDefault();
+            var extension = $('#custom_background_image').val().split('.').pop().toLowerCase();
+            if ($.inArray(extension, ['jpeg', 'jpg', 'png', 'gif']) == -1) {
+                $.notify('Ooops! File format not supported.', 'error');
+                $('#custom_background_image').val('');
+            }else{
+                customTheme = $('#custom_background_image').prop('files')[0];
+
+            }
+        });
+        $('input[name="custom_color_scheme"]').click(function(){
+            if($(this).prop("checked") == true){
+                $('#custom_color_scheme').val(1);
+            }
+            else if($(this).prop("checked") == false){
+                $('#custom_color_scheme').val(0);
+            }
+        });
+        $('#customeThemeForm').parsley().on('field:validated', function() {
+
+        }).on('form:submit', function() {
+            var config = {
+                        onUploadProgress: function(progressEvent) {
+                        var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                        }
+                };
+                var form_data = new FormData();
+                form_data.append('name',"Custom Background {{rand(0,999)}}.");
+                form_data.append('attachment',customTheme);
+                form_data.append('scheme',$('#custom_color_scheme').val());
+                form_data.append('custom','yes');
+                $('#customBackgroundBtn').text('Processing...');
+                 axios.post('/theme/gallery/upload',form_data, config)
+                .then(response=>{
+                    $.notify(response.data.message, 'success');
+                    $('#customBackgroundBtn').text('Done');
+                    setTimeout(function () {
+                        $("#customBackgroundBtn").text("Save");
+                        $('#custom_background_image').val('');
+                        $('#custom_text_color').val('');
+                        $('#backgroundThemeModal').modal('hide');
+                        location.reload();
+                    }, 2000);
+
+                })
+                .catch(error=>{
+                    $.notify('Error! Something went wrong.', 'error');
+                    $('#customBackgroundBtn').text("Ooops...We couldn't upload theme.");
+                    setTimeout(function () {
+                        $("#customBackgroundBtn").text("Save");
+                    }, 2000);
+                });
+            return false;
+        });
+
     });
 </script>
 @stack('chat-script')

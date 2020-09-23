@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Backend\ChatNCalls\View;
 use Livewire\Component;
 use App\Notifications\ChatNotification;
 use Twilio\Exceptions\ConfigurationException;
+use Twilio\Jwt\ClientToken;
 use Twilio\Rest\Client;
 use Pusher\Pusher;
 use App\User;
@@ -107,6 +108,16 @@ class ChatNCalls extends Component
                 getenv('TWILIO_ACCOUNT_SID'),
                 getenv('TWILIO_AUTH_TOKEN'),
             );
+
+            /* $forPage = $request->input('forPage');
+            $applicationSid = getenv('TWILIO_ACCOUNT_SID');
+            $this->clientToken->allowClientOutgoing($applicationSid);
+
+            if ($forPage === route('dashboard', [], false)) {
+                $this->clientToken->allowClientIncoming('support_agent');
+            } else {
+
+            } */
             try{
                 $client->calls->create(
                     $this->phone_number,

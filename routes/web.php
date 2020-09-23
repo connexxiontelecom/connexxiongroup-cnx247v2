@@ -157,6 +157,7 @@ Route::get('/renew-membership/{timestamp}/{plan}', 'CNX247\Backend\UserControlle
 Route::post('/renew-membership/pay', 'CNX247\Backend\UserController@proceedToPay')->name('pay-membership');
 Route::get('/my-feedback', 'CNX247\Backend\UserController@myFeedback')->name('my-feedback');
 Route::post('/my-feedback', 'CNX247\Backend\UserController@submitFeedback');
+Route::post('/switch-theme', 'CNX247\Backend\UserController@switchTheme');
 
 #HR routes
 Route::get('/hr-dashboard', 'CNX247\Backend\HRController@hrDashboard')->name('hr-dashboard');
@@ -360,6 +361,13 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::post('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@storeChanges');
     Route::post('/procurement/supplier/contact-person', 'CNX247\Frontend\ProcurementController@updateContactPerson')->name('supplier-update-contact-person');
     Route::post('/procurement/supplier/change-password', 'CNX247\Frontend\ProcurementController@changePassword')->name('supplier-change-password');
+
+#Accounting routes
+    Route::get('/chart-of-accounts', 'CNX247\Backend\Accounting\ChartOfAccountController@index')->name('chart-of-accounts');
+    Route::post('/new/chart-of-account', 'CNX247\Backend\Accounting\ChartOfAccountController@createCOA')->name('create-new-coa');
+    Route::post('/get-parent-account', 'CNX247\Backend\Accounting\ChartOfAccountController@getParentAccount');
+    Route::post('/save-account', 'CNX247\Backend\Accounting\ChartOfAccountController@saveAccount');
+
 #QuickBooks routes
 //Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@analyzeBusiness');
 Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@connectToQuickBooks')->name('connect-to-quickbooks');
@@ -376,6 +384,9 @@ Route::post('/update-terms-n-conditions', 'CNX247\Backend\AdminController@editTe
 Route::get('/privacy-policy', 'CNX247\Backend\AdminController@privacyPolicy')->name('privacy-policy');
 Route::get('/edit/privacy-policy/{id}', 'CNX247\Backend\AdminController@showEditPrivacyPolicyForm')->name('edit-privacy-policy');
 Route::post('/update-privacy-policy', 'CNX247\Backend\AdminController@editPrivacyPolicy')->name('update-privacy-policy');
-
+Route::get('/theme-gallery', 'CNX247\Backend\AdminController@themeGallery')->name('admin-theme-gallery');
+Route::post('/theme/gallery/upload', 'CNX247\Backend\AdminController@themeGalleryUpload');
+Route::get('/admin/access-faqs', 'CNX247\Backend\AdminController@accessFaqs')->name('access-faqs');
+Route::post('/faq/new', 'CNX247\Backend\AdminController@storeFaq');
 #Error routes
 Route::get('/404', 'CNX247\Backend\ErrorController@error404')->name('404');

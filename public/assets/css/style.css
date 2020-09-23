@@ -6379,7 +6379,7 @@ span.badge {
     color: #919aa3 !important;
 }
 .pcoded .pcoded-navbar .pcoded-navigatio-lavel[menu-title-theme="theme5"] {
-    color: #999 !important;
+    color: #999;
 }
 .pcoded .pcoded-navbar .pcoded-navigatio-lavel[menu-title-theme="theme6"] {
     color: #fff !important;

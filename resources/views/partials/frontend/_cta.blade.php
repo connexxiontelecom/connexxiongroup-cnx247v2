@@ -7,9 +7,9 @@
                 </div>
                 <div class="content ml-4">
                     <h5 class="mb-1"><a href="javascript:void(0)" class="text-dark">Get in Touch !</a></h5>
-                    <p class="text-muted mb-0">This is required when, for text is not yet available.</p>
+                    <p class="text-muted mb-0">We'll like to hear from you. Leave a line or more and we'll get back to you as soon as possible.</p>
                     <div class="mt-2">
-                        <a href="javascript:void(0)" class="btn btn-sm btn-soft-primary">Submit a Request</a>
+                        <a href="{{route('support')}}" class="btn btn-sm btn-soft-primary">Submit a Request</a>
                     </div>
                 </div>
             </div>
@@ -21,10 +21,10 @@
                     <i class="uil uil-webcam"></i>
                 </div>
                 <div class="content ml-4">
-                    <h5 class="mb-1"><a href="javascript:void(0)" class="text-dark">Start a Meeting</a></h5>
-                    <p class="text-muted mb-0">This is required when, for text is not yet available.</p>
+                    <h5 class="mb-1"><a href="javascript:void(0)" class="text-dark">Get Started Today!</a></h5>
+                    <p class="text-muted mb-0">The right time to start is now. Get access to the various features our ERP solution has to offer.</p>
                     <div class="mt-2">
-                        <a href="javascript:void(0)" class="btn btn-sm btn-soft-primary">Start Video Chat</a>
+                        <a href="{{route('pricing')}}" class="btn btn-sm btn-soft-primary">Start Subscription</a>
                     </div>
                 </div>
             </div>

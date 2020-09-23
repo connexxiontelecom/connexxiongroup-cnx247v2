@@ -1,4 +1,4 @@
-<nav class="navbar header-navbar pcoded-header" style="background: none;">
+<nav class="navbar header-navbar pcoded-header" style="">
     <div class="navbar-wrapper" style="background: none;">
 
         <div class="navbar-logo" style="background: none;">

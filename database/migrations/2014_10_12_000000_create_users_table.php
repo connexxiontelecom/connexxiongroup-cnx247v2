@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('gender')->nullable();
             $table->string('username')->nullable();
             $table->tinyInteger('account_status')->default(1)->nullable();
-            $table->string('active_theme')->default('default')->nullable();
+            $table->unsignedBigInteger('active_theme')->default(1)->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

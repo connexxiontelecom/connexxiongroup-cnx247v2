@@ -285,7 +285,7 @@
             </li>
         </ul> -->
 
-        <div class="pcoded-navigatio-lavel text-white">Accounting</div>
+        <div class="pcoded-navigatio-lavel">Accounting</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
@@ -294,7 +294,7 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <li class=" ">
-                        <a href="form-elements-component.htm">
+                        <a href="{{route('chart-of-accounts')}}">
                             <span class="pcoded-mtext">Chart of Accounts</span>
                         </a>
                     </li>
@@ -450,13 +450,18 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('privacy-policy')}}">
-                            <span class="pcoded-mtext">Privacy Policy</span>
+                        <a href="{{route('admin-theme-gallery')}}">
+                            <span class="pcoded-mtext">Themes</span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="bs-table-styling.htm">
-                            <span class="pcoded-mtext">Language</span>
+                        <a href="{{route('access-faqs')}}">
+                            <span class="pcoded-mtext">FAQs</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('privacy-policy')}}">
+                            <span class="pcoded-mtext">Privacy Policy</span>
                         </a>
                     </li>
                 </ul>
