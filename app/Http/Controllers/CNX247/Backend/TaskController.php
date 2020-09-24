@@ -262,4 +262,43 @@ class TaskController extends Controller
         session()->flash("success", "<strong>Success!</strong> Task deleted.");
         return redirect()->back();
     }
+
+    public function uploadPostAttachment(Request $request){
+        $this->validate($request,[
+            'attachment'=>'required',
+            'post'=>'required'
+        ]);
+        if(!empty($request->file('attachment'))){
+            $extension = $request->file('attachment');
+            $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
+            $dir = 'assets/uploads/attachments/';
+            $filename = 'task_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+            $request->file('attachment')->move(public_path($dir), $filename);
+        }else{
+            $filename = '';
+        }
+        if(!empty($request->file('attachment'))){
+            $attach = new PostAttachment;
+            $attach->post_id = $request->post;
+            $attach->user_id = Auth::user()->id;
+            $attach->attachment = $filename;
+            $attach->tenant_id = Auth::user()->tenant_id;
+            $attach->save();
+        }
+        if($attach){
+            return response()->json(['message'=>'Success! Attachment uploaded.'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! Could not upload attachment.'], 400);
+
+        }
+    }
+
+    public function submitTask($url){
+        $post = Post::where('tenant_id', Auth::user()->tenant_id)->where('post_url', $url)->first();
+        if(!empty($post) ){
+            return view('backend.tasks.submit-task', ['task'=>$post]);
+        }else{
+            return redirect()->route('404');
+        }
+    }
 }
