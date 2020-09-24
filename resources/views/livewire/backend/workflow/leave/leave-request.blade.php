@@ -28,6 +28,14 @@
                                         <strong>Success!</strong> {!! session('success') !!}
                                     </div>
                                 @endif
+                                @if(session()->has('error'))
+                                    <div class="alert alert-warning border-warning" style="padding:5px;">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <i class="icofont icofont-close-line-circled"></i>
+                                        </button>
+                                         {!! session('error') !!}
+                                    </div>
+                                @endif
                                 <div class="row">
                                     <div class="col-md-12">
                                         <form  action="{{route('leave-request')}}" method="post">
@@ -66,8 +74,8 @@
                                                     <label class="">Leave Type</label>
                                                     <select name="absence_type" class="form-control form-control-normal">
                                                         <option selected disabled>Select leave type</option>
-                                                        @foreach ($leaves as $leave)
-                                                            <option value="{{ $leave->id }}">{{ $leave->leave_name }}</option>
+                                                        @foreach ($leave_types as $type)
+                                                            <option value="{{ $type->id }}">{{ $type->leave_name }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('absence_type')

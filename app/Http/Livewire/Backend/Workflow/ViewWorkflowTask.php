@@ -7,6 +7,7 @@ use App\Post;
 use App\PostComment;
 use App\PostAttachment;
 use App\PostRevision;
+use App\RequestApprover;
 use App\ResponsiblePerson;
 use App\BusinessLog;
 use Carbon\Carbon;
@@ -145,6 +146,9 @@ class ViewWorkflowTask extends Component
             session()->flash("success_code", "<strong>Success!</strong> We just sent verification code to your registered email.");
     }
 
+    public function clockIn($id){
+
+    }
     public function verifyCode($id){
         $verify = RequisitionVerification::where('post_id', $id)
                     ->where('processor_id', Auth::user()->id)
@@ -165,45 +169,58 @@ class ViewWorkflowTask extends Component
                     $log->request_id = $id;
                     $log->user_id = Auth::user()->id;
                     $log->name = $verifyStatus;
-                    $log->note = str_replace('-', ' ',$details->post_type)." ".$verifyStatus." by ".Auth::user()->first_name." ".Auth::user()->surname;
+                    $log->note = str_replace('-', ' ',$details->post_type)." ".$verifyStatus." by ".Auth::user()->first_name." ".Auth::user()->surname ?? " ";
                     $log->save();
-                    //search for supervisor
-                    $find = ResponsiblePerson::select('user_id')
-                                            ->where('post_id', $id)
-                                            ->where('status','in-progress')
-                                            ->first();
+                    $responsiblePersons = ResponsiblePerson::where('post_id', $id)
+                                                //->where('user_id', Auth::user()->id)
+                                                ->get();
+                    $responsiblePersonIds = [];
+                    foreach($responsiblePersons as $per){
+                       array_push($responsiblePersonIds, $per->user_id);
+                    }
+                    //search for processor
+                    $approvers = RequestApprover::where('request_type', $details->post_type)
+                                                ->where('depart_id', $details->user->department_id)
+                                                ->where('tenant_id', Auth::user()->tenant_id)
+                                                ->get();
+                    $approverIds = [];
+                    if(!empty($approvers) ){
+                        foreach($approvers as $approver){
+                            array_push($approverIds, $approver->user_id);
+                        }
+                    }
+                    $remainingProcessors = array_diff($approverIds,$responsiblePersonIds);
                     //identify next supervisor
                     $supervise = new BusinessLog;
                     $supervise->request_id = $id;
                     $supervise->user_id = Auth::user()->id;
                     $supervise->name = 'Log entry';
-                    $supervise->note = "Identifying next supervisor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
+                    $supervise->note = "Identifying next processor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
                     $supervise->save();
-                        if(!empty($find)){
-                            //identify supervisor
-                            $supervise = new BusinessLog;
-                            $supervise->request_id = $id;
-                            $supervise->user_id = Auth::user()->id;
-                            $supervise->name = 'Log entry';
-                            $supervise->note = "New supervisor identified for ".str_replace('-', ' ',$details->post_type)." ".$details->post_title;
-                            $supervise->save();
-                        }else{
-                            //there's no more supervisor
-                            $supervise = new BusinessLog;
-                            $supervise->request_id = $id;
-                            $supervise->user_id = Auth::user()->id;
-                            $supervise->name = 'Log entry';
-                            $supervise->note = "There're no more supervisors for ".str_replace('-', ' ',$details->post_type)." ".$details->post_title;
-                            $supervise->save();
-                            //update request table finally
-                            $status = Post::find($id);
-                            $status->post_status = $verifyStatus;
-                            $status->save();
+                    //return dd($remainingProcessors);
+                    //Assign next processor
+                    if(!empty($remainingProcessors) ){
+                        $reset = array_values($remainingProcessors);
+                        for($i = 0; $i<count($reset); $i++){
+                            $next = new ResponsiblePerson;
+                            $next->post_id = $id;
+                            $next->user_id = $reset[$i];
+                            $next->tenant_id = Auth::user()->tenant_id;
+                            $next->save();
+                            $user = User::find($reset[$i]);
+                            $user->notify(new NewPostNotification($details));
+                        break;
                         }
-                        $this->actionStatus = 0;
-                        $this->verificationPostId = null;
-                        $this->getContent();
-                        session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+                    }else{
+                        $status = Post::find($id);
+                        $status->post_status = $verifyStatus;
+                        $status->save();
+                        #Requisition to GL flow takes over from here
+                    }
+                    $this->actionStatus = 0;
+                    $this->verificationPostId = null;
+                    $this->getContent();
+                    session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
                 }else{
                     $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
                     $action->status = $verifyStatus;
@@ -225,10 +242,10 @@ class ViewWorkflowTask extends Component
                         session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
                 }
             }else{
-                session()->flash("error_code", "<strong>Ooops! Authentication code mis-match. Try again.</strong>");
+                session()->flash("error_code", "<strong>Ooops!</strong>  Authentication code mis-match. Try again.");
             }
         }else{
-            session()->flash("error_code", "<strong>Ooops! There's no authentication code for this request.</strong>");
+            session()->flash("error_code", "<strong>Ooops!</strong> There's no authentication code for this request.");
         }
 
     }

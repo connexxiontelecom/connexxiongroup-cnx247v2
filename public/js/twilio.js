@@ -2069,6 +2069,7 @@ function EventEmitter() {
   EventEmitter.init.call(this);
 }
 module.exports = EventEmitter;
+module.exports.once = once;
 
 // Backwards-compat with node 0.10.x
 EventEmitter.EventEmitter = EventEmitter;
@@ -2458,6 +2459,35 @@ function unwrapListeners(arr) {
     ret[i] = arr[i].listener || arr[i];
   }
   return ret;
+}
+
+function once(emitter, name) {
+  return new Promise(function (resolve, reject) {
+    function eventListener() {
+      if (errorListener !== undefined) {
+        emitter.removeListener('error', errorListener);
+      }
+      resolve([].slice.call(arguments));
+    };
+    var errorListener;
+
+    // Adding an error listener is not optional because
+    // if an error is thrown on an event emitter we cannot
+    // guarantee that the actual event we are waiting will
+    // be fired. The result could be a silent way to create
+    // memory or file descriptor leaks, which is something
+    // we should avoid.
+    if (name !== 'error') {
+      errorListener = function errorListener(err) {
+        emitter.removeListener(name, eventListener);
+        reject(err);
+      };
+
+      emitter.once('error', errorListener);
+    }
+
+    emitter.once(name, eventListener);
+  });
 }
 
 
@@ -6154,7 +6184,7 @@ var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.j
 var device_1 = __webpack_require__(/*! ./device */ "./node_modules/twilio-client/es5/twilio/device.js");
 var errors_1 = __webpack_require__(/*! ./errors */ "./node_modules/twilio-client/es5/twilio/errors/index.js");
 var log_1 = __webpack_require__(/*! ./log */ "./node_modules/twilio-client/es5/twilio/log.js");
-var candidate_1 = __webpack_require__(/*! ./rtc/candidate */ "./node_modules/twilio-client/es5/twilio/rtc/candidate.js");
+var icecandidate_1 = __webpack_require__(/*! ./rtc/icecandidate */ "./node_modules/twilio-client/es5/twilio/rtc/icecandidate.js");
 var statsMonitor_1 = __webpack_require__(/*! ./statsMonitor */ "./node_modules/twilio-client/es5/twilio/statsMonitor.js");
 var util_1 = __webpack_require__(/*! ./util */ "./node_modules/twilio-client/es5/twilio/util.js");
 var Backoff = __webpack_require__(/*! backoff */ "./node_modules/backoff/index.js");
@@ -6222,6 +6252,10 @@ var Connection = /** @class */ (function (_super) {
          * Whether the call has been answered.
          */
         _this._isAnswered = false;
+        /**
+         * Whether the call has been cancelled.
+         */
+        _this._isCancelled = false;
         /**
          * The most recent public input volume value. 0 -> 1 representing -100 to -30 dB.
          */
@@ -6325,14 +6359,13 @@ var Connection = /** @class */ (function (_super) {
             // (rrowland) Is this check necessary? Verify, and if so move to pstream / VSP module.
             var callsid = payload.callsid;
             if (_this.parameters.CallSid === callsid) {
-                _this.once('disconnect', function () {
-                    _this._status = Connection.State.Closed;
-                    _this.emit('cancel');
-                    _this.pstream.removeListener('cancel', _this._onCancel);
-                });
+                _this._isCancelled = true;
                 _this._publisher.info('connection', 'cancel', null, _this);
                 _this._cleanupEventListeners();
                 _this.mediaStream.close();
+                _this._status = Connection.State.Closed;
+                _this.emit('cancel');
+                _this.pstream.removeListener('cancel', _this._onCancel);
             }
         };
         /**
@@ -6480,6 +6513,14 @@ var Connection = /** @class */ (function (_super) {
             _this.emit('sample', sample);
         };
         /**
+         * Called when we receive a transportClose event from pstream.
+         * Re-emits the event.
+         */
+        _this._onTransportClose = function () {
+            _this._log.error('Received transportClose from pstream');
+            _this.emit('transportClose');
+        };
+        /**
          * Re-emit an StatsMonitor warning as a {@link Connection}.warning or .warning-cleared event.
          * @param warningData
          * @param wasCleared - Whether this is a -cleared or -raised event.
@@ -6510,6 +6551,14 @@ var Connection = /** @class */ (function (_super) {
             _this.parameters = _this.options.callParameters;
         }
         _this._direction = _this.parameters.CallSid ? Connection.CallDirection.Incoming : Connection.CallDirection.Outgoing;
+        if (_this._direction === Connection.CallDirection.Incoming && _this.parameters) {
+            _this.callerInfo = _this.parameters.StirStatus
+                ? { isVerified: _this.parameters.StirStatus === 'TN-Validation-Passed-A' }
+                : null;
+        }
+        else {
+            _this.callerInfo = null;
+        }
         _this._mediaReconnectBackoff = Backoff.exponential(BACKOFF_CONFIG);
         _this._mediaReconnectBackoff.on('ready', function () { return _this.mediaStream.iceRestart(); });
         var publisher = _this._publisher = config.publisher;
@@ -6565,8 +6614,16 @@ var Connection = /** @class */ (function (_super) {
             _this._publisher.post(level, 'pc-connection-state', state, null, _this);
         };
         _this.mediaStream.onicecandidate = function (candidate) {
-            var payload = new candidate_1.RTCLocalIceCandidate(candidate).toPayload();
+            var payload = new icecandidate_1.IceCandidate(candidate).toPayload();
             _this._publisher.debug('ice-candidate', 'ice-candidate', payload, _this);
+        };
+        _this.mediaStream.onselectedcandidatepairchange = function (pair) {
+            var localCandidatePayload = new icecandidate_1.IceCandidate(pair.local).toPayload();
+            var remoteCandidatePayload = new icecandidate_1.IceCandidate(pair.remote, true).toPayload();
+            _this._publisher.debug('ice-candidate', 'selected-ice-candidate-pair', {
+                local_candidate: localCandidatePayload,
+                remote_candidate: remoteCandidatePayload,
+            }, _this);
         };
         _this.mediaStream.oniceconnectionstatechange = function (state) {
             var level = state === 'failed' ? 'error' : 'debug';
@@ -6644,22 +6701,24 @@ var Connection = /** @class */ (function (_super) {
         };
         _this.mediaStream.onclose = function () {
             _this._status = Connection.State.Closed;
-            if (_this.options.shouldPlayDisconnect && _this.options.shouldPlayDisconnect()) {
+            if (_this.options.shouldPlayDisconnect && _this.options.shouldPlayDisconnect()
+                // Don't play disconnect sound if this was from a cancel event. i.e. the call
+                // was ignored or hung up even before it was answered.
+                && !_this._isCancelled) {
                 _this._soundcache.get(device_1.default.SoundName.Disconnect).play();
             }
             monitor.disable();
             _this._publishMetrics();
-            _this.emit('disconnect', _this);
+            if (!_this._isCancelled) {
+                _this.emit('disconnect', _this);
+            }
         };
         // temporary call sid to be used for outgoing calls
         _this.outboundConnectionId = generateTempCallSid();
         _this.pstream = config.pstream;
         _this.pstream.on('cancel', _this._onCancel);
         _this.pstream.on('ringing', _this._onRinging);
-        _this.pstream.on('transportClose', function () {
-            _this._log.error('Received transportClose from pstream');
-            _this.emit('transportClose');
-        });
+        _this.pstream.on('transportClose', _this._onTransportClose);
         _this.on('error', function (error) {
             _this._publisher.error('connection', 'error', {
                 code: error.code, message: error.message,
@@ -7078,6 +7137,7 @@ var Connection = /** @class */ (function (_super) {
             _this.pstream.removeListener('cancel', _this._onCancel);
             _this.pstream.removeListener('hangup', _this._onHangup);
             _this.pstream.removeListener('ringing', _this._onRinging);
+            _this.pstream.removeListener('transportClose', _this._onTransportClose);
         };
         // This is kind of a hack, but it lets us avoid rewriting more code.
         // Basically, there's a sequencing problem with the way PeerConnection raises
@@ -7285,7 +7345,7 @@ exports.default = Connection;
  * This file is generated on build. To make changes, see /templates/constants.js
  */
 var PACKAGE_NAME = 'twilio-client';
-var RELEASE_VERSION = '1.11.0';
+var RELEASE_VERSION = '1.12.5';
 module.exports.SOUNDS_BASE_URL = 'https://sdk.twilio.com/js/client/sounds/releases/1.0.0';
 module.exports.PACKAGE_NAME = PACKAGE_NAME;
 module.exports.RELEASE_VERSION = RELEASE_VERSION;
@@ -7427,12 +7487,6 @@ var PStream = __webpack_require__(/*! ./pstream */ "./node_modules/twilio-client
 var rtc = __webpack_require__(/*! ./rtc */ "./node_modules/twilio-client/es5/twilio/rtc/index.js");
 var getUserMedia = __webpack_require__(/*! ./rtc/getusermedia */ "./node_modules/twilio-client/es5/twilio/rtc/getusermedia.js");
 var Sound = __webpack_require__(/*! ./sound */ "./node_modules/twilio-client/es5/twilio/sound.js");
-/**
- * @private
- */
-var networkInformation = navigator.connection
-    || navigator.mozConnection
-    || navigator.webkitConnection;
 var REGISTRATION_INTERVAL = 30000;
 var RINGTONE_PLAY_TIMEOUT = 2000;
 var hasBeenWarnedHandlers = false;
@@ -7551,6 +7605,28 @@ var Device = /** @class */ (function (_super) {
          * The Signaling stream.
          */
         _this.stream = null;
+        /**
+         * Destroy the {@link Device}, freeing references to be garbage collected.
+         */
+        _this.destroy = function () {
+            _this._disconnectAll();
+            _this._stopRegistrationTimer();
+            if (_this.audio) {
+                _this.audio._unbind();
+            }
+            if (_this.stream) {
+                _this.stream.destroy();
+                _this.stream = null;
+            }
+            if (_this._networkInformation && typeof _this._networkInformation.removeEventListener === 'function') {
+                _this._networkInformation.removeEventListener('change', _this._publishNetworkChange);
+            }
+            if (typeof window !== 'undefined' && window.removeEventListener) {
+                window.removeEventListener('beforeunload', _this._confirmClose);
+                window.removeEventListener('unload', _this.destroy);
+                window.removeEventListener('pagehide', _this.destroy);
+            }
+        };
         /**
          * Called on window's beforeunload event if closeProtection is enabled,
          * preventing users from accidentally navigating away from an active call.
@@ -7706,13 +7782,13 @@ var Device = /** @class */ (function (_super) {
             if (!_this._activeConnection) {
                 return;
             }
-            if (networkInformation) {
+            if (_this._networkInformation) {
                 _this._publisher.info('network-information', 'network-change', {
-                    connection_type: networkInformation.type,
-                    downlink: networkInformation.downlink,
-                    downlinkMax: networkInformation.downlinkMax,
-                    effective_type: networkInformation.effectiveType,
-                    rtt: networkInformation.rtt,
+                    connection_type: _this._networkInformation.type,
+                    downlink: _this._networkInformation.downlink,
+                    downlinkMax: _this._networkInformation.downlinkMax,
+                    effective_type: _this._networkInformation.effectiveType,
+                    rtt: _this._networkInformation.rtt,
                 }, _this._activeConnection);
             }
         };
@@ -7760,6 +7836,12 @@ var Device = /** @class */ (function (_super) {
         }
         if (_this._isBrowserExtension) {
             _this._log.info('Running as browser extension.');
+        }
+        if (navigator) {
+            var n = navigator;
+            _this._networkInformation = n.connection
+                || n.mozConnection
+                || n.webkitConnection;
         }
         if (token) {
             _this.setup(token, options);
@@ -7879,27 +7961,6 @@ var Device = /** @class */ (function (_super) {
         return connection;
     };
     /**
-     * Destroy the {@link Device}, freeing references to be garbage collected.
-     */
-    Device.prototype.destroy = function () {
-        this._disconnectAll();
-        this._stopRegistrationTimer();
-        if (this.audio) {
-            this.audio._unbind();
-        }
-        if (this.stream) {
-            this.stream.destroy();
-            this.stream = null;
-        }
-        if (networkInformation) {
-            networkInformation.removeEventListener('change', this._publishNetworkChange);
-        }
-        if (typeof window !== 'undefined' && window.removeEventListener) {
-            window.removeEventListener('beforeunload', this._confirmClose);
-            window.removeEventListener('unload', this._disconnectAll);
-        }
-    };
-    /**
      * Set a handler for the disconnect event.
      * @deprecated Use {@link Device.on}.
      * @param handler
@@ -7994,17 +8055,17 @@ var Device = /** @class */ (function (_super) {
     Device.prototype.setup = function (token, options) {
         var _this = this;
         if (options === void 0) { options = {}; }
+        if (util_1.isLegacyEdge()) {
+            throw new errors_1.NotSupportedError('Microsoft Edge Legacy (https://support.microsoft.com/en-us/help/4533505/what-is-microsoft-edge-legacy) ' +
+                'is deprecated and will not be able to connect to Twilio to make or receive calls after September 1st, 2020. ' +
+                'Please see this documentation for a list of supported browsers ' +
+                'https://www.twilio.com/docs/voice/client/javascript#supported-browsers');
+        }
         if (!Device.isSupported && !options.ignoreBrowserSupport) {
             if (window && window.location && window.location.protocol === 'http:') {
                 throw new errors_1.NotSupportedError("twilio.js wasn't able to find WebRTC browser support.           This is most likely because this page is served over http rather than https,           which does not support WebRTC in many browsers. Please load this page over https and           try again.");
             }
-            throw new errors_1.NotSupportedError("twilio.js 1.3+ SDKs require WebRTC/ORTC browser support.         For more information, see <https://www.twilio.com/docs/api/client/twilio-js>.         If you have any questions about this announcement, please contact         Twilio Support at <help@twilio.com>.");
-        }
-        if (util_1.isLegacyEdge()) {
-            this._log.warn('Microsoft Edge Legacy (https://support.microsoft.com/en-us/help/4533505/what-is-microsoft-edge-legacy) ' +
-                'is deprecated and will not be able to connect to Twilio to make or receive calls after September 1st, 2020. ' +
-                'Please see this documentation for a list of supported browsers ' +
-                'https://www.twilio.com/docs/voice/client/javascript#supported-browsers');
+            throw new errors_1.NotSupportedError("twilio.js 1.3+ SDKs require WebRTC browser support.         For more information, see <https://www.twilio.com/docs/api/client/twilio-js>.         If you have any questions about this announcement, please contact         Twilio Support at <help@twilio.com>.");
         }
         if (!token) {
             throw new errors_1.InvalidArgumentError('Token is required for Device.setup()');
@@ -8107,8 +8168,8 @@ var Device = /** @class */ (function (_super) {
         if (this.options.publishEvents === false) {
             this._publisher.disable();
         }
-        if (networkInformation) {
-            networkInformation.addEventListener('change', this._publishNetworkChange);
+        if (this._networkInformation && typeof this._networkInformation.addEventListener === 'function') {
+            this._networkInformation.addEventListener('change', this._publishNetworkChange);
         }
         this.audio = new (this.options.AudioHelper || audiohelper_1.default)(this._updateSinkIds, this._updateInputStream, getUserMedia, {
             audioContext: Device.audioContext,
@@ -8128,7 +8189,8 @@ var Device = /** @class */ (function (_super) {
         this.updateToken(token);
         // Setup close protection and make sure we clean up ongoing calls on unload.
         if (typeof window !== 'undefined' && window.addEventListener) {
-            window.addEventListener('unload', this._disconnectAll);
+            window.addEventListener('unload', this.destroy);
+            window.addEventListener('pagehide', this.destroy);
             if (this.options.closeProtection) {
                 window.addEventListener('beforeunload', this._confirmClose);
             }
@@ -9831,7 +9893,7 @@ var Edge;
      * Public edges
      */
     Edge["Sydney"] = "sydney";
-    Edge["SaoPaolo"] = "sao-paolo";
+    Edge["SaoPaulo"] = "sao-paulo";
     Edge["Dublin"] = "dublin";
     Edge["Frankfurt"] = "frankfurt";
     Edge["Tokyo"] = "tokyo";
@@ -9943,7 +10005,7 @@ var regionURIs = (_b = {},
  */
 exports.edgeToRegion = (_c = {},
     _c[Edge.Sydney] = Region.Au1,
-    _c[Edge.SaoPaolo] = Region.Br1,
+    _c[Edge.SaoPaulo] = Region.Br1,
     _c[Edge.Dublin] = Region.Ie1,
     _c[Edge.Frankfurt] = Region.De1,
     _c[Edge.Tokyo] = Region.Jp1,
@@ -9967,7 +10029,7 @@ exports.edgeToRegion = (_c = {},
  */
 exports.regionToEdge = (_d = {},
     _d[Region.Au1] = Edge.Sydney,
-    _d[Region.Br1] = Edge.SaoPaolo,
+    _d[Region.Br1] = Edge.SaoPaulo,
     _d[Region.Ie1] = Edge.Dublin,
     _d[Region.De1] = Edge.Frankfurt,
     _d[Region.Jp1] = Edge.Tokyo,
@@ -10168,74 +10230,6 @@ module.exports = Request;
 
 /***/ }),
 
-/***/ "./node_modules/twilio-client/es5/twilio/rtc/candidate.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/twilio-client/es5/twilio/rtc/candidate.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-/**
- * @module Voice
- * @internalapi
- */
-Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * {@link RTCIceCandidate} parses an ICE candidate gathered by the browser
- * and returns a RTCLocalIceCandidate object
- */
-var RTCLocalIceCandidate = /** @class */ (function () {
-    /**
-     * @constructor
-     * @param iceCandidate RTCIceCandidate coming from the browser
-     */
-    function RTCLocalIceCandidate(iceCandidate) {
-        /**
-         * Whether this is deleted from the list of candidate gathered
-         */
-        this.deleted = false;
-        /**
-         * Whether this is a remote candidate
-         */
-        this.isRemote = false;
-        var cost;
-        var parts = iceCandidate.candidate.split('network-cost ');
-        if (parts[1]) {
-            cost = parseInt(parts[1], 10);
-        }
-        this.candidateType = iceCandidate.type;
-        this.ip = iceCandidate.ip || iceCandidate.address;
-        this.networkCost = cost;
-        this.port = iceCandidate.port;
-        this.priority = iceCandidate.priority;
-        this.protocol = iceCandidate.protocol;
-        this.transportId = iceCandidate.sdpMid;
-    }
-    /**
-     * Get the payload object for insights
-     */
-    RTCLocalIceCandidate.prototype.toPayload = function () {
-        return {
-            'candidate_type': this.candidateType,
-            'deleted': this.deleted,
-            'ip': this.ip,
-            'is_remote': this.isRemote,
-            'network-cost': this.networkCost,
-            'port': this.port,
-            'priority': this.priority,
-            'protocol': this.protocol,
-            'transport_id': this.transportId,
-        };
-    };
-    return RTCLocalIceCandidate;
-}());
-exports.RTCLocalIceCandidate = RTCLocalIceCandidate;
-//# sourceMappingURL=candidate.js.map
-
-/***/ }),
-
 /***/ "./node_modules/twilio-client/es5/twilio/rtc/getusermedia.js":
 /*!*******************************************************************!*\
   !*** ./node_modules/twilio-client/es5/twilio/rtc/getusermedia.js ***!
@@ -10279,6 +10273,78 @@ function getUserMedia(constraints, options) {
 }
 
 module.exports = getUserMedia;
+
+/***/ }),
+
+/***/ "./node_modules/twilio-client/es5/twilio/rtc/icecandidate.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/twilio-client/es5/twilio/rtc/icecandidate.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+/**
+ * @module Voice
+ * @internalapi
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * {@link RTCIceCandidate} parses an ICE candidate gathered by the browser
+ * and returns a IceCandidate object
+ */
+var IceCandidate = /** @class */ (function () {
+    /**
+     * @constructor
+     * @param iceCandidate RTCIceCandidate coming from the browser
+     */
+    function IceCandidate(iceCandidate, isRemote) {
+        if (isRemote === void 0) { isRemote = false; }
+        /**
+         * Whether this is deleted from the list of candidate gathered
+         */
+        this.deleted = false;
+        var cost;
+        var parts = iceCandidate.candidate.split('network-cost ');
+        if (parts[1]) {
+            cost = parseInt(parts[1], 10);
+        }
+        this.candidateType = iceCandidate.type;
+        this.ip = iceCandidate.ip || iceCandidate.address;
+        this.isRemote = isRemote;
+        this.networkCost = cost;
+        this.port = iceCandidate.port;
+        this.priority = iceCandidate.priority;
+        this.protocol = iceCandidate.protocol;
+        this.relatedAddress = iceCandidate.relatedAddress;
+        this.relatedPort = iceCandidate.relatedPort;
+        this.tcpType = iceCandidate.tcpType;
+        this.transportId = iceCandidate.sdpMid;
+    }
+    /**
+     * Get the payload object for insights
+     */
+    IceCandidate.prototype.toPayload = function () {
+        return {
+            'candidate_type': this.candidateType,
+            'deleted': this.deleted,
+            'ip': this.ip,
+            'is_remote': this.isRemote,
+            'network-cost': this.networkCost,
+            'port': this.port,
+            'priority': this.priority,
+            'protocol': this.protocol,
+            'related_address': this.relatedAddress,
+            'related_port': this.relatedPort,
+            'tcp_type': this.tcpType,
+            'transport_id': this.transportId,
+        };
+    };
+    return IceCandidate;
+}());
+exports.IceCandidate = IceCandidate;
+//# sourceMappingURL=icecandidate.js.map
 
 /***/ }),
 
@@ -10880,6 +10946,7 @@ function PeerConnection(audioHelper, pstream, getUserMedia, options) {
   this.oniceconnectionstatechange = noop;
   this.onpcconnectionstatechange = noop;
   this.onicecandidate = noop;
+  this.onselectedcandidatepairchange = noop;
   this.onvolume = noop;
   this.version = null;
   this.pstream = pstream;
@@ -11538,6 +11605,7 @@ PeerConnection.prototype._setupChannel = function () {
     if (candidate) {
       _this5._hasIceCandidates = true;
       _this5.onicecandidate(candidate);
+      _this5._setupRTCIceTransportListener();
     }
 
     _this5._log.info('ICE Candidate: ' + JSON.stringify(candidate));
@@ -11546,7 +11614,6 @@ PeerConnection.prototype._setupChannel = function () {
   pc.onicegatheringstatechange = function () {
     var state = pc.iceGatheringState;
     if (state === 'gathering') {
-      _this5._hasIceCandidates = false;
       _this5._startIceGatheringTimeout();
     } else if (state === 'complete') {
       _this5._stopIceGatheringTimeout();
@@ -11627,58 +11694,77 @@ PeerConnection.prototype._setupRTCDtlsTransportListener = function () {
 };
 
 /**
+ * Setup a listener for RTCIceTransport to capture selected candidate pair changes
+ * @private
+ */
+PeerConnection.prototype._setupRTCIceTransportListener = function () {
+  var _this7 = this;
+
+  var iceTransport = this._getRTCIceTransport();
+
+  if (!iceTransport || iceTransport.onselectedcandidatepairchange) {
+    return;
+  }
+
+  iceTransport.onselectedcandidatepairchange = function () {
+    return _this7.onselectedcandidatepairchange(iceTransport.getSelectedCandidatePair());
+  };
+};
+
+/**
  * Restarts ICE for the current connection
  * ICE Restart failures are ignored. Retries are managed in Connection
  * @private
  */
 PeerConnection.prototype.iceRestart = function () {
-  var _this7 = this;
+  var _this8 = this;
 
   if (!this.options.enableIceRestart) {
     return;
   }
   this._log.info('Attempting to restart ICE...');
+  this._hasIceCandidates = false;
   this.version.createOffer(this.options.maxAverageBitrate, this.codecPreferences, { iceRestart: true }).then(function () {
-    _this7._removeReconnectionListeners();
+    _this8._removeReconnectionListeners();
 
-    _this7._onAnswerOrRinging = function (payload) {
-      _this7._removeReconnectionListeners();
+    _this8._onAnswerOrRinging = function (payload) {
+      _this8._removeReconnectionListeners();
 
-      if (!payload.sdp || _this7.version.pc.signalingState !== 'have-local-offer') {
-        var message = 'Invalid state or param during ICE Restart:' + ('hasSdp:' + !!payload.sdp + ', signalingState:' + _this7.version.pc.signalingState);
-        _this7._log.info(message);
+      if (!payload.sdp || _this8.version.pc.signalingState !== 'have-local-offer') {
+        var message = 'Invalid state or param during ICE Restart:' + ('hasSdp:' + !!payload.sdp + ', signalingState:' + _this8.version.pc.signalingState);
+        _this8._log.info(message);
         return;
       }
 
-      var sdp = _this7._maybeSetIceAggressiveNomination(payload.sdp);
-      _this7._answerSdp = sdp;
-      if (_this7.status !== 'closed') {
-        _this7.version.processAnswer(_this7.codecPreferences, sdp, null, function (err) {
+      var sdp = _this8._maybeSetIceAggressiveNomination(payload.sdp);
+      _this8._answerSdp = sdp;
+      if (_this8.status !== 'closed') {
+        _this8.version.processAnswer(_this8.codecPreferences, sdp, null, function (err) {
           var message = err && err.message ? err.message : err;
-          _this7._log.info('Failed to process answer during ICE Restart. Error: ' + message);
+          _this8._log.info('Failed to process answer during ICE Restart. Error: ' + message);
         });
       }
     };
 
-    _this7._onHangup = function () {
-      _this7._log.info('Received hangup during ICE Restart');
-      _this7._removeReconnectionListeners();
+    _this8._onHangup = function () {
+      _this8._log.info('Received hangup during ICE Restart');
+      _this8._removeReconnectionListeners();
     };
 
-    _this7.pstream.on('answer', _this7._onAnswerOrRinging);
-    _this7.pstream.on('hangup', _this7._onHangup);
-    _this7.pstream.reinvite(_this7.version.getSDP(), _this7.callSid);
+    _this8.pstream.on('answer', _this8._onAnswerOrRinging);
+    _this8.pstream.on('hangup', _this8._onHangup);
+    _this8.pstream.reinvite(_this8.version.getSDP(), _this8.callSid);
   }).catch(function (err) {
     var message = err && err.message ? err.message : err;
-    _this7._log.info('Failed to createOffer during ICE Restart. Error: ' + message);
+    _this8._log.info('Failed to createOffer during ICE Restart. Error: ' + message);
     // CreateOffer failures doesn't transition ice state to failed
     // We need trigger it so it can be picked up by retries
-    _this7.onfailed(message);
+    _this8.onfailed(message);
   });
 };
 
 PeerConnection.prototype.makeOutgoingCall = function (token, params, callsid, rtcConstraints, rtcConfiguration, onMediaStarted) {
-  var _this8 = this;
+  var _this9 = this;
 
   if (!this._initializeMediaStream(rtcConstraints, rtcConfiguration)) {
     return;
@@ -11705,10 +11791,10 @@ PeerConnection.prototype.makeOutgoingCall = function (token, params, callsid, rt
       return;
     }
 
-    var sdp = _this8._maybeSetIceAggressiveNomination(payload.sdp);
+    var sdp = _this9._maybeSetIceAggressiveNomination(payload.sdp);
     self._answerSdp = sdp;
     if (self.status !== 'closed') {
-      self.version.processAnswer(_this8.codecPreferences, sdp, onAnswerSuccess, onAnswerError);
+      self.version.processAnswer(_this9.codecPreferences, sdp, onAnswerSuccess, onAnswerError);
     }
     self.pstream.removeListener('answer', self._onAnswerOrRinging);
     self.pstream.removeListener('ringing', self._onAnswerOrRinging);
@@ -11892,6 +11978,15 @@ PeerConnection.prototype._canStopMediaStreamTrack = function () {
 
 PeerConnection.prototype._getAudioTracks = function (stream) {
   return typeof stream.getAudioTracks === 'function' ? stream.getAudioTracks() : stream.audioTracks;
+};
+
+/**
+ * Get the RTCIceTransport object from the PeerConnection
+ * @returns RTCIceTransport
+ */
+PeerConnection.prototype._getRTCIceTransport = function _getRTCIceTransport() {
+  var dtlsTransport = this.getRTCDtlsTransport();
+  return dtlsTransport && dtlsTransport.iceTransport || null;
 };
 
 // Is PeerConnection.protocol used outside of our SDK? We should remove this if not.
@@ -12106,10 +12201,16 @@ RTCPC.prototype.processAnswer = function (codecPreferences, sdp, onSuccess, onEr
 
        typeof (new mozRTCPeerConnection()).getLocalStreams === 'function'
 
+
+    NOTE(rrowland): We no longer support Legacy Edge as of Sep 1, 2020.
 */
 RTCPC.test = function () {
   if ((typeof navigator === 'undefined' ? 'undefined' : _typeof(navigator)) === 'object') {
     var getUserMedia = navigator.mediaDevices && navigator.mediaDevices.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia;
+
+    if (util.isLegacyEdge(navigator)) {
+      return false;
+    }
 
     if (getUserMedia && typeof window.RTCPeerConnection === 'function') {
       return true;
@@ -15021,6 +15122,14 @@ module.exports = g;
 /***/ (function(module, exports, __webpack_require__) {
 
 var Device = __webpack_require__(/*! twilio-client */ "./node_modules/twilio-client/es5/twilio.js").Device;
+/* Call the support_agent from the home page */
+
+
+function callSupport() {
+  updateCallStatus("Calling support..."); // Our backend will assume that no params means a call to support_agent
+
+  Twilio.Device.connect();
+}
 
 /***/ }),
 

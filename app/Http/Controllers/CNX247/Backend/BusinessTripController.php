@@ -32,6 +32,11 @@ class BusinessTripController extends Controller
             'start_date'=>'required|date',
             'end_date'=>'required|date|after_or_equal:start_date'
         ]);
+        $processor = RequestApprover::select('user_id')
+                                    ->where('request_type', 'business-trip')
+                                    ->where('depart_id', Auth::user()->department_id)
+                                    ->where('tenant_id', Auth::user()->tenant_id)
+                                    ->first();
         if(!empty($request->file('attachment'))){
             $extension = $request->file('attachment');
             $extension = $request->file('attachment')->getClientOriginalExtension();
@@ -43,21 +48,21 @@ class BusinessTripController extends Controller
             $filename = '';
         }
         $url = substr(sha1(time()), 10,10);
-        $requisition = new Post;
-        $requisition->post_title = $request->title;
-        $requisition->budget = $request->amount;
-        $requisition->currency = $request->currency;
-        $requisition->post_type = 'business-trip';
-        $requisition->post_content = $request->purpose;
-        $requisition->location = $request->destination;
-        $requisition->start_date = $request->start_date;
-        $requisition->end_date = $request->end_date;
-        $requisition->post_status = 'in-progress';
-        $requisition->user_id = Auth::user()->id;
-        $requisition->tenant_id = Auth::user()->tenant_id;
-        $requisition->post_url = $url;
-        $requisition->save();
-        $id = $requisition->id;
+        $business = new Post;
+        $business->post_title = $request->title;
+        $business->budget = $request->amount;
+        $business->currency = $request->currency;
+        $business->post_type = 'business-trip';
+        $business->post_content = $request->purpose;
+        $business->location = $request->destination;
+        $business->start_date = $request->start_date;
+        $business->end_date = $request->end_date;
+        $business->post_status = 'in-progress';
+        $business->user_id = Auth::user()->id;
+        $business->tenant_id = Auth::user()->tenant_id;
+        $business->post_url = $url;
+        $business->save();
+        $id = $business->id;
         if(!empty($request->file('attachment'))){
             $attachment = new PostAttachment;
             $attachment->post_id = $id;
@@ -66,21 +71,13 @@ class BusinessTripController extends Controller
             $attachment->attachment = $filename;
             $attachment->save();
         }
-
-        $processors = RequestApprover::select('user_id')
-                        ->where('request_type', 'business-trip')
-                        ->where('depart_id', Auth::user()->department_id)
-                        ->where('tenant_id', Auth::user()->tenant_id)
-                        ->get();
-        foreach($processors as $process){
-            $event = new ResponsiblePerson;
-            $event->post_id = $id;
-            $event->user_id = $process->user_id;
-            $event->tenant_id = Auth::user()->tenant_id;
-            $event->save();
-            $user = User::find($process->user_id);
-                $user->notify(new NewPostNotification($requisition));
-        }
+        $event = new ResponsiblePerson;
+        $event->post_id = $id;
+        $event->user_id = $processor->user_id;
+        $event->tenant_id = Auth::user()->tenant_id;
+        $event->save();
+        $user = User::find($processor->user_id);
+        $user->notify(new NewPostNotification($business));
 
         //Register business process log
         $log = new BusinessLog;

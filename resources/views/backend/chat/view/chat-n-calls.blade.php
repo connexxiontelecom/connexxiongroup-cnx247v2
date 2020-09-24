@@ -36,7 +36,7 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col-md-12 d-flex justify-content-center">
-                        <button class="btn btn-danger btn-icon"><i class="zmdi zmdi-phone-end"></i></button>
+                        <button class="btn btn-danger btn-icon" onclick="callUser()"><i class="zmdi zmdi-phone-end"></i></button>
                     </div>
                 </div>
             </div>

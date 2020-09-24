@@ -4,8 +4,8 @@
             <div class="card widget-statstic-card">
                 <div class="card-header">
                     <div class="card-header-left">
-                        <h5>Probation</h5>
-                        <p class="p-t-10 m-b-0 text-c-yellow">Compared to last week</p>
+                        <h5>Active</h5>
+                        <p class="p-t-10 m-b-0 text-c-yellow">Current number of employees</p>
                     </div>
                 </div>
                 <div class="card-block">
@@ -21,8 +21,8 @@
             <div class="card widget-statstic-card">
                 <div class="card-header">
                     <div class="card-header-left">
-                        <h5>Unique Visitor</h5>
-                        <p class="p-t-10 m-b-0 text-c-pink">55% From last 28 hours</p>
+                        <h5>Terminated</h5>
+                        <p class="p-t-10 m-b-0 text-c-pink">Employment terminated.</p>
                     </div>
                 </div>
                 <div class="card-block">
@@ -37,8 +37,8 @@
             <div class="card widget-statstic-card">
                 <div class="card-header">
                     <div class="card-header-left">
-                        <h5>New Orders</h5>
-                        <p class="p-t-10 m-b-0 text-c-blue">54% From last month</p>
+                        <h5>Resigned</h5>
+                        <p class="p-t-10 m-b-0 text-c-blue">Those who resigned.</p>
                     </div>
                 </div>
                 <div class="card-block">

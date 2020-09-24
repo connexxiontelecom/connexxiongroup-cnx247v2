@@ -25,7 +25,7 @@ class Index extends Component
     public function getContent(){
         $this->expenses = Post::where('user_id', Auth::user()->id)
                                 ->where('tenant_id', Auth::user()->tenant_id)
-                                ->where('post_type', 'expense-request')
+                                ->where('post_type', 'expense-report')
                                 ->orderBy('id', 'DESC')
                                 ->get();
     }

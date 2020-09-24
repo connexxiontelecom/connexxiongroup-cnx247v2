@@ -75,7 +75,7 @@
                         </div>
                         <div class="form-group">
                             <label for="">Description</label>
-                            <textarea name="" id="description" required cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
+                            <textarea name="" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
                         </div>
                         <hr>
                         <div class="btn-group d-flex justify-content-center">

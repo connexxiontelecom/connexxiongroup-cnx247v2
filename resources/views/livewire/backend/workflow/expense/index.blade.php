@@ -12,10 +12,6 @@
                         <a class="nav-link active" data-toggle="tab" href="#expenseReportTab" role="tab">Expense Report</a>
                         <div class="slide"></div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#businessProcessTab" role="tab">Business Process</a>
-                        <div class="slide"></div>
-                    </li>
                 </ul>
                 <div class="tab-content card-block" style="margin-top: -20px;">
                     <div class="tab-pane active" id="expenseReportTab" role="tabpanel">
@@ -85,18 +81,6 @@
                         </div>
                     </div>
                     </div>
-                    <div class="tab-pane" id="businessProcessTab" role="tabpanel">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong>Business Process Name: </strong> Expense Report
-                                <p><strong>Business Process Description:</strong> This process sends an expense report for an approval using the Company Structure's hierarchy. When the approval reaches a designated "Final Approver", it is completed. Notifications of the report's progress are sent out at various stages</p>
-                            </div>
-                            <div class="card-block">
-                                <button class="btn btn-out-dashed btn-inverse btn-square btn-sm waves-effect" class="nav nav-tabs md-tabs" role="tablist" data-toggle="tab" href="#businessProcessConstants" role="tab" type="button">Set Request Constants</button>
-                            </div>
-                            @livewire('backend.workflow.common.business-constant')
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -106,7 +90,7 @@
 @push('expense-script')
 <script>
      $(document).ready(function(){
-            var file_data = null;
+        var file_data = null;
         $(document).on('change', '#uploadAttachment', function(e){
             e.preventDefault();
             var extension = $('#uploadAttachment').val().split('.').pop().toLowerCase();
@@ -129,7 +113,7 @@
                 };
                 var form_data = new FormData();
                 form_data.append('amount',$('#amount').val());
-                form_data.append('description',$('#description').val());
+                form_data.append('description',tinymce.get('description').getContent());
                 form_data.append('title',$('#title').val());
                 form_data.append('attachment',file_data);
                 form_data.append('post_type','expense-request');
@@ -144,10 +128,10 @@
                     }, 2000);
 
                 })
-                .catch(error=>{
-                    $.notify('Error! Something went wrong.', 'error');
-                    //$('#op-failed').css('display', 'block');
-                    $('#addNewExpenseBtn').text('Ooops...Could not submit report.');
+                .catch(errors=>{
+                    var errs = Object.values(errors.response.data.error);
+                    $.notify(errs, "error");
+                    $('#addNewExpenseBtn').text('Error!');
                     setTimeout(function () {
                         $("#addNewExpenseBtn").text("Save");
                     }, 2000);

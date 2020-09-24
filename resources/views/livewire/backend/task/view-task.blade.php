@@ -343,3 +343,10 @@
         </div>
     </div>
 </div>
+@push('task-scripts')
+    <script>
+        $(document).ready(function(){
+            alert('ready');
+        });
+    </script>
+@endpush

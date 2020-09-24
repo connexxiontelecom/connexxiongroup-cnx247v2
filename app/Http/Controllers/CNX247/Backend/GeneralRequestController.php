@@ -32,73 +32,75 @@ class GeneralRequestController extends Controller
             'title'=>'required',
             'description'=>'required'
         ]);
-        if(!empty($request->file('attachment'))){
-            $extension = $request->file('attachment');
-            $extension = $request->file('attachment')->getClientOriginalExtension();
-            $size = $request->file('attachment')->getSize();
-            $dir = 'assets/uploads/requisition/';
-            $filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
-            $request->file('attachment')->move(public_path($dir), $filename);
+        $processor = RequestApprover::select('user_id')
+                                    ->where('request_type', 'general-request')
+                                    ->where('depart_id', Auth::user()->department_id)
+                                    ->where('tenant_id', Auth::user()->tenant_id)
+                                    ->first();
+        if(empty($processor)){
+            return response()->json(["error"=>"Error! Could not submit. No processor found."],400);
         }else{
-            $filename = '';
-        }
+            if(!empty($request->file('attachment'))){
+                $extension = $request->file('attachment');
+                $extension = $request->file('attachment')->getClientOriginalExtension();
+                $size = $request->file('attachment')->getSize();
+                $dir = 'assets/uploads/requisition/';
+                $filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+                $request->file('attachment')->move(public_path($dir), $filename);
+            }else{
+                $filename = '';
+            }
 
-        $url = substr(sha1(time()), 10,10);
-        $requisition = new Post;
-        $requisition->post_title = $request->title;
-        $requisition->budget = $request->amount;
-        $requisition->currency = $request->currency;
-        $requisition->post_type = 'general-request';
-        $requisition->post_content = $request->description;
-        $requisition->post_status = 'in-progress';
-        $requisition->user_id = Auth::user()->id;
-        $requisition->tenant_id = Auth::user()->tenant_id;
-        $requisition->post_url = $url;
-        $requisition->save();
-        $id = $requisition->id;
-        if(!empty($request->file('attachment'))){
-            $attachment = new PostAttachment;
-            $attachment->post_id = $id;
-            $attachment->user_id = Auth::user()->id;
-            $attachment->tenant_id = Auth::user()->tenant_id;
-            $attachment->attachment = $filename;
-            $attachment->save();
-        }
-
-        $processors = RequestApprover::select('user_id')
-                        ->where('request_type', 'general-request')
-                        ->where('depart_id', Auth::user()->department_id)
-                        ->where('tenant_id', Auth::user()->tenant_id)
-                        ->get();
-        foreach($processors as $process){
+            $url = substr(sha1(time()), 10,10);
+            $general = new Post;
+            $general->post_title = $request->title;
+            $general->budget = $request->amount;
+            $general->currency = $request->currency;
+            $general->post_type = 'general-request';
+            $general->post_content = $request->description;
+            $general->post_status = 'in-progress';
+            $general->user_id = Auth::user()->id;
+            $general->tenant_id = Auth::user()->tenant_id;
+            $general->post_url = $url;
+            $general->save();
+            $id = $general->id;
+            if(!empty($request->file('attachment'))){
+                $attachment = new PostAttachment;
+                $attachment->post_id = $id;
+                $attachment->user_id = Auth::user()->id;
+                $attachment->tenant_id = Auth::user()->tenant_id;
+                $attachment->attachment = $filename;
+                $attachment->save();
+            }
             $event = new ResponsiblePerson;
             $event->post_id = $id;
-            $event->user_id = $process->user_id;
+            $event->user_id = $processor->user_id;
             $event->tenant_id = Auth::user()->tenant_id;
             $event->save();
-            $user = User::find($process->user_id);
-                $user->notify(new NewPostNotification($requisition));
+            $user = User::find($processor->user_id);
+            $user->notify(new NewPostNotification($general));
+
+
+            //Register business process log
+            $log = new BusinessLog;
+            $log->request_id = $id;
+            $log->user_id = Auth::user()->id;
+            $log->note = "Approval for general request ".$request->title." registered.";
+            $log->name = "Registering general request";
+            $log->tenant_id = Auth::user()->tenant_id;
+            $log->save();
+
+            //identify supervisor
+            $supervise = new BusinessLog;
+            $supervise->request_id = $id;
+            $supervise->user_id = Auth::user()->id;
+            $supervise->name = "Log entry";
+            $supervise->note = "Identifying processor for ".Auth::user()->first_name." ".Auth::user()->surname;
+            $supervise->tenant_id = Auth::user()->tenant_id;
+            $supervise->save();
+
+            session()->flash("success", "General request saved.");
+         return response()->json(['message'=>'Success! General request  submitted.']);
         }
-
-        //Register business process log
-        $log = new BusinessLog;
-        $log->request_id = $id;
-        $log->user_id = Auth::user()->id;
-        $log->note = "Approval for general request ".$request->title." registered.";
-        $log->name = "Registering general request";
-        $log->tenant_id = Auth::user()->tenant_id;
-        $log->save();
-
-        //identify supervisor
-        $supervise = new BusinessLog;
-        $supervise->request_id = $id;
-        $supervise->user_id = Auth::user()->id;
-        $supervise->name = "Log entry";
-        $supervise->note = "Identifying processor for ".Auth::user()->first_name." ".Auth::user()->surname;
-        $supervise->tenant_id = Auth::user()->tenant_id;
-        $supervise->save();
-
-        session()->flash("success", "General request saved.");
-     return response()->json(['message'=>'Success! General request  submitted.']);
     }
 }
