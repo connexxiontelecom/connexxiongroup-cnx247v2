@@ -82,13 +82,18 @@
                             data-dropdown-in="fadeIn"
                             data-dropdown-out="fadeOut"
                         >
+                        @if ($task->post_status == 'in-progress')
                             <a wire:click="markAsComplete({{$task->id}})"  class="dropdown-item waves-light waves-effect" href="javascript:void(0);">
                                 <i class="icofont icofont-checked m-r-10"></i>Mark as completed
                             </a>
+
+                        @endif
+                        @if ($task->user_id == Auth::user()->id)
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item waves-light waves-effect" href="{{ route('edit-task', $task->post_url) }}">
                                 <i class="icofont icofont-edit-alt m-r-10 text-warning"></i>Edit task
                             </a>
+                        @endif
                             <a class="dropdown-item waves-light waves-effect" href="{{ route('view-task', $task->post_url) }}">
                                 <i class="ti-eye text-primary m-r-10"></i>View task
                             </a>
@@ -102,37 +107,299 @@
                 <h5 class="card-header-text">
                     <i class="icofont icofont-attachment"></i> Shared Files
                 </h5>
-                <button class="btn btn-success btn-mini float-right" title="Upload attachment">
+                <button class="btn btn-success btn-mini float-right uploadAttachmentBtn" data-post-id="{{$task->id}}" title="Upload attachment" data-toggle="modal" data-target="#uploadTaskAttachmentModal">
                     <i class="ti-cloud-up mr-2"></i> Upload Attachment
                 </button>
             </div>
             <div class="card-block task-attachment">
                 <ul class="media-list">
-                    @if (count($attachments) > 0)
-                        @foreach ($attachments as $attachment)
-                            <li class="media d-flex m-b-10">
-                                <div class="m-r-20 v-middle">
-                                    <i class="icofont icofont-file-word f-28 text-muted"></i>
-                                </div>
-                                <div class="media-body">
-                                    <a href="#" class="m-b-5 d-block">{{$task->post_title ?? ''}}</a>
-                                    <div class="text-muted">
-                                        <span>Size: 1.2Mb</span>
-                                        <span>
-                                            Added by
-                                            <a href="{{route('view-profile', $attachment->user->url)}}">{{$attachment->user->first_name ?? ''}} {{$attachment->user->surname ?? ''}}</a>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="f-right v-middle text-muted">
-                                    <i class="icofont icofont-download-alt f-18"></i>
-                                </div>
-                            </li>
-                        @endforeach
+                    @foreach ($attachments as $attach)
 
-                    @else
-                        <li class="text-muted text-center">There're no attachments for this task.</li>
-                    @endif
+                    @switch(pathinfo($attach->attachment, PATHINFO_EXTENSION))
+                                @case('pptx')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+
+                                    @break
+                                @case('pdf')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$task->name ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+
+                                @case('csv')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$file->name ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('xls')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('xlsx')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('doc')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('doc')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('docx')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('jpeg')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('jpg')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('png')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('gif')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('ppt')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                                @case('txt')
+                                <li class="media d-flex m-b-10">
+                                    <div class="m-r-20 v-middle">
+                                        <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <div class="text-muted">
+                                            <span>
+                                                Uploaded by
+                                                <a href="{{route('view-profile', $task->user->url)}}">{{$task->user->first_name ?? ''}} {{$task->surname ?? ''}}</a>
+                                                <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($attach->created_at))}}</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="f-right v-middle text-muted">
+                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                    </div>
+                                </li>
+                                @break
+                            @endswitch
+                    @endforeach
                 </ul>
             </div>
         </div>
@@ -155,9 +422,30 @@
                             <p>{{$person->user->position ?? '-' }}</p>
                         </div>
                         <div>
-                            <a href="#!" class="text-muted">
-                                <i class="icon-options-vertical"></i>
-                            </a>
+                            @if ($person->user_id == Auth::user()->id)
+                                <div class="dropdown-secondary dropdown d-inline-block">
+                                    <button
+                                        class="btn btn-sm btn-light dropdown-toggle waves-light"
+                                        type="button"
+                                        id="dropdown3"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        <i class="icofont icofont-navigation-menu"></i>
+                                    </button>
+                                    <div
+                                        class="dropdown-menu"
+                                        aria-labelledby="dropdown3"
+                                        data-dropdown-in="fadeIn"
+                                        data-dropdown-out="fadeOut"
+                                    >
+                                        <a  class="dropdown-item waves-light waves-effect" href="{{route('submit-task', $task->post_url)}}">
+                                            <i class="icofont icofont-paper-plane m-r-10"></i>Submit Task
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @endforeach
@@ -238,13 +526,14 @@
         <div class="card">
             <div class="card-block">
                 <h5 class="sub-title">
-                    <i class="icofont icofont-tasks-alt m-r-5"></i> {{$task->post_title }}                @if ($task->post_status == 'complete')
+                    <i class="icofont icofont-tasks-alt m-r-5"></i> {{$task->post_title }}
+                @if ($task->post_status == 'complete')
                     <label for="" class="label label-success">Completed</label>
                 @elseif($task->post_status == 'in-progress')
                     <label for="" class="label label-warning">in-progress</label>
                 @endif
                 </h5>
-                @if ($task->post_status == 'in-progress')
+                @if ($task->post_status == 'in-progress' && $task->user_id == Auth::user()->id)
                 <button class="btn btn-sm btn-primary f-right btn-mini" wire:click="markAsComplete({{$task->id}})" >
                     <i class="icofont icofont-ui-alarm"></i>Mark as completed
                 </button>
@@ -343,10 +632,60 @@
         </div>
     </div>
 </div>
-@push('task-scripts')
-    <script>
-        $(document).ready(function(){
-            alert('ready');
-        });
-    </script>
+@push('task-script')
+<script>
+    $(document).ready(function(){
+       var file_data = null;
+       var postId = null;
+       $(document).on('change', '#attachment', function(e){
+           e.preventDefault();
+           var extension = $('#attachment').val().split('.').pop().toLowerCase();
+           if ($.inArray(extension, ['csv', 'xls', 'xlsx', 'pdf', 'doc', 'docx', 'jpeg', 'jpg', 'png']) == -1) {
+               $.notify('Ooops! File format not supported.', 'error');
+               $('#attachment').val('');
+           }else{
+               file_data = $('#attachment').prop('files')[0];
+
+           }
+       });
+
+       $(document).on('click', '.uploadAttachmentBtn', function(e){
+           e.preventDefault();
+           postId = $(this).data('post-id');
+
+       });
+        $('#taskAttachmentForm').parsley().on('field:validated', function() {
+
+       }).on('form:submit', function() {
+           var config = {
+                       onUploadProgress: function(progressEvent) {
+                       var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                       }
+               };
+               var form_data = new FormData();
+               form_data.append('attachment',file_data);
+               form_data.append('post', postId);
+               $('#uploadTaskAttachmentBtn').text('Processing...');
+                axios.post('/upload/post/attachment',form_data, config)
+               .then(response=>{
+                   $.notify(response.data.message, 'success');
+                   $('#uploadTaskAttachmentBtn').text('Done');
+                   setTimeout(function () {
+                       $("#uploadTaskAttachmentBtn").text("Save");
+                       location.reload();
+                   }, 2000);
+
+               })
+               .catch(errors=>{
+                   var errs = Object.values(errors.response.data.error);
+                   $.notify(errs, "error");
+                   $('#uploadTaskAttachmentBtn').text('Error!');
+                   setTimeout(function () {
+                       $("#uploadTaskAttachmentBtn").text("Save");
+                   }, 2000);
+               });
+               return false;
+       });
+       });
+   </script>
 @endpush

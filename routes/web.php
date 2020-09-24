@@ -287,6 +287,8 @@ Route::get('/task/task-analytics', 'CNX247\Backend\TaskController@taskAnalytics'
 Route::post('/delete/task', 'CNX247\Backend\TaskController@deleteTask');
 Route::get('/task/edit/{url}', 'CNX247\Backend\TaskController@editTask')->name('edit-task');
 Route::post('/task/update', 'CNX247\Backend\TaskController@updateTask')->name('update-task');
+Route::post('/upload/post/attachment', 'CNX247\Backend\TaskController@uploadPostAttachment');
+Route::get('/task/submit-task/{url}', 'CNX247\Backend\TaskController@submitTask')->name('submit-task');
 
 #Project routes
 Route::get('/project/project-board', 'CNX247\Backend\ProjectController@projectBoard')->name('project-board');
