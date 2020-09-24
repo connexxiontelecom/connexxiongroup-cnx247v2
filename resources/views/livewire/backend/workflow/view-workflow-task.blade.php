@@ -45,16 +45,39 @@
                                                         <i class="ti-na text-danger"></i>
                                                     @endif
                                                     <a href="#! "><img src="/assets/images/avatars/thumbnails/{{$processor->user->avatar ?? 'avatar.png'}}" style="border-radius: 50%; height:64px; width:64px;" data-toggle="tooltip" title="" alt=" " data-original-title="{{$processor->user->first_name }} {{$processor->user->surname ?? ''}} {{$processor->status}} request"></a>
-                                                    @if (end($processor))
-                                                        <i class="zmdi zmdi-long-arrow-right"></i>
-
-                                                    @endif
+                                                    <i class="zmdi zmdi-long-arrow-right"></i>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex align-items-center bd-highlight mb-4 ">
+                                            <div class="team-box p-b-10">
+                                                <div class="team-section d-inline-block">
+                                                    @switch($request->post_status)
+                                                        @case('in-progress')
+                                                            <label for="" class="label label-warning special-badge">In-progress</label>
+                                                            @break
+                                                        @case('approved')
+                                                            <label for="" class="label label-success special-badge">Approved</label>
+                                                            @break
+                                                        @case('declined')
+                                                            <label for="" class="label label-danger special-badge">Declined</label>
+                                                            @break
+                                                        @default
 
-                            </div>
+                                                    @endswitch
+                                                    @if ($request->post_type == 'leave-request' && $request->post_status == 'approved' && $request->user_id == Auth::user()->id)
+                                                        <button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini clockInBtn" wire:click="clockIn({{ $request->id }})"> <i class="ti-alarm-clock mr-2"></i>
+                                                            Clock-in
+                                                        </button>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12 d-flex justify-content-center">

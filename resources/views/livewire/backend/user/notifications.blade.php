@@ -40,7 +40,7 @@
                         @case('query')
                             <a href="{{route('view-query',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
-                        @case('expense-request')
+                        @case('expense-report')
                                 <a href="{{route('view-workflow-task',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
                         @case('leave-request')

@@ -15,6 +15,7 @@ use Auth;
 class LeaveRequest extends Component
 {
     public $leaves ;
+    public $leave_types ;
 
     public function render()
     {
@@ -30,6 +31,7 @@ class LeaveRequest extends Component
                                 ->where('post_type', 'leave-request')
                                 ->orderBy('id', 'DESC')
                                 ->get();
+        $this->leave_types = LeaveType::where('tenant_id', Auth::user()->tenant_id)->get();
     }
 
 }

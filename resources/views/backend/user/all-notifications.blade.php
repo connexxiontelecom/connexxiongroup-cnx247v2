@@ -59,7 +59,7 @@
                                                 @case('query')
                                                         <a href="{{route('view-query',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                                         @break
-                                                @case('expense-request')
+                                                @case('expense-report')
                                                         <a href="{{route('view-workflow-task',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                                         @break
                                                 @case('leave-request')

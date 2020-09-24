@@ -5,6 +5,7 @@ use Livewire\WithPagination;
 use Livewire\Component;
 use App\Mail\RequisitionVerificationMail;
 use App\RequisitionVerification;
+use App\Notifications\NewPostNotification;
 use Carbon\Carbon;
 use App\BusinessLog;
 use App\Post;
@@ -12,6 +13,7 @@ use App\PostView;
 use App\PostComment;
 use App\PostLike;
 use App\ResponsiblePerson;
+use App\RequestApprover;
 use App\User;
 use Auth;
 
@@ -55,12 +57,6 @@ class Shortcut extends Component
         $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
                                 ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
                                 ->take(5)->get();
-/*         $responsiblePersons = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)
-                                ->where('user_id', Auth::user()->id)->get();
-        $getResponsiblePersonsId = [];
-        foreach($responsiblePersons as $res){
-            array_push($getResponsiblePersonsId, $res->user_id);
-        } */
         return view('livewire.backend.activity-stream.shortcut',
                                 ['posts'=> Post::where('tenant_id', Auth::user()->tenant_id)
                                 ->orderBy('id', 'DESC')
@@ -219,45 +215,58 @@ class Shortcut extends Component
                     $log->request_id = $id;
                     $log->user_id = Auth::user()->id;
                     $log->name = $verifyStatus;
-                    $log->note = str_replace('-', ' ',$details->post_type)." ".$verifyStatus." by ".Auth::user()->first_name." ".Auth::user()->surname;
+                    $log->note = str_replace('-', ' ',$details->post_type)." ".$verifyStatus." by ".Auth::user()->first_name." ".Auth::user()->surname ?? " ";
                     $log->save();
-                    //search for supervisor
-                    $find = ResponsiblePerson::select('user_id')
-                                            ->where('post_id', $id)
-                                            ->where('status','in-progress')
-                                            ->first();
+                    $responsiblePersons = ResponsiblePerson::where('post_id', $id)
+                                                //->where('user_id', Auth::user()->id)
+                                                ->get();
+                    $responsiblePersonIds = [];
+                    foreach($responsiblePersons as $per){
+                       array_push($responsiblePersonIds, $per->user_id);
+                    }
+                    //search for processor
+                    $approvers = RequestApprover::where('request_type', $details->post_type)
+                                                ->where('depart_id', $details->user->department_id)
+                                                ->where('tenant_id', Auth::user()->tenant_id)
+                                                ->get();
+                    $approverIds = [];
+                    if(!empty($approvers) ){
+                        foreach($approvers as $approver){
+                            array_push($approverIds, $approver->user_id);
+                        }
+                    }
+                    $remainingProcessors = array_diff($approverIds,$responsiblePersonIds);
                     //identify next supervisor
                     $supervise = new BusinessLog;
                     $supervise->request_id = $id;
                     $supervise->user_id = Auth::user()->id;
                     $supervise->name = 'Log entry';
-                    $supervise->note = "Identifying next supervisor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
+                    $supervise->note = "Identifying next processor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
                     $supervise->save();
-                        if(!empty($find)){
-                            //identify supervisor
-                            $supervise = new BusinessLog;
-                            $supervise->request_id = $id;
-                            $supervise->user_id = Auth::user()->id;
-                            $supervise->name = 'Log entry';
-                            $supervise->note = "New supervisor identified for ".str_replace('-', ' ',$details->post_type)." ".$details->post_title;
-                            $supervise->save();
-                        }else{
-                            //there's no more supervisor
-                            $supervise = new BusinessLog;
-                            $supervise->request_id = $id;
-                            $supervise->user_id = Auth::user()->id;
-                            $supervise->name = 'Log entry';
-                            $supervise->note = "There're no more supervisors for ".str_replace('-', ' ',$details->post_type)." ".$details->post_title;
-                            $supervise->save();
-                            //update request table finally
-                            $status = Post::find($id);
-                            $status->post_status = $verifyStatus;
-                            $status->save();
+                    //return dd($remainingProcessors);
+                    //Assign next processor
+                    if(!empty($remainingProcessors) ){
+                        $reset = array_values($remainingProcessors);
+                        for($i = 0; $i<count($reset); $i++){
+                            $next = new ResponsiblePerson;
+                            $next->post_id = $id;
+                            $next->user_id = $reset[$i];
+                            $next->tenant_id = Auth::user()->tenant_id;
+                            $next->save();
+                            $user = User::find($reset[$i]);
+                            $user->notify(new NewPostNotification($details));
+                        break;
                         }
-                        $this->actionStatus = 0;
-                        $this->verificationPostId = null;
-                        $this->getContent();
-                        session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+                    }else{
+                        $status = Post::find($id);
+                        $status->post_status = $verifyStatus;
+                        $status->save();
+                        #Requisition to GL flow takes over from here
+                    }
+                    $this->actionStatus = 0;
+                    $this->verificationPostId = null;
+                    $this->getContent();
+                    session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
                 }else{
                     $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
                     $action->status = $verifyStatus;
@@ -279,10 +288,10 @@ class Shortcut extends Component
                         session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
                 }
             }else{
-                session()->flash("error_code", "<strong>Ooops! Authentication code mis-match. Try again.</strong>");
+                session()->flash("error_code", "<strong>Ooops!</strong>  Authentication code mis-match. Try again.");
             }
         }else{
-            session()->flash("error_code", "<strong>Ooops! There's no authentication code for this request.</strong>");
+            session()->flash("error_code", "<strong>Ooops!</strong> There's no authentication code for this request.");
         }
 
     }

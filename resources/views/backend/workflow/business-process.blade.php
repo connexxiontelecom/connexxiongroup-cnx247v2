@@ -302,7 +302,7 @@
                             <option value="expense-report">Expense Report</option>
                             <option value="purchase-request">Purchase Request</option>
                             <option value="general-request">General Request</option>
-                            <option value="leave-approval">Leave Approval</option>
+                            <option value="leave-request">Leave Approval</option>
                             <option value="business-trip">Business Trip</option>
                         </select>
                     </div>

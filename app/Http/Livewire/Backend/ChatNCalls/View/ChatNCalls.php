@@ -9,6 +9,8 @@ use Twilio\Jwt\ClientToken;
 use Twilio\Rest\Client;
 use Pusher\Pusher;
 use App\User;
+use Carbon\Carbon;
+use Cache;
 use App\Message;
 use Auth;
 use DB;
@@ -40,6 +42,12 @@ class ChatNCalls extends Component
                             ->where('tenant_id', Auth::user()->tenant_id)
                             ->orderBy('first_name', 'ASC')
                             ->get();
+/*         foreach ($this->users as $user) {
+            if (Cache::has('user-is-online-' . $user->id))
+                echo $user->name . " is online. Last seen: " . Carbon::parse($user->last_seen)->diffForHumans() . " <br>";
+            else
+                echo $user->name . " is offline. Last seen: " . Carbon::parse($user->last_seen)->diffForHumans() . " <br>";
+        } */
        /* $this->users = DB::select("select users.id, users.first_name, users.surname, users.avatar,
                         users.email, users.tenant_id, count(is_read) as unread
                         FROM users

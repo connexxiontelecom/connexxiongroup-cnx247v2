@@ -104,7 +104,7 @@
                         </tbody>
                     </table>
                     <div class="text-center">
-                        <a href="{{route('employees')}}" class=" b-b-primary text-primary">View all Projects</a>
+                        <a href="{{route('employees')}}" class=" b-b-primary text-primary">View all Employees</a>
                     </div>
                 </div>
             </div>
