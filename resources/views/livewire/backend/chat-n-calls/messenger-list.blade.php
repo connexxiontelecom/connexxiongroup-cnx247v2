@@ -26,7 +26,7 @@
                                 data-username="{{$user->first_name}} {{$user->surname ?? ''}}"
                                 data-toggle="tooltip"
                                 data-placement="left"
-                                title="{{$user->first_name}} {{$user->surname ?? ''}}" 
+                                title="{{$user->first_name}} {{$user->surname ?? ''}}"
                                 >
                                 <a class="media-left" href="#!">
                                     <img class="media-object img-radius img-radius" src="/assets/images/avatar-3.jpg" alt="{{$user->first_name}} {{$user->surname ?? ''}} ">
@@ -38,7 +38,7 @@
                             </div>
 
                         @endforeach
-                        
+
                     @endif
 
                 </div>
@@ -73,50 +73,3 @@
 </div>
 <!-- Sidebar inner chat end-->
 </div>
-@push('chat-script')
-<script>
-    var to_id = '';
-    var from_id = "{{ Auth::user()->id ?? ''}}";
-    $(document).ready(function(){
-        $(document).on('click', '.userlist-box', function(e){
-            e.preventDefault();
-            //$('.user').removeClass('active');
-            //$(this).addClass('active');
-            to_id = $(this).data('id');
-            //alert(to_id);
-            axios.get('/conversation/'+to_id)
-            .then(response=>{
-                $('#load-conversation').html(response.data);
-            });
-
-        });
-
-         // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
-
-            var pusher = new Pusher('4becc02b3fce153a2f45', {
-            cluster: 'eu'
-            });
-
-            var channel = pusher.subscribe('my-channel');
-            channel.bind('my-event', function(data) {
-            alert(JSON.stringify(data));
-            });
-            
-        /*
-        * When chat button is pressed
-        */
-        $(document).on('click', '#sendChat', function(e){
-            e.preventDefault();
-            if($('#chat-message').val() != ""){
-                axios.post('/conversation/send',{to:to_id, message:$('#chat-message').val()})
-                .then(response=>{
-                    $('#chat-message').val('')
-                });
-            }else{
-                return;
-            }
-        });
-    });
-</script>
-@endpush 

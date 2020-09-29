@@ -9,7 +9,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">At Risk</h6>
-                            <h5 class="m-b-0">379</h5>
+                            <h5 class="m-b-0">{{number_format($tasks->where('post_status', 'at-risk')->where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'task')->count())}}</h5>
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">In Progress</h6>
-                            <h5 class="m-b-0">205</h5>
+                            <h5 class="m-b-0">{{number_format($tasks->where('post_status', 'in-progress')->where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'task')->count())}}</h5>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">Complete</h6>
-                            <h5 class="m-b-0">5984</h5>
+                            <h5 class="m-b-0">{{number_format($tasks->where('post_status', 'completed')->where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'task')->count())}}</h5>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">Cancel</h6>
-                            <h5 class="m-b-0">325</h5>
+                            <h5 class="m-b-0">{{number_format($tasks->where('post_status', 'cancelled')->where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'task')->count())}}</h5>
                         </div>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                         <div class="card-block">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <img src="\assets\images\widget\icon-1.png" alt=" " class="img-responsive p-b-20">
+                                    <i class="icofont icofont-ui-calendar text-primary"></i>
                                     <div class="row">
                                         <div class="col-5">
                                             <p class="text-muted m-b-5">Overall :</p>
@@ -177,7 +177,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6 m-t-0">
-                                    <img src="\assets\images\widget\icon-3.png" alt=" " class="img-responsive p-b-10 p-t-10">
+                                    <i class="icofont icofont-ui-calendar text-primary"></i>
                                     <div class="row">
                                         <div class="col-5">
                                             <p class="text-muted m-b-5">Last Year :</p>
@@ -188,7 +188,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6 m-t-0">
-                                    <img src="\assets\images\widget\icon-4.png" alt=" " class="img-responsive p-b-10 p-t-10">
+                                    <i class="icofont icofont-ui-calendar text-primary"></i>
                                     <div class="row">
                                         <div class="col-5">
                                             <p class="text-muted m-b-5">Last Three Years :</p>
@@ -205,20 +205,20 @@
                 <div class="col-xl-3 col-md-12">
                     <div class="card user-card2">
                         <div class="card-block text-center">
-                            <h6 class="m-b-15">Weighing Balance</h6>
+                            <h6 class="m-b-15">Scale</h6>
                             <div class="risk-rate">
-                                <span><b>5</b></span>
+                                <span>{{number_format($tasks->where('post_status', 'completed')->where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'task')->count() - $tasks->where('post_status', 'in-progress')->where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'task')->count())}}</span>
                             </div>
-                            <h6 class="m-b-10 m-t-10">Meter</h6>
+                            <h6 class="m-b-10 m-t-10">Scale</h6>
                             <a href="{{route('task-board')}}" class="text-c-yellow b-b-warning">Task Dashoard</a>
                             <div class="row justify-content-center m-t-10 b-t-default m-l-0 m-r-0">
                                 <div class="col m-t-15 b-r-default">
-                                    <h6 class="text-muted">Done</h6>
-                                    <h6>AWS 2455</h6>
+                                    <h6 class="text-muted">Completed</h6>
+                                    <h6>{{number_format($tasks->where('post_status', 'completed')->where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'task')->count())}}</h6>
                                 </div>
                                 <div class="col m-t-15">
-                                    <h6 class="text-muted">Undone</h6>
-                                    <h6>30th Sep</h6>
+                                    <h6 class="text-muted">In-Progress</h6>
+                                    <h6>{{number_format($tasks->where('post_status', 'in-progress')->where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'task')->count())}}</h6>
                                 </div>
                             </div>
                         </div>

@@ -5,8 +5,9 @@
             <a href="{{ route('task-gantt-chart') }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Gantt</a>
             <a href="{{ route('task-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
             <a href="{{ route('task-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
-            <a href="#participatingObserving" class="btn btn-secondary btn-mini btn-round text-white"><i class="icofont icofont-unity-hand "></i>  Participating | Observing </a>
-            <a href="#myTask" class="btn btn-primary btn-mini btn-round text-white"><i class="ti-user "></i>  My Task(s) </a>
+            <a href="{{route('task-board')}}#participatingObserving" class="btn btn-secondary btn-mini btn-round text-white"><i class="icofont icofont-unity-hand "></i>  Participating | Observing </a>
+            <!-- <a href="{{-- {{route('task-board')}} --}}#myTask" class="btn btn-primary btn-mini btn-round text-white"><i class="ti-user "></i>  My Task(s) </a> -->
+            <a href="{{route('view-assigment-submissions')}}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-paper-plane "></i>  Submissions </a>
         </div>
     </div>
     <div class="nav-item nav-grid">

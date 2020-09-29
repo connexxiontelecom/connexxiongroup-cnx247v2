@@ -32,6 +32,9 @@ class Supplier extends Authenticatable
     public function supplierIndustry(){
         return $this->belongsTo(Industry::class, 'industry');
     }
+    public function supplierReviews(){
+        return $this->hasMany(SupplierReview::class, 'supplier_id');
+    }
 
 
 

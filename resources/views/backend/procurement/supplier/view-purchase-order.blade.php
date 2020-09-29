@@ -23,15 +23,11 @@
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12 col-xl-12">
-            <div class="card">
-                <div class="card-block">
-                    @include('livewire.backend.crm.common._slab-menu')
-                </div>
-            </div>
-        </div>
+<div class="row">
+    <div class="col-md-12 filter-bar">
+        @include('backend.procurement.supplier.common._procurement-slab')
     </div>
+</div>
     <div class="card" id="purchaseContainer">
         <div class="row invoice-contact">
             <div class="col-md-12">
@@ -168,6 +164,7 @@
                                     </tr>
                                 @endforeach
                                 <tr>
+                                    <input type="hidden" id="supplier" value="{{$purchase->getSupplier->id}}"/>
                                 <td colspan="4" class="text-right"><strong>Total: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($purchase->total,2)}}</td>
                                 </tr>
                             </tbody>
@@ -182,13 +179,11 @@
             <div class="row text-center">
                 <div class="col-sm-12 purchase-btn-group text-center">
                     <div class="btn-group">
-                        @if ($purchase->status == 'in-progress')
-
-                        <button type="button" class="btn btn-success btn-mini btn-approve m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$purchase->id}}"> <i class="ti-check mr-2"></i> Approve </button>
-                        <button type="button" class="btn btn-danger btn-mini btn-approve m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$purchase->id}}"> <i class="ti-close mr-2"></i> Decline </button>
-                        @endif
                         <button type="button" class="btn btn-primary btn-mini btn-print-purchase m-b-10 btn-sm waves-effect waves-light m-r-20" type="button" id="printInvoice"><i class="icofont icofont-printer mr-2"></i> Print</button>
                         <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
+                        @if ($purchase->status == 'delivered')
+                        <button type="button" class="btn btn-success btn-mini btn-approve m-b-10 btn-sm waves-effect waves-light m-r-20" id="poConfirmBtn" data-toggle="modal" data-target="#poReviewModal" value="{{$purchase->id}}"> <i class="ti-check mr-2"></i> Confirm </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -197,7 +192,41 @@
 @endsection
 
 @section('dialog-section')
-
+<div class="modal fade" id="poReviewModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title">Review Purchase Order Delivery</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <p>How would you rate <strong>{{$purchase->getSupplier->company_name ?? ''}}?</strong></p>
+                    <div class="form-group">
+                        <label>Rate</label>
+                        <select id="rate" class="form-control col-md-4">
+                            @for($i = 1; $i<6; $i++)
+                            <option value="{{$i}}">{{$i}} star rating</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Content</label>
+                        <textarea name="" id="poReviewContent" style="resize:none;" cols="5" rows="5" class="form-control content" placeholder="Review {{$purchase->getSupplier->company_name ?? ''}}'s delivery."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Close</button>
+                    <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitSupplierReviewBtn"><i class="mr-2 ti-check"></i>Submit</button>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('extra-scripts')
 <script src="{{asset('/assets/js/cus/printThis.js')}}"></script>
@@ -205,6 +234,7 @@
 <script src="{{asset('/assets/js/cus/axios-progress.js')}}"></script>
 <script>
     $(document).ready(function(){
+        var po = null;
         //print without commission
         $(document).on('click', '#printInvoice', function(event){
             $('#purchaseContainer').printThis({
@@ -222,6 +252,28 @@
             })
             .catch(error=>{
                 $('#sendEmailAddon').text('Error!');
+            });
+        });
+
+        $(document).on('click', '#poConfirmBtn', function(e){
+            e.preventDefault();
+            po = $(this).val();
+
+        });
+        $(document).on('click', '#submitSupplierReviewBtn', function(e){
+            e.preventDefault();
+            axios.post('/procurement/review/purchase-order', {
+                po:po,
+                supplier:$('#supplier').val(),
+                rating:$('#rate').val(),
+                review:$('#poReviewContent').val()
+            })
+            .then(response=>{
+                $.notify(response.data.message, 'success');
+                $('#poReviewModal').modal('hide');
+            })
+            .catch(error=>{
+                $.notify('Ooops! Something went wrong.', 'error');
             });
         });
     });

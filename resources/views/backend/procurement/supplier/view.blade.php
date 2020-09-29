@@ -20,6 +20,8 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-block">
+                <h5 class="sub-title">Supplier Profile</h5>
+
                 <div class="card-header">
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success mt-3">
@@ -30,50 +32,83 @@
                         </div>
                     @endif
                 </div>
-                <div class="col-xl-6 col-md-12">
-                    <div class="card user-card-full">
-                        <div class="row m-l-0 m-r-0">
-                            <div class="col-sm-4 bg-c-lite-green user-profile">
-                                <div class="card-block text-center text-white">
-                                    <div class="m-b-25">
-                                        <img src="/assets/images/avatars/thumbnails/avatar.png" class="img-radius img-100" alt="User-Profile-Image">
+                <div class="row">
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card">
+                            <div class="row m-l-0 m-r-0">
+                                <div class="col-sm-4 bg-c-lite-green user-profile">
+                                    <div class="card-block text-center text-white">
+                                        <div class="m-b-25">
+                                            <img src="/assets/images/avatars/thumbnails/avatar.png" class="img-radius img-100" alt="User-Profile-Image">
+                                        </div>
+                                        <h6 class="f-w-600">{{$supplier->first_name ?? ''}}</h6>
+                                        <p>{{$supplier->position ?? ''}}</p>
+                                        <i class="feather icon-edit m-t-10 f-16"></i>
                                     </div>
-                                    <h6 class="f-w-600">{{$supplier->first_name ?? ''}}</h6>
-                                    <p>{{$supplier->position ?? ''}}</p>
-                                    <i class="feather icon-edit m-t-10 f-16"></i>
                                 </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="card-block">
-                                    <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Company Information</h6>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Email</p>
-                                            <h6 class="text-muted f-w-400"><a href="mailto:{{$supplier->company_email}}" class="__cf_email__" data-cfemail="1e747b70675e79737f7772307d7173">[{{$supplier->company_email}}]</a></h6>
+                                <div class="col-sm-8">
+                                    <div class="card-block">
+                                        <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Company Information</h6>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p class="m-b-10 f-w-600">Email</p>
+                                                <h6 class="text-muted f-w-400"><a href="mailto:{{$supplier->company_email}}" class="__cf_email__" data-cfemail="1e747b70675e79737f7772307d7173">[{{$supplier->company_email}}]</a></h6>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="m-b-10 f-w-600">Phone</p>
+                                                <h6 class="text-muted f-w-400">{{$supplier->company_phone ?? ''}}</h6>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Phone</p>
-                                            <h6 class="text-muted f-w-400">{{$supplier->company_phone ?? ''}}</h6>
+                                        <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Contact Person</h6>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p class="m-b-10 f-w-600">Full Name</p>
+                                                <h6 class="text-muted f-w-400">{{$supplier->first_name ?? ''}}</h6>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="m-b-10 f-w-600">Mobile No.</p>
+                                                <h6 class="text-muted f-w-400">{{$supplier->mobile_no ?? ''}}</h6>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="m-b-10 f-w-600">Email Address</p>
+                                                <h6 class="text-muted f-w-400">{{$supplier->email_address ?? ''}}</h6>
+                                            </div>
                                         </div>
                                     </div>
-                                    <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Projects</h6>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Recent</p>
-                                            <h6 class="text-muted f-w-400">Guruable Admin</h6>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Most Viewed</p>
-                                            <h6 class="text-muted f-w-400">Able Pro Admin</h6>
-                                        </div>
-                                    </div>
-                                    <ul class="social-link list-unstyled m-t-40 m-b-10">
-                                        <li><a href="#!" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="facebook"><i class="feather icon-facebook facebook" aria-hidden="true"></i></a></li>
-                                        <li><a href="#!" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="twitter"><i class="feather icon-twitter twitter" aria-hidden="true"></i></a></li>
-                                        <li><a href="#!" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="instagram"><i class="feather icon-instagram instagram" aria-hidden="true"></i></a></li>
-                                    </ul>
                                 </div>
+
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card">
+                           <div class="card-block">
+                               <h5 class="sub-title">Reviews & Rating</h5>
+                               @foreach($supplier->supplierReviews as $review)
+                                    <div class="media">
+                                        <a class="media-left" href="{{route('view-profile', $review->user->url)}}">
+                                            <img class="img-30" src="/assets/images/avatars/thumbnails/{{$review->user->avatar ?? 'avatar.png'}}" alt="{{$review->first_name ?? ''}}">
+                                        </a>                
+                                        <div class="media-body">
+                                            <div class="col-xs-12">
+                                                <a href="{{route('view-profile', $review->user->url)}}">
+                                                    <h6 class="d-inline-block">
+                                                        {{$review->user->first_name ?? ''}} {{$review->user->surname ?? ''}}
+                                                    </h6>
+                                                </a>
+                                            </div>
+                                            <div class="f-13 text-muted m-b-15">
+                                                @for($i = 1; $i<= $review->rating; $i++)
+                                                    <i class="icofont icofont-star text-primary"></i>
+                                                @endfor
+                                            </div>
+                                            <p>{{$review->review ?? ''}} &nbsp; &nbsp; | <small>{{date(Auth::user()->dateFormat->format ?? 'd F,Y', strtotime($review->created_at))}} @ {{date('h:ia', strtotime($review->created_at))}}</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                               @endforeach
+                            </div>
+                           </div>
                         </div>
                     </div>
                 </div>
@@ -83,12 +118,9 @@
 
     <div class="col-sm-12">
         <div class="card">
-            <div class="card-header">
-                <h5>Purchase Orders</h5>
-                <span>List of all purchase orders</span>
-
-            </div>
             <div class="card-block">
+                <h5 class="sub-title">Purchase Orders</h5>
+                <a href="{{route('new-purchase-order', $supplier->slug)}}" class="btn btn-mini btn-primary float-right mb-4" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add New Purchase Order"><i class="ti-plus mr-2 "></i> Add New Purchase Order</a>
                 <div class="dt-responsive table-responsive">
                     <table id="simpletable" class="table table-striped table-bordered nowrap">
                         <thead>

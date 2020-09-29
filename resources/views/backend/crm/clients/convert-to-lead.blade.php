@@ -136,7 +136,7 @@ Convert to Lead
                                         @enderror
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Unit Cost" class="form-control" name="unit_cost[]">
+                                        <input type="number" placeholder="Unit Cost" step="0.01" class="form-control" name="unit_cost[]">
                                         @error('unit_cost')
                                             <i class="text-danger mt-2">{{$message}}</i>
                                         @enderror
@@ -206,28 +206,18 @@ Convert to Lead
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody class="float-left ml-3">
+                        <tbody class="float-left pl-3">
                             <tr>
-                                <th class="float-left">Account Name:</th>
-                                <td class="float-left"></td>
+                                <th class="text-left"> <strong>Account Name:</strong> </th>
+                                <td>{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
                             </tr>
                             <tr>
-                                <th class="float-left">Account Number: </th>
-                                <td class="float-left">
-                                    {{Auth::user()->tenant->bankDetails ?? 'Update this section in General Settings > Finance'}}
-                                </td>
+                                <th class="text-left"><strong>Account Number:</strong> </th>
+                                <td>{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
                             </tr>
                             <tr>
-                                <th class="float-left">Account Type:</th>
-                                <td class="float-left">
-                                    type
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="float-left">Bank Name: </th>
-                                <td class="float-left">
-                                    bank
-                                </td>
+                                <th class="text-left"><strong>Bank:</strong> </th>
+                                <td>{{Auth::user()->tenantBankDetails->bank_name ?? ''}}</td>
                             </tr>
                         </tbody>
                     </table>

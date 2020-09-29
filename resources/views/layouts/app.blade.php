@@ -122,7 +122,7 @@
         <div class="pcoded-main-container" id="pcoded-background" style="background: url('/assets/uploads/themes/{{Auth::user()->userTheme->theme}}'); background-size:cover; background-repeat: no-repeat;">
             <div class="pcoded-wrapper">
 
-                @include('partials.sidebar._admin-sidebar')
+                @livewire('backend.partials.sidebar-menu')
 
                 <div class="pcoded-content">
                     <div class="pcoded-inner-content">

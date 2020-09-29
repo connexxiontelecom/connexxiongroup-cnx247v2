@@ -12,7 +12,10 @@ use App\Priority;
 use App\ResponsiblePerson;
 use App\Participant;
 use App\Observer;
+use App\PostRating;
 use App\PostAttachment;
+use App\PostSubmission;
+use App\PostSubmissionAttachment;
 use Auth;
 
 class TaskController extends Controller
@@ -109,7 +112,7 @@ class TaskController extends Controller
         }
         //responsible persons
         if(!empty($request->responsible_persons)){
-            foreach(json_decode($request->responsible_persons) as $participant){
+            foreach($request->responsible_persons as $participant){
                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new ResponsiblePerson;
@@ -121,7 +124,7 @@ class TaskController extends Controller
         }
         //participants
         if(!empty($request->participants)){
-            foreach(json_decode($request->participants) as $person){
+            foreach($request->participants as $person){
                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new Participant;
@@ -133,7 +136,7 @@ class TaskController extends Controller
         }
         //observers
         if(!empty($request->observers)){
-            foreach(json_decode($request->observers) as $observe){
+            foreach($request->observers as $observe){
                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new Observer;
@@ -300,5 +303,74 @@ class TaskController extends Controller
         }else{
             return redirect()->route('404');
         }
+    }
+
+    public function storeAssignedTask(Request $request){
+        $this->validate($request,[
+            'leave_note'=>'required',
+            'post'=>'required',
+            'owner'=>'required',
+            'type'=>'required'
+        ]);
+        $submit = new PostSubmission;
+        $submit->post_id = $request->post;
+        $submit->submitted_by = Auth::user()->id;
+        $submit->owner = $request->owner;
+        $submit->post_type = $request->type;
+        $submit->post_id = $request->post;
+        $submit->tenant_id = Auth::user()->tenant_id;
+        $submit->date_submitted = now();
+        $submit->note = $request->leave_note;
+        $submit->save();
+
+        if(!empty($request->file('attachment'))){
+            $extension = $request->file('attachment');
+            $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
+            $dir = 'assets/uploads/attachments/';
+            $filename = 'task_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+            $request->file('attachment')->move(public_path($dir), $filename);
+        }else{
+            $filename = '';
+        }
+        if(!empty($request->file('attachment'))){
+            $attach = new PostSubmissionAttachment;
+            $attach->post_id = $request->post;
+            $attach->attachment = $filename;
+            $attach->tenant_id = Auth::user()->tenant_id;
+            $attach->save();
+        }
+        session()->flash("success", "<strong>Success!</strong> Submission done.");
+        return back();
+    }
+
+    public function viewAssignmentSubmissions(){
+        return view('backend.tasks.view-task-submission');
+    }
+
+    public function rateTaskSubmitted(Request $request){
+        $this->validate($request,[
+            'submission'=>'required',
+            'responsible'=>'required',
+            'review'=>'required',
+            'rating'=>'required',
+            'appraisal'=>'required'
+        ]);
+        $rating = new PostRating;
+        $rating->tenant_id = Auth::user()->tenant_id;
+        $rating->rated_by = Auth::user()->id;
+        $rating->post_id = $request->submission;
+        $rating->review = $request->review;
+        $rating->user_id = $request->user;
+        $rating->rating = $request->rating;
+        $rating->use_for_appraisal = $request->appraisal;
+        $rating->save();
+        #Update submission
+        $submission = PostSubmission::find($request->submission);
+        $submission->status = 'approved';
+        $submission->save();
+        if($request->appraisal == 1 ){
+            #Do appraisal
+        }
+        return response()->json(['message'=>'Success! Task review submitted.'], 200);
     }
 }

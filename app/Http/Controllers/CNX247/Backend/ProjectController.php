@@ -47,8 +47,8 @@ class ProjectController extends Controller
             'project_name'=>'required',
             'responsible_persons'=>'required',
             'project_description'=>'required',
-            'due_date'=>'required|date',
-            'start_date'=>'required|after_or_equal:due_date',
+            'due_date'=>'required|date|after_or_equal:start_date',
+            'start_date'=>'required|date',
             'project_sponsor'=>'required'
         ]);
 

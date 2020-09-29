@@ -17,11 +17,12 @@ class CreatePostSubmissionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('submitted_by');
+            $table->unsignedBigInteger('owner');
+            $table->unsignedBigInteger('tenant_id');
             $table->string('post_type');
             $table->dateTime('date_submitted');
             $table->text('note')->nullable();
-            $table->integer('rating')->nullable();
-            $table->tinyInteger('use_for_appraisal')->default(0)->nullable(); //1=yes
+            $table->string('status')->default('in-progress');//in-progress
             $table->timestamps();
         });
     }

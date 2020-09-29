@@ -78,5 +78,10 @@ class Post extends Model
         return $this->belongsTo(Status::class, 'status_id');
     }
 
+    public function getPostSubmission(){
+        return $this->hasMany(PostSubmission::class, 'post_id');
+    }
+
+
 
 }

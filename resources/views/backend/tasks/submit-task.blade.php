@@ -9,6 +9,9 @@
 
 @section('content')
 <div class="row">
+    <div class="col-md-12 filter-bar">
+        @include('livewire.backend.task.common._task-slab')
+    </div>
     <div class="col-md-12">
         <div class="card">
             <div class="card-block">
@@ -25,11 +28,11 @@
                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                    <i class="icofont icofont-close-line-circled"></i>
                                                </button>
-                                               <strong>Success!</strong> {!! session('success') !!}
+                                               {!! session('success') !!}
                                            </div>
                                        @endif
 
-                                   <form action="{{route('internal-memo')}}" method="post" enctype="multipart/form-data">
+                                   <form action="{{route('submit-assigned-task')}}" method="post" enctype="multipart/form-data">
                                        @csrf
                                        <div class="form-group">
                                            <div class="btn-group">
@@ -54,18 +57,20 @@
                                        </div>
                                        <div class="form-group">
                                            <label class="">Leave Note</label>
-                                           <textarea name="content" class="form-control form-control-normal content col-md-10" placeholder="Leave note...">{{old('content')}}</textarea>
-                                           @error('content')
+                                           <textarea name="leave_note" class="form-control form-control-normal content col-md-10" placeholder="Leave note...">{{old('leave_note')}}</textarea>
+                                           @error('leave_note')
                                                <span class="mt-3">
                                                    <i class="text-danger">{{ $message }}</i>
-                                                   <input type="hidden" name="post" value="{{$task->id}}">
-                                               </span>
-                                           @enderror
+                                                </span>
+                                            @enderror
+                                                <input type="hidden" name="post" value="{{$task->id}}">
                                        </div>
                                        <div class="form-group">
                                            <label class="">Attachment <br> <i>(Optional)</i></label>
                                            <div  class="col-sm-10 col-md-2">
                                                <input type="file" id="attachment" name="attachment">
+                                               <input type="hidden" name="owner" value="{{$task->user_id}}">
+                                               <input type="hidden" name="type" value="{{$task->post_type}}">
                                            </div>
                                        </div>
                                        <div class=" row m-t-30 d-flex justify-content-center">

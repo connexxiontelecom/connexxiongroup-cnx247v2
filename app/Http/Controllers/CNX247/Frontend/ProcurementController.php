@@ -43,6 +43,7 @@ class ProcurementController extends Controller
             $order = PurchaseOrder::find($request->order);
             $order->status = $request->status;
             $order->date_delivered = now();
+            $order->delivered_by = Auth::user()->id;
             $order->save();
             return response()->json(['message'=>'Success! Purchase order '.$request->status], 200);
         }else{

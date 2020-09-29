@@ -34,6 +34,8 @@ class Shortcut extends Component
     public $comment;
     public $likes;
     public $users = [];
+    public $online;
+    public $workforce;
 
     public function render()
     {
@@ -57,6 +59,8 @@ class Shortcut extends Component
         $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
                                 ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
                                 ->take(5)->get();
+        $this->online = User::where('tenant_id', Auth::user()->tenant_id)->where('is_online', 1)->count();
+        $this->workforce = User::where('tenant_id', Auth::user()->tenant_id)->count();
         return view('livewire.backend.activity-stream.shortcut',
                                 ['posts'=> Post::where('tenant_id', Auth::user()->tenant_id)
                                 ->orderBy('id', 'DESC')

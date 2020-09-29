@@ -320,8 +320,6 @@
         * Create new appreciation
         */
        $('#appreciationForm').parsley().on('field:validated', function() {
-
-
     }).on('form:submit', function() {
         var config = {
                     onUploadProgress: function(progressEvent) {

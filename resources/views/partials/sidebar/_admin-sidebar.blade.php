@@ -2,24 +2,6 @@
     <div class="pcoded-inner-navbar main-menu" style="background: none;">
         <div class="pcoded-navigatio-lavel">Navigation</div>
         <ul class="pcoded-item pcoded-left-item">
-            <!-- <li class="pcoded-hasmenu">
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-home"></i></span>
-                    <span class="pcoded-mtext">Dashboard</span>
-                </a>
-                <ul class="pcoded-submenu">
-                    <li class="">
-                        <a href="route('dashboard')}}">
-                            <span class="pcoded-mtext">Home</span>
-                        </a>
-                    </li>
-                    <li class="">
-                        <a href="route('crm-dashboard')}}">
-                            <span class="pcoded-mtext">CRM</span>
-                        </a>
-                    </li>
-                </ul>
-            </li> -->
             <li class="">
                 <a href="{{route('activity-stream')}}">
                     <span class="pcoded-micon"><i class="ti-layers-alt"></i></span>
@@ -29,7 +11,7 @@
             <li class="">
                 <a href="{{route('workflow-tasks')}}">
                     <span class="pcoded-micon"><i class="ti-menu"></i></span>
-                    <span class="pcoded-mtext">Workflows</span>
+                    <span class="pcoded-mtext">Workflows <label for="" class="badge badge-danger">2</label></span>
                 </a>
             </li>
             <li class="">
@@ -299,7 +281,7 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="form-elements-add-on.htm">
+                        <a href="#">
                             <span class="pcoded-mtext">Company Info</span>
                         </a>
                     </li>
@@ -309,7 +291,7 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="form-elements-advance.htm">
+                        <a href="#">
                             <span class="pcoded-mtext">Opening Balance</span>
                         </a>
                     </li>
