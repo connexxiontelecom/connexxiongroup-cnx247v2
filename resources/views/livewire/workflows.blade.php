@@ -85,17 +85,18 @@
                                             </div>
                                         @endif
                                         @if ($actionStatus == 1 && $verificationPostId == $request->id)
-                                            <div class="row mt-2">
+                                        <div class="row mt-2">
+                                            <div class="col-md-8 offset-md-2">
                                                 <div class="card ml-4">
                                                     <div class="card-block">
                                                         <div class="col-sm-12">
-                                                            <h5 class="sub-title">Requisition Verification</h5>
+                                                            <h5 class="sub-title">Transaction Password</h5>
                                                             @if (session()->has('error_code'))
                                                                 <div class="alert alert-warning background-warning" role="alert">
                                                                     {!! session()->get('error_code') !!}
                                                                 </div>
                                                             @endif
-
+                
                                                             <div class="form-group">
                                                                 @if (session()->has('success_code'))
                                                                     <div class="alert alert-success background-success" role="alert">
@@ -103,17 +104,21 @@
                                                                     </div>
                                                                 @endif
                                                             <div class="input-group input-group-primary">
-                                                                <input type="text" class="form-control" wire:model.debounce.9900000ms="verificationCode" placeholder="8-digit code">
+                                                                <input type="password" class="form-control" wire:model.debounce.9900000ms="transactionPassword" placeholder="Transaction Password">
                                                                     <span class="input-group-addon btn-mini" wire:click="verifyCode({{ $request->id }})">
                                                                     <i class="ti-check mr-2"></i> Verify
                                                                     </span>
                                                             </div>
+                                                            @error('transactionPassword')
+                                                                <i class="text-danger mt-2">{{$message}}</i>
+                                                            @enderror
                                                         </div>
                                                     </div>
-
+                
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                         @endif
                                     </td>
                                 </tr>

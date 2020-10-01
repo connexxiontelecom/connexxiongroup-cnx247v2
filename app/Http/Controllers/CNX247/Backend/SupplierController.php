@@ -4,6 +4,7 @@ namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Mail\NewSupplier;
 use App\SupplierReview;
 use App\Supplier;
 use App\Industry;
@@ -58,12 +59,16 @@ class SupplierController extends Controller
             'email_address' =>'required',
             'mobile_no' =>'required'
         ]);
-        Supplier::create(array_merge($request->all(),
+        $password = substr(sha1(time()), 32,40);
+        $hashed = bcrypt($password);
+        $supplier = Supplier::create(array_merge($request->all(),
         [
         'added_by'=>Auth::user()->id,
         'tenant_id'=>Auth::user()->tenant_id,
-        'slug'=>substr(sha1(time()), 26,40)
+        'slug'=>substr(sha1(time()), 26,40),
+        'password'=>$hashed
         ]));
+        \Mail::to($request->company_email)->send(new NewSupplier($supplier, $password));
         session()->flash("success", "<strong>Success!</strong> New supplier registered.");
         return redirect()->route('suppliers');
     }

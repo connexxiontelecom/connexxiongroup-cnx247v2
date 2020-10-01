@@ -92,7 +92,7 @@
                         <div class="card">
                             <div class="card-block">
                                     <h5 class="sub-title">Suppliers</h5>
-                                    <span>List of all suppliers</span>
+                                    <a href="{{route('new-supplier')}}" class="btn btn-primary btn-mini waves-effect waves-light float-right mb-4"><i class="ti-plus mr-2"></i>Add New Supplier</a>
                                 <div class="dt-responsive table-responsive">
                                     <table id="simpletable" class="table table-striped table-bordered nowrap">
                                         <thead>

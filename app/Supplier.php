@@ -24,7 +24,8 @@ class Supplier extends Authenticatable
         'comment',
         'tenant_id',
         'added_by',
-        'slug'
+        'slug',
+        'password'
     ];
     public function orderSupplier(){
         return $this->hasMany(PurchaseOrder::class, 'supplier_id');

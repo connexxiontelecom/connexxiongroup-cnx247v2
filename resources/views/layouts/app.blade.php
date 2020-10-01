@@ -148,7 +148,7 @@
                                         <nav class="nav">
                                             <a class="nav-link text-white" href="{{route('cnx247-terms-n-conditions')}}">Terms & Conditions</a>
                                             <a class="nav-link text-white" href="{{route('cnx247-privacy-policy')}}">Privacy Policy</a>
-                                            <a class="nav-link text-white" href="http://www.connexxiongroup.com" target="_blank">All Rights Reserved &copy; {{date('Y')}} Connexxion Group</a>
+                                            <a class="nav-link text-white" href="https://telecom.connexxiongroup.com/" target="_blank">All Rights Reserved &copy; {{date('Y')}} Connexxion Telecom</a>
                                         </nav>
                                     </div>
                                     <div class="col-md-3">
@@ -260,6 +260,8 @@
 <script src="https://js.pusher.com/6.0/pusher.min.js"></script>
 <script src="{{asset('/assets/js/cus/parsley.min.js')}}"></script>
 <script src="{{asset('/assets/js/cus/progressBar.js')}}"></script>
+@stack('dialer-script')
+<script src="{{asset('/assets/js/cus/twilio.min.js')}}"></script>
 <script>
     var theme = null;
     var themeId = null;

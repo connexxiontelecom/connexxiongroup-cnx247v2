@@ -6,9 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-
+use App\Supplier;
+use Auth;
 class NewSupplier extends Mailable
 {
+    public $supplier, $password;
     use Queueable, SerializesModels;
 
     /**
@@ -16,9 +18,10 @@ class NewSupplier extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Supplier $supplier, $password)
     {
-        //
+        $this->supplier = $supplier;
+        $this->password = $password;
     }
 
     /**
@@ -28,6 +31,8 @@ class NewSupplier extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mails.procurement.supplier.new-supplier');
+        return $this->from(Auth::user()->tenant->email,Auth::user()->tenant->company_name)
+        ->subject('Goodnews! New Supplier to '.Auth::user()->tenant->company_name)
+        ->markdown('mails.procurement..supplier.new-supplier');
     }
 }

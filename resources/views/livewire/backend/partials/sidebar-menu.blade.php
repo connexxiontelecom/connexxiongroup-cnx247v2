@@ -274,35 +274,12 @@
                     </li>
                 </ul>
             </li>
-            <li class="pcoded-hasmenu">
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-clipboard"></i></span>
-                    <span class="pcoded-mtext">Logistics</span>
-                </a>
-                <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="form-elements-component.htm">
-                            <span class="pcoded-mtext">Drivers</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="form-elements-add-on.htm">
-                            <span class="pcoded-mtext">Routes</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="form-elements-advance.htm">
-                            <span class="pcoded-mtext">Report</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
         </ul>
         <div class="pcoded-navigatio-lavel">Procurement</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
                 <a href="javascript:void(0);">
-                    <span class="pcoded-micon"><i class="feather icon-credit-card"></i></span>
+                    <span class="pcoded-micon"><i class="icofont icofont-bar-code"></i></span>
                     <span class="pcoded-mtext">Procurement</span>
                 </a>
                 <ul class="pcoded-submenu">
@@ -319,6 +296,47 @@
                     <li class=" ">
                         <a href="{{route('purchase-orders')}}">
                             <span class="pcoded-mtext">Purchase Orders</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div class="pcoded-navigatio-lavel">Logistics</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu">
+                <a href="javascript:void(0);">
+                    <span class="pcoded-micon"><i class="icofont icofont-fire-truck"></i></span>
+                    <span class="pcoded-mtext">Logistics</span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class=" ">
+                        <a href="{{route('logistics-drivers')}}">
+                            <span class="pcoded-mtext">Drivers</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('new-supplier')}}">
+                            <span class="pcoded-mtext">Vehicle</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('new-supplier')}}">
+                            <span class="pcoded-mtext">Delivery</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('suppliers')}}">
+                            <span class="pcoded-mtext">Routes</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('purchase-orders')}}">
+                            <span class="pcoded-mtext">Dispute</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('purchase-orders')}}">
+                            <span class="pcoded-mtext">Maintenance</span>
                         </a>
                     </li>
                 </ul>

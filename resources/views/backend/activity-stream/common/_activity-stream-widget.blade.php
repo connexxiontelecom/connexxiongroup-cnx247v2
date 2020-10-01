@@ -37,7 +37,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="">Message</label>
-                                        <textarea id="compose_message" required class="form-control form-control-normal content" placeholder="Compose message" style="resize: none;"></textarea>
+                                        <textarea id="compose_message" class="form-control form-control-normal content" placeholder="Compose message" style="resize: none;"></textarea>
                                         @error('compose_message')
                                             <i class="text-danger">{{ $message }}</i>
                                         @enderror
@@ -96,7 +96,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label class="">Task Title</label>
-                                        <input type="text" id="task_title" required class="form-control form-control-normal mb-2" placeholder="Task title">
+                                        <input type="text" id="task_title" class="form-control form-control-normal mb-2" placeholder="Task title">
                                         @error('task_title')
                                             <i class="text-danger">{{$message}}</i>
                                         @enderror
@@ -239,7 +239,7 @@
                                      <div class="col-md-12">
                                          <div class="form-group">
                                             <label>Event Name</label>
-                                            <input type="text" required id="event_name" class="form-control form-control-normal mb-2" placeholder="Event Name">
+                                            <input type="text" id="event_name" class="form-control form-control-normal mb-2" placeholder="Event Name">
                                             @error('event_name')
                                                 <i class="text-danger">{{$message}}</i>
                                             @enderror
@@ -334,7 +334,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Content</label>
-                                            <textarea id="announcement_text" required  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Type content here..."></textarea>
+                                            <textarea id="announcement_text"  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Type content here..."></textarea>
                                             @error('announcement_text')
                                                 <i class="text-danger">{{$message}}</i>
                                             @enderror
@@ -459,7 +459,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="">Content</label>
-                                        <textarea id="appreciation_text" required  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Type content here..."></textarea>
+                                        <textarea id="appreciation_text"  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Type content here..."></textarea>
                                         @error('appreciation_text')
                                             <i class="text-danger">{{$message}}</i>
                                         @enderror

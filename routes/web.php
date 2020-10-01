@@ -368,7 +368,13 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::post('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@storeChanges');
     Route::post('/procurement/supplier/contact-person', 'CNX247\Frontend\ProcurementController@updateContactPerson')->name('supplier-update-contact-person');
     Route::post('/procurement/supplier/change-password', 'CNX247\Frontend\ProcurementController@changePassword')->name('supplier-change-password');
-
+#Logistics routes
+    Route::get('/logistics/drivers', 'CNX247\Backend\LogisticsController@drivers')->name('logistics-drivers');
+    Route::get('/logistics/new-driver', 'CNX247\Backend\LogisticsController@addNewDriver')->name('new-driver');
+    Route::post('/logistics/new-driver', 'CNX247\Backend\LogisticsController@storeDriver');
+    Route::get('/logistics/driver-profile/{url}', 'CNX247\Backend\LogisticsController@driverProfile')->name('driver-profile');
+        #Driver emergency contact routes
+        Route::post('/logistics/driver/emergency-contact', 'CNX247\Backend\LogisticsController@driverEmergencyContact');
 #Accounting routes
     Route::get('/chart-of-accounts', 'CNX247\Backend\Accounting\ChartOfAccountController@index')->name('chart-of-accounts');
     Route::post('/new/chart-of-account', 'CNX247\Backend\Accounting\ChartOfAccountController@createCOA')->name('create-new-coa');
