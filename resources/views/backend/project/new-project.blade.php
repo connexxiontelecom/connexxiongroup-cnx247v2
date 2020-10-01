@@ -67,16 +67,16 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <label>Due Date <sup class="text-danger" style="cursor: pointer;"> <abbr title="Required">*</abbr> </sup></label>
-                                <input type="datetime-local" value="{{old('due_date')}}" name="due_date" class="form-control form-control-normal" placeholder="Due date">
-                                @error('due_date')
+                                <label >Start Date</label>
+                                        <input type="datetime-local" value="{{old('start_date')}}" name="start_date" class="form-control form-control-normal" placeholder="Start Date">
+                                @error('start_date')
                                     <i class="text-danger">{{$message}}</i>
                                 @enderror
                             </div>
                             <div class="col-md-4">
-                                <label >Start Date</label>
-                                        <input type="datetime-local" value="{{old('start_date')}}" name="start_date" class="form-control form-control-normal" placeholder="Start Date">
-                                @error('start_date')
+                                <label>Due Date <sup class="text-danger" style="cursor: pointer;"> <abbr title="Required">*</abbr> </sup></label>
+                                <input type="datetime-local" value="{{old('due_date')}}" name="due_date" class="form-control form-control-normal" placeholder="Due date">
+                                @error('due_date')
                                     <i class="text-danger">{{$message}}</i>
                                 @enderror
                             </div>

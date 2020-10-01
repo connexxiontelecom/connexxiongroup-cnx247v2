@@ -55,7 +55,7 @@
         <div class="row align-items-center">
             <div class="col-sm-6">
                 <div class="text-sm-left">
-                    <p class="mb-0">© {{date('Y')}} All Rights Reserved <a href="http://connexxiongroup.com" target="_blank" class="text-reset">Connexxiong Group</a>.</p>
+                    <p class="mb-0">© {{date('Y')}} All Rights Reserved <a href="https://telecom.connexxiongroup.com/" target="_blank" class="text-reset">Connexxiong Telecom</a>.</p>
                 </div>
             </div>
         </div>

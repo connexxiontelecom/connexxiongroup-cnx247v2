@@ -16,9 +16,6 @@ class Employees extends Component
     public $hire_from, $hire_to;
     public $department;
 
-
-
-
     public function mount(){
         $this->getEmployees();
     }

@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\User;
 use App\Notification;
 use Auth;
+use DB;
 class Notifications extends Component
 {
     public $notifications = [];
@@ -26,6 +27,16 @@ class Notifications extends Component
     * Mark as read
     */
      public function markNotificationAsRead(){
-       // Auth::user()->unreadNotifications()->update(['read_at' => now()]);
+/*          $notification_id = $id;
+        $Notification = Auth::user()->Notification->find($notification_id);
+        if($Notification){
+           $Notification->markAsRead();
+        }  */
+        //DB::table('notifications')->where('id',$id)->update(['read_at'=>Carbon::now()]);
+/*         $notify =  Auth::user()->Notification::find($id);
+       if(!empty($notify) ){
+           Auth::user()->notify->markAsRead();
+        }  */   
+           Auth::user()->unreadNotifications()->update(['read_at' => now()]);
     }
 }

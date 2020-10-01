@@ -10,6 +10,7 @@ use Hash;
 class ChangePassword extends Component
 {
     public $password, $current_password, $password_confirmation;
+    public $transaction_password, $confirm_transaction_password;
     public function render()
     {
         return view('livewire.backend.user.settings.security.change-password');
@@ -36,5 +37,17 @@ class ChangePassword extends Component
             $this->password_confirmation = '';
             return back();
           }
+    }
+
+    public function setTransactionPassword(){
+        $this->validate([
+            'transaction_password'=>'required',
+            'confirm_transaction_password'=>'required'
+        ]);
+        $transaction = User::where('tenant_id', Auth::user()->tenant_id)->where('id', Auth::user()->id)->first();
+        $transaction->transaction_password = bcrypt($this->transaction_password);
+        $transaction->save();
+        session()->flash("trans_success", "<strong>Success!</strong> New transaction password set.");
+        return back();
     }
 }

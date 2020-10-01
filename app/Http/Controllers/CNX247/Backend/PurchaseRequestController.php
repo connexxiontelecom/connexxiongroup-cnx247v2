@@ -70,12 +70,6 @@ class PurchaseRequestController extends Controller
                 $attachment->attachment = $filename;
                 $attachment->save();
             }
-
-/*             $processor = RequestApprover::select('user_id')
-                            ->where('request_type', 'purchase-request')
-                            ->where('depart_id', Auth::user()->department_id)
-                            ->where('tenant_id', Auth::user()->tenant_id)
-                            ->first(); */
             $event = new ResponsiblePerson;
             $event->post_id = $id;
             $event->user_id = $processor->user_id;

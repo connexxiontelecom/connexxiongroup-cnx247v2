@@ -33,28 +33,28 @@
                                         <div class="col-xs-12">
                                             @switch($notification->data['post_type'])
                                                 @case('project')
-                                                    <a href="{{route('view-project', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}} </a>
+                                                    <a href="{{route('view-project', $notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">{{$notification->data['post_title'] ?? 'No title'}} </a>
                                                         @break
                                                 @case('task')
-                                                    <a href="{{route('view-task', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                    <a href="{{route('view-task', $notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
                                                 @case('message')
-                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
                                                 @case('event')
-                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
                                                 @case('file')
-                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
                                                 @case('appreciation')
-                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
                                                 @case('announcement')
-                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                    <a href="{{route('view-post-activity-stream', $notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
                                                 @case('chat')
-                                                    <a href="{{$notification->data['url']}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                    <a href="{{route('chat-n-calls')}}" class="nav-link" wire:click="markNotificationAsRead">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                                         @break
                                                 @case('query')
                                                         <a href="{{route('view-query',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
@@ -68,12 +68,15 @@
                                                 @case('purchase-request')
                                                         <a href="{{route('view-workflow-task',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                                         @break
+                                                @case('business-trip')
+                                                        <a href="{{route('view-workflow-task',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                                        @break
                                                 @case('memo')
                                                         <a href="{{route('view-internal-memo',$notification->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                                         @break
                                                 @case('workgroup')
                                                 @default
-                                                        <a href="{{route('view-workgroup-invitation',$notification->data['url'])}}" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
+                                                        <a href="{{route('view-workgroup-invitation',$notification->data['url'])}}"  wire:click="markNotificationAsRead" class="nav-link">{{$notification->data['post_title'] ?? 'No title'}}</a>
                                             @endswitch
 
                                         </div>

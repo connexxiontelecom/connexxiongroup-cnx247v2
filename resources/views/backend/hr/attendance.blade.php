@@ -54,7 +54,7 @@
                                 <tr>
                                     <td>
                                         <a href="{{ route('view-profile', $attend->user->url) }}">
-                                            <img src="{{ $attend->user->avatar ?? '\assets\images\user.png' }}" class="img-40" alt="{{$attend->user->first_name ?? ''}} {{ $attend->user->surname ?? '' }}">
+                                            <img src="/assets/images/avatars/thumbnails/{{ $attend->user->avatar ?? 'avatar.png' }}" class="img-40" alt="{{$attend->user->first_name ?? ''}} {{ $attend->user->surname ?? '' }}">
                                         </a> 
                                         <a href="{{ route('view-profile', $attend->user->url) }}">{{$attend->user->first_name ?? ''}} {{ $attend->user->surname ?? '' }}</a>
                                     </td>

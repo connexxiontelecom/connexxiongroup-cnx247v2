@@ -4,6 +4,8 @@ namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Mail\NewSupplier;
+use App\SupplierReview;
 use App\Supplier;
 use App\Industry;
 use App\PurchaseOrderDetail;
@@ -57,12 +59,16 @@ class SupplierController extends Controller
             'email_address' =>'required',
             'mobile_no' =>'required'
         ]);
-        Supplier::create(array_merge($request->all(),
+        $password = substr(sha1(time()), 32,40);
+        $hashed = bcrypt($password);
+        $supplier = Supplier::create(array_merge($request->all(),
         [
         'added_by'=>Auth::user()->id,
         'tenant_id'=>Auth::user()->tenant_id,
-        'slug'=>substr(sha1(time()), 26,40)
+        'slug'=>substr(sha1(time()), 26,40),
+        'password'=>$hashed
         ]));
+        \Mail::to($request->company_email)->send(new NewSupplier($supplier, $password));
         session()->flash("success", "<strong>Success!</strong> New supplier registered.");
         return redirect()->route('suppliers');
     }
@@ -144,6 +150,27 @@ class SupplierController extends Controller
         }else{
             return redirect()->route('404');
         }
+    }
+
+    public function purchaseOrders(){
+        $orders = PurchaseOrder::where('tenant_id', Auth::user()->tenant_id)->get();
+        return view('backend.procurement.supplier.purchase-orders', ['orders'=>$orders]);
+    }
+    public function reviewPurchaseOrder(Request $request){
+        $this->validate($request,[
+            'po'=>'required',
+            'supplier'=>'required'
+        ]);
+        $review = new SupplierReview;
+        $review->supplier_id = $request->supplier;
+        $review->po_id = $request->po;
+        $review->tenant_id = Auth::user()->tenant_id;
+        $review->rating = $request->rating;
+        $review->review = $request->review;
+        $review->user_id = Auth::user()->id;
+        $review->save();
+        return response()->json(['message'=>'Success! Review submitted'], 200);
+
     }
 
     /**

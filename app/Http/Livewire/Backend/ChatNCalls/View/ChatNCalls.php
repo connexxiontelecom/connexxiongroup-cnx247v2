@@ -130,7 +130,8 @@ class ChatNCalls extends Component
                 $client->calls->create(
                     $this->phone_number,
                     getenv('TWILIO_NUMBER'),
-                    array("url"=>"http://demo.twilio.com/docs/voice.xml")
+                    //array("url"=>"http://demo.twilio.com/docs/voice.xml") https://demo.twilio.com/welcome/voice/
+                    array("url"=>"https://handler.twilio.com/twiml/EH18a8f6e92ab777a827278cefbf03f768")
                 );
                 session()->flash('stage', 'Ringing...');
             }catch(\Exception $e){

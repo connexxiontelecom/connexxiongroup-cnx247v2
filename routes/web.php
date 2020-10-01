@@ -289,6 +289,9 @@ Route::get('/task/edit/{url}', 'CNX247\Backend\TaskController@editTask')->name('
 Route::post('/task/update', 'CNX247\Backend\TaskController@updateTask')->name('update-task');
 Route::post('/upload/post/attachment', 'CNX247\Backend\TaskController@uploadPostAttachment');
 Route::get('/task/submit-task/{url}', 'CNX247\Backend\TaskController@submitTask')->name('submit-task');
+Route::post('/submit-assigned-task', 'CNX247\Backend\TaskController@storeAssignedTask')->name('submit-assigned-task');
+Route::get('/assignment/view-submissions', 'CNX247\Backend\TaskController@viewAssignmentSubmissions')->name('view-assigment-submissions');
+Route::post('/rate/task/submitted', 'CNX247\Backend\TaskController@rateTaskSubmitted');
 
 #Project routes
 Route::get('/project/project-board', 'CNX247\Backend\ProjectController@projectBoard')->name('project-board');
@@ -352,9 +355,11 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::get('/purchase-order/new/{slug}', 'CNX247\Backend\SupplierController@purchaseOrder')->name('new-purchase-order');
     Route::post('/purchase-order/new', 'CNX247\Backend\SupplierController@storePurchaseOrder')->name('store-purchase-order');
     Route::get('/purchase-order/view/{slug}', 'CNX247\Backend\SupplierController@viewPurchaseOrder')->name('view-purchase-order');
+    Route::get('/procurement/purchase-orders', 'CNX247\Backend\SupplierController@purchaseOrders')->name('purchase-orders');
+    Route::post('/procurement/review/purchase-order', 'CNX247\Backend\SupplierController@reviewPurchaseOrder');
+    #Procurement supplier account
     Route::get('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@login')->name('supplier.login');
     Route::post('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@loginNow');
-    #Procurement supplier account
     Route::get('/procurement/supplier-account', 'CNX247\Frontend\ProcurementController@myAccount')->name('supplier-account');
     Route::get('/procurement/supplier/my-purchase-orders', 'CNX247\Frontend\ProcurementController@myPurchaseOrders')->name('supplier-purchase-orders');
     Route::get('/procurement/supplier/my-purchase-orders/learn/{slug}', 'CNX247\Frontend\ProcurementController@viewMyPurchaseOrders')->name('my-purchase-orders');
@@ -363,7 +368,13 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::post('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@storeChanges');
     Route::post('/procurement/supplier/contact-person', 'CNX247\Frontend\ProcurementController@updateContactPerson')->name('supplier-update-contact-person');
     Route::post('/procurement/supplier/change-password', 'CNX247\Frontend\ProcurementController@changePassword')->name('supplier-change-password');
-
+#Logistics routes
+    Route::get('/logistics/drivers', 'CNX247\Backend\LogisticsController@drivers')->name('logistics-drivers');
+    Route::get('/logistics/new-driver', 'CNX247\Backend\LogisticsController@addNewDriver')->name('new-driver');
+    Route::post('/logistics/new-driver', 'CNX247\Backend\LogisticsController@storeDriver');
+    Route::get('/logistics/driver-profile/{url}', 'CNX247\Backend\LogisticsController@driverProfile')->name('driver-profile');
+        #Driver emergency contact routes
+        Route::post('/logistics/driver/emergency-contact', 'CNX247\Backend\LogisticsController@driverEmergencyContact');
 #Accounting routes
     Route::get('/chart-of-accounts', 'CNX247\Backend\Accounting\ChartOfAccountController@index')->name('chart-of-accounts');
     Route::post('/new/chart-of-account', 'CNX247\Backend\Accounting\ChartOfAccountController@createCOA')->name('create-new-coa');

@@ -101,6 +101,8 @@ class ChartOfAccountController extends Controller
                 $table->timestamps();
             });
         }
+        session()->flash("success", "<strong>Success!</strong> Chart of Accounts created.");
+        return back();
     }
     public function getParentAccount(Request $request){
         $this->validate($request,[

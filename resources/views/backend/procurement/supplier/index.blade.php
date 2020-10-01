@@ -90,12 +90,9 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h5>Suppliers</h5>
-                                <span>List of all suppliers</span>
-
-                            </div>
                             <div class="card-block">
+                                    <h5 class="sub-title">Suppliers</h5>
+                                    <a href="{{route('new-supplier')}}" class="btn btn-primary btn-mini waves-effect waves-light float-right mb-4"><i class="ti-plus mr-2"></i>Add New Supplier</a>
                                 <div class="dt-responsive table-responsive">
                                     <table id="simpletable" class="table table-striped table-bordered nowrap">
                                         <thead>
@@ -128,8 +125,7 @@
                                                     <td>
                                                         <div class="btn-group">
                                                             <a href="{{route('view-supplier', $supplier->slug)}}" data-toggle="tooltip" data-placement="top" title="" data-original-title="View Supplier Account"><i class="ti-eye mr-2 text-info"></i></a>
-                                                            <a href="{{route('new-purchase-order', $supplier->slug)}}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add New Purchase Order"><i class="ti-shopping-cart mr-2 text-warning"></i></a>
-                                                            <a href="{{route('view-purchase-order', $supplier->slug)}}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add New Purchase Order"><i class="ti-shopping-cart mr-2 text-warning"></i></a>
+                                                            <a href="{{route('new-purchase-order', $supplier->slug)}}" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add New Purchase Order"><i class="ti-plus mr-2 text-primary"></i></a>
 
                                                         </div>
                                                     </td>

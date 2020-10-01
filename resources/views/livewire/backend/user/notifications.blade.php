@@ -35,7 +35,7 @@
                             <a href="{{route('view-post-activity-stream', $un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
                         @case('chat')
-                            <a href="{{$un->data['url']}}" class="nav-link" wire:click="markNotificationAsRead">
+                            <a href="{{route('chat-n-calls')}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
                         @case('query')
                             <a href="{{route('view-query',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
@@ -47,6 +47,9 @@
                                 <a href="{{route('view-workflow-task',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
                         @case('purchase-request')
+                                <a href="{{route('view-workflow-task',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+                                @break
+                        @case('business-trip')
                                 <a href="{{route('view-workflow-task',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
                         @case('memo')
