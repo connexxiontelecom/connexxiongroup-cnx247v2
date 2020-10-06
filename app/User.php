@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\Access\Authorizable;
 use Spatie\Permission\Traits\HasRoles;
-
+use Cache;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -78,6 +78,14 @@ class User extends Authenticatable
     }
     public function userTheme(){
         return $this->belongsTo(Theme::class, 'active_theme');
+    }
+
+    public function myResponsibilities(){
+        return $this->hasMany(ResponsiblePerson::class, 'user_id');
+    }
+
+    public function isOnline(){
+        return Cache::has('user-is-online'.$this->id);
     }
  /*    public function leaveWallet(){
         return $this->belongsTo(LeaveWallet::class);

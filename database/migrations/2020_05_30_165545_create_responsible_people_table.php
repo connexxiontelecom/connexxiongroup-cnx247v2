@@ -20,6 +20,7 @@ class CreateResponsiblePeopleTable extends Migration
             $table->unsignedBigInteger('tenant_id')->nullable();
             $table->tinyInteger('is_seen')->default(0); 
             $table->string('status')->default('in-progress'); 
+            $table->string('post_type')->nullable(); 
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Backend\Crm\Clients;
 
 use Livewire\Component;
 use App\Client;
+use App\Country;
 use Auth;
 
 class Create extends Component
@@ -13,7 +14,7 @@ class Create extends Component
 
     public function render()
     {
-        return view('livewire.backend.crm.clients.create');
+        return view('livewire.backend.crm.clients.create', ['countries'=>Country::orderBy('name', 'ASC')->get()]);
     }
 
     public function addNewClient(){

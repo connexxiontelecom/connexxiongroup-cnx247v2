@@ -44,7 +44,8 @@ class HRController extends Controller
                             ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
                             ->take(5)->get();
         $employees = User::where('tenant_id', Auth::user()->tenant_id)->get();
-        $announcement = Post::where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'announcement')->get();
+        $announcement = Post::where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'announcement')->take(10)->get();
+        $leaves = Post::where('tenant_id', Auth::user()->tenant_id)->where('post_type', 'leave-request')->where('post_status', 'approved')->count();
         $departments = Department::where('tenant_id', Auth::user()->tenant_id)->count();
         $attendance = Clocker::distinct('user_id')->where('tenant_id', Auth::user()->tenant_id)
                             ->whereDate('clock_in', Carbon::today())->get();
@@ -54,7 +55,8 @@ class HRController extends Controller
             'attendance'=>$attendance,
             'departments'=>$departments,
             'birthdays'=>$birthdays,
-            'announcement'=>$announcement
+            'announcement'=>$announcement,
+            'leaves'=>$leaves
         ]);
     }
     /*

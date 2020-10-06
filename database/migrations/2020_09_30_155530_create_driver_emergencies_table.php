@@ -17,6 +17,7 @@ class CreateDriverEmergenciesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('added_by');
+            $table->unsignedBigInteger('driver_id');
             $table->string('full_name')->nullable();
             $table->string('mobile_no')->nullable();
             $table->string('email')->nullable();

@@ -22,8 +22,8 @@ class OnlineStatusActivity
         if(Auth::check()){
             $expiresAt = Carbon::now()->addMinutes(1);
             Cache::put('user-is-online'.Auth::user()->id, true, $expiresAt);
-            User::where('id', Auth::user()->id)->where('tenant_id', Auth::user()->tenant_id)
-                ->update(['last_seen'=>(new \DateTime())->format("Y-m-d H:i:s"), 'is_online'=>1]);
+           /*  User::where('id', Auth::user()->id)->where('tenant_id', Auth::user()->tenant_id)
+                ->update(['last_seen'=>(new \DateTime())->format("Y-m-d H:i:s"), 'is_online'=>1]); */
         }
         return $next($request);
     }

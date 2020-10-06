@@ -64,6 +64,7 @@ class ActivityStreamController extends Controller
                 $receiver = new ResponsiblePerson;
                 $receiver->user_id = $person;
                 $receiver->post_id = $message_id;
+                $receiver->post_type = 'message';
                 $receiver->tenant_id = Auth::user()->tenant_id;
                 $receiver->save();
                 $user = User::find($person);
@@ -74,6 +75,7 @@ class ActivityStreamController extends Controller
             $receiver = new ResponsiblePerson;
             $receiver->user_id = 32; //a
             $receiver->post_id = $message_id;
+            $receiver->post_type = 'message';
             $receiver->tenant_id = Auth::user()->tenant_id;
             $receiver->save();
         }
@@ -149,6 +151,7 @@ class ActivityStreamController extends Controller
         if($request->target == 0){
             $part = new ResponsiblePerson;
             $part->post_id = $event_id;
+            $part->post_type = 'event';
             $part->user_id = 32;
             $part->tenant_id = Auth::user()->tenant_id;
             $part->save();
@@ -160,6 +163,7 @@ class ActivityStreamController extends Controller
                     \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                     $part = new ResponsiblePerson;
                     $part->post_id = $event_id;
+                    $part->post_type = 'event';
                     $part->user_id = $attendee;
                     $part->tenant_id = Auth::user()->tenant_id;
                     $part->save();
@@ -221,6 +225,7 @@ class ActivityStreamController extends Controller
         if($request->target == 0){
             $part = new ResponsiblePerson;
             $part->post_id = $announcement_id;
+            $part->post_type = 'announcement';
             $part->user_id = 32;
             $part->tenant_id = Auth::user()->tenant_id;
             $part->save();
@@ -231,6 +236,7 @@ class ActivityStreamController extends Controller
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new ResponsiblePerson;
                 $part->post_id = $announcement_id;
+                $part->post_type = 'announcement';
                 $part->user_id = $person;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
@@ -285,6 +291,7 @@ class ActivityStreamController extends Controller
         if($request->target == 0){
             $part = new ResponsiblePerson;
             $part->post_id = $file_id;
+            $part->post_type = 'file';
             $part->user_id = 32;
             $part->tenant_id = Auth::user()->tenant_id;
             $part->save();
@@ -295,6 +302,7 @@ class ActivityStreamController extends Controller
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new ResponsiblePerson;
                 $part->post_id = $file_id;
+                $part->post_type = 'file';
                 $part->user_id = $person;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
@@ -332,6 +340,7 @@ class ActivityStreamController extends Controller
         if($request->target == 0){
             $part = new ResponsiblePerson;
             $part->post_id = $app_id;
+            $part->post_type = 'appreciation';
             $part->user_id = 32;
             $part->tenant_id = Auth::user()->tenant_id;
             $part->save();
@@ -341,6 +350,7 @@ class ActivityStreamController extends Controller
                 foreach(json_decode($request->persons) as $person){
                     $part = new ResponsiblePerson;
                     $part->post_id = $app_id;
+                    $part->post_type = 'appreciation';
                     $part->user_id = $person;
                     $part->tenant_id = Auth::user()->tenant_id;
                     $part->save();

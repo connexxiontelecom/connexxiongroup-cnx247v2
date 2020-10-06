@@ -48,7 +48,7 @@
                             <div class="card user-widget-card bg-c-yellow">
                                 <div class="card-block">
                                     <i class="icofont icofont-files  bg-simple-c-yellow card1-icon"></i>
-                                    <h4>652</h4>
+                                    <h4>{{number_format($leaves)}}</h4>
                                     <p>On Leave</p>
                                     <a href="{{route('leave-management')}}" class="more-info">More Info</a>
                                 </div>
@@ -59,58 +59,55 @@
             </div>
         </div>
    </div>
-
-
    <div class="row">
-    <div class="col-md-12">
-        <div class="card table-card">
-            <div class="card-header">
-                <h5>Emplyees</h5>
-                <p class="text-muted">This list of employees is selected at random.</p>
-            </div>
-            <div class="card-block">
-                <div class="table-responsive">
-                    <table class="table table-hover  table-borderless">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Employee</th>
-                                <th>Email</th>
-                                <th>Mobile</th>
-                                <th>Position</th>
-                                <th>Hire Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $n = 1;
-                            @endphp
-                            @foreach ($employees->shuffle()->slice(0,5) as $employee)
+        <div class="col-md-12">
+            <div class="card table-card">
+                <div class="card-header">
+                    <h5>Emplyees</h5>
+                </div>
+                <div class="card-block">
+                    <div class="table-responsive">
+                        <table class="table table-hover  table-borderless">
+                            <thead>
                                 <tr>
-                                    <td>{{$n++}}</td>
-                                    <td>
-                                        <a href="{{route('view-profile',$employee->url)}}">
-                                            <img src="/assets/images/avatars/thumbnails/{{$employee->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}">
-                                            {{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}
-                                        </a>
-
-                                    </td>
-                                    <td>{{$employee->email ?? '-'}}</td>
-                                    <td>{{$employee->mobile}} </td>
-                                    <td>{{$employee->position ?? '-'}}</td>
-                                    <td class="text-c-blue">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($employee->hire_date))}}</td>
+                                    <th>#</th>
+                                    <th>Employee</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Position</th>
+                                    <th>Hire Date</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <div class="text-center">
-                        <a href="{{route('employees')}}" class=" b-b-primary text-primary">View all Employees</a>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $n = 1;
+                                @endphp
+                                @foreach ($employees->shuffle()->slice(0,5) as $employee)
+                                    <tr>
+                                        <td>{{$n++}}</td>
+                                        <td>
+                                            <a href="{{route('view-profile',$employee->url)}}">
+                                                <img src="/assets/images/avatars/thumbnails/{{$employee->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}">
+                                                {{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}
+                                            </a>
+
+                                        </td>
+                                        <td>{{$employee->email ?? '-'}}</td>
+                                        <td>{{$employee->mobile}} </td>
+                                        <td>{{$employee->position ?? '-'}}</td>
+                                        <td class="text-c-blue">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($employee->hire_date))}}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            <a href="{{route('employees')}}" class=" b-b-primary text-primary">View all Employees</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
    <div class="row">
         <div class="col-xl-8 col-md-12">
@@ -119,26 +116,45 @@
                     <h5>Latest Announcement</h5>
                 </div>
                 <div class="card-block">
-                    <div class="latest-update-box">
+                    <ul class="list-view">
                         @if (count($announcement) > 0)
-                            @foreach ($announcement as $announce)
-                            <table class="table table-hover">
-                                <tr>
-                                    <td>
-                                        <a href="#"><h5>{{$announce->post_title ?? ''}}</h5></a>
-                                        {!! strlen($announce->post_content) > 80 ? substr($announce->post_content,0,80).'...' : $announce->post_content !!}
-                                    </td>
-                                </tr>
-                            </table>
+                            @foreach($announcement as $announce)
+                                <li>
+                                    <div class="card list-view-media">
+                                        <div class="card-block">
+                                            <div class="media">
+                                                <a class="media-left pt-3" href="{{route('view-profile', $announce->user->url)}}">
+                                                    <img class="media-object card-list-img img-30" src="/assets/images/avatars/thumbnails/{{$announce->user->avatar ?? 'avatar.png'}}" alt="{{$announce->user->first_name ?? ''}} {{$announce->user->surname ?? ''}}">
+                                                </a>
+                                                <div class="media-body pt-3">
+                                                    <div class="text-muted">
+                                                        <a href="{{route('view-post-activity-stream', $announce->post_url)}}">
+
+                                                            <h5 class="sub-title">{{$announce->post_title ?? ''}} | <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($announce->created_at))}} @ {{date('h:ia', strtotime($announce->created_at))}}</small></h5>
+                                                        </a>
+                                                    </div>
+                                                    {{ strlen(strip_tags($announce->post_content)) > 80 ? substr(strip_tags($announce->post_content),0,80).'...' : strip_tags($announce->post_content) }}
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                             @endforeach
                         @else
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <p class="text-center text-muted">There're no recent announcements</p>
+                            <li>
+                                <div class="card list-view-media">
+                                    <div class="card-block">
+                                        <div class="media">
+                                            <div class="media-body">
+                                               <p>No record found.</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </li>
                         @endif
-                    </div>
+                    </ul>
                     <div class="text-right">
                         <a href="{{route('activity-stream')}}" class=" b-b-primary text-primary">View in activity stream</a>
                     </div>

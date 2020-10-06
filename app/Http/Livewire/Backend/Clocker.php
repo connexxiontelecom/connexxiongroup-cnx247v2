@@ -65,15 +65,6 @@ class Clocker extends Component
                             ->whereDate('created_at', Carbon::today())
                             ->where('tenant_id',Auth::user()->tenant_id)
                             ->orderBy('id', 'DESC')->first();
-/*         if(empty($this->clocked_in)){
-            $this->status = false;
-        }else{
-            if(empty($this->clocked_in->clock_out)){
-                $this->status = false;
-            }else{
-                $this->status = true;
-            }
-        } */
     }
 
 }

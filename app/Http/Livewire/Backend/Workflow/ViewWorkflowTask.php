@@ -129,7 +129,6 @@ class ViewWorkflowTask extends Component
                 $log->note = str_replace('-', ' ',$details->post_type)." ".$this->userAction." by ".Auth::user()->first_name." ".Auth::user()->surname ?? " ";
                 $log->save();
                 $responsiblePersons = ResponsiblePerson::where('post_id', $id)
-                                            //->where('user_id', Auth::user()->id)
                                             ->get();
                 $responsiblePersonIds = [];
                 foreach($responsiblePersons as $per){
@@ -160,6 +159,7 @@ class ViewWorkflowTask extends Component
                     for($i = 0; $i<count($reset); $i++){
                         $next = new ResponsiblePerson;
                         $next->post_id = $id;
+                        $next->post_type = $details->post_type;
                         $next->user_id = $reset[$i];
                         $next->tenant_id = Auth::user()->tenant_id;
                         $next->save();

@@ -20,6 +20,7 @@ class CreateParticipantsTable extends Migration
             $table->tinyInteger('is_seen')->default(0); 
             $table->string('status')->default('in-progress'); 
             $table->bigInteger('tenant_id')->nullable();
+            $table->string('post_type')->nullable(); 
             $table->timestamps();
         });
     }

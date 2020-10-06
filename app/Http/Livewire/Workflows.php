@@ -114,6 +114,7 @@ class Workflows extends Component
                     for($i = 0; $i<count($reset); $i++){
                         $next = new ResponsiblePerson;
                         $next->post_id = $id;
+                        $next->post_type = $details->post_type;
                         $next->user_id = $reset[$i];
                         $next->tenant_id = Auth::user()->tenant_id;
                         $next->save();

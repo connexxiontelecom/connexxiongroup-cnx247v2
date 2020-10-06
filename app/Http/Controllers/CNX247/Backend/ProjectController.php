@@ -77,6 +77,7 @@ class ProjectController extends Controller
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new ResponsiblePerson;
                 $part->post_id = $project_id;
+                $part->post_type = 'project';
                 $part->user_id = $responsible;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
@@ -93,6 +94,7 @@ class ProjectController extends Controller
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new Participant;
                 $part->post_id = $project_id;
+                $part->post_type = 'project';
                 $part->user_id = $participant;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
@@ -106,6 +108,7 @@ class ProjectController extends Controller
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new Observer;
                 $part->post_id = $project_id;
+                $part->post_type = 'project';
                 $part->user_id = $observer;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
