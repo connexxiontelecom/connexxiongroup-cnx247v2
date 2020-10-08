@@ -526,4 +526,18 @@ class HRController extends Controller
         return view('backend.hr.idea-box',['ideas'=>$ideas]);
     }
 
+    public function terminateEmployment(Request $request){
+        $this->validate($request,[
+            'user'=>'required'
+        ]);
+        $user = User::where('id', $request->user)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($user)){
+            $user->account_status = 2;
+            $user->save();
+            return response()->json(["message"=>"Success! ".$user->first_name."'s employment terminated"],200);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Could not terminate employment");
+            return redirect()->back();
+        }
+    }
 }

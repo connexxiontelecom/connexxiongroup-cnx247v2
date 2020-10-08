@@ -74,4 +74,25 @@
             e.preventDefault();
             $(this).closest('.form-wrapper').remove();
         });
+
+        //terminate employment
+        $(document).on('click', '.terminate-employment', function(e){
+            e.preventDefault();
+            var user = $(this).data('user');
+            $('#selectedUser').val(user);
+        });
+
+        $(document).on('click', '#terminateEmploymentBtn', function(e){
+            e.preventDefault();
+            var id = $('#selectedUser').val();
+            axios.post('/terminate/employment', {user:id})
+            .then(response=>{
+                $.notify(response.data.message, 'success');
+                $('#terminateEmploymentModal').modal('hide');
+            })
+            .catch(error=>{
+                $.notify('Ooops! Could not terminate employment. Try again.', 'error');
+                $('#terminateEmploymentModal').modal('hide');
+            });
+        });
      });
