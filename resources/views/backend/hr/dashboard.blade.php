@@ -63,7 +63,7 @@
         <div class="col-md-12">
             <div class="card table-card">
                 <div class="card-header">
-                    <h5>Emplyees</h5>
+                    <h5>Employees</h5>
                 </div>
                 <div class="card-block">
                     <div class="table-responsive">

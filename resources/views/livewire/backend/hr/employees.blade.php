@@ -11,8 +11,7 @@
                 <div class="card-block">
                     <i class="feather icon-sliders st-icon bg-c-yellow"></i>
                     <div class="text-left">
-                        <h3 class="d-inline-block">5,456</h3>
-                        <span class="f-right bg-c-yellow">23%</span>
+                        <h3 class="d-inline-block">{{number_format(count($employees))}}</h3>
                     </div>
                 </div>
             </div>
@@ -28,7 +27,7 @@
                 <div class="card-block">
                     <i class="feather icon-users st-icon bg-c-pink txt-lite-color"></i>
                     <div class="text-left">
-                        <h3 class="d-inline-block">3,874</h3>
+                        <h3 class="d-inline-block">{{number_format(count($terminated))}}</h3>
                     </div>
                 </div>
             </div>
@@ -44,8 +43,7 @@
                 <div class="card-block">
                     <i class="feather icon-shopping-cart st-icon bg-c-blue"></i>
                     <div class="text-left">
-                        <h3 class="d-inline-block">5,456</h3>
-                        <i class="feather icon-arrow-up text-c-green f-30 "></i>
+                        <h3 class="d-inline-block">{{number_format(count($resigned))}}</h3>
                     </div>
                 </div>
             </div>
@@ -143,6 +141,12 @@
                                 <div class="user-content">
                                     <a href="{{route('view-profile', $emp->url)}}"><h5 class="">{{$emp->first_name ?? ''}}  {{$emp->surname ?? ''}}</h5></a>
                                     <p class="m-b-0 text-muted">{{$emp->position ?? 'Kindly update profile'}}</p>
+                                    <br>
+                                    @if ($emp->account_status == 1)
+                                        <label for="" class="label label-success">Active</label>
+                                    @elseif($emp->account_status == 2)
+                                        <label for="" class="label label-danger">Terminated</label>
+                                    @endif
                                 </div>
 
                             </div>

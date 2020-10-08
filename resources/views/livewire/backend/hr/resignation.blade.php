@@ -8,8 +8,8 @@
                             <i class="icofont icofont-travelling f-30 text-c-lite-green"></i>
                         </div>
                         <div class="col-auto">
-                            <h6 class="text-muted m-b-10">Last Year</h6>
-                            <h2 class="m-b-0">21</h2>
+                            <h6 class="text-muted m-b-10">Overall</h6>
+                            <h2 class="m-b-0">{{number_format(count($resignations))}}</h2>
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">This Year</h6>
-                            <h2 class="m-b-0">4</h2>
+                            <h2 class="m-b-0">{{number_format($thisYear ?? 0)}}</h2>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">Last Month</h6>
-                            <h2 class="m-b-0">7</h2>
+                            <h2 class="m-b-0">{{number_format($lastMonth ?? 0)}}</h2>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-auto">
                             <h6 class="text-muted m-b-10">This Month</h6>
-                            <h2 class="m-b-0">89</h2>
+                            <h2 class="m-b-0">{{number_format($thisMonth ?? 0)}}</h2>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
         <div class="col-sm-4 col-md-4">
             <div class="card bg-c-blue text-white widget-visitor-card">
                 <div class="card-block-small text-center">
-                    <h2>{{number_format($declined)}}</h2>
+                    <h2>{{number_format($resignations->where('status', 'declined')->count())}}</h2>
                     <h6>Declined</h6>
                     <i class="icofont icofont-ui-block"></i>
                 </div>
@@ -74,7 +74,7 @@
         <div class="col-sm-4 col-md-4">
             <div class="card bg-c-pink text-white widget-visitor-card">
                 <div class="card-block-small text-center">
-                    <h2>{{number_format($approved)}}</h2>
+                    <h2>{{number_format($resignations->where('status', 'approved')->count())}}</h2>
                     <h6>Approved</h6>
                     <i class="icofont icofont-holding-hands"></i>
                 </div>
@@ -83,7 +83,7 @@
         <div class="col-sm-4 col-md-4">
             <div class="card bg-c-yellow text-white widget-visitor-card">
                 <div class="card-block-small text-center">
-                    <h2>{{number_format($inProgress)}}</h2>
+                    <h2>{{number_format($resignations->where('status', 'in-progress')->count())}}</h2>
                     <h6>In-progress</h6>
                     <i class="icofont icofont-sand-clock"></i>
                 </div>

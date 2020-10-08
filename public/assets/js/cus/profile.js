@@ -50,10 +50,12 @@
          $(document).on('click', '#submitResignationBtn', function(e){
             e.preventDefault();
             var subject = $('#subject').val();
+            var effective_date = $('#effective_date').val();
             var content = tinymce.get('resignation_content').getContent();
-            axios.post('/resignation', {subject:subject, content:content})
+            axios.post('/resignation', {subject:subject, content:content, effective_date:effective_date})
             .then(response=>{
                 $.notify(response.data.message, 'success');
+                $('#newResignationModal').modal('hide');
             })
             .catch(error=>{
 

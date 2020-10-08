@@ -32,6 +32,7 @@ class EventController extends Controller
             'event_name'=>'required',
             'event_description'=>'required',
             'event_date'=>'required|date',
+            'audience'=>'required',
             'event_end_date'=>'required|date|after_or_equal:event_date'
         ]);
         $url = substr(sha1(time()), 10, 10);
@@ -51,16 +52,30 @@ class EventController extends Controller
         $user = $event->user;
         $user->notify(new NewPostNotification($event));
         //responsible persons
-        if(!empty($request->attendees)){
-            foreach($request->attendees as $attendee){
-                $part = new ResponsiblePerson;
-                $part->post_id = $event_id;
-                $part->post_type = 'event';
-                $part->user_id = $attendee;
-                $part->save();
+        if($request->audience == 0){
+            $users = User::where('tenant_id', Auth::user()->tenant_id)->where('id', '!=', Auth::user()->id)->get();
+            $part = new ResponsiblePerson;
+            $part->post_id = $event_id;
+            $part->post_type = 'event';
+            $part->user_id = 32;//all employee
+            $part->save();
+            foreach($users as $use){
                 //send notification
-                $user = User::find($attendee);
+                $user = User::find($use->id);
                 $user->notify(new NewPostNotification($event));
+            }
+        }else{
+            if(!empty($request->attendees)){
+                foreach($request->attendees as $attendee){
+                    $part = new ResponsiblePerson;
+                    $part->post_id = $event_id;
+                    $part->post_type = 'event';
+                    $part->user_id = $attendee;
+                    $part->save();
+                    //send notification
+                    $user = User::find($attendee);
+                    $user->notify(new NewPostNotification($event));
+                }
             }
         }
         session()->flash("success", "<strong>Success!</strong> Personal event saved.");

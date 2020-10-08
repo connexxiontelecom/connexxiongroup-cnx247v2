@@ -68,7 +68,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     {!! $resign->content !!}
-                    <p>Effective Date: <label for="" class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($resign->effective_date))}}</label></p>
+                    <p>Effective Date: <label for="" class="label label-danger">{{date('d F, Y', strtotime($resign->effective_date))}}</label></p>
                 </div>
             </div>
 

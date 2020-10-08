@@ -56,8 +56,8 @@ class UserController extends Controller
         if($request->avatar){
     	    $file_name = time().'.'.explode('/', explode(':', substr($request->avatar, 0, strpos($request->avatar, ';')))[1])[1];
     	    //avatar image
-    	    \Image::make($request->avatar)->resize(228, 228)->save(public_path('assets/images/avatars/medium/').$file_name);
-    	    \Image::make($request->avatar)->resize(100, 100)->save(public_path('assets/images/avatars/thumbnails/').$file_name);
+    	    \Image::make($request->avatar)->resize(300, 300)->save(public_path('assets/images/avatars/medium/').$file_name);
+    	    \Image::make($request->avatar)->resize(150, 150)->save(public_path('assets/images/avatars/thumbnails/').$file_name);
 
 
     	}
@@ -76,7 +76,7 @@ class UserController extends Controller
         if($request->cover){
     	    $file_name = time().'.'.explode('/', explode(':', substr($request->cover, 0, strpos($request->cover, ';')))[1])[1];
     	    //cover image
-    	    \Image::make($request->cover)->resize(1207, 217)->save(public_path('assets/images/cover-photos/').$file_name);
+    	    \Image::make($request->cover)->resize(1207, 500)->save(public_path('assets/images/cover-photos/').$file_name);
 
 
     	}
@@ -206,7 +206,7 @@ class UserController extends Controller
         $idea->visibility = $request->visibility;
         $idea->save();
         session()->flash("success", "<strong>Success!</strong> New idea submitted.");
-        return redirect()->route('my-ideas');
+        return response()->json(['message'=>'Success! New idea submitted.'], 200);
     }
 
     public function renewMembership($timestamp, $plan){

@@ -41,7 +41,6 @@
                                     <th>Event Name</th>
                                     <th>Start date</th>
                                     <th>End Date</th>
-                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -52,16 +51,11 @@
                                         @foreach ($events as $event)
                                             <tr>
                                                 <td>{{$i++}}</td>
-                                                <td>{{$event->post_title}}</td>
+                                                <td>
+                                                    <a href="{{route('view-post-activity-stream', $event->post_url)}}">{{$event->post_title}}</a>
+                                                </td>
                                                 <td><label for="" class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($event->start_date))}} @ {{date('h:ia', strtotime($event->start_date))}}</label></td>
                                                 <td><label for="" class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($event->end_date))}} @ {{date('h:ia', strtotime($event->start_date))}}</label></td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a href=""> <i class="ti-pencil text-warning mr-2"></i> </a>
-                                                        <a href=""> <i class="ti-trash text-danger mr-2"></i> </a>
-                                                        <a href=""> <i class="ti-eye text-info mr-2"></i> </a>
-                                                    </div>
-                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -76,7 +70,6 @@
                                     <th>Event Name</th>
                                     <th>Start date</th>
                                     <th>End Date</th>
-                                    <th>Action</th>
                                 </tr>
                                 </tfoot>
                             </table>

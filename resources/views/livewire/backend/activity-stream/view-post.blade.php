@@ -9,7 +9,7 @@
             @switch($post->post_type)
                 @case('message')
                 @foreach ($post->responsiblePersons as $person)
-                    @if ($person->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $person->user_id == 32)
+                    @if ($person->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $person->user_id == 32)
                         <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                             <div class="row timeline-right p-t-35">
                                 <div class="col-2 col-sm-2 col-xl-1">
@@ -152,7 +152,7 @@
                     @break
                 @case('task')
                 @foreach ($post->responsiblePersons as $person)
-                @if ($person->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $person->user_id == 32)
+                @if ($person->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $person->user_id == 32)
                     <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                         <div class="row timeline-right p-t-35">
                             <div class="col-2 col-sm-2 col-xl-1">
@@ -295,7 +295,7 @@
                     @break
                 @case('event')
                     @foreach ($post->responsiblePersons as $res)
-                        @if ($res->user_id == Auth::user()->id)
+                        @if ($res->user_id == Auth::user()->id || $res->user_id == 32)
 
                             <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                 <div class="row timeline-right p-t-35">
@@ -400,7 +400,7 @@
                 @break
                 @case('announcement')
                     @foreach ($post->responsiblePersons as $res)
-                        @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                        @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
                             <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                                 <div class="row timeline-right p-t-35">
                                     <div class="col-2 col-sm-2 col-xl-1">
@@ -542,7 +542,7 @@
                 @break
                 @case('file')
                     @foreach ($post->responsiblePersons as $res)
-                    @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                    @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
                         <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                             <div class="row timeline-right p-t-35">
                                 <div class="col-2 col-sm-2 col-xl-1">
@@ -683,7 +683,7 @@
                 @break
                 @case('appreciation')
                     @foreach ($post->responsiblePersons as $res)
-                    @if ($res->user_id == Auth::user()->id && $post->user_id == Auth::user()->id || $res->user_id == 32)
+                    @if ($res->user_id == Auth::user()->id || $post->user_id == Auth::user()->id || $res->user_id == 32)
                         <div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
                             <div class="row timeline-right p-t-35">
                                 <div class="col-2 col-sm-2 col-xl-1">
