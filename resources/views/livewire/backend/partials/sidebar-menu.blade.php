@@ -113,6 +113,11 @@
                         </a>
                     </li>
                     <li class=" ">
+                        <a href="{{ route('terminated-employment') }}">
+                            <span class="pcoded-mtext">Termination</span>
+                        </a>
+                    </li>
+                    <li class=" ">
                         <a href="{{route('hr-ideabox')}}">
                             <span class="pcoded-mtext">IdeaBox</span>
                         </a>

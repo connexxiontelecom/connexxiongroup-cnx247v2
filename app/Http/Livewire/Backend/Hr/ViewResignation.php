@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Backend\Hr;
 
 use Livewire\Component;
 use App\Resignation;
+use App\EmploymentTerminationLog;
 use App\User;
 use Auth;
 class ViewResignation extends Component
@@ -47,6 +48,13 @@ class ViewResignation extends Component
             $user = User::where('id', $resign->user_id)->where('tenant_id', Auth::user()->tenant_id)->first();
             $user->account_status = 2; //terminate employment
             $user->save();
+            #Register log
+            $log = new EmploymentTerminationLog;
+            $log->terminated_by = Auth::user()->id;
+            $log->tenant_id = Auth::user()->tenant_id;
+            $log->effective_date = now();
+            $log->user_id = $request->user;
+            $log->save();
             $this->getContent();
         }
         return redirect()->route('resignation');
