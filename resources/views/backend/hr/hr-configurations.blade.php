@@ -10,16 +10,12 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 col-xl-12">
         <div class="card">
             <div class="card-block">
-                <div class="d-inline-block">
-                    <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('clients')}}"><i class="icofont icofont-ui-user"></i>  Plans</a>
-                    <a href="{{ route('leads') }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-thumbs-up"></i> Features</a>
-                </div>
+                @include('livewire.backend.hr.common._slab-menu')
             </div>
         </div>
-
     </div>
 </div>
    <div class="row">

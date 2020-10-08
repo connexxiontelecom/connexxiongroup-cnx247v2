@@ -151,11 +151,11 @@
                     <span class="pcoded-mtext">Timesheet</span>
                 </a>
                 <ul class="pcoded-submenu">
-                    <li class=" ">
+                    <!--<li class=" ">
                         <a href="{{route('timesheet')}}">
                             <span class="pcoded-mtext">Timesheet</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class=" ">
                         <a href="{{route('attendance')}}">
                             <span class="pcoded-mtext">Attendance</span>
