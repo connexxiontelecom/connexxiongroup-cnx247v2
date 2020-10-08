@@ -854,6 +854,18 @@
                             <p>Share <strong id="fileToShare"></strong> with...</p>
                             <hr>
                             <div class="form-group">
+                                <div class="checkbox-fade fade-in-primary">
+                                    <label>
+                                        <input type="checkbox" value="32" name="all_employee" id="all_employee">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span>
+                                        <span>All employees</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-group">
                                 @foreach ($employees as $employee)
                                     <div class="checkbox-fade fade-in-primary">
                                         <label>
@@ -954,6 +966,7 @@
 <script>
     $(document).ready(function(){
         var file_data = null;
+        var all_employee = null;
         //create folder button
         $(document).on('click', '#createFolder', function(e){
             e.preventDefault();
@@ -1023,7 +1036,14 @@
 
             });
         });
-
+        $(document).on('change','#all_employee', function(e){
+            e.preventDefault();
+            if ($("#all_employee").is(':checked'))
+                all_employee = 32; //all employees
+            else {
+                all_employee = null;
+            }
+        });
         $(document).on('click', '.shareFile', function(e){
             var name = $(this).data('file');
             var id = $(this).data('unique');
@@ -1035,7 +1055,8 @@
                     });
                 axios.post('/cnx247-drive/share',{
                     employees:employees,
-                    id:id
+                    id:id,
+                    all:all_employee
                 })
                 .then(response=>{
                     $.notify(response.data.message, 'success');
