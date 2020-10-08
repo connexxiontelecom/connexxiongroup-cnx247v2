@@ -45,7 +45,7 @@
                                     <div class="media-left media-middle photo-table">
                                         <a href="javascript:void(0)">
                                             <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$user->avatar ?? 'avatar.png'}}" alt="{{$user->first_name}} {{$user->surname ?? ''}}">
-                                            @if ($user->is_online == 1)
+                                            @if ($user->isOnline())
                                                 <div class="live-status bg-success"></div>
                                             @else
                                                 <div class="live-status bg-danger"></div>

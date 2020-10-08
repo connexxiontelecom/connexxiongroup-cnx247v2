@@ -12,6 +12,7 @@ class EditProfile extends Component
     public $first_name, $surname, $email, $mobile, $gender,
     $position, $hire_date, $confirm_date, $birth_date,
     $department, $address, $employee_id;
+    public $marital_status;
     public $departments;
 
     public function render()
@@ -43,6 +44,8 @@ class EditProfile extends Component
         $this->department = Auth::user()->department ?? '';
         $this->employee_id = Auth::user()->employee_id ?? '';
         $this->address = Auth::user()->address ?? '';
+        $this->gender = Auth::user()->gender ?? '';
+        $this->marital_status = Auth::user()->marital_status ?? '';
         $this->departments = Department::where('tenant_id', Auth::user()->tenant_id)->get();
     }
 
@@ -73,8 +76,10 @@ class EditProfile extends Component
             $user->address = $this->address;
             $user->email = $this->email;
             $user->gender = $this->gender;
+            $user->marital_status = $this->marital_status;
             $user->save();
             session()->flash("success", "<strong>Success!</strong> Changes saved.");
             $this->setProperties();
+            return redirect()->route('my-profile');
     }
 }

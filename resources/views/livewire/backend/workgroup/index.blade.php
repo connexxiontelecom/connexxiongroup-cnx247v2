@@ -21,7 +21,7 @@
                                         <img src="/assets/images/workgroup/medium/{{$group->group_image ?? 'cnx247.jpg'}}" alt="{{$group->group_name ?? ''}}">
                                         <figcaption>
                                             <h2 style="font-size: 18px; letter-spacing:1px; color:#fff;"> <a href="{{ route('view-workgroup', $group->url) }}" style="color: #fff;">{{ $group->group_name ?? ''}}</a> </h2>
-                                            <span style="display:block; font-size:12px; letter-spacing:1px; text-transform:none; margin-top:30px;">{!! $group->description ?? ''!!}</span>
+                                            <span style="display:block; font-size:12px; letter-spacing:1px; text-transform:none; margin-top:30px;">{{ strip_tags($group->description) ?? '' }}</span>
                                             <p>
                                                 <a href="{{ route('view-workgroup', $group->url) }}"><i class="fa fa-users"></i> <span><small style="font-size: 12px;">{{count($group->member) + count($group->workgroupModerators)}}</small></span></a>
                                                 <a href="{{ route('view-workgroup', $group->url) }}"><i class="fa fa-fw fa-comments-o"></i><span><small style="font-size: 12px;">{{count($group->workgroupComments)}}</small></span></a>

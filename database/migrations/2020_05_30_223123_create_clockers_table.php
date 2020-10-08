@@ -18,7 +18,7 @@ class CreateClockersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->dateTime('clock_in')->nullable();
             $table->dateTime('clock_out')->nullable();
-            $table->tinyInteger('status')->nullable();
+            $table->tinyInteger('status')->nullable(); //0=none, 1=in, 2=out
             $table->bigInteger('tenant_id')->nullable();
             $table->timestamps();
         });

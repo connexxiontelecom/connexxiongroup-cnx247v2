@@ -32,7 +32,7 @@ class NewSupplier extends Mailable
     public function build()
     {
         return $this->from(Auth::user()->tenant->email,Auth::user()->tenant->company_name)
-        ->subject('Goodnews! New Supplier to '.Auth::user()->tenant->company_name)
-        ->markdown('mails.procurement..supplier.new-supplier');
+        ->subject('Goodnews! You were registered as supplier to'.Auth::user()->tenant->company_name)
+        ->markdown('mails.procurement.supplier.new-supplier');
     }
 }

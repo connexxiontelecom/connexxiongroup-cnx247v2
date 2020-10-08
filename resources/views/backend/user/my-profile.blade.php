@@ -38,7 +38,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Birth Date</th>
-                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime(Auth::user()->birth_date))}}</td>
+                                                                <td>{{date('d F, Y', strtotime(Auth::user()->birth_date))}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
@@ -50,11 +50,11 @@
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Hire Date</th>
-                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime(Auth::user()->hire_date)) ?? '-'}}</td>
+                                                                <td>{{date('d F, Y', strtotime(Auth::user()->hire_date)) ?? '-'}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Start Date</th>
-                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime(Auth::user()->start_date))}}</td>
+                                                                <td>{{date('d F, Y', strtotime(Auth::user()->start_date))}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -87,7 +87,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Confirm Date</th>
-                                                                <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime(Auth::user()->confirm_date)) ?? '-'}}</td>
+                                                                <td>{{date('d M, Y', strtotime(Auth::user()->confirm_date)) ?? '-'}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
@@ -118,7 +118,7 @@
                                     @php
                                         $serial = 1;
                                     @endphp
-                                    
+
                                     @foreach(Auth::user()->experience as $exp)
                                     <div class="col-md-12">
                                         <ul class="list-view">
@@ -142,8 +142,8 @@
                                                                 <p>{!! $exp->role_description !!}</p>
                                                                 <div class="m-t-15">
                                                                     <div class="btn-group">
-                                                                        <label class="label label-primary">Start Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($exp->start_date))}}</label>
-                                                                        <label class="label label-danger">End Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($exp->end_date))}}</label>
+                                                                        <label class="label label-primary">Start Date: {{date('d F, Y', strtotime($exp->start_date))}}</label>
+                                                                        <label class="label label-danger">End Date: {{date('d F, Y', strtotime($exp->end_date))}}</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -170,7 +170,7 @@
                                     @php
                                     $index = 1;
                                 @endphp
-                                
+
                                 @foreach(Auth::user()->education as $edu)
                                 <div class="col-md-12">
                                     <ul class="list-view">
@@ -193,8 +193,8 @@
                                                             </div>
                                                             <div class="m-t-15">
                                                                 <div class="btn-group">
-                                                                    <label class="label label-primary">Start Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($edu->start_date))}}</label>
-                                                                    <label class="label label-danger">End Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($edu->end_date))}}</label>
+                                                                    <label class="label label-primary">Start Date: {{date('d F, Y', strtotime($edu->start_date))}}</label>
+                                                                    <label class="label label-danger">End Date: {{date('d F, Y', strtotime($edu->end_date))}}</label>
                                                                 </div>
                                                             </div>
                                                         </div>

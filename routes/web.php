@@ -269,6 +269,8 @@ Route::post('/announcement/new', 'CNX247\Backend\ActivityStreamController@create
 Route::post('/activity-stream/upload/attachment', 'CNX247\Backend\ActivityStreamController@shareFile');
 Route::post('/appreciation/new', 'CNX247\Backend\ActivityStreamController@createAppreciation');
 Route::post('/send/invitation/by-email', 'CNX247\Backend\ActivityStreamController@inviteUser');
+Route::post('/activity-stream/clockin', 'CNX247\Backend\ActivityStreamController@clockin');
+Route::post('/activity-stream/clockout', 'CNX247\Backend\ActivityStreamController@clockout');
 
 #View an employee's profile
 Route::get('/activity-stream/profile/{url}', 'CNX247\Backend\ActivityStreamController@viewProfile')
@@ -373,9 +375,28 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::get('/logistics/new-driver', 'CNX247\Backend\LogisticsController@addNewDriver')->name('new-driver');
     Route::post('/logistics/new-driver', 'CNX247\Backend\LogisticsController@storeDriver');
     Route::get('/logistics/driver-profile/{url}', 'CNX247\Backend\LogisticsController@driverProfile')->name('driver-profile');
+    Route::get('/logistics/pick-up-points', 'CNX247\Backend\LogisticsController@pickupPoints')->name('logistics-pick-up-points');
+    Route::post('/logistics/pick-up-point/store', 'CNX247\Backend\LogisticsController@storePickupPoint');
+    Route::post('/logistics/pick-up-point/edit', 'CNX247\Backend\LogisticsController@editPickupPoint');
         #Driver emergency contact routes
         Route::post('/logistics/driver/emergency-contact', 'CNX247\Backend\LogisticsController@driverEmergencyContact');
-#Accounting routes
+        Route::post('/logistics/driver/kin-contact', 'CNX247\Backend\LogisticsController@driverKinContact');
+        Route::post('/logistics/driver/guarantor', 'CNX247\Backend\LogisticsController@driverGuarantorContact');
+        Route::post('/logistics/user/avatar', 'CNX247\Backend\LogisticsController@changeUserAvatar');
+        #Shipping routes
+        Route::get('/logistics/shipping', 'CNX247\Backend\LogisticsController@shipping')->name('logistics-shipping');
+        Route::get('/logistics/new-shipping', 'CNX247\Backend\LogisticsController@newShipping')->name('new-shipping');
+        #Customer routes
+        Route::get('/logistics/customers', 'CNX247\Backend\LogisticsController@customers')->name('logistics-customers');
+        Route::get('/logistics/new-customer', 'CNX247\Backend\LogisticsController@newCustomer')->name('logistics-new-customer');
+        Route::post('/store-logistic-customer', 'CNX247\Backend\LogisticsController@storeCustomer')->name('store-logistic-customer');
+        #Vehicle routes
+        Route::get('/logistics/vehicles', 'CNX247\Backend\LogisticsController@vehicles')->name('logistics-vehicles');
+        Route::get('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@newVehicle')->name('logistics-new-vehicle');
+        Route::post('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@storeVehicle');
+        Route::get('/logistics/view-vehicle/{slug}', 'CNX247\Backend\LogisticsController@viewVehicle')->name('logistics-view-vehicle');
+        Route::post('/logistics/vehicle/assign', 'CNX247\Backend\LogisticsController@assignVehicleToDriver');
+        #Accounting routes
     Route::get('/chart-of-accounts', 'CNX247\Backend\Accounting\ChartOfAccountController@index')->name('chart-of-accounts');
     Route::post('/new/chart-of-account', 'CNX247\Backend\Accounting\ChartOfAccountController@createCOA')->name('create-new-coa');
     Route::post('/get-parent-account', 'CNX247\Backend\Accounting\ChartOfAccountController@getParentAccount');

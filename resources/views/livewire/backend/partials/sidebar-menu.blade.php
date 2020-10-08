@@ -12,7 +12,9 @@
                 <a href="{{route('workflow-tasks')}}">
                     <span class="pcoded-micon"><i class="ti-menu"></i></span>
                     <span class="pcoded-mtext">Workflows
-                        <label for="" class="badge badge-danger">{{number_format(count(array_diff($postIds, $responsiblePostIds)))}}</label>
+                        @if(count(Auth::user()->myResponsibilities()->whereIn('post_type', ['expense-report', 'purchase-request', 'business-trip', 'general-request', 'leave-request'])->where('status', 'in-progress')->get()) > 0)
+                            <label for="" class="badge badge-danger">{{count(Auth::user()->myResponsibilities()->whereIn('post_type', ['expense-report', 'purchase-request', 'business-trip', 'general-request', 'leave-request'])->where('status', 'in-progress')->get())}}</label>
+                        @endif
                     </span>
                 </a>
             </li>
@@ -32,14 +34,22 @@
                 <li class="">
                     <a href="{{ route('project-board')  }}">
                         <span class="pcoded-micon"><i class="ti-briefcase"></i></span>
-                        <span class="pcoded-mtext">Projects</span>
+                        <span class="pcoded-mtext">Projects
+                            @if(count(Auth::user()->myResponsibilities()->where('post_type', 'project')->where('status', 'in-progress')->get()) > 0)
+                                <label for="" class="badge badge-danger">{{count(Auth::user()->myResponsibilities()->where('post_type', 'project')->where('status', 'in-progress')->get())}}</label>
+                            @endif
+                        </span>
                     </a>
                 </li>
 
                 <li class="">
                     <a href="{{ route('task-board')  }}">
                         <span class="pcoded-micon"><i class="ti-check-box"></i></span>
-                        <span class="pcoded-mtext">Tasks</span>
+                        <span class="pcoded-mtext">Tasks
+                            @if(count(Auth::user()->myResponsibilities()->where('post_type', 'task')->where('status', 'in-progress')->get()) > 0)
+                                <label for="" class="badge badge-danger">{{count(Auth::user()->myResponsibilities()->where('post_type', 'task')->where('status', 'in-progress')->get())}}</label>
+                            @endif
+                        </span>
                     </a>
                 </li>
 
@@ -315,30 +325,30 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('new-supplier')}}">
-                            <span class="pcoded-mtext">Vehicle</span>
+                        <a href="{{route('logistics-customers')}}">
+                            <span class="pcoded-mtext">Customers</span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('new-supplier')}}">
-                            <span class="pcoded-mtext">Delivery</span>
+                        <a href="{{route('logistics-vehicles')}}">
+                            <span class="pcoded-mtext">Vehicles</span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('suppliers')}}">
-                            <span class="pcoded-mtext">Routes</span>
+                        <a href="{{route('logistics-shipping')}}">
+                            <span class="pcoded-mtext">Shipping </span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('purchase-orders')}}">
+                        <a href="{{route('logistics-pick-up-points')}}">
+                            <span class="pcoded-mtext">Pick-up Points</span>
+                        </a>
+                    </li>
+                    <!--<li class=" ">
+                        <a href="#">
                             <span class="pcoded-mtext">Dispute</span>
                         </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('purchase-orders')}}">
-                            <span class="pcoded-mtext">Maintenance</span>
-                        </a>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
         </ul>

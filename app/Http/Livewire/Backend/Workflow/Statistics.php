@@ -23,14 +23,14 @@ class Statistics extends Component
     public function getContent(){
         $now = Carbon::now();
         $this->overall = Post::whereIn('post_type',
-                            ['purchase-request', 'expense-request',
+                            ['purchase-request', 'expense-report',
                             'leave-request', 'business-trip',
                             'general-request'])
                             ->where('tenant_id',Auth::user()->tenant_id)
                             ->where('post_status', 'approved')
                             ->sum('budget');
         $this->thisYear = Post::whereIn('post_type',
-                            ['purchase-request', 'expense-request',
+                            ['purchase-request', 'expense-report',
                             'leave-request', 'business-trip',
                             'general-request'])
                             ->where('tenant_id',Auth::user()->tenant_id)
@@ -38,7 +38,7 @@ class Statistics extends Component
                             ->whereYear('created_at', date('Y'))
                             ->sum('budget');
         $this->thisMonth = Post::whereIn('post_type',
-                            ['purchase-request', 'expense-request',
+                            ['purchase-request', 'expense-report',
                             'leave-request', 'business-trip',
                             'general-request'])
                             ->where('tenant_id',Auth::user()->tenant_id)
@@ -47,7 +47,7 @@ class Statistics extends Component
                             ->whereYear('created_at', date('Y'))
                             ->sum('budget');
         $this->lastMonth = Post::whereIn('post_type',
-                            ['purchase-request', 'expense-request',
+                            ['purchase-request', 'expense-report',
                             'leave-request', 'business-trip',
                             'general-request'])
                             ->where('tenant_id',Auth::user()->tenant_id)

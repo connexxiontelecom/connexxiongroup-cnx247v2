@@ -55,6 +55,7 @@ class EventController extends Controller
             foreach($request->attendees as $attendee){
                 $part = new ResponsiblePerson;
                 $part->post_id = $event_id;
+                $part->post_type = 'event';
                 $part->user_id = $attendee;
                 $part->save();
                 //send notification

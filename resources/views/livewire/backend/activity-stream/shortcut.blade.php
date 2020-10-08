@@ -1126,7 +1126,7 @@
                                                                                                     {!! session()->get('error_code') !!}
                                                                                                 </div>
                                                                                             @endif
-                                                
+
                                                                                             <div class="form-group">
                                                                                                 @if (session()->has('success_code'))
                                                                                                     <div class="alert alert-success background-success" role="alert">
@@ -1144,7 +1144,7 @@
                                                                                             @enderror
                                                                                         </div>
                                                                                     </div>
-                                                
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1329,7 +1329,7 @@
                                                                                                     {!! session()->get('error_code') !!}
                                                                                                 </div>
                                                                                             @endif
-                                                
+
                                                                                             <div class="form-group">
                                                                                                 @if (session()->has('success_code'))
                                                                                                     <div class="alert alert-success background-success" role="alert">
@@ -1347,7 +1347,7 @@
                                                                                             @enderror
                                                                                         </div>
                                                                                     </div>
-                                                
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1532,7 +1532,7 @@
                                                                                                     {!! session()->get('error_code') !!}
                                                                                                 </div>
                                                                                             @endif
-                                                
+
                                                                                             <div class="form-group">
                                                                                                 @if (session()->has('success_code'))
                                                                                                     <div class="alert alert-success background-success" role="alert">
@@ -1550,7 +1550,7 @@
                                                                                             @enderror
                                                                                         </div>
                                                                                     </div>
-                                                
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1739,7 +1739,7 @@
                                                                                                     {!! session()->get('error_code') !!}
                                                                                                 </div>
                                                                                             @endif
-                                                
+
                                                                                             <div class="form-group">
                                                                                                 @if (session()->has('success_code'))
                                                                                                     <div class="alert alert-success background-success" role="alert">
@@ -1757,7 +1757,7 @@
                                                                                             @enderror
                                                                                         </div>
                                                                                     </div>
-                                                
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1946,7 +1946,7 @@
                                                                                                     {!! session()->get('error_code') !!}
                                                                                                 </div>
                                                                                             @endif
-                                                
+
                                                                                             <div class="form-group">
                                                                                                 @if (session()->has('success_code'))
                                                                                                     <div class="alert alert-success background-success" role="alert">
@@ -1964,7 +1964,7 @@
                                                                                             @enderror
                                                                                         </div>
                                                                                     </div>
-                                                
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2200,23 +2200,26 @@
         </div>
         <div class="col-lg-3 col-md-3">
             <div class="row">
-                <div class="col-lg-12 col-md-12">
+                <!--<div class="col-lg-12 col-md-12">
                     <div class="fb-timeliner">
                         <h2 class="recent-highlight bg-warning">Invite Users
                             <button class="btn btn-mini btn-default float-right" data-toggle="modal" data-target="#inviteUserModal" style="margin-top:-5px;"> <i class="ti-plus"></i> New</button>
                         </h2>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-lg-12 col-md-12">
                     <div class="fb-timeliner">
                         <h2 class="recent-highlight bg-secondary">Company Pulse
-                            @if (ceil(($online/$workforce)*100) < 50)
-                                <label class="label label-danger float-right">
-                                    {{ceil(($online/$workforce)*100)}}% <i class="m-l-10 feather icon-arrow-down"></i>
+                            @php
+                             $onlineCounter = 0;
+                            @endphp
+                            @if (ceil((Auth::user()->isOnline()/$workforce)*100) < 50)
+                                <label class="label label-danger float-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Current company activity level">
+                                    {{ceil((Auth::user()->isOnline()/$workforce)*100)}}% <i class="m-l-10 feather icon-arrow-down"></i>
                                 </label>
                             @else
-                                <label class="label label-success float-right">
-                                    {{ceil(($online/$workforce)*100)}}% <i class="m-l-10 feather icon-arrow-up"></i>
+                                <label class="label label-success float-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Current company activity level">
+                                    {{ceil((Auth::user()->isOnline()/$workforce)*100)}}% <i class="m-l-10 feather icon-arrow-up"></i>
                                 </label>
                             @endif
                         </h2>
@@ -2228,13 +2231,18 @@
                             <label for="" class="label label-danger">Live</label>
                             <div class="row">
                                 <div class="col-md-2 col-sm-2" style="margin-left: 0px; padding-left:0px;">
-                                    <div data-toggle="tooltip" data-placement="top" title="" data-original-title="Employees online" data-label="{{ceil(($online/$workforce)*100)}}%" class="radial-bar radial-bar-{{ceil(($online/$workforce)*100)}} radial-bar-sm"></div>
+                                    <div data-toggle="tooltip" data-placement="top" title="" data-original-title="Employees online" data-label="{{ceil((Auth::user()->isOnline()/$workforce)*100)}}%" class="radial-bar radial-bar-{{ceil((Auth::user()->isOnline()/$workforce)*100)}} radial-bar-sm"></div>
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    @foreach (Auth::user()->where('tenant_id', Auth::user()->tenant_id)->where('is_online', 1)->get() as $onlineUser)
-                                        <a href="{{route('view-profile', $onlineUser->url)}}">
-                                            <img data-toggle="tooltip" data-placement="top" title="" data-original-title="{{$onlineUser->first_name ?? ''}} {{$onlineUser->surname ?? ''}}" src="/assets/images/avatars/thumbnails/{{$onlineUser->avatar ?? 'avatar.png'}}" class="img-30" style="border-radius: 50%;" alt="{{$onlineUser->first_name ?? ''}} {{$onlineUser->surname ?? ''}}">
-                                        </a>
+                                    @foreach (Auth::user()->where('tenant_id', Auth::user()->tenant_id)->get() as $onlineUser)
+                                        @if($onlineUser->isOnline())
+                                            <a href="{{route('view-profile', $onlineUser->url)}}">
+                                                <img data-toggle="tooltip" data-placement="top" title="" data-original-title="{{$onlineUser->first_name ?? ''}} {{$onlineUser->surname ?? ''}}" src="/assets/images/avatars/thumbnails/{{$onlineUser->avatar ?? 'avatar.png'}}" class="img-30" style="border-radius: 50%;" alt="{{$onlineUser->first_name ?? ''}} {{$onlineUser->surname ?? ''}}">
+                                            </a>
+                                            @php
+                                            $onlineCounter++;
+                                            @endphp
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>

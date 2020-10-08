@@ -56,8 +56,8 @@ class UserController extends Controller
         if($request->avatar){
     	    $file_name = time().'.'.explode('/', explode(':', substr($request->avatar, 0, strpos($request->avatar, ';')))[1])[1];
     	    //avatar image
-    	    \Image::make($request->avatar)->resize(100, 100)->save(public_path('assets/images/avatars/medium/').$file_name);
-    	    \Image::make($request->avatar)->resize(80, 80)->save(public_path('assets/images/avatars/thumbnails/').$file_name);
+    	    \Image::make($request->avatar)->resize(228, 228)->save(public_path('assets/images/avatars/medium/').$file_name);
+    	    \Image::make($request->avatar)->resize(100, 100)->save(public_path('assets/images/avatars/thumbnails/').$file_name);
 
 
     	}

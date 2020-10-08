@@ -74,6 +74,7 @@ class GeneralRequestController extends Controller
             }
             $event = new ResponsiblePerson;
             $event->post_id = $id;
+            $event->post_type = 'general-request';
             $event->user_id = $processor->user_id;
             $event->tenant_id = Auth::user()->tenant_id;
             $event->save();

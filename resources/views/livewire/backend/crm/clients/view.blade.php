@@ -66,7 +66,7 @@
                                                 <label>{{date('d F, Y', strtotime($client->created_at)) ?? ''}}</label>
 
                                                 <p><label class="label label-success">Owner</label></p>
-                                                <label>Joseph</label>
+                                                <label>{{$client->addedBy->first_name ?? ''}} {{$client->addedBy->surname ?? ''}}</label>
                                             </div>
                                         </div>
                                     </div>

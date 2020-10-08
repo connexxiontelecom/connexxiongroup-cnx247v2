@@ -117,6 +117,7 @@ class TaskController extends Controller
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new ResponsiblePerson;
                 $part->post_id = $task_id;
+                $part->post_type = 'task';
                 $part->user_id = $participant;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
@@ -129,6 +130,7 @@ class TaskController extends Controller
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new Participant;
                 $part->post_id = $task_id;
+                $part->post_type = 'task';
                 $part->user_id = $person;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
@@ -141,6 +143,7 @@ class TaskController extends Controller
                 \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
                 $part = new Observer;
                 $part->post_id = $task_id;
+                $part->post_type = 'task';
                 $part->user_id = $observe;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();

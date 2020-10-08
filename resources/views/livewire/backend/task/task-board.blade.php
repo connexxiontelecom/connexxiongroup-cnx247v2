@@ -113,7 +113,7 @@
                                                         <div class="card-block">
                                                             <div class="row">
                                                                 <div class="col-sm-12">
-                                                                    <p class="task-detail">{{ strlen($task->post_content) > 110 ? substr($task->post_content, 0, 110).'...' : $task->post_content }}</p>
+                                                                    <p class="task-detail">{{ strlen(strip_tags($task->post_content)) > 110 ? substr(strip_tags($task->post_content), 0, 110).'...' : strip_tags($task->post_content) }}</p>
                                                                     <p class="task-due">
                                                                         <strong> Due :</strong>
                                                                         <strong class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->end_date) )}}</strong>
@@ -193,7 +193,7 @@
                                                     <div class="card-block">
                                                         <div class="row">
                                                             <div class="col-sm-12">
-                                                                <p class="task-detail">{{ strlen($task->post_content) > 110 ? substr($task->post_content, 0, 110).'...' : $task->post_content }}</p>
+                                                                <p class="task-detail">{{ strlen(strip_tags($task->post_content)) > 110 ? substr(strip_tags($task->post_content), 0, 110).'...' : strip_tags($task->post_content) }}</p>
                                                                 <p class="task-due">
                                                                     <strong> Due :</strong>
                                                                     <strong class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->end_date) )}}</strong>

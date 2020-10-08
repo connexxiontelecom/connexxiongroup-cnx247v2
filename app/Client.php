@@ -11,6 +11,8 @@ class Client extends Model
             return $this->hasOne(Lead::class, 'id');
         }
 
-
+        public function addedBy(){
+            return $this->belongsTo(User::class, 'owner');
+        }
 
 }

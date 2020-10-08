@@ -77,23 +77,37 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="">Gender<sup class="text-danger">*</sup></label>
-                                                <select name="gender" id="" class="form-control col-md-6">
+                                                <select name="gender" id="" class="form-control">
                                                     <option selected disabled >Select gender</option>
                                                     <option value="1">Male</option>
-                                                    <option value="2">Male</option>
+                                                    <option value="2">Female</option>
                                                 </select>
                                                 @error('gender')
                                                     <i class="text-danger">{{$message}}</i>
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="">Location<sup class="text-danger">*</sup></label>
+                                                <select name="location" id="" class="form-control">
+                                                    <option selected disabled >Select Location</option>
+                                                    @foreach ($locations as $location)
+                                                        <option value="{{$location->id}}">{{$location->location ?? ''}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('location')
+                                                    <i class="text-danger">{{$message}}</i>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="">Driver ID No.<sup class="text-danger">*</sup></label>
-                                                <input type="number"  class="form-control" placeholder="Driver ID No." name="driver_no">
+                                                <input type="number"  class="form-control" placeholder="Driver ID No." name="driver_no" value="{{old('driver_no')}}">
                                                 @error('driver_no')
                                                     <i class="text-danger">{{$message}}</i>
                                                 @enderror
@@ -120,6 +134,17 @@
                                             @error('moi_attachment')
                                                 <i class="text-danger">{{$message}}</i>
                                             @enderror
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label for="">Address</label>
+                                                <textarea name="address" class="form-control" style="resize: none;" placeholder="Driver address...">{{old('address')}}</textarea>
+                                                @error('address')
+                                                <i class="text-danger">{{$message}}</i>
+                                            @enderror
+                                            </div>
                                         </div>
                                     </div>
                                     <hr>

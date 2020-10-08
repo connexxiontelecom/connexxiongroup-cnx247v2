@@ -69,12 +69,14 @@ class InternalMemoController extends Controller
             $resp = new ResponsiblePerson;
             $resp->user_id = 32;
             $resp->post_id = $id;
+            $resp->post_type = 'memo';
             $resp->tenant_id = Auth::user()->tenant_id;
             $resp->save();
         }elseif($request->to == 2){ //specific
             foreach($request->employees as $person){
                  $part = new ResponsiblePerson;
                  $part->post_id = $id;
+                 $part->post_type = 'memo';
                  $part->user_id = $person;
                  $part->tenant_id = Auth::user()->tenant_id;
                  $part->save();
@@ -91,6 +93,7 @@ class InternalMemoController extends Controller
                 foreach($users as $user){
                     $send = new ResponsiblePerson;
                     $send->post_id = $id;
+                    $send->post_type = 'memo';
                     $send->user_id = $user->id;
                     $send->tenant_id = Auth::user()->tenant_id;
                     $send->save();
@@ -102,6 +105,7 @@ class InternalMemoController extends Controller
                 $resp = new ResponsiblePerson;
                 $resp->user_id = 32;
                 $resp->post_id = $id;
+                $resp->post_type = 'memo';
                 $resp->tenant_id = Auth::user()->tenant_id;
                 $resp->save();
                 $message = "<strong>Success!</strong> There're no employees in this department. Memo sent to all employees instead";

@@ -361,6 +361,7 @@
     });
 </script>
 @stack('chat-script')
+@stack('clocker-script')
     @yield('extra-scripts')
 @livewireScripts
 
