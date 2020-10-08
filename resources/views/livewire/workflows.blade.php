@@ -5,11 +5,10 @@
         <div class="dropdown-primary dropdown open mt-2 mb-3" data-intro="This is Card Header" data-step="1">
             <button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-filter mr-2"></i>Filter</button>
             <div class="dropdown-menu" aria-labelledby="dropdown-2" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 39px, 0px); top: 0px; left: 0px; will-change: transform;">
-                <a class="dropdown-item waves-light waves-effect" href="#">All</a>
-                <a class="dropdown-item waves-light waves-effect" href="#">In-progress</a>
-                <a class="dropdown-item waves-light waves-effect" href="#">Approved</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item waves-light waves-effect" href="#">Declined</a>
+                <a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="allWorkflows">All</a>
+                <a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="inprogressWorkflows">In-progress</a>
+                <a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="approvedWorkflows">Approved</a>
+                <a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="declinedWorkflows">Declined</a>
             </div>
         </div>
         @if(session()->has('success'))
@@ -96,7 +95,7 @@
                                                                     {!! session()->get('error_code') !!}
                                                                 </div>
                                                             @endif
-                
+
                                                             <div class="form-group">
                                                                 @if (session()->has('success_code'))
                                                                     <div class="alert alert-success background-success" role="alert">
@@ -114,7 +113,7 @@
                                                             @enderror
                                                         </div>
                                                     </div>
-                
+
                                                     </div>
                                                 </div>
                                             </div>

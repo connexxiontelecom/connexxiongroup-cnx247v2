@@ -17,6 +17,7 @@ class CreateLogisticsVehiclesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('added_by');
+            $table->unsignedBigInteger('assigned_to');
             $table->string('chassis_no');
             $table->string('registration_no');
             $table->dateTime('registration_date');

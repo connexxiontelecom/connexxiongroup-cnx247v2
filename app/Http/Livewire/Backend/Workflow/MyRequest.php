@@ -31,4 +31,42 @@ class MyRequest extends Component
                                     ->orderBy('id', 'DESC')
                                     ->get();
     }
+
+
+    public function allWorkflows(){
+        $this->getMyRequests();
+    }
+    public function inprogressWorkflows(){
+        $this->my_requests = Post::whereIn('post_type',
+                          ['purchase-request', 'expense-report',
+                          'leave-request', 'business-trip',
+                          'general-request'])
+                          ->where('post_status', 'in-progress')
+                          ->where('user_id', Auth::user()->id)
+                          ->where('tenant_id',Auth::user()->tenant_id)
+                          ->orderBy('id', 'DESC')
+                          ->get();
+    }
+    public function approvedWorkflows(){
+        $this->my_requests = Post::whereIn('post_type',
+                          ['purchase-request', 'expense-report',
+                          'leave-request', 'business-trip',
+                          'general-request'])
+                          ->where('post_status', 'approved')
+                          ->where('user_id', Auth::user()->id)
+                          ->where('tenant_id',Auth::user()->tenant_id)
+                          ->orderBy('id', 'DESC')
+                          ->get();
+    }
+    public function declinedWorkflows(){
+        $this->my_requests = Post::whereIn('post_type',
+                          ['purchase-request', 'expense-report',
+                          'leave-request', 'business-trip',
+                          'general-request'])
+                          ->where('post_status', 'declined')
+                          ->where('user_id', Auth::user()->id)
+                          ->where('tenant_id',Auth::user()->tenant_id)
+                          ->orderBy('id', 'DESC')
+                          ->get();
+    }
 }

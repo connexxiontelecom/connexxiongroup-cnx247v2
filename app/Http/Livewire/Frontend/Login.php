@@ -33,7 +33,7 @@ class Login extends Component
                     return redirect()->route('my-profile');
                 }else{
 
-                    return redirect()->route('workflow-tasks');
+                    return redirect()->route('activity-stream');
                 }
             }else{
                 $this->error = session()->flash("wrongCredentials", "<strong>Error! </strong> Wrong or invalid login credentials. Try again.");

@@ -79,6 +79,10 @@ class User extends Authenticatable
     public function userTheme(){
         return $this->belongsTo(Theme::class, 'active_theme');
     }
+    public function userMaritalStatus(){
+        return $this->belongsTo(MaritalStatus::class, 'marital_status');
+    }
+
 
     public function myResponsibilities(){
         return $this->hasMany(ResponsiblePerson::class, 'user_id');

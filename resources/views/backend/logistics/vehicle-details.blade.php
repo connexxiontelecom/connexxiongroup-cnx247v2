@@ -34,7 +34,7 @@
                     <div class="col-lg-7 col-xs-12 product-detail" id="product-detail">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12">
-                                <button class="btn btn-mini btn-primary float-right mb-2"><i class="zmdi zmdi-car-taxi mr-2"></i> Assign To Driver</button>
+                                <button class="btn btn-mini btn-primary float-right mb-2" data-toggle="modal" data-target="#assignVehicleModal"><i class="zmdi zmdi-car-taxi mr-2"></i> Assign To Driver</button>
                                 <table class="table">
                                     <tbody>
                                         <tr>
@@ -67,7 +67,7 @@
                                         </tr>
                                         <tr>
                                             <td class="col-lg-2"><strong>Assigned To:</strong></td>
-                                            <td class="col-lg-10"><label class="label label-light">Driver Name</label></td>
+                                            <td class="col-lg-10"><label class="label label-success">{{$vehicle->assignedTo->first_name ?? ''}} {{$vehicle->assignedTo->surname ?? ''}}</label></td>
                                         </tr>
                                         <tr>
                                             <td class="col-lg-2"><strong>Added By:</strong></td>
@@ -95,7 +95,78 @@
         <div class="card">
             <div class="card-block">
                 <h5 class="sub-title">Vehicle Assignment Log</h5>
-                
+
+                <table class="table table-strip">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Driver</th>
+                            <th>Assigned By</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $i = 1;
+                        @endphp
+                        @foreach ($logs as $item)
+                            <tr>
+                                <td>{{$i++}}</td>
+                                <td>{{$item->assignedTo->first_name ?? ''}} {{$item->assignedTo->surname ?? ''}}</td>
+                                <td>{{$item->assignedBy->first_name ?? ''}} {{$item->assignedBy->surname ?? ''}}</td>
+                                <td>{{date('d F, Y', strtotime($item->created_at))}}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>#</th>
+                            <th>Driver</th>
+                            <th>Assigned By</th>
+                            <th>Date</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('dialog-section')
+<div class="modal fade" id="assignVehicleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h4 class="modal-title"><i class="zmdi zmdi-car-taxi text-white"></i> Assign Vehicle</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="text-white">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form data-parsley-validate id="assignVehicle">
+
+                    <div class="form-group">
+                        <label for="">Drivers</label>
+                        <select name="assign_driver"  id="assign_driver" class="form-control" required>
+                            <option selected disabled>Select Driver</option>
+                            @foreach ($drivers as $driver)
+                                <option value="{{$driver->id}}">{{$driver->first_name ?? ''}} {{$driver->surname ?? ''}}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="vehicleId" id="vehicleId" value="{{$vehicle->id}}">
+                    </div>
+                    <hr>
+                    <div class="form-group d-flex justify-content-center">
+                        <div class="btn-group">
+                            <input type="hidden" id="editPickupId">
+                            <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Close</button>
+                            <button type="submit" id="assignVehicleBtn" class="btn btn-primary waves-effect waves-light btn-mini"><i class="ti-check mr-2"></i> Assign Vehicle</button>
+                        </div>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
@@ -103,5 +174,43 @@
 @endsection
 
 @section('extra-scripts')
+<script>
+    $(document).ready(function(){
 
+    $('#assignVehicle').parsley().on('field:validated', function() {
+
+    }).on('form:submit', function() {
+    var config = {
+                onUploadProgress: function(progressEvent) {
+                var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                }
+        };
+        var form_data = new FormData();
+        form_data.append('driver',$('#assign_driver').val());
+        form_data.append('vehicle',$('#vehicleId').val());
+        $('#assignVehicleBtn').text('Processing...');
+        axios.post('/logistics/vehicle/assign',form_data, config)
+        .then(response=>{
+            $.notify(response.data.message, 'success');
+            $('#assignVehicleBtn').text('Done');
+            location.reload();
+            $('#assignVehicleModal').modal('hide');
+            setTimeout(function () {
+                $("#assignVehicleBtn").text("Save");
+                $("#simpletable").load(location.href + " #simpletable");
+            }, 2000);
+
+        })
+        .catch(errors=>{
+            var errs = Object.values(errors.response.data.error);
+            $.notify(errs, "error");
+            $('#assignVehicleBtn').text('Error!');
+            setTimeout(function () {
+                $("#assignVehicleBtn").text("Save");
+            }, 2000);
+        });
+        return false;
+        });
+    });
+</script>
 @endsection

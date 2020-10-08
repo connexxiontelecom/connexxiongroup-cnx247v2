@@ -18,10 +18,12 @@
                 <div class="social-timeline-left" style="top:0px !important;">
                     <div class="card">
                         <div class="social-profile">
-                            <img class="img-fluid width-100" src="\assets\images\social\profile.jpg" alt="">
-                            <div class="profile-hvr">
+                            <img class="img-fluid width-100" src="/assets/uploads/logistics/avatars/medium/{{$driver->avatar ?? 'profile.jpg'}}" alt="">
+                            <div class="profile-hvr uploadAvatar">
                                 <i class="icofont icofont-ui-edit p-r-10"></i>
                             </div>
+                            <input type="file" hidden id="avatarInput">
+                            <input type="hidden" id="userId" value="{{$driver->id}}">
                         </div>
                         <div class="card-block social-follower">
                             <h4>{{$driver->first_name ?? ''}} {{$driver->surname ?? ''}}</h4>
@@ -56,7 +58,7 @@
                                     <div class="card-block">
                                         <h5 class="sub-title">Personal Information</h5>
                                         <div id="view-info" class="row">
-                                            <div class="col-lg-6 col-md-12">
+                                            <div class="col-lg-12 col-md-12">
                                                 <input type="hidden" name="driver" id="driver" value="{{$driver->id}}"/>
                                                 <form>
                                                     <table class="table table-responsive m-b-0">
@@ -78,12 +80,25 @@
                                                             <td class="social-user-name b-none text-muted">{{$driver->mobile_no ?? ''}}</td>
                                                         </tr>
                                                         <tr>
+                                                            <th class="social-label b-none">Pickup Point.</th>
+                                                            <td class="social-user-name b-none text-muted">
+                                                                <p><strong>Location: </strong>{{$driver->driverLocation->location ?? ''}}</p>
+                                                                <p><strong>Address: </strong>{{$driver->driverLocation->address ?? ''}}</p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
                                                             <th class="social-label b-none">Member Since</th>
                                                             <td class="social-user-name b-none text-muted">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($driver->created_at))}}</td>
                                                         </tr>
                                                         <tr>
                                                             <th class="social-label b-none p-b-0">Address</th>
-                                                            <td class="social-user-name b-none p-b-0 text-muted">New York, USA</td>
+                                                            <td class="social-user-name b-none p-b-0 text-muted">{{$driver->address ?? ''}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="social-label b-none p-b-0">Vehicle Assigned</th>
+                                                            <td class="social-user-name b-none p-b-0 text-muted">
+                                                                <a href="">Vehicle Assigend</a>
+                                                            </td>
                                                         </tr>
                                                     </table>
                                                 </form>
@@ -103,7 +118,7 @@
                                             @endphp
                                             @foreach($driver->driverEmergencyContact as $emergency)
                                                 <div class="col-lg-6 col-md-6 mt-3" style="border-left:2px solid #FF0000;">
-                                                    <label class="badge badge-danger">{{$i++}}</label> 
+                                                    <label class="badge badge-danger">{{$i++}}</label>
                                                     <table class="table table-responsive m-b-0">
                                                         <tr>
                                                             <th class="social-label b-none p-t-0">
@@ -144,7 +159,7 @@
                                         @endphp
                                         @foreach($driver->driverNextOfKin as $kin)
                                             <div class="col-lg-6 col-md-6 mt-3" style="border-left:2px solid #2EA44F;">
-                                                <label class="badge badge-success">{{$k++}}</label> 
+                                                <label class="badge badge-success">{{$k++}}</label>
                                                 <table class="table table-responsive m-b-0">
                                                     <tr>
                                                         <th class="social-label b-none p-t-0">
@@ -187,7 +202,7 @@
                                     @endphp
                                     @foreach($driver->driverGuarantor as $guarant)
                                         <div class="col-lg-6 col-md-6 mt-3" style="border-left:2px solid #2EA44F;">
-                                            <label class="badge badge-success">{{$g++}}</label> 
+                                            <label class="badge badge-success">{{$g++}}</label>
                                             <table class="table table-responsive m-b-0">
                                                 <tr>
                                                     <th class="social-label b-none p-t-0">
@@ -536,6 +551,31 @@
                 });
                 return false;
             });
+
+            $(document).on('click', '.uploadAvatar', function(e){
+             e.preventDefault();
+             $('#avatarInput').click();
+             $('#avatarInput').change(function(ev){
+                  let file = ev.target.files[0];
+                let reader = new FileReader();
+                var avatar='';
+                reader.onloadend = (file) =>{
+                    avatar = reader.result;
+                    $('#avatar-preview').attr('src', avatar);
+                    axios.post('/logistics/user/avatar',{avatar:avatar, user:$('#userId').val()})
+                    .then(response=>{
+                        $.notify('Success! Profile image updated.', 'success');
+                        location.reload();
+                    })
+                    .catch(error=>{
+                        var errs = Object.values(error.response.data.error);
+                        $.notify(errs, "error");
+                        });
+                    }
+                    reader.readAsDataURL(file);
+
+                });
+         });
     });
 </script>
 @endsection

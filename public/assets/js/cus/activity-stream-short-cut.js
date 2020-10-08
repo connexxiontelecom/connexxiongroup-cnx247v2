@@ -100,6 +100,7 @@
         $(document).on('mouseover', '.rollover', function(e){
             axios.post('/activity-stream/live-update', {live:$(this).data('live')});
         });
+
         //process task attachment
         $('#task_attachments').change(function(event){
             var extension = $('#task_attachments').val().split('.').pop().toLowerCase();

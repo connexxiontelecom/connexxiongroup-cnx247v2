@@ -37,10 +37,41 @@ class Workflows extends Component
                           ['purchase-request', 'expense-report',
                           'leave-request', 'business-trip',
                           'general-request'])
+                          ->where('tenant_id',Auth::user()->tenant_id)
                           ->orderBy('id', 'DESC')
                           ->get();
     }
 
+    public function allWorkflows(){
+        $this->getContent();
+    }
+    public function inprogressWorkflows(){
+        $this->requests = Post::whereIn('post_type',
+                          ['purchase-request', 'expense-report',
+                          'leave-request', 'business-trip',
+                          'general-request'])
+                          ->where('post_status', 'in-progress')
+                          ->orderBy('id', 'DESC')
+                          ->get();
+    }
+    public function approvedWorkflows(){
+        $this->requests = Post::whereIn('post_type',
+                          ['purchase-request', 'expense-report',
+                          'leave-request', 'business-trip',
+                          'general-request'])
+                          ->where('post_status', 'approved')
+                          ->orderBy('id', 'DESC')
+                          ->get();
+    }
+    public function declinedWorkflows(){
+        $this->requests = Post::whereIn('post_type',
+                          ['purchase-request', 'expense-report',
+                          'leave-request', 'business-trip',
+                          'general-request'])
+                          ->where('post_status', 'declined')
+                          ->orderBy('id', 'DESC')
+                          ->get();
+    }
      /*
     * Approve request
     */

@@ -11,6 +11,7 @@ use App\PostAttachment;
 use App\ResponsiblePerson;
 use App\Participant;
 use App\Invitation;
+use App\Clocker as ClockInOut;
 use App\Observer;
 use App\User;
 use DB;
@@ -397,5 +398,29 @@ class ActivityStreamController extends Controller
 
         $user = User::where('url', $url)->where('tenant_id', Auth::user()->tenant_id)->first();
       return view('backend.activity-stream.view-employee-profile', ['user'=>$user]);
+    }
+
+    public function clockin(){
+        //register in DB
+         $in = new ClockInOut;
+        $in->user_id = Auth::user()->id;
+        $in->clock_in = now();
+        $in->tenant_id = Auth::user()->tenant_id;
+        $in->status = 1; //in
+        $in->save();
+        return response()->json(['message'=>'Success! Clocked-in'], 200);
+    }
+    /*
+    * Clock out method
+    */
+    public function clockout(){
+        //register in DB
+        $out = ClockInOut::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')
+                           ->where('tenant_id',Auth::user()->tenant_id)->first();
+        $out->clock_out = now();
+        $out->tenant_id = Auth::user()->tenant_id;
+        $out->status = 2; //out
+        $out->save();
+        return response()->json(['message'=>'Success! Clocked-out'], 200);
     }
 }

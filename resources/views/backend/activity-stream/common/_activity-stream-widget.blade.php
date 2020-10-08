@@ -106,7 +106,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="">Task Description</label>
-                                            <textarea id="task_description" required  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Task Description"></textarea>
+                                            <textarea id="task_description"  cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Task Description"></textarea>
                                             @error('task_description')
                                                 <i class="text-danger">{{$message}}</i>
                                             @enderror
@@ -250,7 +250,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Event Description</label>
-                                            <textarea id="event_description" required cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Event Description"></textarea>
+                                            <textarea id="event_description" cols="5" rows="5" class="content form-control form-control-normal mb-2" placeholder="Event Description"></textarea>
                                             @error('event_description')
                                                 <i class="text-danger">{{$message}}</i>
                                             @enderror

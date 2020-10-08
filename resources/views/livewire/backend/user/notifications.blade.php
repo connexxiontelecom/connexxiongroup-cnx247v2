@@ -61,7 +61,7 @@
                     @endswitch
                             <li>
                                 <div class="media">
-                                    <img class="d-flex align-self-center img-radius" src="{{asset('/assets/images/avatars/thumbnails/'.$un->data['avatar']) ?? '/assets/images/avatars/thumbnails/avatar.png'}}" alt="{{$un->data['post_author']}}">
+                                    <img class="d-flex align-self-center img-radius" src="{{asset('/assets/images/avatars/thumbnails/'.$un->data['avatar']) ?? 'avatar.png'}}" alt="{{$un->data['post_author']}}">
                                     <div class="media-body">
                                         <h5 class="notification-user">{{$un->data['post_author']}}</h5>
                                         <p class="notification-msg">

@@ -340,20 +340,15 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('suppliers')}}">
-                            <span class="pcoded-mtext">Routes</span>
+                        <a href="{{route('logistics-pick-up-points')}}">
+                            <span class="pcoded-mtext">Pick-up Points</span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="{{route('purchase-orders')}}">
+                    <!--<li class=" ">
+                        <a href="#">
                             <span class="pcoded-mtext">Dispute</span>
                         </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('purchase-orders')}}">
-                            <span class="pcoded-mtext">Maintenance</span>
-                        </a>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
         </ul>

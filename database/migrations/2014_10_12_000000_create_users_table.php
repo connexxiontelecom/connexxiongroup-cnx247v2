@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('surname')->nullable();
             $table->string('last_name')->nullable();
             $table->tinyInteger('gender')->nullable();
+            $table->unsignedBigInteger('marital_status')->nullable();
             $table->string('username')->nullable();
             $table->tinyInteger('account_status')->default(1)->nullable();
             $table->unsignedBigInteger('active_theme')->default(1)->nullable();

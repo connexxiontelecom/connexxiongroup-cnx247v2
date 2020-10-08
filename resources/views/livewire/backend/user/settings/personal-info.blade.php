@@ -112,6 +112,35 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
+                        <label for="">Marital Status</label>
+                        <select id="" class="form-control" wire:model.debounce.50000ms="marital_status">
+                            <option disabled selected wire:ignore>Select marital status</option>
+                            @foreach ($marital_statuses as $stat)
+                                <option value="{{$stat->id}}">{{$stat->name ?? ''}}</option>
+                            @endforeach
+                        </select>
+                        @error('marital_status')
+                            <i class="text-danger mt-2">{{$message}}</i>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="">Gender</label>
+                        <select  id="" class="form-control" wire:model.debounce.50000ms="gender">
+                            <option disabled selected wire:ignore>Select gender</option>
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                        </select>
+                        @error('gender')
+                            <i class="text-danger mt-2">{{$message}}</i>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
                         <label>Address</label>
                         <textarea class="form-control" style="resize:none;" wire:model.debounce.90000ms="address" placeholder="Address"></textarea>
                         @error('address')

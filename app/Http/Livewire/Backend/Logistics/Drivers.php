@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Backend\Logistics;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Driver;
+use App\LogisticsUser;
 use Auth;
 
 class Drivers extends Component
@@ -28,7 +28,9 @@ class Drivers extends Component
     * Get list of all drivers
     */
     public function getDrivers(){
-        $this->drivers = Driver::where('tenant_id',Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->get();
+        $this->drivers = LogisticsUser::where('tenant_id',Auth::user()->tenant_id)
+                                        ->where('role', 1)
+                                        ->orderBy('first_name', 'ASC')->get();
 
     }
 }

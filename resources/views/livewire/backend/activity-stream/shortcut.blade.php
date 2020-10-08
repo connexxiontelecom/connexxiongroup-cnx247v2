@@ -2200,20 +2200,20 @@
         </div>
         <div class="col-lg-3 col-md-3">
             <div class="row">
-                <div class="col-lg-12 col-md-12">
+                <!--<div class="col-lg-12 col-md-12">
                     <div class="fb-timeliner">
                         <h2 class="recent-highlight bg-warning">Invite Users
                             <button class="btn btn-mini btn-default float-right" data-toggle="modal" data-target="#inviteUserModal" style="margin-top:-5px;"> <i class="ti-plus"></i> New</button>
                         </h2>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-lg-12 col-md-12">
                     <div class="fb-timeliner">
                         <h2 class="recent-highlight bg-secondary">Company Pulse
                             @php
                              $onlineCounter = 0;
                             @endphp
-                            @if (ceil(($onlineCounter/$workforce)*100) < 50)
+                            @if (ceil((Auth::user()->isOnline()/$workforce)*100) < 50)
                                 <label class="label label-danger float-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Current company activity level">
                                     {{ceil((Auth::user()->isOnline()/$workforce)*100)}}% <i class="m-l-10 feather icon-arrow-down"></i>
                                 </label>
