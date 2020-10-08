@@ -61,7 +61,7 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Close</button>
                     <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitComplaintBtn"><i class="mr-2 ti-check"></i>Submit</button>
-                </div>  
+                </div>
             </div>
         </div>
     </div>

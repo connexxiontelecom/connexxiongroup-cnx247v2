@@ -72,15 +72,15 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <li class="">
-                        <a href="{{route('my-events')}}">
+                        <a href="{{route('my-event-list')}}">
                             <span class="pcoded-mtext">My Events</span>
                         </a>
                     </li>
-                    <li class="">
-                        <a href="{{route('company-calendar')}}">
+                    <!-- <li class="">
+                        <a href="#">
                             <span class="pcoded-mtext">Company Calendar</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </li>
         </ul>
@@ -117,11 +117,11 @@
                             <span class="pcoded-mtext">IdeaBox</span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="{{route('complaints')}}">
+                    <!--<li class=" ">
+                        <a href="route('complaints')}}">
                             <span class="pcoded-mtext">Complaints</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class=" ">
                         <a href="{{route('queries')}}">
                             <span class="pcoded-mtext">Queries</span>
@@ -344,11 +344,6 @@
                             <span class="pcoded-mtext">Pick-up Points</span>
                         </a>
                     </li>
-                    <!--<li class=" ">
-                        <a href="#">
-                            <span class="pcoded-mtext">Dispute</span>
-                        </a>
-                    </li> -->
                 </ul>
             </li>
         </ul>

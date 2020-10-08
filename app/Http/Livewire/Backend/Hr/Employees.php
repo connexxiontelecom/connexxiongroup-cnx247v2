@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Backend\Hr;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\User;
+use App\Resignation;
 use App\Department;
 use Auth;
 
@@ -15,6 +16,8 @@ class Employees extends Component
     public $confirm_from, $confirm_to;
     public $hire_from, $hire_to;
     public $department;
+    public $terminated;
+    public $resigned;
 
     public function mount(){
         $this->getEmployees();
@@ -32,6 +35,8 @@ class Employees extends Component
     */
     public function getEmployees(){
         $this->employees = User::where('tenant_id',Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->get();
+        $this->terminated = User::where('tenant_id',Auth::user()->tenant_id)->where('account_status', 2)->get();
+        $this->resigned = Resignation::where('tenant_id',Auth::user()->tenant_id)->where('status', 'approved')->get();
 
     }
 

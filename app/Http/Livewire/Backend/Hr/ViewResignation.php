@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Backend\Hr;
 
 use Livewire\Component;
 use App\Resignation;
+use App\User;
 use Auth;
 class ViewResignation extends Component
 {
@@ -42,8 +43,13 @@ class ViewResignation extends Component
         if(!empty($resign) ){
             $resign->status = 'approved';
             $resign->save();
+            #Terminate employement
+            $user = User::where('id', $resign->user_id)->where('tenant_id', Auth::user()->tenant_id)->first();
+            $user->account_status = 2; //terminate employment
+            $user->save();
             $this->getContent();
         }
+        return redirect()->route('resignation');
     }
     public function decline($id){
         $resign = Resignation::where('tenant_id', Auth::user()->tenant_id)->where('id', $id)->first();

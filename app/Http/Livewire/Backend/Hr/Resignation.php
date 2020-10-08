@@ -5,11 +5,13 @@ namespace App\Http\Livewire\Backend\Hr;
 use Livewire\Component;
 use App\User;
 use App\Resignation as ResignationModel;
+use Carbon\Carbon;
 use Auth;
 
 class Resignation extends Component
 {   public $approved, $declined, $inProgress;
     public $resignations;
+    public $thisMonth, $thisWeek, $thisYear,$lastMonth;
 
     public function render()
     {
@@ -17,9 +19,25 @@ class Resignation extends Component
     }
 
     public function mount(){
-        $this->approved = ResignationModel::where('status', 'approved')->where('tenant_id',Auth::user()->tenant_id)->count();
-        $this->declined = ResignationModel::where('status', 'declined')->where('tenant_id',Auth::user()->tenant_id)->count();
+        $now = Carbon::now();
+        $this->resignations = ResignationModel::where('tenant_id',Auth::user()->tenant_id)->get();
+
+        $this->thisYear = ResignationModel::where('tenant_id', Auth::user()->tenant_id)
+                                ->whereYear('effective_date', date('Y'))
+                                ->count();
+        $this->thisMonth = ResignationModel::where('tenant_id', Auth::user()->tenant_id)
+                                ->whereMonth('effective_date', date('m'))
+                                ->whereYear('effective_date', date('Y'))
+                                ->count();
+        $this->lastMonth = ResignationModel::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereMonth('effective_date', '=', $now->subMonth()->month)
+                            ->count();
+        $this->thisWeek = ResignationModel::where('tenant_id', Auth::user()->tenant_id)
+                                ->whereBetween('effective_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->endOfWeek()->format('Y-m-d H:i')])
+                                ->count();
+        /*$this->declined = ResignationModel::where('status', 'declined')->where('tenant_id',Auth::user()->tenant_id)->count();
         $this->inProgress = ResignationModel::where('status', 'in-progress')->where('tenant_id',Auth::user()->tenant_id)->count();
         $this->resignations = ResignationModel::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();
+        $this->resignations = ResignationModel::where('user_id', Auth::user()->id)->where('tenant_id',Auth::user()->tenant_id)->get();*/
     }
 }

@@ -190,7 +190,8 @@
                     $.notify(response.data.message, "success");
                     $('#submitIdeaBtn').text('Submit');
                     $('#myIdeaModal').modal('hide');
-                    $('#simpletable').load(href.location + ' #simpletable');
+                    //$('#simpletable').load(href.location + ' #simpletable');
+                    location.reload();
                 })
                 .catch(error=>{
                     $('#submitIdeaBtn').text('Submit');

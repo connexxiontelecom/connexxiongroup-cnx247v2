@@ -136,16 +136,22 @@ class HRController extends Controller
     public function submitResignation(Request $request){
         $this->validate($request,[
             'subject'=>'required',
-            'content'=>'required'
+            'content'=>'required',
+            'effective_date'=>'required'
         ]);
         $resign = new Resignation;
         $resign->subject = $request->subject;
+        $resign->effective_date = $request->effective_date;
         $resign->content = $request->content;
         $resign->user_id = Auth::user()->id;
         $resign->tenant_id = Auth::user()->tenant_id;
         $resign->slug = sha1(time());
         $resign->save();
-        return response()->json(['message'=>'Success! Resignation submitted.']);
+        if($resign){
+            return response()->json(['message'=>'Success! Resignation submitted.'],200);
+        }else{
+            return response()->json(['error'=>'Ooops! Could not submit. Try again.'],400);
+        }
     }
 
     /*

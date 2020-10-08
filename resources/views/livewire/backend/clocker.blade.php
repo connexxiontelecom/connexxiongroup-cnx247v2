@@ -9,7 +9,7 @@
                 <i class="ti-alarm-clock"></i>Clock-out
             </button>
             <button type="button" class="btn btn-inverse btn-mini waves-effect waves-light" data-toggle="tooltip" data-placement="top" title="" data-original-title="When you clocked in">
-                <i class="ti-alarm-clock mr-2" wire:poll.1000ms="updateTimer"></i>{{ date('d M, Y | h:i a', strtotime($clocked_in->clock_in)) }}
+                <i class="ti-alarm-clock mr-2" wire:poll.900000ms="updateTimer"></i>{{ date('d M, Y | h:i a', strtotime($clocked_in->clock_in)) }}
             </button>
 
         @endif
