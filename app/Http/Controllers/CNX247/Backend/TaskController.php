@@ -121,6 +121,8 @@ class TaskController extends Controller
                 $part->user_id = $participant;
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
+                $user = User::find($participant);
+                $user->notify(new NewPostNotification($task));
             }
         }
         //participants

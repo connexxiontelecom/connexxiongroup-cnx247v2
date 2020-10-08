@@ -262,6 +262,9 @@ Route::post('/feedback-status', 'CNX247\Backend\CRMController@feedbackStatus');
 #Activity stream routes
 Route::get('/activity-stream', 'CNX247\Backend\ActivityStreamController@index')->name('activity-stream');
 Route::post('/activity-stream/message', 'CNX247\Backend\ActivityStreamController@sendMessage');
+
+Route::post('/activity-stream/new/task', 'CNX247\Backend\ActivityStreamController@storeTask');
+
 Route::post('/activity-stream/live-update', 'CNX247\Backend\ActivityStreamController@postView');
 Route::get('/activity-stream/post/{slug}', 'CNX247\Backend\ActivityStreamController@viewPost')->name('view-post-activity-stream');
 Route::post('/event/new', 'CNX247\Backend\ActivityStreamController@createEvent');

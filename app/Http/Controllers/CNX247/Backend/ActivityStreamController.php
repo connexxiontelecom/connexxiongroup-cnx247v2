@@ -117,11 +117,94 @@ class ActivityStreamController extends Controller
     public function viewPost($slug){
         return view('backend.activity-stream.view-post');
     }
-    /*
-    * Create task
+
+/*
+    * store new task
     */
+    public function storeTask(Request $request){
 
+        $this->validate($request, [
+            'task_title'=>'required',
+            'responsible_persons'=>'required',
+            'task_description'=>'required',
+            'start_date'=>'required|date',
+            'due_date'=>'required|date|after_or_equal:start_date'
+        ]);
 
+        $url = substr(sha1(time()), 10, 10);
+        $task = new Post;
+        $task->post_title = $request->task_title;
+        $task->user_id = Auth::user()->id;
+        $task->post_content = $request->task_description;
+        $task->post_color = $request->color;
+        $task->post_type = 'task';
+        $task->post_url = $url;
+        $task->start_date = $request->start_date ?? '';
+        $task->end_date = $request->due_date;
+        $task->post_priority = $request->priority;
+        $task->tenant_id = Auth::user()->tenant_id;
+        $task->save();
+        $task_id = $task->id;
+        if(!empty($request->file('attachment'))){
+            $extension = $request->file('attachment');
+            $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
+            $dir = 'assets/uploads/attachments/';
+            $filename = 'task_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+            $request->file('attachment')->move(public_path($dir), $filename);
+        }else{
+            $filename = '';
+        }
+        if(!empty($request->file('attachment'))){
+            $attach = new PostAttachment;
+            $attach->post_id = $task_id;
+            $attach->user_id = Auth::user()->id;
+            $attach->attachment = $filename;
+            $attach->tenant_id = Auth::user()->tenant_id;
+            $attach->save();
+        }
+        //responsible persons
+        if(!empty(json_decode($request->responsible_persons))){
+            foreach(json_decode($request->responsible_persons) as $participant){
+               /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
+                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
+                $part = new ResponsiblePerson;
+                $part->post_id = $task_id;
+                $part->post_type = 'task';
+                $part->user_id = $participant;
+                $part->tenant_id = Auth::user()->tenant_id;
+                $part->save();
+                $user = User::find($participant);
+                $user->notify(new NewPostNotification($task));
+            }
+        }
+        //participants
+        if(!empty(json_decode($request->participants))){
+            foreach(json_decode($request->participants) as $person){
+               /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
+                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
+                $part = new Participant;
+                $part->post_id = $task_id;
+                $part->post_type = 'task';
+                $part->user_id = $person;
+                $part->tenant_id = Auth::user()->tenant_id;
+                $part->save();
+            }
+        }
+        //observers
+        if(!empty(json_decode($request->observers))){
+            foreach(json_decode($request->observers) as $observe){
+               /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
+                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
+                $part = new Observer;
+                $part->post_id = $task_id;
+                $part->post_type = 'task';
+                $part->user_id = $observe;
+                $part->tenant_id = Auth::user()->tenant_id;
+                $part->save();
+            }
+        }
+        return response()->json(['message'=>'Success! Task created.'], 200);
+    }
     /*
     * Create event
     */

@@ -137,7 +137,7 @@
             task_form.append('status', $('#status').val());
             $('.task-cus-preloader').show();
              $('#submitTask').attr('disabled', 'disabled');
-            axios.post('/task/new', task_form)
+            axios.post('/activity-stream/new/task', task_form)
             .then(response=>{
                  $('.task-cus-preloader').hide();
                  $('#submitTask').removeAttr('disabled');

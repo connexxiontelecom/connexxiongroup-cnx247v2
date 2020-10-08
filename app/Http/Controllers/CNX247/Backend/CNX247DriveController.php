@@ -158,16 +158,28 @@ class CNX247DriveController extends Controller
 
     public function shareAttachment(Request $request){
         $this->validate($request,[
-            'employees'=>'required',
+            //'employees'=>'required',
             'id'=>'required'
         ]);
-        foreach($request->employees as $employee){
-            $share = new SharedFile;
-            $share->owner = Auth::user()->id;
-            $share->file_id = $request->id;
-            $share->tenant_id = Auth::user()->tenant_id;
-            $share->shared_with = $employee;
-            $share->save();
+        if($request->all == 32){
+            $users = User::where('tenant_id', Auth::user()->tenant_id)->where('id', '!=', Auth::user()->id)->get();
+            foreach($users as $user){
+                $share = new SharedFile;
+                $share->owner = Auth::user()->id;
+                $share->file_id = $request->id;
+                $share->tenant_id = Auth::user()->tenant_id;
+                $share->shared_with = $user->id;
+                $share->save();
+            }
+        }else{
+            foreach($request->employees as $employee){
+                $share = new SharedFile;
+                $share->owner = Auth::user()->id;
+                $share->file_id = $request->id;
+                $share->tenant_id = Auth::user()->tenant_id;
+                $share->shared_with = $employee;
+                $share->save();
+            }
         }
         if($share){
             return response()->json(['message'=>'Success! File shared.'],200);
