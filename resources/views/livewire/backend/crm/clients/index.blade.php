@@ -24,13 +24,11 @@
    <div class="row">
     <div class="col-lg-12 col-xl-12">
         <div class="card">
-            <div class="card-header">
-                <h5 class="card-header-text">Clients</h5>
+            <div class="card-block p-b-0">
                 <div class="btn-group float-right">
                     <a href="{{route('new-client')}}" class="btn btn-primary btn-mini"> <i class="ti-plus mr-2"></i> Add New Client</a>
                 </div>
-            </div>
-            <div class="card-block p-b-0">
+                <h5 class="sub-title">Clients</h5>
                 <div class="row">
                     <div class="col-md-12" id="draggableMultiple">
                         <div class="row">
@@ -38,8 +36,8 @@
                                 @foreach ($clients as $client)
                                     <div class="col-md-6">
                                         <div class="sortable-moves" style="cursor: auto;">
-                                            <img class="img-fluid p-absolute" src="/assets/images/avatars/thumbnails/avatar.png" alt="">
-                                                <span id="clientAvatarBtn" style="cursor: pointer"><i class="ti-camera"></i></span>
+                                            <img class="img-fluid p-absolute" src="/assets/images/clients/avatars/thumbnails/{{$client->avatar ?? 'avatar.png'}}" alt="">
+                                                <span class="clientAvatarBtn"  data-id="{{$client->id}}" style="cursor: pointer"><i class="ti-camera"></i></span>
                                                 <input type="file" hidden id="clientAvatar">
                                                 <table class="table m-0">
                                                     <tbody>
@@ -57,7 +55,9 @@
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">Website</th>
-                                                            <td>{{$client->website ?? ''}}</td>
+                                                            <td>
+                                                                <a href="{{$client->website ?? 'http://www.cnx247.com'}}" target="_blank">{{$client->website ?? ''}}</a>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -88,11 +88,29 @@
 @push('client-script')
 <script>
     $(document).ready(function(){
-        $(document).on('click', '#clientAvatarBtn', function(e){
+        var id = null;
+        $(document).on('click', '.clientAvatarBtn', function(e){
             e.preventDefault();
+            id = $(this).data('id');
             $('#clientAvatar').click();
             $('#clientAvatar').on('change',function(event){
-                alert('changed');
+                let file = event.target.files[0];
+                let reader = new FileReader();
+                var avatar='';
+                reader.onloadend = (file) =>{
+                    avatar = reader.result;
+                    $('#avatar-preview').attr('src', avatar);
+                    axios.post('/upload/client/avatar',{avatar:avatar,client:id})
+                    .then(response=>{
+                        $.notify('Success! Client avatar updated.', 'success');
+                        location.reload();
+                    })
+                    .catch(error=>{
+                        var errs = Object.values(error.response.data.errors);
+                        $.notify(errs, "error");
+                        });
+                    }
+                    reader.readAsDataURL(file);
             });
         });
     });

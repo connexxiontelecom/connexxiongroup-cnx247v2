@@ -232,6 +232,7 @@ Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name(
     Route::get('/crm/client/new', 'CNX247\Backend\CRMController@createClient')->name('new-client');
     Route::get('/crm/client/view/{slug}', 'CNX247\Backend\CRMController@viewClient')->name('view-client');
     Route::get('/crm/client/edit/{slug}', 'CNX247\Backend\CRMController@editClient')->name('edit-client');
+    Route::post('/upload/client/avatar', 'CNX247\Backend\CRMController@uploadClientAvatar');
 #Products
     Route::get('/crm/products', 'CNX247\Backend\CRMController@products')->name('products');
     Route::get('/crm/product/new', 'CNX247\Backend\CRMController@addNewProduct')->name('add-new-product');

@@ -20,6 +20,7 @@ use App\Product;
 use App\Feedback;
 use App\ProductCategory;
 use Auth;
+use Image;
 
 
 class CRMController extends Controller
@@ -91,6 +92,26 @@ class CRMController extends Controller
     #Contacts/clients
     public function clients(){
         return view('backend.crm.clients.index');
+    }
+
+    #Contacts/uploadClientAvatar
+    public function uploadClientAvatar(Request $request){
+        $this->validate($request,[
+            'avatar'=>'required'
+        ]);
+        if($request->avatar){
+    	    $file_name = time().'.'.explode('/', explode(':', substr($request->avatar, 0, strpos($request->avatar, ';')))[1])[1];
+    	    //avatar image
+    	    \Image::make($request->avatar)->resize(300, 300)->save(public_path('assets/images/clients/avatars/medium/').$file_name);
+    	    \Image::make($request->avatar)->resize(150, 150)->save(public_path('assets/images/clients/avatars/thumbnails/').$file_name);
+
+
+    	}
+        $client = Client::where('id',$request->client)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $client->avatar = $file_name;
+        $client->save();
+        return response()->json(['message'=>'Success! Client avatar updated.']);
+
     }
 
     /*
