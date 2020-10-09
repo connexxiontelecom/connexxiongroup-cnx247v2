@@ -45,7 +45,7 @@
                                                     <tbody>
                                                         <tr>
                                                             <th scope="row">Full Name</th>
-                                                            <td>{{$client->first_name ?? ''}} {{$client->surname ?? ''}}</td>
+                                                            <td>{{$client->title ?? ''}} {{$client->first_name ?? ''}} {{$client->surname ?? ''}}</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">Mobile</th>

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Backend\Crm\Clients;
 
 use Livewire\Component;
 use App\Client;
+use App\Country;
 use Auth;
 class Edit extends Component
 {
@@ -14,7 +15,7 @@ class Edit extends Component
 
     public function render()
     {
-        return view('livewire.backend.crm.clients.edit');
+        return view('livewire.backend.crm.clients.edit',['countries'=>Country::orderBy('name', 'ASC')->get()]);
     }
     public function mount($slug = ''){
         $this->link = request('slug', $slug);
@@ -33,6 +34,7 @@ class Edit extends Component
         $this->website = $this->client->website;
         $this->street_1 = $this->client->street_1;
         $this->street_2 = $this->client->street_2;
+        $this->city = $this->client->city;
         $this->country = $this->client->country;
         $this->postal_code = $this->client->postal_code;
         $this->note = $this->client->note;
@@ -47,9 +49,7 @@ class Edit extends Component
             'street_1'=>'required',
             'email'=>'required|email',
             'country'=>'required',
-            'state'=>'required',
-            'city'=>'required',
-            'postal_code'=>'required',
+            'city'=>'required'
         ]);
         $client =  Client::where('id', $this->client_id)->where('tenant_id', Auth::user()->tenant_id)->first();
         $client->owner = Auth::user()->id;

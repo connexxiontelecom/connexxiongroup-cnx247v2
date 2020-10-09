@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8 col-lg-8 col-sm-12 offset-md-2 offset-lg-2">
             <div class="card">
                 <div class="btn-group mt-3 btn-group d-flex justify-content-end mr-3" >
                     <a href="{{route('clients')}}" class="btn btn-primary btn-mini waves-effect waves-light">
@@ -19,16 +19,12 @@
                 <div class="card-block">
                     <h5 class="sub-title">Add New Client</h5>
                     <span>All fields marked with <sup class="text-danger">*</sup> are compulsory.</span>
-                    <form action="" wire:submit.prevent="addNewClient">
+                    <form action="" wire:submit.prevent="addNewClient" class="mt-3">
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">Title <sup class="text-danger">*</sup> </label>
-                                    <select name="" id="" class="form-control" wire:model="title">
-                                        <option selected disabled>Select Title</option>
-                                        <option value="1">Mr.</option>
-                                        <option value="2">Mrs.</option>
-                                    </select>
+                                    <input type="text" placeholder="Title" wire:model.debounce.900000ms="title" class="form-control">
                                     @error('title')
                                         <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
@@ -94,29 +90,19 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="">Country  <sup class="text-danger">*</sup> </label> <br>
                                 <select name="" id="" class="form-control" wire:model="country">
-                                    <option selected disabled>Select Country</option>
+                                    <option selected disabled wire:ignore>Select Country</option>
                                     @foreach($countries as $count)
-                                        <option value="{{$count->id}}">{{$count->name}}</option>
+                                        <option value="{{$count->id}}">{{ucfirst(strtolower($count->name))}}</option>
                                     @endforeach
                                 </select>
                                 @error('country')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                 @enderror
                             </div>
-                            <div class="col-md-3">
-                                <label for="">State <sup class="text-danger">*</sup> </label>
-                                <select name="" id="" class="form-control" wire:model="state">
-                                    <option value="1">FCT</option>
-                                    <option value="2">Abuja</option>
-                                </select>
-                                @error('state')
-                                    <i class="text-danger mt-2">{{$message}}</i>
-                                @enderror
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="">City  <sup class="text-danger">*</sup> </label> <br>
                                 <input type="text" placeholder="City" class="form-control" wire:model="city">
                                 @error('city')
