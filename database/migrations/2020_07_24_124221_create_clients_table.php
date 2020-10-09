@@ -17,11 +17,11 @@ class CreateClientsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('owner');
             $table->unsignedBigInteger('country_id');
-            $table->unsignedBigInteger('state_id');
+            $table->unsignedBigInteger('state_id')->nullable();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('assigned_to')->nullable(); //nullable
             $table->string('first_name');
-            $table->unsignedBigInteger('title')->default(1);
+            $table->string('title')->nullable();
             $table->string('suffix')->nullable();
             $table->string('surname')->nullable();
             $table->string('other_names')->nullable();

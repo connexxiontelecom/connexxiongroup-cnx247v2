@@ -66,6 +66,7 @@
                             @if ($selectedUserId == null )
                                 <p class="text-center text-muted" style="margin-top: 200px;">Kindly select a contact to start conversation...</p>
                             @else
+                            <div wire:poll.5000ms="getConversation({{$selectedUserId}})">
                                 @foreach ($messages as $message)
                                     @if ($message->from_id == Auth::user()->id)
                                     <div class="media">
@@ -118,6 +119,7 @@
                                     @endif
 
                                 @endforeach
+                            </div>
                             @endif
                         </div>
 

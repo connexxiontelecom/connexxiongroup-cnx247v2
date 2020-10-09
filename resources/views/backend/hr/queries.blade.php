@@ -28,99 +28,84 @@
 
 <div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 col-xl-12">
             <div class="card">
                 <div class="card-block">
-                    <h4 class="sub-title">Queries</h4>
-                    @if (session()->has('success'))
-                        <div class="alert alert-success background-success mt-3">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <i class="icofont icofont-close-line-circled text-white"></i>
-                            </button>
-                            {!! session()->get('success') !!}
-                        </div>
-                    @endif
+                    @include('livewire.backend.hr.common._slab-menu')
                 </div>
             </div>
         </div>
-    </div>
+   </div>
 
     <div class="card p-3" style="margin-top:-20px;">
         <div class="card-block ">
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Queries</h5>
-                            <span>All queries issued to employees</span>
+                        <h5 class="sub-title">Queries</h5>
+                        <span>All queries issued to employees</span>
+                    <div class="dt-responsive table-responsive">
+                        <table id="simpletable" class="table table-striped table-bordered nowrap">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Employee</th>
+                                <th>Subject</th>
+                                <th>Status</th>
+                                <th>Issued by</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $serial = 1;
+                                @endphp
+                                @if (count($queries) > 0)
+                                    @foreach ($queries as $query)
+                                        <tr>
+                                            <td>{{$serial++}}</td>
+                                            <td><a href="{{route('view-profile', $query->queriedEmployee->url)}}"> <img src="/assets/images/avatars/thumbnails/{{$query->queriedEmployee->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$query->queriedEmployee->first_name ?? ''}} {{$query->queriedEmployee->surname ?? ''}}"> {{$query->queriedEmployee->first_name ?? ''}} {{$query->queriedEmployee->surname ?? ''}}</a></td>
+                                            <td><a href="{{route('view-query', $query->slug)}}">{{$query->subject}}</a> </td>
+                                            <td>
+                                                @if ($query->status == 1)
+                                                    <label for="" class="label label-success">Open</label>
+                                                @else
+                                                    <label for="" class="label label-danger">Closed</label>
 
-                        </div>
-                        <div class="card-block">
-                            <div class="dt-responsive table-responsive">
-                                <table id="simpletable" class="table table-striped table-bordered nowrap">
-                                    <thead>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{route('view-profile', $query->issuedBy->url)}}"> <img src="/assets/images/avatars/thumbnails/{{$query->issuedBy->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$query->issuedBy->first_name ?? ''}} {{$query->issuedBy->surname ?? ''}}"> {{$query->issuedBy->first_name ?? ''}} {{$query->issuedBy->surname ?? ''}}</a>
+                                            </td>
+                                            <td>
+                                                @if ($query->query_type == 0)
+                                                    <label for="" class="label label-warning">Warning</label>
+                                                @else
+                                                    <label for="" class="label label-danger">Query</label>
+                                                @endif
+                                            </td>
+                                            <td><label for="" class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($query->created_at))}}</label></td>
+                                        </tr>
+                                    @endforeach
+                                @else
                                     <tr>
-                                        <th>#</th>
-                                        <th>Employee</th>
-                                        <th>Subject</th>
-                                        <th>Status</th>
-                                        <th>Issued by</th>
-                                        <th>Type</th>
-                                        <th>Date</th>
+                                        <td colspan="9">There're no queries.</td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $serial = 1;
-                                        @endphp
-                                        @if (count($queries) > 0)
-                                            @foreach ($queries as $query)
-                                                <tr>
-                                                    <td>{{$serial++}}</td>
-                                                    <td><a href="{{route('view-profile', $query->queriedEmployee->url)}}"> <img src="/assets/images/avatars/thumbnails/{{$query->queriedEmployee->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$query->queriedEmployee->first_name ?? ''}} {{$query->queriedEmployee->surname ?? ''}}"> {{$query->queriedEmployee->first_name ?? ''}} {{$query->queriedEmployee->surname ?? ''}}</a></td>
-                                                    <td><a href="{{route('view-query', $query->slug)}}">{{$query->subject}}</a> </td>
-                                                    <td>
-                                                        @if ($query->status == 1)
-                                                            <label for="" class="label label-success">Open</label>
-                                                        @else
-                                                            <label for="" class="label label-danger">Closed</label>
+                                @endif
 
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                       <a href="{{route('view-profile', $query->issuedBy->url)}}"> <img src="/assets/images/avatars/thumbnails/{{$query->issuedBy->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$query->issuedBy->first_name ?? ''}} {{$query->issuedBy->surname ?? ''}}"> {{$query->issuedBy->first_name ?? ''}} {{$query->issuedBy->surname ?? ''}}</a>
-                                                    </td>
-                                                    <td>
-                                                        @if ($query->query_type == 0)
-                                                            <label for="" class="label label-warning">Warning</label>
-                                                        @else
-                                                            <label for="" class="label label-danger">Query</label>
-                                                        @endif
-                                                    </td>
-                                                    <td><label for="" class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($query->created_at))}}</label></td>
-                                                </tr>
-                                            @endforeach
-                                        @else
-                                            <tr>
-                                                <td colspan="9">There're no queries.</td>
-                                            </tr>
-                                        @endif
-
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Employee</th>
-                                        <th>Subject</th>
-                                        <th>Status</th>
-                                        <th>Issued by</th>
-                                        <th>Type</th>
-                                        <th>Date</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Employee</th>
+                                <th>Subject</th>
+                                <th>Status</th>
+                                <th>Issued by</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                            </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>

@@ -71,11 +71,17 @@
                                                         <tbody>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Gender</th>
-                                                                <td>-</td>
+                                                                <td>
+                                                                    @if (Auth::user()->gender == 1)
+                                                                        Male
+                                                                    @else
+                                                                        Female
+                                                                    @endif
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Marital Status</th>
-                                                                <td>-</td>
+                                                                <td>{{Auth::user()->userMaritalStatus->name ?? '-'}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile</th>
@@ -265,7 +271,8 @@
                             </div>
                             <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
                                 <div class="accordion-content accordion-desc">
-                                    @php
+                                    <div class="row">
+                                        @php
                                             $n = 1;
                                         @endphp
                                         @foreach(Auth::user()->nextKin as $contact)
@@ -297,6 +304,7 @@
                                                 </table>
                                             </div>
                                         @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>

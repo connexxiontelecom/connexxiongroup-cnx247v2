@@ -27,8 +27,7 @@ class Create extends Component
             'email'=>'required|email',
             'country'=>'required',
             'state'=>'required',
-            'city'=>'required',
-            'postal_code'=>'required',
+            'city'=>'required'
         ]);
         $client = new Client;
         $client->owner = Auth::user()->id;

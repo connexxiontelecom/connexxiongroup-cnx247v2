@@ -11,17 +11,25 @@
 @endsection
 
 @section('content')
+<div class="row">
+    <div class="col-md-12 col-xl-12">
+        <div class="card">
+            <div class="card-block">
+                @include('livewire.backend.hr.common._slab-menu')
+            </div>
+        </div>
+    </div>
+</div>
    <div class="row">
     <div class="col-md-12">
         <div class="card table-card">
             <div class="card-header">
                 <a href="{{ url()->previous() }}" class="btn-mini btn-secondary btn"> <i class="ti-back-left"></i> Back</a>
-                <div class="btn-group d-flex justify-content-center mb-4">
+                <!--<div class="btn-group d-flex justify-content-center mb-4">
                     <button class="btn btn-mini btn-danger"> <i class="icofont icofont-file-excel"></i> Export Excel</button>
                     <button class="btn btn-mini btn-secondary"> <i class="icofont icofont-file-excel"></i> Export CSV</button>
-                </div>
-                <h5>Attendance</h5>
-                <div class="card-header-right form-inline">
+                </div> -->
+                <!--<div class="card-header-right form-inline">
                     <label for="">Sort</label>
                     <select name="" id="" class="form-control">
                         <option value="">Today</option>
@@ -29,7 +37,9 @@
                         <option value="">This Month</option>
                         <option value="">This Year</option>
                     </select>
-                </div>
+                </div> -->
+                <br>
+                <h5>Attendance</h5>
             </div>
             <div class="card-block">
                 <div class="dt-responsive table-responsive">
@@ -50,12 +60,12 @@
                                     $end = \Carbon\Carbon::parse($attend->clock_out);
 
                                     $diff = $start->diffInMinutes($end);
-                                @endphp     
+                                @endphp
                                 <tr>
                                     <td>
                                         <a href="{{ route('view-profile', $attend->user->url) }}">
                                             <img src="/assets/images/avatars/thumbnails/{{ $attend->user->avatar ?? 'avatar.png' }}" class="img-40" alt="{{$attend->user->first_name ?? ''}} {{ $attend->user->surname ?? '' }}">
-                                        </a> 
+                                        </a>
                                         <a href="{{ route('view-profile', $attend->user->url) }}">{{$attend->user->first_name ?? ''}} {{ $attend->user->surname ?? '' }}</a>
                                     </td>
                                     <td>{{date('d F, Y', strtotime($attend->clock_in)) ?? '-'}} @ {{ date('h:i a', strtotime($attend->clock_in)) }} | <small>{{ \Carbon\Carbon::parse($attend->clock_in)->diffForHumans() ?? '-'}}</small> </td>

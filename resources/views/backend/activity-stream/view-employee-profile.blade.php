@@ -29,7 +29,11 @@
                                     <div class="user-title">
                                         <h2>{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</h2>
                                         <span class="text-white">{{$user->position ?? ''}}</span>
-
+                                        @if ($user->account_status == 2)
+                                            <label class="label label-danger">Terminated</label>
+                                        @elseif($user->account_status == 1)
+                                            <label class="label label-success">Active</label>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -60,11 +64,13 @@
                     <div class="slide"></div>
                 </li>
                 <li class="nav-item">
-                    <div class="btn-group">
+                    @if ($user->account_status != 2)
+                        <div class="btn-group">
                         <a href="{{route('query-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Query {{$user->first_name}}"> <i class="ti-help-alt mr-4 text-danger"></i></a>
                         <a href="{{route('assign-permission-to-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Assign Role to {{$user->first_name}}"> <i class="icofont icofont-chart-flow-alt-1 mr-4 text-warning"></i></a>
-                        <a href="" data-toggle="tooltip" data-placement="top" title="Terminate {{$user->first_name}}'s employement"> <i class="ti-na mr-4 text-danger"></i></a>
-                    </div>
+                            <a href="javascript:void(0);" data-toggle="modal" class="terminate-employment" data-user="{{$user->id}}" data-target="#terminateEmploymentModal" title="Terminate {{$user->first_name}}'s employement"> <i class="ti-na mr-4 text-danger"></i></a>
+                        </div>
+                    @endif
                 </li>
             </ul>
             <!-- Tab panes -->
@@ -80,15 +86,19 @@
                                     </tr>
                                     <tr>
                                         <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Gender</th>
-                                        <td>Female</td>
+                                        <td>@if ($user->gender == 1)
+                                            Male
+                                        @else
+                                            Female
+                                        @endif</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Birth Date</th>
-                                        <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($user->birth_date)) ?? ''}}</td>
+                                        <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($user->birth_date))}}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Marital Status</th>
-                                        <td>Single</td>
+                                        <td>{{$user->userMaritalStatus->name ?? '-'}}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
@@ -139,11 +149,40 @@
                                     </div>
                                     <div id="collapsenextOfKin" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="nextOfKin">
                                         <div class="accordion-content accordion-desc">
-                                            <p>
-                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                                survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                                sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                            </p>
+                                            <div class="row">
+                                                @php
+                                                    $n = 1;
+                                                @endphp
+                                                @foreach($user->nextKin as $contact)
+                                                    <div class="col-md-6" >
+                                                            <label class="badge badge-primary float-right">{{$n++}}</label>
+                                                        <table class="table m-0" style="border-left:2px solid #ff000;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
+                                                                    <td>{{$contact->full_name ?? ''}} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Relationship</th>
+                                                                    <td>{{$contact->relationship ?? ''}} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
+                                                                    <td>{{$contact->email ?? ''}} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile No.</th>
+                                                                    <td>{{$contact->mobile ?? ''}} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
+                                                                    <td>{{$contact->address ?? ''}} </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -157,11 +196,40 @@
                                     </div>
                                     <div id="collapseemergencyContact" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="emergencyContact">
                                         <div class="accordion-content accordion-desc">
-                                            <p>
-                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
-                                                survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                                sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                                            </p>
+                                            <div class="row">
+                                                @php
+                                                    $n = 1;
+                                                @endphp
+                                                @foreach($user->emergencyContact as $contact)
+                                                    <div class="col-md-6" >
+                                                            <label class="badge badge-primary float-right">{{$n++}}</label>
+                                                        <table class="table m-0" style="border-left:2px solid #ff000;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Full Name</th>
+                                                                    <td>{{$contact->full_name ?? ''}} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Relationship</th>
+                                                                    <td>{{$contact->relationship ?? ''}} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Email</th>
+                                                                    <td>{{$contact->email ?? ''}} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Mobile No.</th>
+                                                                    <td>{{$contact->mobile ?? ''}} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
+                                                                    <td>{{$contact->address ?? ''}} </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +244,31 @@
 @endsection
 
 @section('dialog-section')
-
+<div class="modal fade" id="terminateEmploymentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h6 class="modal-title text-uppercase">Are you sure?</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="text-white">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <p>This action cannot be undone.
+                Are you sure you want to terminate <i>{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</i>'s employment?</p>
+                <form action="">
+                    <div class="form-group">
+                        <input type="hidden"  id="selectedUser">
+                    </div>
+                    <div class="btn-group d-flex justify-content-center">
+                        <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>No, cancel</button>
+                        <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="terminateEmploymentBtn"><i class="mr-2 ti-check"></i>Yes, please</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('extra-scripts')

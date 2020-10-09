@@ -54,6 +54,7 @@ Route::post('/permission/new', 'CNX247\Backend\AdminController@newPermission')->
 Route::get('/assign/role-to-permission/{id}', 'CNX247\Backend\AdminController@assignRoleToPermission')
         ->name('assign-role-to-permission');
 Route::post('/store/permission', 'CNX247\Backend\AdminController@storeRolePermission')->name('store-permission');
+
 Route::get('/module-manager', 'CNX247\Backend\AdminController@moduleManager')->name('module-manager');
 Route::post('/module/new', 'CNX247\Backend\AdminController@newModule')->name('new-module');
 #Plans & Features
@@ -192,6 +193,8 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         Route::get('/employee-supervisor-appraisal/{appraisal_id}', 'CNX247\Backend\HRController@supervisorAppraisal')->name('employee-supervisor-appraisal');
         Route::post('/employee-supervisor-appraisal', 'CNX247\Backend\HRController@storeSupervisorAppraisal')->name('store-supervisor-appraisal');
         Route::get('/appraisal-result/{appraisal_id}', 'CNX247\Backend\HRController@appraisalResult')->name('appraisal-result');
+        Route::post('/terminate/employment', 'CNX247\Backend\HRController@terminateEmployment');
+        Route::get('/terminated-employment', 'CNX247\Backend\HRController@terminatedEmployment')->name('terminated-employment');
     #HR Constants
         Route::get('/hr/configurations', 'CNX247\Backend\HRController@hrConfigurations')->name('hr-configurations');
     #Assign permission(s) to employee

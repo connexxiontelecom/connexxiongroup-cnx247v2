@@ -87,7 +87,7 @@
                                 <a class="accordion-msg scale_active collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                     <button class="btn btn-mini btn-round btn-light" type="button">
                                         <i class="icofont icofont-plus"></i> Add New Appreciation
-                                    </button> 
+                                    </button>
                                 </a>
                             </h3>
                             </div>
@@ -113,7 +113,7 @@
                                         <div class="row">
                                             <div class="col-md-12 d-flex justify-content-center">
                                                 <button class="btn btn-primary btn-sm" type="submit" id="submitAppreciation">Submit</button>
-                                                
+
                                             </div>
                                             <div class="col-md-12 d-flex justify-content-center mt-1 ">
                                                 <div class="preloader3 loader-block appreciation-cus-preloader">
@@ -122,7 +122,7 @@
                                                     <div class="circ3 loader-primary"></div>
                                                     <div class="circ4 loader-primary"></div>
                                                 </div>
-    
+
                                             </div>
                                         </div>
                                     </form>
@@ -168,7 +168,7 @@
                                                                             <label for="" class="label label-info">{{date('d F, Y', strtotime($appreciate->created_at)) ?? ''}}</label>
                                                                         </td>
                                                                     </tr>
-                                                                    
+
                                                                 @endforeach
                                                             @endforeach
                                                         </table>

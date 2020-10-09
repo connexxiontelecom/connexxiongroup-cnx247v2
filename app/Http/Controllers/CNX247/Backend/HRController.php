@@ -17,6 +17,7 @@ use App\QuestionSelf;
 use App\QuestionQuantitative;
 use App\QuestionQualitative;
 use App\EmployeeAppraisal;
+use App\EmploymentTerminationLog;
 use App\User;
 use App\AnswerSelf;
 use App\AnswerQuantitative;
@@ -526,4 +527,50 @@ class HRController extends Controller
         return view('backend.hr.idea-box',['ideas'=>$ideas]);
     }
 
+    public function terminateEmployment(Request $request){
+        $this->validate($request,[
+            'user'=>'required'
+        ]);
+        $user = User::where('id', $request->user)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($user)){
+            $user->account_status = 2;
+            $user->save();
+            #Register log
+            $log = new EmploymentTerminationLog;
+            $log->terminated_by = Auth::user()->id;
+            $log->tenant_id = Auth::user()->tenant_id;
+            $log->effective_date = now();
+            $log->user_id = $request->user;
+            $log->save();
+            return response()->json(["message"=>"Success! ".$user->first_name."'s employment terminated"],200);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Could not terminate employment");
+            return redirect()->back();
+        }
+    }
+
+    public function terminatedEmployment(){
+        $now = Carbon::now();
+        $terminations = EmploymentTerminationLog::where('tenant_id', Auth::user()->tenant_id)->get();
+        $thisYear = EmploymentTerminationLog::where('tenant_id', Auth::user()->tenant_id)
+                                ->whereYear('effective_date', date('Y'))
+                                ->count();
+        $thisMonth = EmploymentTerminationLog::where('tenant_id', Auth::user()->tenant_id)
+                                ->whereMonth('effective_date', date('m'))
+                                ->whereYear('effective_date', date('Y'))
+                                ->count();
+        $lastMonth = EmploymentTerminationLog::where('tenant_id', Auth::user()->tenant_id)
+                            ->whereMonth('effective_date', '=', $now->subMonth()->month)
+                            ->count();
+        $thisWeek = EmploymentTerminationLog::where('tenant_id', Auth::user()->tenant_id)
+                                ->whereBetween('effective_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->endOfWeek()->format('Y-m-d H:i')])
+                                ->count();
+        return view('backend.hr.terminated-employment', [
+            'terminations'=>$terminations,
+            'thisMonth'=>$thisMonth,
+            'thisYear'=>$thisYear,
+            'thisWeek'=>$thisWeek,
+            'lastMonth'=>$lastMonth
+            ]);
+    }
 }
