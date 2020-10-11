@@ -8,7 +8,7 @@
             @if (!Auth::check())
                 <div class="buy-button">
                     <a href="{{route('pricing')}}" class="btn btn-primary">Sign up</a>
-                    <a href="{{route('signin')}}" class="btn btn-outline-primary">Sign in</a>
+                    <a href="{{route('signin')}}" class="btn btn-light">Sign in</a>
                 </div>
             @endif
             <div class="menu-extras">

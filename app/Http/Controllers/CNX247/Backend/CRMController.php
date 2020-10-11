@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Client;
 use App\ClientLog;
+use App\ClientMessaging;
+use App\Mail\ClientMessaging as ClientMessagingMail;
 use App\Mail\SendInvoice;
 use App\Mail\SendReceipt;
 use App\Ticket;
@@ -125,7 +127,8 @@ class CRMController extends Controller
     * view client
     */
     public function viewClient($slug){
-        return view('backend.crm.clients.view');
+        $client = Client::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
+        return view('backend.crm.clients.view',['client'=>$client]);
     }
     /*
     * view client
@@ -190,7 +193,7 @@ class CRMController extends Controller
             $item->description = $request->description[$i];
             $item->quantity = $request->quantity[$i];
             $item->unit_cost = $request->unit_cost[$i];
-            $item->total = $request->total[$i];
+            $item->total = $request->quantity[$i] * $request->unit_cost[$i];
             $item->invoice_id = $invoiceId;
             $item->client_id = $request->clientId;
             $item->tenant_id = Auth::user()->tenant_id;
@@ -205,6 +208,44 @@ class CRMController extends Controller
         $log->save();
         session()->flash("success", "<strong>Success! </strong> Invoice generated. Proceed to print it or send via mail.");
         return redirect()->route('invoice-list');
+    }
+
+    public function sendEmailToClient(Request $request){
+        $this->validate($request,[
+            'email'=>'required',
+            'subject'=>'required',
+            'content'=>'required'
+        ]);
+        $client = Client::where('id', $request->client)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $message = new ClientMessaging;
+        $message->tenant_id = Auth::user()->tenant_id;
+        $message->sent_by = Auth::user()->id;
+        $message->client_id = $request->client;
+        $message->email = $request->email;
+        $message->subject = $request->subject;
+        $message->content = $request->content;
+        $message->type = 1;//email
+        $message->save();
+        \Mail::to($client)->send(new ClientMessagingMail($client, $message));
+        #Register log
+        $log = new ClientLog;
+        $log->tenant_id = Auth::user()->tenant_id;
+        $log->client_id = $request->client;
+        $log->user_id = Auth::user()->id;
+        $log->log = Auth::user()->first_name.' '.Auth::user()->surname.' Sent an email.';
+        $log->save();
+        if($message){
+            return response()->json(['message'=>'Success! Mail sent.'], 200);
+        }else{
+            return response()->json(['error'=>'Ooops! Could not send email. Try again'], 400);
+        }
+    }
+
+    public function sendSmsToClient(Request $request){
+        $this->validate($request,[
+            'mobile_no'=>'required',
+            'sms'=>'required'
+        ]);
     }
 
     /*
