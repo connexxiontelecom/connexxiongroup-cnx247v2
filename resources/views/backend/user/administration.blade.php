@@ -13,6 +13,14 @@
     @livewire('backend.user.my-profile')
     <div class="card" style="margin-top:-25px;">
         <div class="card-block accordion-block ">
+            @if (session()->has('success'))
+                <div class="alert alert-success background-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="icofont icofont-close-line-circled text-white"></i>
+                    </button>
+                    {!! session()->get('success') !!}
+                </div>
+            @endif
             <div id="accordion" role="tablist" aria-multiselectable="true">
                 <div class="accordion-panel">
                     <div class=" accordion-heading" role="tab" id="queryAccordion">

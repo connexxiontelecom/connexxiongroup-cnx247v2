@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Mail\NewDriver;
 use App\Driver;
 use App\LogisticsUser;
+use App\DriverLog;
 use App\Relationship;
 use App\DriverEmergency;
 use App\DriverNextOfKin;
@@ -373,5 +374,10 @@ class LogisticsController extends Controller
             return response()->json(['error'=>'Ooops! Could not set avatar'], 400);
 
         }
+    }
+
+    public function allLogs(){
+        $logs = DriverLog::where('tenant_id', Auth::user()->tenant_id)->get();
+        return view('backend.logistics.all-logs',['logs'=>$logs]);
     }
 }

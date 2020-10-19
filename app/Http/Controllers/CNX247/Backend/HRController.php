@@ -24,6 +24,7 @@ use App\AnswerQuantitative;
 use App\AnswerQualitative;
 use App\Supervisor;
 use App\IdeaBox;
+use App\JobRole;
 use App\Post;
 use Auth;
 use DB;
@@ -107,16 +108,27 @@ class HRController extends Controller
     * Performance indicator
     */
     public function performanceIndicator(){
-        $selfQuestions = QuestionSelf::all();
-        $quantitativeQuestions = QuestionQuantitative::all();
-        $qualitativeQuestions = QuestionQualitative::all();
+        $selfQuestions = QuestionSelf::where('tenant_id', Auth::user()->tenant_id)->get();
+        $quantitativeQuestions = QuestionQuantitative::where('tenant_id', Auth::user()->tenant_id)->get();
+        $qualitativeQuestions = QuestionQualitative::where('tenant_id', Auth::user()->tenant_id)->get();
+        $roles = JobRole::where('tenant_id', Auth::user()->tenant_id)->get();
         return view('backend.hr.indicator',[
             'self'=>$selfQuestions,
             'quantitatives'=>$quantitativeQuestions,
-            'qualitatives'=>$qualitativeQuestions
+            'qualitatives'=>$qualitativeQuestions,
+            'roles'=>$roles
         ]);
     }
 
+    public function jobRoleQuestions($id){
+        $role = JobRole::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($role)){
+            $questions = QuestionQuantitative::where('tenant_id', Auth::user()->tenant_id)
+                        ->where('role_id', $id)
+                        ->get();
+            return view('backend.hr.job-role-questions', ['questions'=>$questions,'id'=>$id, 'role'=>$role]);
+        }
+    }
     /*
     *Employee appreciation
     */
@@ -298,12 +310,16 @@ class HRController extends Controller
 
     public function quantitativeAssessmentQuestion(Request $request){
         $this->validate($request,[
-            'question'=>'required'
+            'question'=>'required',
+            'role'=>'required'
         ]);
+        $department = JobRole::where('id', $request->role)->where('tenant_id', Auth::user()->tenant_id)->first();
         $question = new QuestionQuantitative;
         $question->question = $request->question;
         $question->tenant_id = Auth::user()->tenant_id;
         $question->added_by = Auth::user()->id;
+        $question->role_id = $request->role;
+        $question->department_id = $department->department_id;
         $question->save();
         return response()->json(['message'=>'Success! New question saved.'],200);
     }
@@ -347,7 +363,7 @@ class HRController extends Controller
 
     public function employeePerformance(){
         $employees = User::where('tenant_id', Auth::user()->tenant_id)->get();
-        $supervisors = Supervisor::where('tenant_id', Auth::user()->tenant_id)->get();
+        $supervisors = User::where('tenant_id', Auth::user()->tenant_id)->get();//Supervisor::where('tenant_id', Auth::user()->tenant_id)->get();
         $appraisals = EmployeeAppraisal::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
         return view('backend.hr.employee-appraisal',
         ['employees'=>$employees,
@@ -426,8 +442,10 @@ class HRController extends Controller
                                         ->where('appraisal_id', $request->appraisal_id)->first();
         if(!empty($appraisal) ){
             $appraisal->employee_status = 1; //done
+            $appraisal->appraisal_status =  $appraisal->supervisor_status == 1 ? 1 : 0; //done
             $appraisal->save();
         }
+        session()->flash("success", "<strong>Success!</strong> Employee appraisal done.");
         return redirect()->route('user-administration');
     }
     public function supervisorAppraisal($appraisal_id){
@@ -435,7 +453,9 @@ class HRController extends Controller
                                         ->where('tenant_id', Auth::user()->tenant_id)
                                         ->first();
         if(!empty($appraisal) ){
-            $quantitatives = QuestionQuantitative::where('tenant_id', Auth::user()->tenant_id)->get();
+            $user = User::where('tenant_id', Auth::user()->tenant_id)->first();
+            $quantitatives = QuestionQuantitative::where('tenant_id', Auth::user()->tenant_id)
+                                                    ->where('role_id', $user->job_role)->get();
             $qualitatives = QuestionQualitative::where('tenant_id', Auth::user()->tenant_id)->get();
             return view('backend.hr.employee-appraisal-supervisor',
             [
@@ -480,9 +500,10 @@ class HRController extends Controller
                                         ->where('appraisal_id', $request->appraisal_id)->first();
         if(!empty($appraisal) ){
             $appraisal->supervisor_status = 1; //done
-            $appraisal->appraisal_status = 1; //done
+            $appraisal->appraisal_status =  $appraisal->employee_status == 1 ? 1 : 0; //done
             $appraisal->save();
         }
+        session()->flash("success", "<strong>Success!</strong> Employee appraisal done.");
         return redirect()->route('user-administration');
     }
 

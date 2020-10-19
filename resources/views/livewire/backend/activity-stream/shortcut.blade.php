@@ -2209,12 +2209,12 @@
                 
                    @foreach (Auth::user()->where('tenant_id', Auth::user()->tenant_id)->get() as $onlineUser)
                         @if($onlineUser->isOnline())
-                            <input type="hidden" value="{{$onlineCounter++}}"/>
+                            <input type="hidden" value="{{++$onlineCounter}}"/>
                         @endif
                     @endforeach
                 <div class="col-lg-12 col-md-12">
                     <div class="fb-timeliner">
-                        <h2 class="recent-highlight bg-secondary">Company Pulse
+                        <h2 class="recent-highlight bg-secondary">Company Pulse 
                             @if (ceil(($onlineCounter/$workforce)*100) < 50)
                                 <label class="label label-danger float-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Current company activity level">
                                     {{ceil(($onlineCounter/$workforce)*100)}}% <i class="m-l-10 feather icon-arrow-down"></i> 

@@ -108,6 +108,13 @@
 
                                         </div>
                                     </div>
+                                    <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                                <div class="btn-group d-flex justify-content-center">
+                                                    <a href="{{route('user-settings')}}" class="btn btn-mini btn-warning"><i class="ti-pencil mr-2"></i> Edit Profile</a>
+                                                </div>
+                                            </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

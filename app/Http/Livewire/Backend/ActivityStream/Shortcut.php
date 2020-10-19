@@ -39,7 +39,7 @@ class Shortcut extends Component
     public $workforce;
     public $transactionPassword;
     public $userAction; //approved/declined
-    public $onlineCounter = 1;
+    public $onlineCounter = 0;
     public function render()
     {
         $now = Carbon::now();

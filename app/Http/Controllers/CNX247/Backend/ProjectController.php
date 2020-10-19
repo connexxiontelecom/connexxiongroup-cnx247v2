@@ -240,4 +240,43 @@ class ProjectController extends Controller
         return response()->json(['message'=>'Success! Project milestone created.'], 200);
     }
 
+    public function deleteProject(Request $request){
+        $this->validate($request,[
+            'projectId'=>'required'
+        ]);
+        $task = Post::where('tenant_id', Auth::user()->tenant_id)
+                    ->where('id', $request->projectId)->first();
+        if(!empty($task) ){
+            $task->delete();
+            $responsible = ResponsiblePerson::where('post_id', $request->projectId)
+                                            ->where('tenant_id', Auth::user()->tenant_id)
+                                            ->get();
+            if(!empty($responsible) ){
+                foreach($responsible as $person){
+                    $person->delete();
+                }
+            }
+            #Observers
+            $observers = Observer::where('post_id', $request->projectId)
+                                            ->where('tenant_id', Auth::user()->tenant_id)
+                                            ->get();
+            if(!empty($observers) ){
+                foreach($observers as $observer){
+                    $observer->delete();
+                }
+            }
+            #Participants
+            $participants = Participant::where('post_id', $request->projectId)
+                                            ->where('tenant_id', Auth::user()->tenant_id)
+                                            ->get();
+            if(!empty($participants) ){
+                foreach($participants as $participant){
+                    $participant->delete();
+                }
+            }
+        }
+        session()->flash("success", "<strong>Success!</strong> Task deleted.");
+        return redirect()->back();
+    }
+
 }

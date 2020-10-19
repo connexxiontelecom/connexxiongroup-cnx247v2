@@ -26,7 +26,12 @@ class RedirectIfAuthenticated
               if (Auth::guard($guard)->check()) {
                 return redirect()->route('supplier-account');
               }
-
+            break;
+            case 'logistic':
+              if (Auth::guard($guard)->check()) {
+                return redirect()->route('logistics-account');
+              }
+            break;
             default:
               if (Auth::guard($guard)->check()) {
                   return redirect()->route('activity-stream');

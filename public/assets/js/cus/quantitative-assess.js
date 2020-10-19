@@ -9,7 +9,8 @@
                 $.notify("Ooops! Kindly type question before submitting...", "error");
             }else{
                 axios.post('/performance-indicator/quantitative', {
-                    'question':question
+                    question:question,
+                    role:$('#roleId').val()
                 })
                 .then(response=>{
                     $.notify(response.data.message, "success");

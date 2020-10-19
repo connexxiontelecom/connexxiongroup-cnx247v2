@@ -23,6 +23,8 @@ use App\Feedback;
 use App\ProductCategory;
 use Auth;
 use Image;
+use DB;
+use Schema;
 
 
 class CRMController extends Controller
@@ -143,13 +145,14 @@ class CRMController extends Controller
     public function convertClientToLead($slug){
         $client = Client::where('slug', $slug)->first();
         $invoice = Invoice::orderBy('id', 'DESC')->first();
+        $products = Product::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
         $invoiceNo = null;
         if(!empty($invoice) ){
             $invoiceNo = $invoice->invoice_no + rand(11, 99);
         }else{
             $invoiceNo = rand(111, 999);
         }
-        return view('backend.crm.clients.convert-to-lead', ['client'=>$client, 'invoice_no'=>$invoiceNo]);
+        return view('backend.crm.clients.convert-to-lead', ['client'=>$client, 'invoice_no'=>$invoiceNo, 'products'=>$products]);
     }
 
     /*
@@ -162,12 +165,33 @@ class CRMController extends Controller
             'description.*'=>'required',
             'quantity.*'=>'required'
         ]);
-        $lead = new Lead;
-        $lead->client_id = $request->clientId;
-        $lead->tenant_id = Auth::user()->tenant_id;
-        $lead->converted_by = Auth::user()->id;
-        //$lead->slug = substr(sha1(time()), 23,40);
-        $lead->save();
+        //return dd($request->all());
+        $totalAmount = 0;
+        if(!empty($request->total)){
+            for($i = 0; $i<count($request->total); $i++){
+                $totalAmount += $request->total[$i];
+            }
+        }
+        $productGlCodes = [];
+        if(!empty($request->description)){
+            for($d = 0; $d < count($request->description); $d ++){
+                $product = Product::where('tenant_id', Auth::user()->tenant_id)
+                                    ->where('id',$request->description[$d])->first();
+                array_push($productGlCodes, $product->glcode);
+            }
+        }
+        //return $productGlCodes;
+        //Check if client already exist
+        $clientExist = Lead::where('client_id', $request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(empty($clientExist)){
+            $lead = new Lead;
+            $lead->client_id = $request->clientId;
+            $lead->tenant_id = Auth::user()->tenant_id;
+            $lead->converted_by = Auth::user()->id;
+            //$lead->slug = substr(sha1(time()), 23,40);
+            $lead->save();
+        }
+
         #Generate invoice
         $invoice = new Invoice;
         $invoice->invoice_no = $request->invoiceNo;
@@ -189,8 +213,9 @@ class CRMController extends Controller
         $invoiceId = $invoice->id;
         #Enter invoice items
         for($i = 0; $i<count($request->description); $i++ ){
+            $pro = Product::find($request->description[$i]);
             $item = new InvoiceItem;
-            $item->description = $request->description[$i];
+            $item->description = $pro->product_name ?? '';
             $item->quantity = $request->quantity[$i];
             $item->unit_cost = $request->unit_cost[$i];
             $item->total = $request->quantity[$i] * $request->unit_cost[$i];
@@ -198,6 +223,28 @@ class CRMController extends Controller
             $item->client_id = $request->clientId;
             $item->tenant_id = Auth::user()->tenant_id;
             $item->save();
+        }
+        #Check for accounting module
+        $trans_ref = strtoupper(substr(sha1(time()), 35,40).$request->invoiceNo);
+        if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+            //$services = InvoiceItem::where('tenant_id', Auth::user()->tenant_id)->whereIn('invoice_id', [$serviceIds])->get();
+            $productArray = [];
+            for($n = 0; $n<count($request->description); $n++ ){
+                $productGl = [
+                    'glcode'=>$productGlCodes[$n],
+                    'posted_by'=>Auth::user()->id,
+                    'narration'=>"Invoice generation for ",
+                    'dr_amount'=>0,
+                    'cr_amount'=>$request->unit_cost[$n],
+                    'ref_no'=>$trans_ref,
+                    'bank'=>0,
+                    'ob'=>0,
+                    'created_at'=>$request->issue_date,
+                ];
+                array_push($productArray, $productGl);
+            }
+            #Register service in GL table
+            DB::table(Auth::user()->tenant_id.'_gl')->insert($productArray);
         }
         #Register log
         $log = new ClientLog;
@@ -246,6 +293,32 @@ class CRMController extends Controller
             'mobile_no'=>'required',
             'sms'=>'required'
         ]);
+    }
+
+        /*
+    * Convert client to lead
+    */
+    public function receivePayment($slug){
+        $invoice = Invoice::where('tenant_id', Auth::user()->tenant_id)->where('slug', $slug)->first();
+        if(!empty($invoice) ){
+            $total = 0;
+            $charts = DB::table(Auth::user()->tenant_id.'_coa')->orderBy('glcode', 'ASC')->get();
+            $pending_invoices = Invoice::where('tenant_id', Auth::user()->tenant_id)
+                                        ->where('status', 0)->where('client_id', $invoice->client_id)->get();
+            return view('backend.crm.clients.receive-payment', [
+                'invoice'=>$invoice,
+                'pending_invoices'=>$pending_invoices,
+                'total'=>$total,
+                'charts'=>$charts
+                ]);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> No record found.");
+            return redirect()->back();
+        }
+    }
+
+    public function postPayment(Request $request){
+        return dd($request->all());
     }
 
     /*
@@ -476,7 +549,7 @@ class CRMController extends Controller
     * Products [index]
     */
     public function products(){
-        $products = Product::orderBy('id', 'DESC')->get();
+        $products = Product::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
         return view('backend.crm.products.index', ['products'=>$products]);
     }
 
@@ -484,22 +557,43 @@ class CRMController extends Controller
     * Add new product [add]
     */
     public function addNewProduct(){
+        $exist = null;
         $categories = ProductCategory::where('tenant_id', Auth::user()->tenant_id)->orderBy('category', 'ASC')->get();
-        return view('backend.crm.products.create', ['categories'=>$categories]);
+        if(!Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+            $exist = 'no';
+            return view('backend.crm.products.create', ['categories'=>$categories, 'exist'=>$exist]);
+        }else{
+            $exist = 'yes';
+            $charts = DB::table(Auth::user()->tenant_id.'_coa')->orderBy('glcode', 'ASC')->get();
+            return view('backend.crm.products.create', ['categories'=>$categories, 'exist'=>$exist, 'charts'=>$charts]);
+        }
+
+
     }
 
     /*
     * Save product
     */
     public function saveProduct(Request $request){
-        $this->validate($request,[
-            'product_name'=>'required',
-            'product_description'=>'required',
-            'price'=>'required',
-            'product_category'=>'required',
-            'featured_image'=>'required'
-        ]);
-        //return dd($request->all());
+        if($request->exist == 'yes'){
+            $this->validate($request,[
+                'product_name'=>'required',
+                'product_description'=>'required',
+                'price'=>'required',
+                'product_category'=>'required',
+                'featured_image'=>'required',
+                'account'=>'required'
+            ]);
+
+        }else{
+            $this->validate($request,[
+                'product_name'=>'required',
+                'product_description'=>'required',
+                'price'=>'required',
+                'product_category'=>'required',
+                'featured_image'=>'required'
+            ]);
+        }
         if(!empty($request->file('featured_image'))){
             $extension = $request->file('featured_image');
             $extension = $request->file('featured_image')->getClientOriginalExtension();
@@ -518,6 +612,7 @@ class CRMController extends Controller
         $product->tenant_id = Auth::user()->tenant_id;
         $product->category_id = $request->product_category;
         $product->slug = substr(sha1(time()), 23,40);
+        $product->glcode = $request->account;
         $product->featured_image = $featured_image;
         $product->save();
         session()->flash("success", "<strong>Success! </strong> Product saved.");

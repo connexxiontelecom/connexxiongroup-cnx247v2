@@ -11,6 +11,11 @@
                     <a href="{{route('signin')}}" class="btn btn-light">Sign in</a>
                 </div>
             @endif
+            @if (Auth::check())
+                <div class="buy-button">
+                    <a href="{{route('my-profile')}}" class="btn btn-primary">My Account</a>
+                </div>
+            @endif
             <div class="menu-extras">
                 <div class="menu-item">
                     <a class="navbar-toggle">

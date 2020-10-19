@@ -152,7 +152,7 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <!--<li class=" ">
-                        <a href="{{route('timesheet')}}">
+                        <a href="route('timesheet')}}">
                             <span class="pcoded-mtext">Timesheet</span>
                         </a>
                     </li> -->
@@ -258,18 +258,13 @@
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="feather icon-clipboard"></i></span>
-                    <span class="pcoded-mtext">Setup</span>
+                    <span class="pcoded-micon"><i class="icofont icofont-money-bag"></i></span>
+                    <span class="pcoded-mtext">Account</span>
                 </a>
                 <ul class="pcoded-submenu">
                     <li class=" ">
                         <a href="{{route('chart-of-accounts')}}">
                             <span class="pcoded-mtext">Chart of Accounts</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="#">
-                            <span class="pcoded-mtext">Company Info</span>
                         </a>
                     </li>
                     <li class=" ">
@@ -285,6 +280,11 @@
                     <li class=" ">
                         <a href="form-elements-advance.htm">
                             <span class="pcoded-mtext">VAT</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="#">
+                            <span class="pcoded-mtext">Requisition Setup</span>
                         </a>
                     </li>
                 </ul>
@@ -340,15 +340,20 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('logistics-shipping')}}">
+                        <a href="{{route('all-logs')}}">
+                            <span class="pcoded-mtext">Log</span>
+                        </a>
+                    </li>
+                    <!--<li class=" ">
+                        <a href="'logistics-shipping')}}">
                             <span class="pcoded-mtext">Shipping </span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="{{route('logistics-pick-up-points')}}">
+                        <a href="'logistics-pick-up-points')}}">
                             <span class="pcoded-mtext">Pick-up Points</span>
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
             </li>
         </ul>

@@ -71,7 +71,7 @@ Convert to Deal
             <div class="row invoive-info">
                 <div class="col-md-4 col-xs-12 invoice-client-info">
                     <h6>Client Information :</h6>
-                    <h6 class="m-0">{{$client->first_name ?? ''}} {{$client->surname ?? ''}}</h6>
+                    <h6 class="m-0">{{$client->title ?? ''}} {{$client->first_name ?? ''}} {{$client->surname ?? ''}}</h6>
                     <p class="m-0 m-t-10">{{$client->street_1 ?? ''}}. {{$client->city ?? ''}}, {{$client->postal_code ?? ''}}</p>
                     <p class="m-0">{{$client->mobile_no ?? ''}}</p>
                     <p><a href="mailto:{{$client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[ {{$client->email ?? ''}} ]</a></p>
@@ -103,8 +103,8 @@ Convert to Deal
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Receipt Number <span>#{{$receipt_no}}</span></h6>
-                    <h6 class="text-uppercase text-primary">Total Due :
-                        <span class="total">0.00</span>
+                    <h6 class="text-uppercase text-primary">Balance :
+                        <span class="balance">0.00</span>
                     </h6>
                 </div>
             </div>
@@ -136,7 +136,7 @@ Convert to Deal
                                         @enderror
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Unit Cost" class="form-control" name="unit_cost[]">
+                                        <input type="number" placeholder="Unit Cost" step="0.01" class="form-control" name="unit_cost[]">
                                         @error('unit_cost')
                                             <i class="text-danger mt-2">{{$message}}</i>
                                         @enderror
@@ -168,27 +168,31 @@ Convert to Deal
                             <tr>
                                 <th>Taxes (%) :</th>
                                 <td>
-                                    <input type="number" placeholder="Tax Rate" class="form-control" id="tax_rate">
+                                    <input type="text" placeholder="Tax Rate" step="0.01" class="form-control" id="tax_rate">
                                 </td>
                             </tr>
                             <tr>
-                                <th>Inclusive of Tax?</th>
+                                <th>Tax amount</th>
                                 <td>
-                                    <div class="checkbox-fade fade-in-primary float-left">
-                                        <label>
-                                            <input type="checkbox" value="" >
-                                            <span class="cr">
-                                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                            </span>
-                                            <span>Yes</span>
-                                        </label>
-                                    </div>
+                                    <input type="text" readonly placeholder="Tax Amount" class="form-control" id="tax_amount">
                                 </td>
                             </tr>
                             <tr>
                                 <th>Discount (%) :</th>
                                 <td>
-                                    <input type="number" placeholder="Discount Rate" class="form-control" id="discount_rate">
+                                    <input type="text" placeholder="Discount Rate" class="form-control" id="discount_rate">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Discounted amount :</th>
+                                <td>
+                                    <input type="text" readonly placeholder="Discount Amount" class="form-control" id="discounted_amount">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Cash :</th>
+                                <td>
+                                    <input type="text" placeholder="Cash Amount" class="form-control" id="cash_amount" name="cash_amount">
                                 </td>
                             </tr>
                             <tr class="text-info">
@@ -202,26 +206,43 @@ Convert to Deal
                                 </td>
                             </tr>
                         </tbody>
+                        <tbody class="float-left pl-3">
+                            <tr>
+                                <th class="text-left"> <strong>Account Name:</strong> </th>
+                                <td>{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left"><strong>Account Number:</strong> </th>
+                                <td>{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left"><strong>Bank:</strong> </th>
+                                <td>{{Auth::user()->tenantBankDetails->bank_name ?? ''}}</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
                     <h6>Terms And Condition :</h6>
-                    <p>{!! Auth::user()->tenant->receipt_terms !!}</p>
+                <p>{!! Auth::user()->tenant->invoice_terms !!}</p>
                 </div>
             </div>
             <div class="row text-center">
                 <div class="col-sm-12 invoice-btn-group text-center">
                     <input type="hidden" name="clientId" value="{{$client->id}}">
-                    <input type="hidden" name="receiptNo" value="{{$receipt_no}}">
-                    <input type="hidden" name="receiptTotal" value="3400" id="receiptTotal">
-                    <input type="hidden" name="receiptSubtotal" value="340" id="receiptSubtotal">
-                    <input type="hidden" name="taxValue" value="340" id="taxValue">
-                    <input type="hidden" name="discountValue" value="340" id="discountValue">
-                    <input type="hidden" name="taxRate" value="3" id="taxRate">
-                    <input type="hidden" name="discountRate" value="2" id="discountRate">
-                    <button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Convert {{$client->first_name ?? ''}} to Deal</button>
+                    <input type="hidden" name="invoiceNo" value="{{$receipt_no}}">
+
+                    <input type="hidden" name="subTotal" id="subTotal"/>
+                    <input type="hidden" name="totalAmount" id="totalAmount"/>
+
+                    <input type="hidden" name="taxValue"  id="taxValue">
+                    <input type="hidden" name="discountValue"  id="discountValue">
+
+                    <input type="hidden" name="hiddenTaxRate"  id="hiddenTaxRate">
+                    <input type="hidden" name="hiddenDiscountRate"  id="hiddenDiscountRate">
+                    <button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Convert {{$client->first_name ?? ''}} to Lead</button>
                     <a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
                 </div>
             </div>
@@ -235,8 +256,6 @@ Convert to Deal
 
 @endsection
 @section('extra-scripts')
-<script type="text/javascript" src="/assets/bower_components/tinymce/tinymce.min.js"></script>
-<script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
 
 <script>
     $(document).ready(function(){
@@ -268,7 +287,10 @@ Convert to Deal
             const total = subTotals.reduce((a, v)=> a + Number(v), 0);
             grand_total = total;
             $('.sub-total').text(formatAsCurrency(grand_total));
+            $('#subTotal').val(grand_total);
+            $('#totalAmount').val(grand_total);
             $('.total').text(formatAsCurrency(total));
+            $('.balance').text(formatAsCurrency(total));
         }
 
         //calculate subtotals
@@ -280,22 +302,61 @@ Convert to Deal
             $row.find('td:nth-last-child(2) input[type=text]').val(subtotal);
             return subtotal;
         }
-        //subtotal
-        function subTotal(){
-
-        }
 
         //calculate tax
         $(document).on('blur', '#tax_rate', function(e){
             e.preventDefault();
-            var tax_rate = $(this).val();
-            var tax_value = (grand_total * tax_rate)/100;
-            $('.sub-total').text(formatAsCurrency(grand_total - tax_value));
+            $('#hiddenTaxRate').val($(this).val());
+            var discount_rate = null;
+            if($('#discount_rate').val() == ''){
+                discount_rate = 0;
+            }else{
+                discount_rate = $('#discount_rate').val();
+            }
+            var rate = $(this).val();
+            //$('#tax_rate').val(rate);
+
+            var tax_value = ($('#totalAmount').val() * rate)/100;
+            var discount_value = ($('#subTotal').val() * discount_rate )/100;
+            $('#taxValue').val(tax_value);
+            $('#tax_amount').val(tax_value);
+            $('#discounted_amount').val(discount_value);
+            var total = +$('#totalAmount').val()  + +tax_value;
+            $('#totalAmount').val(total);
+            $('.total').text(formatAsCurrency(total));
+            $('.balance').text(formatAsCurrency(total));
+        });
+        //calculate discount
+        $(document).on('blur', '#discount_rate', function(e){
+            e.preventDefault();
+            $('#hiddenDiscountRate').val($(this).val());
+                var rate = null;
+            if($('#tax_rate').val() == ''){
+                rate = 0;
+            }else{
+                rate = $('#tax_rate').val();
+            }
+
+            var discount_rate = $(this).val();
+            var discount_value = ($('#subTotal').val() * discount_rate)/100;
+            $('#discountValue').val(discount_value);
+            //discount
+            $('#discounted_amount').val(discount_value);
+            var total = ($('#subTotal').val() - discount_value ) - ($('#subTotal').val() * rate)/100;
+            $('#totalAmount').val(total);
+            $('.total').text(formatAsCurrency(total));
+            $('.balance').text(formatAsCurrency(total));
         });
         //format as currency
         function formatAsCurrency(amount){
             return "₦"+Number(amount).toFixed(2);
         }
+
+        $(document).on('blur', '#cash_amount', function(e){
+            var cash = $(this).val();
+            var total = $('#totalAmount').val() - cash;
+            $('.balance').text(formatAsCurrency(total));
+        });
     });
 </script>
 @endsection

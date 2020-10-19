@@ -69,31 +69,43 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    @foreach($quantitatives as $quantitative)
+                                    @if (count($quantitatives) > 0)
+                                        @foreach($quantitatives as $quantitative)
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="row">
+                                                        <div class="col-xs-10 col-md-10">
+                                                            <p><strong>Question</strong></p>
+                                                            <label class="label label-danger">{{$quan++}}</label>
+                                                            <h6 class="d-inline-block">
+                                                                {!! $quantitative->question !!}</h6>
+                                                                <input type="hidden" value="{{$quantitative->id}}" name="quantitative[]"/>
+                                                        </div>
+                                                        <div class="col-md-2 col-xs-2">
+                                                            <p><strong>Rating</strong></p>
+                                                            <select  class="form-control" name="quantitative_rating[]" autocomplete="off">
+                                                                <option value="1">Unsatisfactory</option>
+                                                                <option value="2">Fair</option>
+                                                                <option value="3">Satisfactory</option>
+                                                                <option value="4">Good</option>
+                                                                <option value="5">Excellent</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
                                         <div class="media">
                                             <div class="media-body">
                                                 <div class="row">
-                                                    <div class="col-xs-10 col-md-10">
-                                                        <p><strong>Question</strong></p>
-                                                        <label class="label label-danger">{{$quan++}}</label>
-                                                        <h6 class="d-inline-block">
-                                                            {!! $quantitative->question !!}</h6>
-                                                            <input type="hidden" value="{{$quantitative->id}}" name="quantitative[]"/>
-                                                    </div>
-                                                    <div class="col-md-2 col-xs-2">
-                                                        <p><strong>Rating</strong></p>
-                                                        <select  class="form-control" name="quantitative_rating[]" autocomplete="off">
-                                                            <option value="1">Unsatisfactory</option>
-                                                            <option value="2">Fair</option>
-                                                            <option value="3">Satisfactory</option>
-                                                            <option value="4">Good</option>
-                                                            <option value="5">Excellent</option>
-                                                        </select>
+                                                    <div class="col-xs-12 col-md-12">
+                                                        <h6 class="text-center">There're no quantitative questions for this job role.</h6>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
+                                    @endif
                                     <h5 class="sub-title mt-4"><label class="label label-primary">Qualitative Assessment (Score 80)</label></h5>
                                     <strong>Rating</strong>
                                     <div class="row">
@@ -122,32 +134,44 @@
                                     @php
                                         $qual = 1;
                                     @endphp
-                                    @foreach($qualitatives as $quality)
+                                    @if (count($qualitatives) > 0)
+                                        @foreach($qualitatives as $quality)
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="row">
+                                                        <div class="col-xs-10 col-md-10">
+                                                            <p><strong>Question</strong></p>
+                                                            <label class="label label-danger">{{$qual++}}</label>
+                                                            <h6 class="d-inline-block">
+                                                                {!! $quality->question !!}</h6>
+                                                                <input type="hidden" value="{{$quality->id}}" name="qualitative[]"/>
+                                                        </div>
+                                                        <div class="col-md-2 col-xs-2">
+                                                            <p><strong>Rating</strong></p>
+                                                            <select  class="form-control" name="qualitative_rating[]" autocomplete="off">
+                                                                <option value="1">Unsatisfactory</option>
+                                                                <option value="2">Fair</option>
+                                                                <option value="3">Satisfactory</option>
+                                                                <option value="4">Good</option>
+                                                                <option value="5">Excellent</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
                                         <div class="media">
                                             <div class="media-body">
                                                 <div class="row">
-                                                    <div class="col-xs-10 col-md-10">
-                                                        <p><strong>Question</strong></p>
-                                                        <label class="label label-danger">{{$qual++}}</label>
-                                                        <h6 class="d-inline-block">
-                                                            {!! $quality->question !!}</h6>
-                                                            <input type="hidden" value="{{$quality->id}}" name="qualitative[]"/>
-                                                    </div>
-                                                    <div class="col-md-2 col-xs-2">
-                                                        <p><strong>Rating</strong></p>
-                                                        <select  class="form-control" name="qualitative_rating[]" autocomplete="off">
-                                                            <option value="1">Unsatisfactory</option>
-                                                            <option value="2">Fair</option>
-                                                            <option value="3">Satisfactory</option>
-                                                            <option value="4">Good</option>
-                                                            <option value="5">Excellent</option>
-                                                        </select>
+                                                    <div class="col-xs-12 col-md-12">
+                                                        <h6 class="text-center">There're no qualitative questions for this job role.</h6>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
-                                    
+                                    @endif
+
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="btn-group d-flex justify-content-center">

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQuestionQuantitativesTable extends Migration
+class CreateDriverLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateQuestionQuantitativesTable extends Migration
      */
     public function up()
     {
-        Schema::create('question_quantitatives', function (Blueprint $table) {
+        Schema::create('driver_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tenant_id');
-            $table->unsignedBigInteger('role_id');
-            $table->unsignedBigInteger('department_id');
-            $table->unsignedBigInteger('added_by');
-            $table->text('question');
+            $table->unsignedBigInteger('driver_id');
+            $table->dateTime('check_in');
+            $table->dateTime('check_out')->nullable();
+            $table->string('destination')->nullable();
+            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateQuestionQuantitativesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('question_quantitatives');
+        Schema::dropIfExists('driver_logs');
     }
 }
