@@ -107,8 +107,8 @@
                                                         <table class="table table-bordered" id="quantitativeAssessmentTable">
                                                             <thead>
                                                                 <th>#</th>
-                                                                <th>Question</th>
-                                                                <th>Added By</th>
+                                                                <th>Department</th>
+                                                                <th>Job Role</th>
                                                                 <th>Date</th>
                                                                 <th>Action</th>
                                                             </thead>
@@ -116,16 +116,14 @@
                                                                 @php
                                                                     $i = 1;
                                                                 @endphp
-                                                                @foreach($quantitatives as $question)
+                                                                @foreach($roles as $role)
                                                                 <tr>
                                                                     <td>{{$i++}}</td>
-                                                                    <td>{!! strlen($question->question) > 81 ? substr($question->question,0,81).'...' : $question->question !!}</td>
+                                                                    <td>{{ $role->department->department_name ?? '' }}</td>
+                                                                    <td>{{ $role->role_name ?? '' }}</td>
+                                                                    <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($role->created_at))}}</td>
                                                                     <td>
-                                                                        <a href="{{route('view-profile', $question->user->url)}}">{{$question->user->first_name ?? ''}} {{$question->user->surname ?? ''}}</a>
-                                                                    </td>
-                                                                    <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($question->created_at))}}</td>
-                                                                    <td>
-                                                                        <a href="javascript:void(0);" data-toggle="modal" data-target="#quantitativeQuestionModal" data-quantitative-question="{{$question->question}}" data-qqid="{{$question->id}}" class="quantitativeQuestionLauncherClass"> <i class="text-warning ti-pencil"></i> </a>
+                                                                        <a href="{{route('job-role-questions', $role->id)}}" class="btn btn-primary btn-mini"> <i class="mr-2 ti-eye"></i> View Questions</a>
                                                                     </td>
                                                                 </tr>
                                                            @endforeach

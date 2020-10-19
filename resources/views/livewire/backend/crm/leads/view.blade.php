@@ -200,7 +200,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <label class="label label-md label-danger">${{number_format($invoice->total,2)}}</label>
+                                                        <label class="label label-md label-danger">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}</label>
                                                     </td>
                                                     <td>
                                                         <div class="btn-group">

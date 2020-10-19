@@ -4,6 +4,7 @@ namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Notifications\NewPostNotification;
 use App\Post;
 use App\Link;
 use App\User;

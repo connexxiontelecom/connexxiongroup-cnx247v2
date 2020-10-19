@@ -82,14 +82,14 @@
                                     <h4 class="pro-desc">{!! $product->product_name ?? ''!!}</h4>
                                 </div>
                                 <div class="col-lg-12">
-                                    <span class="text-primary product-price"><i class="icofont icofont-cur-dollar"></i>{{number_format($product->price, 2)}}</span> 
+                                    <span class="text-primary product-price">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($product->price, 2)}}</span> 
                                     <hr>
                                     {!! $product->product_description ?? ''!!}
                                     </p>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="btn-group d-flex justify-content-end">
-                                        <a href="{{route('delete-product', $product->slug)}}"> <i class="text-danger ti-trash mr-2"></i> </a>
+                                        <!-- <a href="route('delete-product', $product->slug"> <i class="text-danger ti-trash mr-2"></i> </a> -->
                                         <a href="{{route('edit-product', $product->slug)}}"> <i class="text-warning ti-pencil mr-2"></i> </a>
                                     </div>
                                 </div>

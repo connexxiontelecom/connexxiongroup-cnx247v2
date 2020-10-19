@@ -18,15 +18,13 @@ class Create extends Component
     }
 
     public function addNewClient(){
-        $this->validate([
-            'title'=>'required',
+         $this->validate([
             'first_name'=>'required',
             'surname'=>'required',
             'mobile_no'=>'required',
             'street_1'=>'required',
             'email'=>'required|email',
             'country'=>'required',
-            'state'=>'required',
             'city'=>'required'
         ]);
         $client = new Client;

@@ -31,6 +31,7 @@ class CreateInvoicesTable extends Migration
             $table->double('cash')->default(0)->nullable();
             $table->string('slug')->nullable();
             $table->tinyInteger('status')->default(0); //pending
+            $table->double('paid_amount')->default(0);
             $table->timestamps();
         });
     }

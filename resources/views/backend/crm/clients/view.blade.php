@@ -27,7 +27,7 @@ View Client
 @endsection
 
 @section('dialog-section')
-<div class="modal fade" id="sendEmail" tabindex="-1" role="dialog">
+<div class="modal fade" id="sendEmailModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -37,24 +37,28 @@ View Client
             </button>
             </div>
             <div class="modal-body">
-                <form action="">
+                <p><strong>Note:</strong> All fields are required.</p>
+                <form id="sendClientEmailForm" data-parsley-validate>
                     <div class="form-group">
-                        <label for="">To</label>
-                        <input type="email" placeholder="To" id="subject" class="form-control">
+                        <label for="">To <sup class="text-danger">*</sup></label>
+                        <input type="email" placeholder="To" required id="email" class="form-control" value="{{$client->email ?? ''}}">
                     </div>
                     <div class="form-group">
-                        <label for="">Subject</label>
-                        <input type="text" placeholder="Subject" id="subject" class="form-control">
+                        <label for="">Subject<sup class="text-danger">*</sup></label>
+                        <input type="text" placeholder="Subject" id="email_subject" required class="form-control">
+                        <input type="hidden" id="clientId" value="{{$client->id}}">
                     </div>
                     <div class="form-group">
-                        <label for="">Content</label>
-                        <textarea name="" id="resignation_content" cols="5" rows="5" class="form-control content" placeholder="Compose mail..."></textarea>
+                        <label for="">Content<sup class="text-danger">*</sup></label>
+                        <textarea name="" id="email_message" cols="5" rows="5" class="form-control content" placeholder="Compose mail..."></textarea>
+                    </div>
+                    <div class="form-group d-flex justify-content-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary waves-effect btn-mini waves-light" id="sendMailBtn"> <i class="icofont icofont-paper-plane text-white mr-2"></i> Send</button>
+                        </div>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-default waves-effect btn-mini" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="sendMail"> <i class="ti-email text-white mr-2"></i> Send</button>
             </div>
         </div>
     </div>
@@ -72,11 +76,11 @@ View Client
                 <form action="">
                     <div class="form-group">
                         <label for="">Mobile Number</label>
-                        <input type="email" placeholder="Mobile Number" id="subject" class="form-control">
+                        <input type="text" placeholder="Mobile Number" id="mobile_no" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="">Message</label>
-                        <textarea style="resize: none;" name="" rows="5" id="message" class="form-control" placeholder="Compose message here..."></textarea>
+                        <textarea style="resize: none;" name="" rows="5" id="sms" class="form-control" placeholder="Compose message here..."></textarea>
                     </div>
                 </form>
             </div>
@@ -91,4 +95,5 @@ View Client
 @section('extra-scripts')
 <script type="text/javascript" src="/assets/bower_components/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
+@stack('client-script')
 @endsection

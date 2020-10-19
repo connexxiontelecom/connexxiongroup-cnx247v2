@@ -23,6 +23,7 @@ class CreateProductsTable extends Migration
             $table->double('price');
             $table->string('featured_image');
             $table->string('slug');
+            $table->unsignedBigInteger('glcode')->nullable();
             $table->timestamps();
         });
     }

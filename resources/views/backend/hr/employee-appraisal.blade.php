@@ -158,7 +158,7 @@
                                     <label>Supervisor <sup class="text-danger">*</sup></label>
                                     <select id="single_supervisor" class="form-control">
                                         @foreach($supervisors as $supervisor)
-                                            <option value="{{$supervisor->user_id}}">{{$supervisor->user->first_name ?? ''}} {{$supervisor->user->surname ?? ''}}</option>
+                                            <option value="{{$supervisor->id}}">{{$supervisor->first_name ?? ''}} {{$supervisor->surname ?? ''}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -191,7 +191,7 @@
                                         <label>Supervisor <sup class="text-danger">*</sup></label>
                                         <select id="bulk_supervisor" class="form-control">
                                             @foreach($supervisors as $supervisor)
-                                                <option value="{{$supervisor->user_id}}">{{$supervisor->user->first_name ?? ''}} {{$supervisor->user->surname ?? ''}}</option>
+                                                <option value="{{$supervisor->user_id}}">{{$supervisor->first_name ?? ''}} {{$supervisor->surname ?? ''}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -286,6 +286,10 @@
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
             var error = 0;
+            console.log(employee);
+            console.log(supervisor);
+            console.log(start_date);
+            console.log(end_date);
             if(employee == '' || supervisor == '' || start_date == '' || end_date == ''){
                 $.notify("Ooops! Kindly make complete the form.", "error");
                 error++;

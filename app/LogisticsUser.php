@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class LogisticsUser extends Model
+class LogisticsUser extends Authenticatable
 {
     //
-    public function driverEmergencyContact(){
+     public function driverEmergencyContact(){
         return $this->hasMany(DriverEmergency::class, 'driver_id');
     }
     public function driverNextOfKin(){
@@ -22,4 +25,5 @@ class LogisticsUser extends Model
     public function assignedVehicle(){
         return $this->belongsTo(LogisticsVehicle::class, 'vehicle_id');
     }
+
 }

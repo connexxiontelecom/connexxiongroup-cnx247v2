@@ -51,19 +51,20 @@
             <div class="card-block">
                 <form action="{{route('add-new-product')}}" method="post" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="exist" value="{{$exist}}"/>
                     <div class="container">
                         <div class="row">
                             <div class="col-md-8">
                                <div class="form-group">
                                    <label for="">Product Name</label>
-                                   <input type="text" name="product_name" placeholder="Product Name" class="form-control">
+                                   <input type="text" name="product_name" placeholder="Product Name" class="form-control" value="{{old('product_name')}}">
                                    @error('product_name')
                                        <i class="text-danger mt-2">{{$message}}</i>
                                    @enderror
                                </div>
                                <div class="form-group">
                                    <label for="">Product Description</label>
-                                   <textarea name="product_description" class="form-control content" placeholder="Product Description"></textarea>
+                                   <textarea name="product_description" class="form-control content" placeholder="Product Description">{{old('product_description')}}</textarea>
                                    @error('product_description')
                                        <i class="text-danger mt-2">{{$message}}</i>
                                    @enderror
@@ -82,6 +83,20 @@
                                        <i class="text-danger mt-2">{{$message}}</i>
                                    @enderror
                                </div>
+                               @if($exist == 'yes')
+                                <div class="form-group">
+                                    <label for="">GL Code (Account)</label>
+                                    <select name="account" class="form-control">
+                                        <option selected disabled>Select account</option>
+                                        @foreach($charts as $chart)
+                                            <option value="{{$chart->glcode}}">{{$chart->account_name  ?? '-'}} - ({{$chart->glcode ?? ''}})</option>
+                                        @endforeach
+                                    </select>
+                                    @error('account')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
+                               @endif
                             </div>
                             <div class="col-md-4">
                                 <div class="card">

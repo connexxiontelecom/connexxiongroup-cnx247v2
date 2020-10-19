@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'suppliers',
         ],
+        'logistic' => [
+            'driver' => 'session',
+            'provider' => 'logistics',
+        ],
 
         'api' => [
             'driver' => 'token',
@@ -77,6 +81,10 @@ return [
         'suppliers' => [
             'driver' => 'eloquent',
             'model' => App\Supplier::class,
+        ],
+        'logistics' => [
+            'driver' => 'eloquent',
+            'model' => App\LogisticsUser::class,
         ],
 
         // 'users' => [

@@ -52,6 +52,9 @@
                                 <div class="form-group">
                                     <label for="">Suffix </label>
                                     <input type="text" class="form-control" placeholder="Suffix" wire:model="suffix">
+                                    @error('suffix')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
                                 </div>
                             </div>
                         </div>
@@ -73,6 +76,9 @@
                             <div class="col-md-4">
                                 <label for="">Website</label>
                                 <input type="text" class="form-control" placeholder="Website" wire:model="website">
+                                @error('website')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
                             </div>
                         </div>
                         <h4 class="sub-title mt-3">Address</h4>
@@ -87,6 +93,9 @@
                             <div class="col-md-6">
                                 <label for="">Street 2</label>
                                 <input type="text" class="form-control" placeholder="Street 2" wire:model="street_2">
+                                @error('street_2')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
                             </div>
                         </div>
                         <div class="row mt-3">

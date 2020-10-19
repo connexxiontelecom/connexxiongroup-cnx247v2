@@ -39,6 +39,7 @@ class Shortcut extends Component
     public $workforce;
     public $transactionPassword;
     public $userAction; //approved/declined
+    public $onlineCounter = 0;
     public function render()
     {
         $now = Carbon::now();
@@ -60,7 +61,7 @@ class Shortcut extends Component
                                 ->count();
         $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
                                 ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
-                                ->take(5)->get();
+                                ->take(10)->get();
         $this->online = User::where('tenant_id', Auth::user()->tenant_id)->where('is_online', 1)->count();
         $this->workforce = User::where('tenant_id', Auth::user()->tenant_id)->count();
         return view('livewire.backend.activity-stream.shortcut',
