@@ -16,7 +16,7 @@ class CreateWorkgroupsTable extends Migration
         Schema::create('workgroups', function (Blueprint $table) {
             $table->id();
             $table->string('group_name');
-            $table->text('description')->nullable()->default('This is a default description for this group since none was created during registration. You can edit this content. Thank you...');
+            $table->text('description')->nullable();
             $table->string('group_image')->nullable()->default('cnx247.jpg');
             $table->bigInteger('tenant_id')->nullable();
             $table->unsignedBigInteger('owner');
