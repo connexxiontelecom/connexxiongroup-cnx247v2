@@ -38,6 +38,7 @@
                 @if (!Auth::check())
                     <div class="buy-menu-btn d-none">
                         <a href="{{route('pricing')}}"  class="btn btn-primary">Sign up</a>
+                        <a href="{{route('signin')}}" class="btn btn-light">Sign in</a>
                     </div>
                 @endif
             </div>

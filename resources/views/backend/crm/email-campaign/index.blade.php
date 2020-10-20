@@ -66,35 +66,13 @@
                                     <table class="table">
                                         <tbody>
                                             @if (count($emails) > 0)
-                                                <tr>
-                                                    <td colspan="5">
-                                                        <div class="check-star">
-                                                            <div class="checkbox-fade fade-in-primary checkbox">
-                                                                <label>
-                                                                    <input type="checkbox" id="selectAllMessages">
-                                                                    <span class="cr"><i class="cr-icon icofont icofont-verification-check txt-primary"></i></span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
                                                 @foreach ($emails as $message)
                                                     <tr class="unread">
-                                                        <td>
-                                                            <div class="check-star">
-                                                                <div class="checkbox-fade fade-in-primary checkbox">
-                                                                    <label>
-                                                                        <input type="checkbox" value="{{$message->id}}">
-                                                                        <span class="cr"><i class="cr-icon icofont icofont-verification-check txt-primary"></i></span>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td><a href="#" class="email-name">{{$message->email}}</a></td>
+                                                        <td><a href="{{route('email-campaign-view', $message->tracking_id)}}" class="email-name">{{$message->email}}</a></td>
                                                         <td>{!! strlen($message->content) > 81 ? substr($message->content, 0,81).'...' : $message->content ?? ''!!}</td>
                                                         <td class="email-attch">
                                                             @if ($message->status == 0)
-                                                            <label for="" class="label label-warning text-white">In-progress</label>
+                                                                <label for="" class="label label-warning text-white">In-progress</label>
                                                             @else
                                                                 <label for="" class="label label-success">Sent</label>
                                                             @endif
@@ -113,10 +91,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Right-side section end -->
         </div>
     </div>
-    <!-- Email-card end -->
 </div>
 @endsection
 

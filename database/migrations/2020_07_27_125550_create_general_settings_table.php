@@ -37,6 +37,8 @@ class CreateGeneralSettingsTable extends Migration
             $table->string('tagline')->nullable();
             $table->string('company_prefix')->nullable(); //example CNX
             $table->text('description')->nullable();
+            $table->time('opening_time')->nullable();
+            $table->time('closing_time')->nullable();
             $table->timestamps();
         });
     }

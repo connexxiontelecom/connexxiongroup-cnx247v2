@@ -12,6 +12,7 @@ class GeneralSettings extends Component
 {
     public $company_name, $email_signature, $tagline, $about_use, $city, $street_1, $street_2, $postal_code;
     public $industry, $preferred_lang, $date_format, $company_prefix, $phone;
+    public $opening_time, $closing_time;
     public function render()
     {
         return view('livewire.backend.settings.general-settings',
@@ -34,6 +35,8 @@ class GeneralSettings extends Component
         $this->date_format = Auth::user()->tenant->date_format_id;
         $this->company_prefix = Auth::user()->tenant->company_prefix;
         $this->phone = Auth::user()->tenant->phone;
+        $this->opening_time = Auth::user()->tenant->opening_time;
+        $this->closing_time = Auth::user()->tenant->closing_time;
     }
 
     /*
@@ -47,7 +50,6 @@ class GeneralSettings extends Component
             //'about_use'=>'required',
             'city'=>'required',
             'street_1'=>'required',
-            'street_2'=>'required',
             'postal_code'=>'required',
             'industry'=>'required',
             'preferred_lang'=>'required',
@@ -69,6 +71,8 @@ class GeneralSettings extends Component
         $tenant->date_format_id = $this->date_format ?? '';
         $tenant->company_prefix = $this->company_prefix ?? '';
         $tenant->phone = $this->phone ?? '';
+        $tenant->closing_time = $this->closing_time ?? '';
+        $tenant->opening_time = $this->opening_time ?? '';
         $tenant->save();
         session()->flash("success", "<strong>Success!</strong> Changes updated.");
         return back();
