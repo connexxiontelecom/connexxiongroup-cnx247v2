@@ -57,7 +57,10 @@
 <div class="card" style="margin-top:-30px;">
     <div class="card-block email-card">
         <div class="row">
-            <div class="col-lg-12 col-xl-12">
+            <div class="col-lg-3 col-xl-3 col-sm-4 col-md-4">
+                @include('backend.crm.bulk-sms.common._navigation')
+            </div>
+            <div class="col-lg-9 col-xl-9 col-sm-8 col-md-8">
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="e-inbox" role="tabpanel">
                         <div class="mail-body">
@@ -113,10 +116,8 @@
                     </div>  
                 </div>
             </div>
-            <!-- Right-side section end -->
         </div>
     </div>
-    <!-- Email-card end -->
 </div>
 @endsection
 

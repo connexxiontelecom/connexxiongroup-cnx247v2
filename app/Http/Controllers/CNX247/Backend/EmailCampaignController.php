@@ -48,16 +48,19 @@ class EmailCampaignController extends Controller
             'subject'=>'required',
             'content'=>'required'
         ]);
-        $campaign = new EmailCampaign;
-        $campaign->tenant_id = Auth::user()->tenant_id;
-        $campaign->sender_id = Auth::user()->id;
-        $campaign->status = 0; //in progress
-        $campaign->email = $request->receivers;
-        $campaign->subject = $request->subject;
-        $campaign->content = $request->content;
-        $campaign->tracking_id = substr(sha1(time()), 19,40);
-        $campaign->read_unread = 0; //unread
-        $campaign->save();
+        $emails = preg_split("/,\s*/",$request->receivers);;
+        for($i = 0; $i<count($emails); $i++){
+            $campaign = new EmailCampaign;
+            $campaign->tenant_id = Auth::user()->tenant_id;
+            $campaign->sender_id = Auth::user()->id;
+            $campaign->status = 0; //in progress
+            $campaign->email = $emails[$i];
+            $campaign->subject = $request->subject;
+            $campaign->content = $request->content;
+            $campaign->tracking_id = substr(sha1(time()), 40-$i < 0 ? $i+1 : 19-$i,40);
+            $campaign->read_unread = 0; //unread
+            $campaign->save();
+        }
         session()->flash("success", "<strong>Success!</strong> Campaign queued for sending...");
         return redirect()->route('email-campaigns');
     }
@@ -70,7 +73,13 @@ class EmailCampaignController extends Controller
      */
     public function show($id)
     {
-        //
+        $mail = EmailCampaign::where('tracking_id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($mail)){
+            return view('backend.crm.email-campaign.view', ['mail'=>$mail]);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Mail not found.");
+            return back();
+        }
     }
 
     /**

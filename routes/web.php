@@ -246,11 +246,17 @@ Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name(
     Route::get('/crm/product/delete/{slug}', 'CNX247\Backend\CRMController@deleteProduct')->name('delete-product');
 #Bulk SMS
     Route::get('/crm/bulk-sms', 'CNX247\Backend\BulkSmsController@index')->name('bulk-sms');
+    Route::get('/crm/bulk-sms/compose', 'CNX247\Backend\BulkSmsController@create')->name('compose-sms');
     Route::post('/crm/bulk-sms/send', 'CNX247\Backend\BulkSmsController@processSMS');
+    Route::get('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@phoneGroups')->name('phone-groups');
+    Route::get('/crm/bulk-sms/phone-group/{slug}', 'CNX247\Backend\BulkSmsController@showPhoneGroup')->name('show-phone-group');
+    Route::post('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@storePhoneGroup');
+    Route::get('/crm/bulk-sms/phone-group/new', 'CNX247\Backend\BulkSmsController@newPhoneGroup')->name('new-phone-group');
 #Email Campaign
     Route::get('/crm/email-campaigns', 'CNX247\Backend\EmailCampaignController@index')->name('email-campaigns');
     Route::get('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@create')->name('new-email-campaign');
     Route::post('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@store');
+    Route::get('/crm/email-campaig/view/{id}', 'CNX247\Backend\EmailCampaignController@show')->name('email-campaign-view');
 #Convert client to lead
 Route::get('/crm/client/convert-to-lead/{slug}', 'CNX247\Backend\CRMController@convertClientToLead')->name('convert-to-lead');
 Route::post('/crm/client/raise-an-invoice', 'CNX247\Backend\CRMController@raiseAnInvoice')->name('raise-an-invoice');

@@ -97,6 +97,26 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-6 col-lg-6 col-sm-6">
+            <div class="form-group">
+                <label for="">Opening Time</label>
+                <input type="time" class="form-control" wire:model.debounce.9000ms="opening_time" placeholder="Opening Time">
+                @error('opening_time')
+                    <i class="text-danger mt-2">{{$message}}</i>
+                @enderror
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6 col-sm-6">
+            <div class="form-group">
+                <label for="">Closing Time</label>
+                <input type="time" class="form-control" wire:model.debounce.9000ms="closing_time" placeholder="Closing Time">
+                @error('closing_time')
+                    <i class="text-danger mt-2">{{$message}}</i>
+                @enderror
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
             <h4 class="sub-title">Address</h4>
         </div>
