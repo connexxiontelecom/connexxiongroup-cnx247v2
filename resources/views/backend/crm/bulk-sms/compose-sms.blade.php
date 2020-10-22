@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('title')
-    New Phone Group
+    Compose SMS
 @endsection
 
 @section('extra-styles')
-
+<link rel="stylesheet" type="text/css" href="/assets/css/component.css">
+<link rel="stylesheet" type="text/css" href="/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
+    <link rel="stylesheet" type="text/css" href="/assets/bower_components/multiselect/css/multi-select.css">
+    <link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
 <style>
 /* The heart of the matter */
 
@@ -36,7 +39,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-block">
-                <h4 class="sub-title">Create New Phone Group</h4>
+                <h4 class="sub-title">Compose SMS</h4>
                 @if (session()->has('success'))
                     <div class="alert alert-success background-success mt-3">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -66,28 +69,47 @@
             </div>
             <div class="col-lg-9 col-xl-9 col-sm-8 col-md-8">
                 <div class="card-block ">
-                    <h5 class="sub-title">Create New Phone Group</h5>
-                    <form action="{{route('phone-groups')}}" method="post">
+                    <h5 class="sub-title">Compose SMS</h5>
+                    <form action="{{route('send-bulk-sms')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-lg-12">
                                 <div class="form-group">
-                                    <label>Phone Group Name</label>
-                                    <input type="text" class="form-control" placeholder="Phone Group Name" name="phone_group_name" value="{{old('phone_group_name')}}"/>
-                                    @error('phone_group_name')
+                                    <label>Sender ID</label>
+                                    <input type="text" class="form-control" maxlength="10" placeholder="Sender ID" name="sender_id" value="{{old('sender_id')}}"/>
+                                    @error('sender_id')
                                         <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label>Phone Numbers</label>
+                                    <label>Send to Phone Group(s)</label>
+                                    <select name="phone_groups[]" class="js-example-basic-multiple col-sm-12" multiple="multiple">
+                                        <option selected disabled>Select Phone Group</option>
+                                        @foreach($groups as $group)
+                                            <option value="{{$group->id}}">{{$group->phone_group_name ?? ''}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('phone_groups')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Numbers <i><small>(Required unless if sending to group.)</small></i></label>
                                     <textarea class="form-control" rows="8" cols="50" name="phone_numbers" style="resize:none;" placeholder="Enter phone numbers separated by comma in any of these formats 070.., 23470... or +234. Duplicate numbers will be removed before saving.">{{old('phone_numbers')}}</textarea>
                                     @error('phone_numbers')
                                         <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
                                 </div>
+                                <div class="form-group">
+                                    <label>Text Message</label>
+                                    <textarea class="form-control" rows="8" cols="50" name="text_message" style="resize:none;" placeholder="Type text message here">{{old('text_message')}}</textarea>
+                                    @error('text_message')
+                                        <i class="text-danger mt-2">{{$message}}</i>
+                                    @enderror
+                                </div>
                                 <hr>
                                 <div class="form-group d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-mini btn-primary"><i class="ti-check mr-2"></i>Save Phone Group</button>
+                                    <button type="submit" class="btn btn-mini btn-primary"><i class="ti-check mr-2"></i>Send Message</button>
                                 </div>
                             </div>
                         </div>
@@ -103,5 +125,8 @@
 
 @endsection
 @section('extra-scripts')
-
+<script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
+<script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
 @endsection

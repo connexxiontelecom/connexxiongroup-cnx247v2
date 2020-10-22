@@ -66,8 +66,8 @@
             </div>
             <div class="col-lg-9 col-xl-9 col-sm-8 col-md-8">
                 <div class="card-block ">
-                    <h5 class="sub-title">Create New Phone Group</h5>
-                    <form action="{{route('phone-groups')}}" method="post">
+                    <h5 class="sub-title">Update Phone Group ({{$group->phone_group_name}})</h5>
+                    <form action="{{route('update-phone-group')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-lg-12">
@@ -84,13 +84,14 @@
                                     @error('phone_numbers')
                                         <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
+                                    <input type="hidden" name="id" value="{{$group->id}}"/>
                                 </div>
                                 <hr>
                                 <div class="form-group d-flex justify-content-center">
                                     <button type="submit" class="btn btn-mini btn-primary"><i class="ti-check mr-2"></i>Update Phone Group</button>
                                 </div>
                                 <div class="form-group d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-mini btn-danger"><i class="ti-check mr-2"></i>Delete Phone Group</button>
+                                    <a href="{{route('delete-phone-group', $group->slug)}}" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Delete Phone Group</a>
                                 </div>
                             </div>
                         </div>
