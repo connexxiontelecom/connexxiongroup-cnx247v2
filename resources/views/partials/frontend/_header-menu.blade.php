@@ -8,7 +8,12 @@
             @if (!Auth::check())
                 <div class="buy-button">
                     <a href="{{route('pricing')}}" class="btn btn-primary">Sign up</a>
-                    <a href="{{route('signin')}}" class="btn btn-outline-primary">Sign in</a>
+                    <a href="{{route('signin')}}" class="btn btn-light">Sign in</a>
+                </div>
+            @endif
+            @if (Auth::check())
+                <div class="buy-button">
+                    <a href="{{route('my-profile')}}" class="btn btn-primary">My Account</a>
                 </div>
             @endif
             <div class="menu-extras">
@@ -33,6 +38,7 @@
                 @if (!Auth::check())
                     <div class="buy-menu-btn d-none">
                         <a href="{{route('pricing')}}"  class="btn btn-primary">Sign up</a>
+                        <a href="{{route('signin')}}" class="btn btn-light">Sign in</a>
                     </div>
                 @endif
             </div>

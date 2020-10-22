@@ -33,6 +33,7 @@ class CreateUsersTable extends Migration
             $table->dateTime('start_date')->nullable();
             $table->dateTime('confirm_date')->nullable();
             $table->unsignedBigInteger('department_id')->nullable();
+            $table->unsignedBigInteger('job_role')->nullable();
             $table->string('position')->nullable();
             $table->string('role')->default('employee')->nullable();
             $table->string('avatar')->default('avatar.png')->nullable();

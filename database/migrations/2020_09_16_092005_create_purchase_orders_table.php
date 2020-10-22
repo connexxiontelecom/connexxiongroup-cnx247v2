@@ -27,7 +27,10 @@ class CreatePurchaseOrdersTable extends Migration
             $table->string('slug')->nullable();
             $table->dateTime('delivery_date')->nullable();
             $table->unsignedBigInteger('delivered_by')->nullable();
+<<<<<<< HEAD
            /*  $table->unsignedBigInteger('delivered_by')->nullable(); */
+=======
+>>>>>>> 4a8e762c19ac340cb823c905de7dc5380d8c63f3
             $table->unsignedBigInteger('confirmed_by')->nullable();
             $table->dateTime('date_delivered')->nullable();
             $table->dateTime('date_confirmed')->nullable();

@@ -63,9 +63,6 @@
                             <a href="{{route('product-details', $product->slug)}}" class="btn btn-primary btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
                                 <i class="icofont icofont-eye-alt f-20"></i>
                             </a>
-                            <a href="{{route('delete-product', $product->slug)}}" class="btn btn-danger btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
-                                <i class="ti-trash f-20"></i>
-                            </a>
                             <a href="{{route('edit-product', $product->slug)}}" class="btn btn-warning btn-icon waves-effect waves-light m-r-15 hvr-bounce-in option-icon">
                                 <i class="ti-pencil f-20"></i>
                             </a>
@@ -79,7 +76,7 @@
                         <div class="m-b-10">
                             <label class="label label-danger">{{$product->category->category}}</label>
                         </div>
-                        <span class="prod-price"><i class="icofont icofont-cur-dollar"></i>{{number_format($product->price, 2)}} 
+                        <span class="prod-price">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($product->price, 2)}} 
                         </span>
                     </div>
                 </div>

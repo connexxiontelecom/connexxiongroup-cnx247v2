@@ -179,6 +179,7 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         Route::get('/timesheet', 'CNX247\Backend\HRController@timesheet')->name('timesheet');
     #Performance
         Route::get('/performance-indicator', 'CNX247\Backend\HRController@performanceIndicator')->name('performance-indicator');
+        Route::get('/job-role/{id}/questions', 'CNX247\Backend\HRController@jobRoleQuestions')->name('job-role-questions');
         Route::post('/performance-indicator/self', 'CNX247\Backend\HRController@selfAssessmentQuestion');
         Route::post('/performance-indicator/self/edit', 'CNX247\Backend\HRController@editSelfAssessmentQuestion');
         Route::post('/performance-indicator/quantitative', 'CNX247\Backend\HRController@quantitativeAssessmentQuestion');
@@ -232,6 +233,9 @@ Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name(
     Route::get('/crm/client/new', 'CNX247\Backend\CRMController@createClient')->name('new-client');
     Route::get('/crm/client/view/{slug}', 'CNX247\Backend\CRMController@viewClient')->name('view-client');
     Route::get('/crm/client/edit/{slug}', 'CNX247\Backend\CRMController@editClient')->name('edit-client');
+    Route::post('/upload/client/avatar', 'CNX247\Backend\CRMController@uploadClientAvatar');
+    Route::post('/messaging/client/email', 'CNX247\Backend\CRMController@sendEmailToClient');
+    Route::post('/messaging/client/sms', 'CNX247\Backend\CRMController@sendSmsToClient');
 #Products
     Route::get('/crm/products', 'CNX247\Backend\CRMController@products')->name('products');
     Route::get('/crm/product/new', 'CNX247\Backend\CRMController@addNewProduct')->name('add-new-product');
@@ -242,14 +246,22 @@ Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name(
     Route::get('/crm/product/delete/{slug}', 'CNX247\Backend\CRMController@deleteProduct')->name('delete-product');
 #Bulk SMS
     Route::get('/crm/bulk-sms', 'CNX247\Backend\BulkSmsController@index')->name('bulk-sms');
+    Route::get('/crm/bulk-sms/compose', 'CNX247\Backend\BulkSmsController@create')->name('compose-sms');
     Route::post('/crm/bulk-sms/send', 'CNX247\Backend\BulkSmsController@processSMS');
+    Route::get('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@phoneGroups')->name('phone-groups');
+    Route::get('/crm/bulk-sms/phone-group/{slug}', 'CNX247\Backend\BulkSmsController@showPhoneGroup')->name('show-phone-group');
+    Route::post('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@storePhoneGroup');
+    Route::get('/crm/bulk-sms/phone-group/new', 'CNX247\Backend\BulkSmsController@newPhoneGroup')->name('new-phone-group');
 #Email Campaign
     Route::get('/crm/email-campaigns', 'CNX247\Backend\EmailCampaignController@index')->name('email-campaigns');
     Route::get('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@create')->name('new-email-campaign');
     Route::post('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@store');
+    Route::get('/crm/email-campaig/view/{id}', 'CNX247\Backend\EmailCampaignController@show')->name('email-campaign-view');
 #Convert client to lead
 Route::get('/crm/client/convert-to-lead/{slug}', 'CNX247\Backend\CRMController@convertClientToLead')->name('convert-to-lead');
 Route::post('/crm/client/raise-an-invoice', 'CNX247\Backend\CRMController@raiseAnInvoice')->name('raise-an-invoice');
+Route::get('/crm/invoice/receive-payment/{slug}', 'CNX247\Backend\CRMController@receivePayment')->name('receive-payment');
+Route::post('/crm/invoice/receive-payment', 'CNX247\Backend\CRMController@postPayment')->name('post-payment');
 #Social media
 Route::get('/facebook/connect-to-facebook', 'CNX247\Backend\FacebookController@connect')->name('connect-to-facebook');
 Route::get('/facebook/facebook-timeline', 'CNX247\Backend\FacebookController@facebookTimeline')->name('facebook-timeline');
@@ -299,6 +311,11 @@ Route::post('/upload/post/attachment', 'CNX247\Backend\TaskController@uploadPost
 Route::get('/task/submit-task/{url}', 'CNX247\Backend\TaskController@submitTask')->name('submit-task');
 Route::post('/submit-assigned-task', 'CNX247\Backend\TaskController@storeAssignedTask')->name('submit-assigned-task');
 Route::get('/assignment/view-submissions', 'CNX247\Backend\TaskController@viewAssignmentSubmissions')->name('view-assigment-submissions');
+
+Route::post('/add-responsible-person', 'CNX247\Backend\TaskController@addResponsiblePerson')->name('add-responsible-person');
+Route::post('/add-observers', 'CNX247\Backend\TaskController@addObserver')->name('add-observers');
+Route::post('/add-participants', 'CNX247\Backend\TaskController@addParticipant')->name('add-participants');
+
 Route::post('/rate/task/submitted', 'CNX247\Backend\TaskController@rateTaskSubmitted');
 
 #Project routes
@@ -311,7 +328,7 @@ Route::get('/project-calendar', 'CNX247\Backend\ProjectController@getProjectCale
 Route::get('/project/gantt-chart', 'CNX247\Backend\ProjectController@projectGanttChart')->name('project-gantt-chart');
 Route::get('/project-gantt-chart', 'CNX247\Backend\ProjectController@getProjectGanttChartData');
 Route::get('/project/project-analytics', 'CNX247\Backend\ProjectController@projectAnalytics')->name('project-analytics');
-Route::post('/delete/task', 'CNX247\Backend\ProjectController@deleteProject');
+Route::post('/delete/project', 'CNX247\Backend\ProjectController@deleteProject');
 Route::get('/project/edit/{url}', 'CNX247\Backend\ProjectController@editProject')->name('edit-project');
 Route::post('/project/update', 'CNX247\Backend\ProjectController@updateProject')->name('update-project');
 Route::post('/project/milestone', 'CNX247\Backend\ProjectController@createProjectMilestone');
@@ -377,8 +394,16 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::post('/procurement/supplier/contact-person', 'CNX247\Frontend\ProcurementController@updateContactPerson')->name('supplier-update-contact-person');
     Route::post('/procurement/supplier/change-password', 'CNX247\Frontend\ProcurementController@changePassword')->name('supplier-change-password');
 #Logistics routes
+    Route::get('/logistics/login', 'CNX247\Frontend\LogisticsAuthController@login')->name('logistics.login');
+    Route::post('/logistics/login', 'CNX247\Frontend\LogisticsAuthController@loginNow');
+    Route::get('/logistics/logistics-account', 'CNX247\Frontend\LogisticsController@myAccount')->name('logistics-account');
+    Route::get('/logistics/log', 'CNX247\Frontend\LogisticsController@log')->name('logistics-log');
+    Route::get('/logistics/check-in', 'CNX247\Frontend\LogisticsController@checkIn')->name('logistics-check-in');
+    Route::get('/logistics/check-out/{id}', 'CNX247\Frontend\LogisticsController@checkOut')->name('logistics-check-out');
+    Route::post('/logistics/check-in', 'CNX247\Frontend\LogisticsController@storeCheckIn');
     Route::get('/logistics/drivers', 'CNX247\Backend\LogisticsController@drivers')->name('logistics-drivers');
     Route::get('/logistics/new-driver', 'CNX247\Backend\LogisticsController@addNewDriver')->name('new-driver');
+    Route::get('/logistics/all-logs', 'CNX247\Backend\LogisticsController@allLogs')->name('all-logs');
     Route::post('/logistics/new-driver', 'CNX247\Backend\LogisticsController@storeDriver');
     Route::get('/logistics/driver-profile/{url}', 'CNX247\Backend\LogisticsController@driverProfile')->name('driver-profile');
     Route::get('/logistics/pick-up-points', 'CNX247\Backend\LogisticsController@pickupPoints')->name('logistics-pick-up-points');

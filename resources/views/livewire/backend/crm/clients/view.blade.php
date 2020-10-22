@@ -17,7 +17,7 @@
                         <a href="{{route('new-client')}}" class="btn btn-mini btn-primary"><i class="ti-plus"></i> Add New Client</a>
                         <a href="{{route('clients')}}" class="btn btn-mini btn-danger"><i class="ti-user"></i> All Clients</a>
                         <a href="{{route('convert-to-lead', $client->slug)}}" class="btn btn-mini btn-info"><i class="ti-control-shuffle"></i> Convert to Lead</a>
-                        <button type="button" class="btn btn-mini btn-default" data-toggle="modal" data-target="#sendEmail"><i class="ti-email"></i> Send Email</button>
+                        <button type="button" class="btn btn-mini btn-default" data-toggle="modal" data-target="#sendEmailModal"><i class="ti-email"></i> Send Email</button>
                         <button type="button" class="btn btn-mini btn-secondary" data-toggle="modal" data-target="#sendSMS"><i class="ti-comment-alt"></i> Send SMS</button>
                     </div>
                 </div>
@@ -32,11 +32,11 @@
                                                 <a href="{{route('edit-client', $client->slug)}}"><i class="ti-pencil text-warning p-2"></i></a>
                                             </div>
                                             <div data-label="50%" class="radial-bar radial-bar-60 radial-bar-lg radial-bar-primary">
-                                                <img src="/assets/images/avatars/thumbnails/avatar.png" alt="" class="img-100">
+                                                <img src="/assets/images/clients/avatars/thumbnails/{{$client->avatar ?? 'avatar.png'}}" alt="" class="img-100">
                                             </div>
                                             <div style="text-align: left;" class="mt-2">
                                                 <p><label class="label label-primary">Full Name</label></p>
-                                                <label>{{$client->first_name ?? ''}} {{$client->surname ?? ''}}</label>
+                                                <label>{{$client->title ?? ''}} {{$client->first_name ?? ''}} {{$client->surname ?? ''}}</label>
 
                                                 <p><label class="label label-primary">Mobile</label></p>
                                                 <label>{{$client->mobile_no ?? ''}}</label>
@@ -45,7 +45,7 @@
                                                 <label>{{$client->email ?? ''}}</label>
 
                                                 <p><label class="label label-primary">Website</label></p>
-                                                <label>{{$client->website ?? ''}}</label>
+                                                <label><a href="{{$client->website ?? 'http://www.cnx247.com'}}" target="_blank">{{$client->website ?? ''}}</a></label>
 
                                                 <p><label class="label label-primary">Street 1</label></p>
                                                 <label>{{$client->street_1 ?? ''}}</label>
@@ -164,5 +164,35 @@
     </div>
 
 </div>
+@push('client-script')
+<script>
+    $(document).ready(function(){
+    $('#sendClientEmailForm').parsley().on('field:validated', function() {
+
+        }).on('form:submit', function() {
+            var config = {
+                        onUploadProgress: function(progressEvent) {
+                        var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                        }
+                };
+                var client = $('#clientId').val();
+                var email = $('#email').val();
+                var subject = $('#email_subject').val();
+                var content = tinymce.get('email_message').getContent();
+                $('#sendMailBtn').text('Sending...');
+                axios.post('/messaging/client/email', {subject:subject, content:content,email:email,client:client})
+                .then(response=>{
+                    $.notify(response.data.message, 'success');
+                    $('#sendEmailModal').modal('hide');
+                })
+                .catch(error=>{
+                    $.notify(error.data.error, 'error');
+                });
+            return false;
+        });
+    });
+</script>
+
+@endpush
 
 

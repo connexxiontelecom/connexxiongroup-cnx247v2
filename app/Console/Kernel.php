@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        Commands\SendEmailCampaign::class,
     ];
 
     /**
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
          $schedule->command('send:invitaion')->hourly();
+         $schedule->command('send:emailcampaign')->everyMinute();
     }
 
     /**

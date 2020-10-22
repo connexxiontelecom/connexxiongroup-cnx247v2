@@ -1,3 +1,8 @@
+
+
+
+
+
 <div class="row">
     <div class="col-xl-4 col-lg-12 push-xl-8 task-detail-right">
         <div class="card">
@@ -408,6 +413,35 @@
                 <h5 class="card-header-text">
                     <i class="icofont icofont-users-alt-4"></i> Responsible Person(s)
                 </h5>
+                <button id="AddRespPersons" class="btn btn-sm btn-primary f-right btn-mini" style="margin-bottom: 10px"  {{-- wire:click="markAsComplete({{$task->id}})"  --}} title="Add a responsible person" data-toggle="modal" data-target="#modal-1" >
+                <i class="fa fa-plus-square"></i>Add person</button>
+            </div>
+            <div style="display:none; padding-right: 10px; padding-left:10px;" id="AddRespPersonsContainer">
+
+                <form method="post" action="{{route('add-responsible-person')}}" enctype="multipart/form-data" id="_addResponsiblePerson">
+                    @csrf
+
+                <div class="row">
+                    <div class="form-group  col-md-12">
+                        <label class="">Responsible Person(s)</label>
+                    <input type="hidden" name="taskId" value="{{$task->id}}">
+                    <input type="hidden" name="url" value="{{$link}}">
+                        <select name="responsible_persons[]" class="js-example-basic-multiple col-sm-12" multiple="multiple">
+                            <option selected disabled>Add Responsible Person(s)</option>
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <button id="add" class="btn btn-sm btn-warning f-right btn-mini" style="margin-bottom: 10px"  {{-- wire:click="markAsComplete({{$task->id}})"  --}}>
+                        <i class="fa fa-plus-square"></i>Add</button>
+                </div>
+
+            </form>
+
+
             </div>
             <div class="card-block user-box assign-user">
                 @foreach($task->responsiblePersons as $person)
@@ -418,7 +452,12 @@
                             </a>
                         </div>
                         <div class="media-body">
-                            <h6><a href="{{ route('view-profile', $person->user->url) }}">{{$person->user->first_name }}  {{ $person->user->surname ?? '' }}</a></h6>
+                            <h6><a href="{{ route('view-profile', $person->user->url) }}">{{$person->user->first_name }}  {{ $person->user->surname ?? '' }}</a>
+                                <button  class="btn btn-sm btn-danger f-right  btn-mini" data-toggle="tooltip" data-placement="top"
+                                data-original-title="Remove Person" style="margin-left: 10px" wire:click="removeResponsiblePerson({{$person->user->id}})"  title="Remove person" >
+                                <i class="fa fa-trash-o"></i>
+                                </button>
+                            </h6>
                             <p>{{$person->user->position ?? '-' }}</p>
                         </div>
                         <div>
@@ -457,7 +496,46 @@
                 <h5 class="card-header-text">
                     <i class="icofont icofont-users-alt-4"></i> Participant(s)
                 </h5>
+                <button class="btn btn-sm btn-primary f-right btn-mini"
+                style="margin-bottom: 10px"
+                itle="Add a participant" id="_addpart">
+                    <i class="fa fa-plus-square"></i>Add Participant</button>
             </div>
+
+
+
+
+            <div style="display:none; padding-right: 10px; padding-left:10px;" id="AddParticipantsContainer">
+
+                <form method="post" action="{{route('add-participants')}}" enctype="multipart/form-data" id="_addParticipants" >
+                    @csrf
+                <div class="row">
+                    <div class="form-group  col-md-12">
+                        <label class="">Responsible Person(s)</label>
+                    <input type="hidden" name="taskId" value="{{$task->id}}">
+                    <input type="hidden" name="url" value="{{$link}}">
+                        <select name="participants[]" class="js-example-basic-multiple col-sm-12" multiple="multiple">
+                            <option selected disabled>Add Responsible Person(s)</option>
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <button id="add_participants"  class="btn btn-sm btn-warning f-right btn-mini" style="margin-bottom: 10px"  {{-- wire:click="markAsComplete({{$task->id}})"  --}}>
+                        <i class="fa fa-plus-square"></i>Add</button>
+                </div>
+
+            </form>
+
+
+            </div>
+
+
+
+
+
             <div class="card-block user-box assign-user">
                 @if(count($task->postParticipants) > 0)
                     @foreach($task->postParticipants as $part)
@@ -468,7 +546,10 @@
                                 </a>
                             </div>
                             <div class="media-body">
-                                <h6><a href="{{ route('view-profile', $part->user->url) }}">{{$part->user->first_name }}  {{ $part->user->surname ?? '' }}</a></h6>
+                                <h6><a href="{{ route('view-profile', $part->user->url) }}">{{$part->user->first_name }}  {{ $part->user->surname ?? '' }}</a>
+                                    <button class="btn btn-sm f-right btn-danger  btn-mini"
+                                     data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove Participant" style="margin-left: 10px" wire:click="removeParticipant({{$part->user->id}})" title="Remove participant" >
+                                    <i class="fa fa-trash-o"></i></button></h6>
                                 <p>{{$part->user->position ?? '-' }}</p>
                             </div>
                             <div>
@@ -492,7 +573,42 @@
                 <h5 class="card-header-text">
                     <i class="icofont icofont-users-alt-4"></i> Observers(s)
                 </h5>
+                <button  class="btn btn-sm btn-primary f-right btn-mini" style="margin-bottom: 10px"
+                id ="_addobserv"  title="Add an observer" >
+                    <i class="fa fa-plus-square"></i>Add Observer</button>
             </div>
+
+
+
+            <div style="display:none; padding-right: 10px; padding-left:10px;" id="AddObserversContainer">
+
+                <form method="post" action="{{route('add-observers')}}" enctype="multipart/form-data" id="_addObservers">
+                    @csrf
+                <div class="row">
+                    <div class="form-group  col-md-12">
+                        <label class="">Responsible Person(s)</label>
+                    <input type="hidden" name="taskId" value="{{$task->id}}">
+                    <input type="hidden" name="url" value="{{$link}}">
+                        <select name="observers[]" class="js-example-basic-multiple col-sm-12" multiple="multiple">
+                            <option selected disabled>Add Responsible Person(s)</option>
+                            @foreach($users as $user)
+                                <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <button id="add_observers" class="btn btn-sm btn-warning f-right btn-mini" style="margin-bottom: 10px"  {{-- wire:click="markAsComplete({{$task->id}})"  --}}>
+                        <i class="fa fa-plus-square"></i>Add</button>
+                </div>
+
+            </form>
+
+            </div>
+
+
+
+
             <div class="card-block user-box assign-user">
                 @if(count($task->postObservers) > 0)
                     @foreach($task->postObservers as $part)
@@ -503,8 +619,12 @@
                                 </a>
                             </div>
                             <div class="media-body">
-                                <h6><a href="{{ route('view-profile', $part->user->url) }}">{{$part->user->first_name }}  {{ $part->user->surname ?? '' }}</a></h6>
+                                <h6><a href="{{ route('view-profile', $part->user->url) }}">{{$part->user->first_name }}  {{ $part->user->surname ?? '' }}</a>
+                                     <button class="btn f-right btn-sm btn-danger btn-mini"  data-toggle="tooltip"
+                                     data-placement="top" title="" data-original-title="Remove observer" style="margin-left: 10px" wire:click="removeObserver({{$part->user->id}})" title="Remove observer" >
+                                    <i class="fa fa-trash-o"></i></button></h6>
                                 <p>{{$part->user->position ?? '-' }}</p>
+
                             </div>
                             <div>
                                 <a href="#!" class="text-muted">
@@ -516,7 +636,7 @@
                     @endforeach
 
                 @else
-                        <p class="">There're no participants for this task</p>
+                        <p class="">There're no observers for this task</p>
 
                 @endif
 
@@ -530,17 +650,101 @@
             <div class="card-block">
                 <h5 class="sub-title">
                     <i class="icofont icofont-tasks-alt m-r-5"></i> {{$task->post_title }}
-                @if ($task->post_status == 'complete')
-                    <label for="" class="label label-success">Completed</label>
+
+                @if ($task->post_status == 'completed')
+                <label for="" class="label btn-success">Completed</label>
                 @elseif($task->post_status == 'in-progress')
-                    <label for="" class="label label-warning">in-progress</label>
+                <label for="" class="label btn-warning">in-progress</label>
+
+                @elseif($task->post_status == 'closed')
+                <label for="" class="label btn-warning">Closed</label>
+
+                @elseif($task->post_status == 'on-hold')
+                <label for="" class="label btn-warning">On-Hold</label>
+
+                @elseif($task->post_status == 'at-risk')
+                <label for="" class="label btn-danger">At-Risk</label>
+
+                @elseif($task->post_status == 'resolved')
+                <label for="" class="label btn-success">Resolved</label>
+
                 @endif
+
+
                 </h5>
-                @if ($task->post_status == 'in-progress' && $task->user_id == Auth::user()->id)
+              {{--   <button
+                class="btn btn-sm btn-primary f-right btn-mini" style="margin-bottom: 10px"  wire:click="markAsComplete({{$task->id}})"  title="update task status" data-toggle="modal" data-target="#taskUpdateStatus" >
+                    <i class="icofont icofont-ui-alarm"></i>Update Task Status
+
+                </button> --}}
+
+                <button
+                class="btn btn-sm btn-primary f-right dropdown-toggle waves-light"
+                type="button"
+                id="statusDropDown"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+
+            >
+                <i class="icofont icofont-ui-alarm"></i>Update Task Status
+            </button>
+            <div
+            class="dropdown-menu"
+            aria-labelledby="statusDropDown"
+            data-dropdown-in="fadeIn"
+            data-dropdown-out="fadeOut"
+        >
+
+            @if($task->post_status != 'at-risk')
+            <a wire:click="markAsRisk({{$task->id}})"  class="dropdown-item waves-light waves-effect" href="javascript:void(0);">
+                <i class="icofont icofont-checked text-danger m-r-10"></i>Mark as At-Risk
+            </a>
+            @endif
+            {{-- <div class="dropdown-divider"></div> --}}
+            @if($task->post_status != 'closed')
+            <a wire:click="markAsClosed({{$task->id}})"  class="dropdown-item waves-light waves-effect" href="javascript:void(0);">
+                <i class="icofont icofont-checked text-warning m-r-10"></i>Mark as Closed
+            </a>
+            @endif
+            {{-- <div class="dropdown-divider"></div> --}}
+            @if($task->post_status != 'on-hold')
+            <a wire:click="markAsHold({{$task->id}})"  class="dropdown-item waves-light waves-effect" href="javascript:void(0);">
+                <i class="icofont icofont-checked text-warning m-r-10"></i>Mark as on-Hold
+            </a>
+            @endif
+
+           {{--  <div class="dropdown-divider"></div> --}}
+
+           @if($task->post_status != 'resolved')
+            <a wire:click="markAsResolved({{$task->id}})"  class="dropdown-item waves-light waves-effect" href="javascript:void(0);">
+                <i class="icofont icofont-checked text-success m-r-10"></i>Mark as Resolved
+            </a>
+            @endif
+
+            @if($task->post_status != 'completed')
+            <a wire:click="markAsComplete({{$task->id}})"  class="dropdown-item waves-light waves-effect" href="javascript:void(0);">
+                <i class="icofont icofont-checked text-success m-r-10"></i>Mark as Completed
+            </a>
+            @endif
+
+
+           {{--  <a class="dropdown-item waves-light waves-effect" href="{{ route('edit-task', $task->post_url) }}">
+                <i class="icofont icofont-edit-alt m-r-10 text-warning"></i>Edit task
+            </a>
+
+            <a class="dropdown-item waves-light waves-effect" href="{{ route('view-task', $task->post_url) }}">
+                <i class="ti-eye text-primary m-r-10"></i>View task
+            </a> --}}
+        </div>
+                <div style="height: 10px"></div>
+
+
+               {{--  @if ($task->post_status == 'in-progress' && $task->user_id == Auth::user()->id)
                 <button class="btn btn-sm btn-primary f-right btn-mini" wire:click="markAsComplete({{$task->id}})" >
                     <i class="icofont icofont-ui-alarm"></i>Mark as completed
                 </button>
-                @endif
+                @endif --}}
 
                 <div class="">
                     <div class="m-b-20">
@@ -603,7 +807,7 @@
                         <div class="card">
                             <div class="card-block accordion-block">
                                 <div id="accordion" role="tablist" aria-multiselectable="true">
-                                    @php 
+                                    @php
                                         $n = 1;
                                     @endphp
 
@@ -626,7 +830,7 @@
                                             <div id="collapse_{{$post->id}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_{{$post->id}}">
                                                 <div class="accordion-content accordion-desc">
                                                    {!! $post->note !!}
-                                                   
+
                                                    <hr>
                                                 @foreach ($submissionAttachments as $attach)
                                                         @switch(pathinfo($attach->attachment, PATHINFO_EXTENSION))
@@ -921,7 +1125,7 @@
                                                         <button class="btn btn-mini btn-danger decline-submission" type="button" data-responsible="{{$post->submittedBy->first_name ?? ''}} {{$post->submittedBy->surname ?? ''}}" data-submission-id="{{$post->id}}" data-user="{{$post->submitted_by}}"><i class="ti-close mr-2"></i> Decline</button>
                                                     </div>
                                                 @endif
-                                               
+
                                                 </div>
                                             </div>
                                         </div>
@@ -961,7 +1165,7 @@
                     <div class="col-md-12 btn-add-task">
                         <div class="input-group input-group-button">
                             <input type="text" wire:model.debounce.10000ms="review" class="form-control" placeholder="Leave review...">
-    
+
                             <span class="input-group-addon btn btn-primary btn-sm" wire:click="leaveReviewBtn({{$task->id }})">
                                 <i class="icofont icofont-plus f-w-600"></i>
                                 Review
@@ -1061,7 +1265,7 @@
 
         }).on('form:submit', function() {
             axios.post('/rate/task/submitted', {
-                submission:submission, 
+                submission:submission,
                 responsible:responsible,
                 review: $('#leave_review').val(),
                 rating: $('#rating').val(),
@@ -1079,6 +1283,42 @@
             });
             return false;
         });
+
+        $('#AddRespPersons').on('click', function(){
+            $("#AddRespPersonsContainer").toggle();//.css("display","block");
+        });
+
+        $('#add').on('click', function(){
+            $("#AddRespPersonsContainer").css("display","none");
+            $('_addResponsiblePerson').submit();
+        });
+
+
+
+        $('#_addpart').on('click', function(){
+            $("#AddParticipantsContainer").toggle();//.css("display","block");
+        });
+
+        $('#add_participants').on('click', function(){
+            $("#AddParticipantsContainer").css("display","none");
+            $('_addParticipants').submit();
+        });
+
+
+
+        $('#_addobserv').on('click', function(){
+            $("#AddObserversContainer").toggle();//.css("display","block");
+        });
+
+
+        $('#add_observers').on('click', function(){
+            $("#AddObserversContainer").css("display","none");
+            $('_addObservers').submit();
+        });
+
+
+
+
 
        });
    </script>

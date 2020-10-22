@@ -68,7 +68,7 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tr>
                             <td align="center" width="100%" style="color: #fff; font-family: Arial, sans-serif; font-size: 12px;">
-                                2020 &copy; <a href="https://connexxiongroup.com/" style="color: #0073AA;">Connexxion Group</a>
+                                2020 &copy; <a href="https://connexxiongroup.com/" style="color: #0073AA;">Connexxion Telecom</a>
                             </td>
                         </tr>
                     </table>

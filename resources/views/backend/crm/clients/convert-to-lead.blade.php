@@ -5,7 +5,10 @@ Convert to Lead
 @endsection
 
 @section('extra-styles')
-
+<link rel="stylesheet" type="text/css" href="/assets/css/component.css">
+<link rel="stylesheet" type="text/css" href="/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
+    <link rel="stylesheet" type="text/css" href="/assets/bower_components/multiselect/css/multi-select.css">
+    <link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
 <style>
 /* The heart of the matter */
 
@@ -71,7 +74,7 @@ Convert to Lead
             <div class="row invoive-info">
                 <div class="col-md-4 col-xs-12 invoice-client-info">
                     <h6>Client Information :</h6>
-                    <h6 class="m-0">{{$client->first_name ?? ''}} {{$client->surname ?? ''}}</h6>
+                    <h6 class="m-0">{{$client->title ?? ''}} {{$client->first_name ?? ''}} {{$client->surname ?? ''}}</h6>
                     <p class="m-0 m-t-10">{{$client->street_1 ?? ''}}. {{$client->city ?? ''}}, {{$client->postal_code ?? ''}}</p>
                     <p class="m-0">{{$client->mobile_no ?? ''}}</p>
                     <p><a href="mailto:{{$client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[ {{$client->email ?? ''}} ]</a></p>
@@ -121,13 +124,20 @@ Convert to Lead
                                     <th class="text-danger">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="products">
                                 <tr class="item">
                                     <td>
-                                        <input type="text" name="description[]" placeholder="Description" class="form-control">
-                                        @error('description')
-                                            <i class="text-danger mt-2">{{$message}}</i>
-                                        @enderror
+                                        <div class="form-group">
+                                            <select name="description[]" value="{{old('description[]')}}" class="js-example-basic-single select-product">
+                                                <option selected disabled>Select service/product</option>
+                                                @foreach($products as $product)
+                                                    <option value="{{$product->id}}" data-price="{{$product->price ?? 0}}">{{$product->product_name ?? ''}}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('description')
+                                                <i class="text-danger mt-2">{{$message}}</i>
+                                            @enderror
+                                        </div>
                                     </td>
                                     <td>
                                         <input type="number" placeholder="Quantity" name="quantity[]" class="form-control">
@@ -147,14 +157,14 @@ Convert to Lead
                                     </td>
 
                                 </tr>
-                                <tr>
-                                    <td colspan="5">
-                                        <button class="btn btn-mini btn-primary add-line"> <i class="ti-plus mr-2"></i> Add Line</button>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-12 col-sm-12 col-lg-12">
+                    <button class="btn btn-mini btn-primary add-line"> <i class="ti-plus mr-2"></i> Add Line</button>
                 </div>
             </div>
             <div class="row">
@@ -168,7 +178,7 @@ Convert to Lead
                             <tr>
                                 <th>Taxes (%) :</th>
                                 <td>
-                                    <input type="text" placeholder="Tax Rate" class="form-control" id="tax_rate">
+                                    <input type="text" placeholder="Tax Rate" step="0.01" class="form-control" id="tax_rate">
                                 </td>
                             </tr>
                             <tr>
@@ -256,22 +266,27 @@ Convert to Lead
 
 @endsection
 @section('extra-scripts')
-
+<script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
+<script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
 <script>
     $(document).ready(function(){
+        $(".select-product").select2({
+            placeholder: "Select product/service"
+        });
         var grand_total = 0;
         $('.invoice-detail-table').on('mouseup keyup', 'input[type=number]', ()=> calculateTotals());
 
         $(document).on('click', '.add-line', function(e){
             e.preventDefault();
-            const $lastRow = $('.item:last');
-            const $newRow = $lastRow.clone();
+            var new_selection = $('.item').first().clone();
+            $('#products').append(new_selection);
 
-            $newRow.find('input').val('');
-            $newRow.find('td:nth-last-child(2) input[type=text]').text('0.00');
-            $newRow.insertAfter($lastRow);
-
-            $newRow.find('input:first').focus();
+            $(".select-product").select2({
+                placeholder: "Select product or service"
+            });
+            $(".select-product").last().next().next().remove();
         });
 
         //Remove line
@@ -297,7 +312,7 @@ Convert to Lead
         function calculateSubTotal(row){
             const $row = $(row);
             const inputs = $row.find('input');
-            const subtotal = inputs[1].value * inputs[2].value;
+            const subtotal = inputs[0].value * inputs[1].value;
            // $row.find('td:nth-last-child(3)').text(formatAsCurrency(subtotal));
             $row.find('td:nth-last-child(2) input[type=text]').val(subtotal);
             return subtotal;

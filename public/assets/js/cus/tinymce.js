@@ -8,6 +8,7 @@ $(function() {
             height: 400,
             theme: "silver",
             branding:false,
+            contextmenu: "paste | link image inserttable | cell row column deletetable",
             plugins: [
                 "advlist autolink lists link charmap print preview hr anchor pagebreak",
                 "searchreplace wordcount visualblocks visualchars code fullscreen"
@@ -28,7 +29,7 @@ $(function() {
             ],
             content_css: []
         });
-    }    
+    }
     //Tinymce editor
     if ($(".content").length) {
         tinymce.init({
@@ -36,6 +37,7 @@ $(function() {
             height: 400,
             theme: "silver",
             branding:false,
+            contextmenu: "paste | link image inserttable | cell row column deletetable",
             plugins: [
                 "advlist autolink lists link charmap print preview hr anchor pagebreak",
                 "searchreplace wordcount visualblocks visualchars code fullscreen"

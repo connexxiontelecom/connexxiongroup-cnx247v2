@@ -51,7 +51,7 @@
                         <strong>Password: </strong> <span>{{$password}}</span> <br>
                     </p>
                     <p>
-                        <a href="{{route('supplier.login')}}" style="color: #00B2B2; text-align: center; text-decoration: none;">Login</a>
+                        <a href="{{route('logistics.login')}}" style="color: #00B2B2; text-align: center; text-decoration: none;">Login</a>
                     </p>
                     <p>In the meantime, please don’t hesitate to contact us, either through email or by calling  directly at {{Auth::user()->tenant->phone}} if you should have any questions or concerns.</p>
                     <p>

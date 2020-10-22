@@ -15,6 +15,10 @@ class Invoice extends Model
         public function invoiceItem(){
             return $this->hasMany(InvoiceItem::class, 'invoice_id');
         }
+        //invoiceItem-invoice relationship
+        public function productDescription(){
+            return $this->hasMany(Product::class, 'invoice_id');
+        }
 
         //invoice-client
         public function clients(){

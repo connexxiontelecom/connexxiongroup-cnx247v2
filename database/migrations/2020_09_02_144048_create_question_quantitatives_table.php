@@ -16,6 +16,8 @@ class CreateQuestionQuantitativesTable extends Migration
         Schema::create('question_quantitatives', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tenant_id');
+            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('added_by');
             $table->text('question');
             $table->timestamps();

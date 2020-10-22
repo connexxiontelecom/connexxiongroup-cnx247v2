@@ -69,7 +69,7 @@
                                         <a href="{{ route('view-profile', $attend->user->url) }}">{{$attend->user->first_name ?? ''}} {{ $attend->user->surname ?? '' }}</a>
                                     </td>
                                     <td>{{date('d F, Y', strtotime($attend->clock_in)) ?? '-'}} @ {{ date('h:i a', strtotime($attend->clock_in)) }} | <small>{{ \Carbon\Carbon::parse($attend->clock_in)->diffForHumans() ?? '-'}}</small> </td>
-                                    <td>{{date('d F, Y', strtotime($attend->clock_out)) ?? '-'}} @ {{ date('h:i a', strtotime($attend->clock_out)) }} | <small>{{ \Carbon\Carbon::parse($attend->clock_out)->diffForHumans() ?? '-'}}</small> </td>
+                                    <td>@if(!is_null($attend->clock_out)){{ date('d F, Y', strtotime($attend->clock_out))}} @ {{ date('h:i a', strtotime($attend->clock_out))}}  <small> | {{  \Carbon\Carbon::parse($attend->clock_out)->diffForHumans() }}</small> @else No record found. @endif</td>
                                     <td> <label for="" class="label label-info">{{number_format($diff) ?? '-'}} <small>minutes</small> </label> </td>
                                     <td>{{ date('d F, Y', strtotime($attend->created_at)) ?? '-' }}</td>
                                 </tr>
