@@ -1,17 +1,13 @@
 <div class="btn-group " role="group">
     @if(empty($clocked_in))
-        @if (\Carbon\Carbon::parse(Auth::user()->opening_time)->format('H:i:s') < \Carbon\Carbon::parse(Auth::user()->opening_time)
-        ->addMinutes(10)
-        ->format('H:i:s'))
+        @if (\Carbon\Carbon::now()->format('H:i:s')->between(\Carbon\Carbon::parse(Auth::user()->tenant->opening_time)->subMinutes(10)->format('H:i:s'), \Carbon\Carbon::parse(Auth::user()->tenant->opening_time)->addMinutes(10)->format('H:i:s')))
             <button wire:ignore type="button"  class="btn btn-success btn-mini waves-effect waves-light clockinBtn" data-toggle="tooltip" data-placement="top" title="" data-original-title="Clock-in">
                 <i class="ti-alarm-clock"></i>Clock-in
             </button>
         @endif
     @else
         @if($clocked_in->status == 1)
-            @if (\Carbon\Carbon::parse(Auth::user()->closing_time)->format('H:i:s') < \Carbon\Carbon::parse(Auth::user()->closing_time)
-                ->addMinutes(10)
-                ->format('H:i:s'))
+            @if (\Carbon\Carbon::now()->between(\Carbon\Carbon::parse(Auth::user()->tenant->opening_time), \Carbon\Carbon::parse(Auth::user()->tenant->closing_time)->addMinutes(10)))
                 <button wire:ignore type="button" class="btn btn-danger btn-mini waves-effect waves-light clockoutBtn" data-toggle="tooltip" data-placement="top" title="" data-original-title="Clock-out">
                     <i class="ti-alarm-clock"></i>Clock-out
                 </button>

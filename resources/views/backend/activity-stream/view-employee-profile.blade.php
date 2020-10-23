@@ -94,7 +94,7 @@
                                     </tr>
                                     <tr>
                                         <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Birth Date</th>
-                                        <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($user->birth_date))}}</td>
+                                        <td>{{date('d F', strtotime($user->birth_date))}}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Marital Status</th>

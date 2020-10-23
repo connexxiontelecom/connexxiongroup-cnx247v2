@@ -61,6 +61,8 @@ Route::post('/module/new', 'CNX247\Backend\AdminController@newModule')->name('ne
 Route::get('/plans-n-features', 'CNX247\Backend\PlansnFeaturesController@index')->name('plans-n-features');
 Route::get('/plans-n-features/new', 'CNX247\Backend\PlansnFeaturesController@create')->name('new-plans-n-features');
 Route::post('/plans-n-features/new', 'CNX247\Backend\PlansnFeaturesController@store');
+Route::get('/plans-n-features/edit/{id}', 'CNX247\Backend\PlansnFeaturesController@edit')->name('edit-plans-n-features');
+Route::post('/plans-n-features/update', 'CNX247\Backend\PlansnFeaturesController@update')->name('update-plans-n-features');
 Route::get('/plans-n-features/view/{url}', 'CNX247\Backend\PlansnFeaturesController@view')->name('view-plans-n-features');
 #Constants
 Route::get('/admin/constants', 'CNX247\Backend\ConstantController@index')->name('constants');
@@ -247,11 +249,13 @@ Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name(
 #Bulk SMS
     Route::get('/crm/bulk-sms', 'CNX247\Backend\BulkSmsController@index')->name('bulk-sms');
     Route::get('/crm/bulk-sms/compose', 'CNX247\Backend\BulkSmsController@create')->name('compose-sms');
-    Route::post('/crm/bulk-sms/send', 'CNX247\Backend\BulkSmsController@processSMS');
+    Route::post('/crm/bulk-sms/send', 'CNX247\Backend\BulkSmsController@sendBulkSms')->name('send-bulk-sms');
     Route::get('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@phoneGroups')->name('phone-groups');
     Route::get('/crm/bulk-sms/phone-group/{slug}', 'CNX247\Backend\BulkSmsController@showPhoneGroup')->name('show-phone-group');
+    Route::get('/crm/bulk-sms/delete/phone-group/{slug}', 'CNX247\Backend\BulkSmsController@deletePhoneGroup')->name('delete-phone-group');
     Route::post('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@storePhoneGroup');
-    Route::get('/crm/bulk-sms/phone-group/new', 'CNX247\Backend\BulkSmsController@newPhoneGroup')->name('new-phone-group');
+    Route::post('/crm/bulk-sms/update-phone-group', 'CNX247\Backend\BulkSmsController@updatePhoneGroup')->name('update-phone-group');
+    Route::get('/crm/bulk-sms/new-phone-group', 'CNX247\Backend\BulkSmsController@newPhoneGroup')->name('new-phone-group');
 #Email Campaign
     Route::get('/crm/email-campaigns', 'CNX247\Backend\EmailCampaignController@index')->name('email-campaigns');
     Route::get('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@create')->name('new-email-campaign');

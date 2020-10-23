@@ -5,6 +5,7 @@
 @endsection
 
 @section('extra-styles')
+
     <style>
         .card{
             border-radius: 0px !important;
@@ -32,7 +33,10 @@
                                         <a class="nav-link px-3 rounded-pill active monthly" id="Monthly" data-toggle="pill" href="#Month" role="tab" aria-controls="Month" aria-selected="true">Monthly</a>
                                     </li>
                                     <li class="nav-item d-inline-block">
-                                        <a class="nav-link px-3 rounded-pill yearly" id="Yearly" data-toggle="pill" href="#Year" role="tab" aria-controls="Year" aria-selected="false">Yearly <span class="badge badge-pill badge-success">15% Off </span></a>
+                                        <a class="nav-link px-3 rounded-pill monthly" id="Quarterly" data-toggle="pill" href="#Quarter" role="tab" aria-controls="Quarter" aria-selected="true">Quarterly</a>
+                                    </li>
+                                    <li class="nav-item d-inline-block">
+                                        <a class="nav-link px-3 rounded-pill yearly" id="Yearly" data-toggle="pill" href="#Year" role="tab" aria-controls="Year" aria-selected="false">Yearly </a>
                                     </li>
                                 </ul>
                             </div>
@@ -46,7 +50,7 @@
                                                     <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
                                                         <div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
                                                             <div class="card-body">
-                                                                <h2 class="title text-uppercase mb-4">{{$plan->planName->name}}</h2>
+                                                                <h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2> 
                                                                 <div class="d-flex mb-4">
                                                                     <span class="h5 mb-0 mt-0">{{$plan->currency->symbol}}</span>
                                                                     <span class="price h5 mb-0">{{number_format($plan->price,2)}}</span>
@@ -56,6 +60,75 @@
                                                                 <p class="text-center text-muted">
                                                                     {{$plan->description}}
                                                                 </p>
+                                                                <ul class="list-unstyled mb-0 pl-0">
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>Calls: {{$plan->calls != 0 ? number_format($plan->calls).' minutes/month' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>Emails: {{$plan->emails != 0 ? number_format($plan->emails).'/month' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>SMS: {{$plan->sms != 0 ? number_format($plan->sms).'/month' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>Users: {{$plan->team_size != 0 ? number_format($plan->team_size).' users (max)' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>CNXStream: {{$plan->stream != 0 ? number_format($plan->stream).' hours    ' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>CNXDrive: {{$plan->storage != 0 ? number_format($plan->storage).' GB' : '-'}}
+                                                                    </li>
+                                                                </ul>
+                                                                <a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <p class="text-center">There're no plans </p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="Quarter" role="tabpanel" aria-labelledby="Quarterly">
+                                    <div class="row">
+                                        @if (count($plans) > 0)
+                                            @foreach ($plans as $plan)
+                                                @if ($plan->duration > 30 && $plan->duration <= 90 )
+                                                    <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
+                                                        <div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
+                                                            <div class="card-body">
+                                                                <h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2>
+                                                                <div class="d-flex mb-4">
+                                                                    <span class="h5 mb-0 mt-0">{{$plan->currency->symbol}}</span>
+                                                                    <span class="price h5 mb-0">{{number_format($plan->price,2)}}</span>
+                                                                    <span class="h5 align-self-end mb-1">/mo</span>
+                                                                </div>
+
+                                                                <p class="text-center text-muted">
+                                                                    {{$plan->description}}
+                                                                </p>
+                                                                <ul class="list-unstyled mb-0 pl-0">
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>Calls: {{$plan->calls != 0 ? number_format($plan->calls).' minutes/month' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>Emails: {{$plan->emails != 0 ? number_format($plan->emails).'/month' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>SMS: {{$plan->sms != 0 ? number_format($plan->sms).'/month' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>Users: {{$plan->team_size != 0 ? number_format($plan->team_size).' users (max)' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>CNXStream: {{$plan->stream != 0 ? number_format($plan->stream).' hours    ' : '-'}}
+                                                                    </li>
+                                                                    <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                        <i class="uim uim-check-circle"></i></span>CNXDrive: {{$plan->storage != 0 ? number_format($plan->storage).' GB' : '-'}}
+                                                                    </li>
+                                                                </ul>
                                                                 <a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
                                                             </div>
                                                         </div>
@@ -76,7 +149,7 @@
                                                 <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
                                                     <div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
                                                         <div class="card-body">
-                                                            <h2 class="title text-uppercase mb-4">{{$plan->planName->name}}</h2>
+                                                            <h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2>
                                                             <div class="d-flex mb-4">
                                                                 <span class="h5 mb-0 mt-0">{{$plan->currency->symbol}}</span>
                                                                 <span class="price h5 mb-0">{{number_format($plan->price,2)}}</span>
@@ -86,6 +159,26 @@
                                                             <p class="text-center text-muted">
                                                                 {{$plan->description}}
                                                             </p>
+                                                            <ul class="list-unstyled mb-0 pl-0">
+                                                                <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                    <i class="uim uim-check-circle"></i></span>Calls: {{$plan->calls != 0 ? number_format($plan->calls).' minutes/month' : '-'}}
+                                                                </li>
+                                                                <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                    <i class="uim uim-check-circle"></i></span>Emails: {{$plan->emails != 0 ? number_format($plan->emails).'/month' : '-'}}
+                                                                </li>
+                                                                <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                    <i class="uim uim-check-circle"></i></span>SMS: {{$plan->sms != 0 ? number_format($plan->sms).'/month' : '-'}}
+                                                                </li>
+                                                                <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                    <i class="uim uim-check-circle"></i></span>Users: {{$plan->team_size != 0 ? number_format($plan->team_size).' users (max)' : '-'}}
+                                                                </li>
+                                                                <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                    <i class="uim uim-check-circle"></i></span>CNXStream: {{$plan->stream != 0 ? number_format($plan->stream).' hours    ' : '-'}}
+                                                                </li>
+                                                                <li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
+                                                                    <i class="uim uim-check-circle"></i></span>CNXDrive: {{$plan->storage != 0 ? number_format($plan->storage).' GB' : '-'}}
+                                                                </li>
+                                                            </ul>
                                                             <a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
                                                         </div>
                                                     </div>

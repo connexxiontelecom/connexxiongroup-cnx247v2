@@ -46,8 +46,8 @@ class SendEmailCampaign extends Command
                 \Mail::to($email)->send(new SendEmailCampaignMail($email, $tenant));
                 $email->status = 1;
                 $email->save();
-                $this->info('Success! Email campaign sent.');
             }
+            $this->info('Success! Email campaign sent.');
         }
     }
 }
