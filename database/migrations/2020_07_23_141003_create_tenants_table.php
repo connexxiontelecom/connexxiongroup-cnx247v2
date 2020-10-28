@@ -53,6 +53,10 @@ class CreateTenantsTable extends Migration
             $table->text('slug')->nullable();
             $table->text('invoice_terms')->nullable();
             $table->text('receipt_terms')->nullable();
+            $table->time('opening_time')->default('08:00:00');
+            $table->time('closing_time')->default('17:00:00');
+            $table->integer('grace_period')->default(10);
+            $table->string('timezone')->default('Africa/Lagos');
             $table->timestamps();
         });
     }

@@ -28,7 +28,7 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <i class="icofont icofont-close-line-circled"></i>
                                     </button>
-                                    <strong>Success!</strong> {!! session('success') !!}
+                                     {!! session('success') !!}
                                 </div>
                             @endif
                     <form action="{{route('new-project')}}" method="post">
@@ -40,8 +40,8 @@
                                 <i class="text-danger">{{$message}}</i>
                             @enderror
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
+                        <div class="row mb-4">
+                            <div class="col-md-4 col-md-4 col-lg-4 col-sm-6">
                                 <div class="form-group">
                                     <label class="">Project Sponsor/Owner </label>
                                     <input type="text" name="project_sponsor" value="{{old('project_sponsor')}}" class="form-control form-control-normal mb-2" placeholder="Project Sponsor/Owner">
@@ -50,10 +50,10 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4 col-md-4 col-lg-4 col-sm-6">
                                 <div class="form-group">
                                     <label class="">Project Manager </label>
-                                    <select  name="project_manager" value="{{old('project_manager')}}" class="form-control form-control-normal mb-2">
+                                    <select  name="project_manager" value="{{old('project_manager')}}" class="form-control js-example-basic-single form-control-normal mb-2">
                                         @foreach ($users as $user)
                                         <option value="{{$user->id}}">{{$user->first_name}} {{$user->surname ?? ''}}</option>
 
@@ -62,6 +62,28 @@
                                         @error('project_manager')
                                             <i class="text-danger">{{$message}}</i>
                                         @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-md-4 col-lg-4 col-sm-6">
+                                <div class="checkbox-fade fade-in-primary">
+                                    <label>
+                                        <input name="budget_check" id="budget_check" type="checkbox" value="1">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span>
+                                        <span>This project has budget</span>
+                                    </label>
+                                </div>
+                                <div id="budget_wrapper">
+                                    <select  name="budget" id="budget" value="{{old('budget')}}" class="form-control js-example-basic-single mb-2">
+                                        <option disabled selected>Select budget</option>
+                                        @foreach ($budgets as $budget)
+                                        <option value="{{$budget->glcode}}">{{$budget->budget_title}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('budget')
+                                        <i class="text-danger">{{$message}}</i>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -123,7 +145,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Responsible Person(s)</label>
-                                    <select name="responsible_persons[]" value="{{old('responsible_persons[]')}}" class="" multiple="multiple">
+                                    <select name="responsible_persons[]" value="{{old('responsible_persons[]')}}" class="js-example-basic-multiple" multiple="multiple">
                                         <option selected disabled>Add Responsible Person(s)</option>
                                         @foreach($users as $user)
                                             <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
@@ -134,7 +156,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="">Participant(s) <i>(Optional)</i> </label>
-                                    <select name="participants[]" value="{{old('participants[]')}}" class="" multiple="multiple">
+                                    <select name="participants[]" value="{{old('participants[]')}}" class="js-example-basic-multiple" multiple="multiple">
                                         <option selected disabled>Add Participant(s)</option>
                                         @foreach($users as $user)
                                             <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
@@ -145,7 +167,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="">Observer(s) <i>(Optional)</i> </label>
-                                    <select name="observers[]" value="{{old('observers[]')}}" class="" multiple="multiple">
+                                    <select name="observers[]" value="{{old('observers[]')}}" class="js-example-basic-multiple" multiple="multiple">
                                         <option selected disabled>Add observer(s)</option>
                                         @foreach($users as $user)
                                             <option value="{{$user->id}}">{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</option>
@@ -193,4 +215,17 @@
 <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
 <script type="text/javascript" src="/assets/bower_components/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#budget_wrapper').hide();
+        $('#budget_check').on('change', function(e){
+            e.preventDefault();
+            if($(this).is(':checked')){
+                $('#budget_wrapper').show();
+            }else{
+                $('#budget_wrapper').hide();
+            }
+        });
+    });
+</script>
 @endsection
