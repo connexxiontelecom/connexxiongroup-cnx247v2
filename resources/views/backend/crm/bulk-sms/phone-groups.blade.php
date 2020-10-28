@@ -68,6 +68,7 @@
             </div>
             <div class="col-lg-9 col-xl-9 col-sm-8 col-md-8">
                 <div class="card-block ">
+                    <a href="{{route('new-phone-group')}}" class="btn btn-mini btn-primary float-right mb-3">Create New Phone Group</a>
                     <h5 class="sub-title">Phone Groups</h5>
                     <div class="dt-responsive table-responsive">
                         <table id="simpletable" class="table table-striped table-bordered nowrap">

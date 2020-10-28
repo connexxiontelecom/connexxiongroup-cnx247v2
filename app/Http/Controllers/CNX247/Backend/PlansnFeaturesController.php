@@ -53,22 +53,34 @@ class PlansnFeaturesController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $this->validate($request,[
             'plan_name'=>'required',
             'duration'=>'required',
             'amount'=>'required',
             'currency'=>'required',
-            'description'=>'required'
+            'emails'=>'required',
+            'sms'=>'required',
+            'call_duration'=>'required',
+            'number_of_users'=>'required',
+            'storage_size'=>'required',
+            'cnxstream_duration'=>'required',
+            'description'=>'required',
         ]);
         $plan = new PlanFeature;
         $plan->currency_id = $request->currency;
         $plan->plan_id = $request->plan_name;
         $plan->duration = $request->duration;
         $plan->price = $request->amount;
+        $plan->emails = $request->emails;
+        $plan->sms = $request->sms;
+        $plan->calls = $request->call_duration;
+        $plan->team_size = $request->number_of_users;
+        $plan->storage_size = $request->storage_size;
+        $plan->stream = $request->cnxstream_duration;
         $plan->description = $request->description;
         $plan->slug = substr(sha1(time()), 19,40);
         $plan->save();
-        session()->flash("success", "<strong>Success!</strong> New plan registered.");
+        session()->flash("success", "<strong>Success!</strong> Plan changes saved.");
         return redirect()->route('plans-n-features');
     }
 
@@ -106,15 +118,18 @@ class PlansnFeaturesController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $currencies = Currency::all();
+        #Plans come from role table
+        $plan = PlanFeature::where('id', $id)->first();
+        $plans = Role::where('type', 0)->get();
+        return view('backend.admin.plan-features.edit',
+        [
+         'currencies'=>$currencies,
+         'plan'=>$plan,
+         'plans'=>$plans
+        ]);
     }
 
     /**
@@ -124,9 +139,36 @@ class PlansnFeaturesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $this->validate($request,[
+            'plan_name'=>'required',
+            'duration'=>'required',
+            'amount'=>'required',
+            'currency'=>'required',
+            'emails'=>'required',
+            'sms'=>'required',
+            'call_duration'=>'required',
+            'number_of_users'=>'required',
+            'storage_size'=>'required',
+            'cnxstream_duration'=>'required',
+            'description'=>'required',
+        ]);
+        $plan = PlanFeature::where('id', $request->planId)->first();
+        $plan->currency_id = $request->currency;
+        $plan->plan_id = $request->plan_name;
+        $plan->duration = $request->duration;
+        $plan->price = $request->amount;
+        $plan->emails = $request->emails;
+        $plan->sms = $request->sms;
+        $plan->calls = $request->call_duration;
+        $plan->team_size = $request->number_of_users;
+        $plan->storage_size = $request->storage_size;
+        $plan->stream = $request->cnxstream_duration;
+        $plan->description = $request->description;
+        $plan->save();
+        session()->flash("success", "<strong>Success!</strong> Plan changes saved.");
+        return redirect()->route('plans-n-features');
     }
 
     /**

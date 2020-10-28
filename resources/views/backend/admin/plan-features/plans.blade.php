@@ -61,7 +61,7 @@
                                                 <td>{{$plan->currency->symbol}}{{number_format($plan->price,2)}}</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href=""> <i class="ti-pencil text-warning mr-3"></i> </a>
+                                                        <a href="{{route('edit-plans-n-features',$plan->id)}}"> <i class="ti-pencil text-warning mr-3"></i> </a>
                                                         <a href="{{route('view-plans-n-features', $plan->slug)}}"> <i class="ti-eye text-info mr-3"></i> </a>
                                                     </div>
                                                 </td>

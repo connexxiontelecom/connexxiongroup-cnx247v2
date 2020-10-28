@@ -16,10 +16,14 @@ class CreateBulkSmsTable extends Migration
         Schema::create('bulk_sms', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tenant_id');
-            $table->unsignedBigInteger('sender_id');
-            $table->tinyInteger('status'); //1=sent, 0=pending
-            $table->string('mobile_no');
-            $table->string('message');
+            $table->string('sender_id')->nullable();
+            $table->tinyInteger('status')->default(0)->nullable(); //1=sent, 0=pending
+            $table->tinyInteger('delivered')->default(0)->nullable(); //1=sent, 0=pending
+            $table->string('mobile_no')->nullable();
+            $table->string('message')->nullable();
+            $table->time('time_sent')->nullable();
+            $table->time('time_received')->nullable();
+            $table->time('batch_id')->nullable();
             $table->timestamps();
         });
     }

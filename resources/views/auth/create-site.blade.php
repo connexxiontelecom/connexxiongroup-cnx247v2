@@ -33,8 +33,27 @@
                             @endif
                         </ul>
                         <p>
-                            Price: <span class="badge badge-pill badge-outline-secondary mr-2 mt-2" style="cursor: pointer;">{{$chosen_plan->currency->symbol}}{{number_format($chosen_plan->price,2)}}</span>
+                            Duration: <span class="badge badge-pill badge-outline-secondary mr-2 mt-2" style="cursor: pointer;">{{$chosen_plan->duration ?? '-'}} days</span>
                         </p>
+                        @if($chosen_plan->duration > 31 && $chosen_plan->duration <= 90)
+                            <p>
+                                Price: <span class="badge badge-pill badge-outline-secondary mr-2 mt-2" style="cursor: pointer;">{{$chosen_plan->currency->symbol}}{{number_format($chosen_plan->price,2)}}</span>
+                            </p>
+                            <p>
+                                Quarterly: <span class="badge badge-pill badge-outline-secondary mr-2 mt-2" style="cursor: pointer;">{{$chosen_plan->currency->symbol}}{{number_format($chosen_plan->price * 3,2)}}</span>
+                            </p>
+                        @elseif($chosen_plan->duration > 91 && $chosen_plan->duration <= 365)
+                            <p>
+                                Price: <span class="badge badge-pill badge-outline-secondary mr-2 mt-2" style="cursor: pointer;">{{$chosen_plan->currency->symbol}}{{number_format($chosen_plan->price,2)}}</span>
+                            </p>
+                            <p>
+                                Annually: <span class="badge badge-pill badge-outline-secondary mr-2 mt-2" style="cursor: pointer;">{{$chosen_plan->currency->symbol}}{{number_format($chosen_plan->price * 12,2)}}</span>
+                            </p>
+                        @else
+                            <p>
+                                Price: <span class="badge badge-pill badge-outline-secondary mr-2 mt-2" style="cursor: pointer;">{{$chosen_plan->currency->symbol}}{{number_format($chosen_plan->price,2)}}</span>
+                            </p>
+                        @endif
                     </div>
                 </div>
                 <div class="col-lg-7 col-md-8">
@@ -192,7 +211,15 @@
                                     <div class="col-md-12">
                                         <input type="hidden" name="orderID" value="{{rand(100,999)}}">
                                         <input type="hidden" name="quantity" value="1">
-                                        <input type="hidden" name="amount" value="{{ ($chosen_plan->price * 100)}}">
+
+                                        @if($chosen_plan->duration > 31 && $chosen_plan->duration <= 90)
+                                            <input type="hidden" name="amount" value="{{ ($chosen_plan->price * 100 * 3)}}">
+                                        @elseif($chosen_plan->duration > 91 && $chosen_plan->duration <= 365)
+                                            <input type="hidden" name="amount" value="{{ ($chosen_plan->price * 100 * 12)}}">
+                                        @else
+                                         <input type="hidden" name="amount" value="{{ ($chosen_plan->price * 100)}}">
+                                        @endif
+                                        
                                         <input type="hidden" name="currency" value="NGN">
                                         <input type="hidden" id="duration" value="{{$chosen_plan->duration}}">
                                         <input type="hidden" id="plan" value="{{$chosen_plan->plan_id}}">

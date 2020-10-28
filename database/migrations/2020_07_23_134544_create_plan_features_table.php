@@ -20,6 +20,12 @@ class CreatePlanFeaturesTable extends Migration
             $table->string('duration');
             $table->double('price');
             $table->string('description')->nullable();
+            $table->integer('emails')->nullable();
+            $table->integer('calls')->nullable();
+            $table->integer('sms')->nullable();
+            $table->integer('team_size')->nullable();
+            $table->integer('storage_size')->nullable();
+            $table->integer('stream')->nullable();
             $table->string('slug');
             $table->timestamps();
         });
