@@ -193,7 +193,7 @@
                                                         {{-- <span class=" btn-warning label f-right"> {{ " In - progress" }}</span> --}}
 
                                                         @if ($task->post_status == 'completed')
-                                                        <label for="" class="label btn-success">Completed</label>
+                                                        <label for="" class="label  f-right btn-success">Completed</label>
                                                         @elseif($task->post_status == 'in-progress')
                                                         <label for="" class="label btn-warning f-right">in-progress</label>
 

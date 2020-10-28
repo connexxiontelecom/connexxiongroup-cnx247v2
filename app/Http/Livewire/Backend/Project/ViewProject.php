@@ -3,6 +3,9 @@
 namespace App\Http\Livewire\Backend\Project;
 
 use Livewire\Component;
+use App\ResponsiblePerson;
+use App\Observer;
+use App\Participant;
 use App\Post;
 use App\PostLike;
 use App\PostComment;
@@ -21,6 +24,8 @@ class ViewProject extends Component
     public $review;
     public $attachments;
     public $milestones;
+    public $users;
+
 
     public function mount($url = ''){
         $this->link = request('url', $url);
@@ -80,14 +85,102 @@ class ViewProject extends Component
                                     ->where('tenant_id', Auth::user()->tenant_id)
                                     ->orderBy('id', 'DESC')
                                     ->get();
+        $this->users = User::select('first_name', 'surname', 'id')
+        ->where('account_status',1)
+        ->where('verified', 1)
+        ->where('tenant_id',Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->get();
     }
 
     public function markAsComplete($id){
         $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
-        $task->post_status = 'complete';
+        $task->post_status = 'completed';
         $task->save();
         session()->flash("success", "<strong>Success!</strong> Task marked as complete.");
         $this->getContent();
         return back();
+    }
+
+   /*  public function markAsComplete($id){
+        $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $task->post_status = 'completed';
+        $task->save();
+        session()->flash("success", "<strong>Success!</strong> Task marked as completed.");
+        $this->getContent();
+        return back();
+    } */
+    public function markAsRisk($id){
+        $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $task->post_status = 'at-risk';
+        $task->save();
+        session()->flash("success", "<strong>Success!</strong> Task marked as At-Risk.");
+        $this->getContent();
+        return back();
+    }
+
+    public function markAsHold($id){
+        $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $task->post_status = 'on-hold';
+        $task->save();
+        session()->flash("success", "<strong>Success!</strong> Task marked as On-Hold.");
+        $this->getContent();
+        return back();
+    }
+
+
+    public function markAsResolved($id){
+        $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $task->post_status = 'resolved';
+        $task->save();
+        session()->flash("success", "<strong>Success!</strong> Task marked as Resolved.");
+        $this->getContent();
+        return back();
+    }
+
+
+    public function markAsClosed($id){
+        $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $task->post_status = 'closed';
+        $task->save();
+        session()->flash("success", "<strong>Success!</strong> Task marked as Closed.");
+        $this->getContent();
+        return back();
+    }
+
+
+    public function removeResponsiblePerson($participant)
+    {
+        $responsiblePerson =  ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)->where('user_id', $participant)->where('post_id', $this->project->id)->first();
+        if(!empty($responsiblePerson)) {
+        $responsiblePerson->delete();
+        }
+        $this->getContent();
+        return back();
+        //return redirect()->route('view-project', ["url" => $request->url]);
+    }
+
+
+
+    public function removeObserver($participant)
+    {
+        $responsiblePerson =  Observer::where('tenant_id', Auth::user()->tenant_id)->where('user_id', $participant)->where('post_id', $this->project->id)->first();
+        if(!empty($responsiblePerson)) {
+        $responsiblePerson->delete();
+        }
+        $this->getContent();
+        return back();
+        //return redirect()->route('view-project', ["url" => $request->url]);
+    }
+
+
+
+    public function removeParticipant($participant)
+    {
+        $responsiblePerson =  Participant::where('tenant_id', Auth::user()->tenant_id)->where('user_id', $participant)->where('post_id', $this->project->id)->first();
+        if(!empty($responsiblePerson)) {
+        $responsiblePerson->delete();
+        }
+        $this->getContent();
+        return back();
+        //return redirect()->route('view-project', ["url" => $request->url]);
     }
 }

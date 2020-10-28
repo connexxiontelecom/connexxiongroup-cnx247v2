@@ -279,4 +279,114 @@ class ProjectController extends Controller
         return redirect()->back();
     }
 
+
+
+    public function addResponsiblePerson(Request $request)
+    {
+
+        $this->validate($request, [
+            'taskId' => 'required',
+            'responsible_persons' => 'required',
+        ]);
+
+        $task = Post::where('tenant_id', Auth::user()->tenant_id)
+            ->where('id', $request->taskId)->first();
+
+        if (!empty($request->responsible_persons)) {
+            foreach ($request->responsible_persons as $participant) {
+                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
+                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
+                $part = new ResponsiblePerson;
+
+                $exists = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)->where('user_id', $participant)->where('post_id', $request->taskId)->first();
+
+                if (empty($exists) || is_null($exists)) {
+
+                    $part->post_id = $request->taskId;
+                    $part->post_type = 'project';
+                    $part->user_id = $participant;
+                    $part->tenant_id = Auth::user()->tenant_id;
+                    $part->save();
+                    $user = User::find($participant);
+                    $user->notify(new NewPostNotification($task));
+
+                }
+            }
+        }
+        return redirect()->route('view-project', ["url" => $request->url]);
+    }
+
+
+
+    public function addParticipant(Request $request)
+    {
+
+        $this->validate($request, [
+            'taskId' => 'required',
+            'participants' => 'required',
+        ]);
+
+        $task = Post::where('tenant_id', Auth::user()->tenant_id)
+            ->where('id', $request->taskId)->first();
+
+        if (!empty($request->participants)) {
+            foreach ($request->participants as $participant) {
+                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
+                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
+                $part = new Participant();
+
+                $exists = Participant::where('tenant_id', Auth::user()->tenant_id)->where('user_id', $participant)->where('post_id', $request->taskId)->first();
+
+                if (empty($exists) || is_null($exists)) {
+
+                    $part->post_id = $request->taskId;
+                    $part->post_type = 'project';
+                    $part->user_id = $participant;
+                    $part->tenant_id = Auth::user()->tenant_id;
+                    $part->save();
+                    $user = User::find($participant);
+                    $user->notify(new NewPostNotification($task));
+
+                }
+            }
+        }
+        return redirect()->route('view-project', ["url" => $request->url]);
+    }
+
+
+    public function addObserver(Request $request)
+    {
+
+        $this->validate($request, [
+            'taskId' => 'required',
+            'observers' => 'required',
+        ]);
+
+        $task = Post::where('tenant_id', Auth::user()->tenant_id)
+            ->where('id', $request->taskId)->first();
+
+        if (!empty($request->observers)) {
+            foreach ($request->observers as $participant) {
+                /*  $user = User::select('first_name', 'surname', 'email', 'id')->where('id', $participant)->first();
+                \Mail::to($user->email)->send(new MailTask($user, $request, $url)); */
+                $part = new Observer();
+
+                $exists = Observer::where('tenant_id', Auth::user()->tenant_id)->where('user_id', $participant)->where('post_id', $request->taskId)->first();
+
+                if (empty($exists) || is_null($exists)) {
+
+                    $part->post_id = $request->taskId;
+                    $part->post_type = 'project';
+                    $part->user_id = $participant;
+                    $part->tenant_id = Auth::user()->tenant_id;
+                    $part->save();
+                    $user = User::find($participant);
+                    $user->notify(new NewPostNotification($task));
+
+                }
+            }
+        }
+        return redirect()->route('view-project', ["url" => $request->url]);
+    }
+
 }

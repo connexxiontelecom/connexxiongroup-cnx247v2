@@ -43,9 +43,32 @@
                                     @if ($person->user_id == Auth::user()->id)
                                         <div class="col-sm-6">
                                             <div class="card" style="border-top: 4px solid {{$task->post_color}}">
-                                                <div class="card-header">
-                                                    <a href="{{ route('view-project', $task->post_url) }}" class="card-title">{{$task->post_title}}</a>
-                                                    <span class="label label-primary f-right"> {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->created_at) )}}</span>
+                                                 <div class="card-header">
+                                                      <a href="{{ route('view-project', $task->post_url) }}" class="card-title">{{$task->post_title}}</a>
+                                                        {{-- <span class=" btn-warning label f-right"> {{ " In - progress" }}</span> --}}
+
+                                                        @if ($task->post_status == 'completed')
+                                                        <label for="" class="label  f-right btn-success">Completed</label>
+                                                        @elseif($task->post_status == 'in-progress')
+                                                        <label for="" class="label btn-warning f-right">in-progress</label>
+
+                                                        @elseif($task->post_status == 'closed')
+                                                        <label for="" class="label btn-warning f-right">Closed</label>
+
+                                                        @elseif($task->post_status == 'on-hold')
+                                                        <label for="" class="label btn-warning f-right">On-Hold</label>
+
+                                                        @elseif($task->post_status == 'at-risk')
+                                                        <label for="" class="label btn-danger f-right">At-Risk</label>
+
+                                                        @elseif($task->post_status == 'resolved')
+                                                        <label for="" class="label btn-success f-right">Resolved</label>
+
+                                                        @endif
+
+                                                        <p><i class="ti-alarm-clock"></i><label style="font-size: 10px; margin-right:10px;" >created: </label><label style="font-size: 10px;"> {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->created_at) )}}</label></p>
+                                                    {{-- <a href="{{ route('view-project', $task->post_url) }}" class="card-title">{{$task->post_title}}</a>
+                                                    <span class="label label-primary f-right"> {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->created_at) )}}</span> --}}
                                                 </div>
                                                 <div class="card-block">
                                                     <div class="row">
