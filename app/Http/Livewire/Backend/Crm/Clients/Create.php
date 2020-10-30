@@ -18,15 +18,19 @@ class Create extends Component
     }
 
     public function addNewClient(){
+        $messages = [
+            'required' => 'The :attribute is mandatory',
+            'mobile_no.regex' => 'The phone number must be in E.164 format(+234...)'
+        ];
          $this->validate([
             'first_name'=>'required',
             'surname'=>'required',
-            'mobile_no'=>'required',
+            'mobile_no'=>'required|regex:/^\+[1-9]\d{1,14}$/',
             'street_1'=>'required',
             'email'=>'required|email',
             'country'=>'required',
             'city'=>'required'
-        ]);
+         ], $messages);
         $client = new Client;
         $client->owner = Auth::user()->id;
         $client->assigned_to = Auth::user()->id;

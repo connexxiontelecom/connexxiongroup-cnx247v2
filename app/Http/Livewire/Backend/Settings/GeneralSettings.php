@@ -12,7 +12,7 @@ class GeneralSettings extends Component
 {
     public $company_name, $email_signature, $tagline, $about_use, $city, $street_1, $street_2, $postal_code;
     public $industry, $preferred_lang, $date_format, $company_prefix, $phone;
-    public $opening_time, $closing_time;
+    public $opening_time, $closing_time, $grace_period, $timezone;
     public function render()
     {
         return view('livewire.backend.settings.general-settings',
@@ -37,6 +37,7 @@ class GeneralSettings extends Component
         $this->phone = Auth::user()->tenant->phone;
         $this->opening_time = Auth::user()->tenant->opening_time;
         $this->closing_time = Auth::user()->tenant->closing_time;
+        $this->grace_period = Auth::user()->tenant->grace_period;
     }
 
     /*
@@ -73,6 +74,7 @@ class GeneralSettings extends Component
         $tenant->phone = $this->phone ?? '';
         $tenant->closing_time = $this->closing_time ?? '';
         $tenant->opening_time = $this->opening_time ?? '';
+        $tenant->grace_period = $this->grace_period ?? '';
         $tenant->save();
         session()->flash("success", "<strong>Success!</strong> Changes updated.");
         return back();

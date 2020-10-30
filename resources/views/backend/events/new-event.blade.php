@@ -128,7 +128,7 @@
 <script>
     $(document).ready(function(){
         $('#event-persons-wrap').hide();
-        $(document).on('change', '#target_event', function(e){
+        $(document).on('change', '#audience', function(e){
             e.preventDefault();
             if($(this).val() == 1){
                 $('#event-persons-wrap').show();

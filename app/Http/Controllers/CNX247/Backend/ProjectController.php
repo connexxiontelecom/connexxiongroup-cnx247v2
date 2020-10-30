@@ -14,6 +14,7 @@ use App\Milestone;
 use App\Status;
 use App\Link;
 use App\User;
+use App\Budget;
 use Auth;
 class ProjectController extends Controller
 {
@@ -36,7 +37,8 @@ class ProjectController extends Controller
                             ->where('account_status',1)->where('verified', 1)
                             ->where('tenant_id',Auth::user()->tenant_id)
                             ->orderBy('first_name', 'ASC')->get();
-        return view('backend.project.new-project',['users'=>$users]);
+        $budgets = Budget::where('tenant_id', Auth::user()->tenant_id)->get();
+        return view('backend.project.new-project',['users'=>$users, 'budgets'=>$budgets]);
     }
     /*
     * store new task
@@ -61,6 +63,7 @@ class ProjectController extends Controller
         $project->project_manager_id = $request->project_manager;
         $project->post_type = 'project';
         $project->post_url = $url;
+        $project->budget = $request->budget ?? '';
         $project->sponsor = $request->project_sponsor;
         $project->start_date = $request->start_date ?? '';
         $project->end_date = $request->due_date;

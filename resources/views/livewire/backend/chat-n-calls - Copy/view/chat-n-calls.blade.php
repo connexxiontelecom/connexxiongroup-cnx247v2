@@ -125,7 +125,7 @@
 
                         <div class="messages-send" style="position: relative; bottom:0px; width:100%; margin-top:30px; background:none;">
                             <div class="form-group">
-
+                                @if ($selectedUserId != null)
                                     <div class="row mb-1">
                                         <div class="col-md-12">
                                             <div class="btn-group " role="group" >
@@ -139,10 +139,10 @@
                                         </div>
                                     </div>
                                     <div class="input-group">
-                                        <textarea name="message" id="message" style="height: 60px; resize:none; outline:none;" id="alighaddon2" class="form-control new-msg" placeholder="Share your thought..."></textarea>
-                                        <span class="input-group-addon bg-white" id="sendMessage"><i class="icofont icofont-paper-plane f-18 text-primary"></i></span>
+                                        <textarea wire:model.debounce.90000ms="message" style="height: 60px; resize:none; outline:none;" id="alighaddon2" class="form-control new-msg" placeholder="What’s on your mind.........."></textarea>
+                                        <span class="input-group-addon bg-white" wire:click="sendMessage"><i class="icofont icofont-paper-plane f-18 text-primary"></i></span>
                                     </div>
-
+                                @endif
                             </div>
                         </div>
                     </div>

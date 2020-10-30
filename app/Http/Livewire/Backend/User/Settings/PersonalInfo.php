@@ -47,7 +47,7 @@ class PersonalInfo extends Component
         $this->employee_id = Auth::user()->employee_id ?? '';
         $this->address = Auth::user()->address ?? '';
         $this->gender = Auth::user()->gender ?? 1;
-        $this->marital_status = Auth::user()->marital_status ?? '';
+        $this->marital_status = Auth::user()->marital_status ?? 2;
         $this->departments = Department::where('tenant_id', Auth::user()->tenant_id)->get();
 
         $this->marital_statuses = MaritalStatus::all();
@@ -56,10 +56,22 @@ class PersonalInfo extends Component
     * Update profile event listener
     */
     public function updateProfile(){
+        $messages = [
+            'required' => 'The :attribute is mandatory',
+            'mobile.regex' => 'The phone number must be in E.164 format(+234...)'
+        ];
+
+/*         $this->validate(
+                [
+
+                'mobile' => 'required|regex:/^\+[1-9]\d{1,14}$/'
+            ], $messages
+        ); */
+
         $this->validate([
             'first_name'=>'required',
             'surname'=>'required',
-            'mobile'=>'required',
+            'mobile'=>'required|regex:/^\+[1-9]\d{1,14}$/',
             'position'=>'required',
             'hire_date'=>'required',
             'confirm_date'=>'required',
@@ -67,7 +79,7 @@ class PersonalInfo extends Component
             'department'=>'required',
             'address'=>'required',
             'email'=>'required|email'
-        ]);
+        ], $messages);
         $user = User::find(Auth::user()->id);
         $user->first_name = $this->first_name;
         $user->surname = $this->surname;

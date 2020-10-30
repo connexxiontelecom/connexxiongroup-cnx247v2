@@ -117,7 +117,9 @@ Route::get('/conversation/{id}', 'CNX247\Backend\ChatnCallsController@getConvers
 Route::post('/conversation/send', 'CNX247\Backend\ChatnCallsController@sendChat');
 Route::post('/conversation/attachment', 'CNX247\Backend\ChatnCallsController@sendAttachment');
 Route::get('/chat-n-calls', 'CNX247\Backend\ChatnCallsController@showChatnCallsView')->name('chat-n-calls');
-
+Route::post('/conversation/compatibility-token', 'CNX247\Backend\TokenController@newToken');
+Route::post('/conversation/call', 'CNX247\Backend\TokenController@newCall');
+#Route::post('/cnx247/calls', 'CNX247\Backend\ChatnCallsController@newCall');
 #CNXStream
 Route::get('/cnx247-stream', 'CNX247\Backend\CNX247Stream@index')->name('cnx247-stream');
 Route::get('/livestreaming/{room_name}', 'CNX247\Backend\CNX247Stream@joinRoom')->name('join-room');
@@ -438,11 +440,20 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
         Route::post('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@storeVehicle');
         Route::get('/logistics/view-vehicle/{slug}', 'CNX247\Backend\LogisticsController@viewVehicle')->name('logistics-view-vehicle');
         Route::post('/logistics/vehicle/assign', 'CNX247\Backend\LogisticsController@assignVehicleToDriver');
-        #Accounting routes
+#Accounting routes
     Route::get('/chart-of-accounts', 'CNX247\Backend\Accounting\ChartOfAccountController@index')->name('chart-of-accounts');
     Route::post('/new/chart-of-account', 'CNX247\Backend\Accounting\ChartOfAccountController@createCOA')->name('create-new-coa');
     Route::post('/get-parent-account', 'CNX247\Backend\Accounting\ChartOfAccountController@getParentAccount');
     Route::post('/save-account', 'CNX247\Backend\Accounting\ChartOfAccountController@saveAccount');
+    Route::get('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@vat')->name('accounting-vat');
+    Route::post('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@postVat');
+    Route::get('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@openingBalance')->name('opening-balance');
+    Route::post('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@postOpeningBalance');
+    #Budget route
+    Route::get('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@index')->name('budget-profile');
+    Route::post('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@budgetProfile');
+    Route::get('/budget-setup', 'CNX247\Backend\Accounting\BudgetController@budgetSetup')->name('budget-setup');
+    Route::post('/budget-setup', 'CNX247\Backend\Accounting\BudgetController@storeBudgetSetup');
 
 #QuickBooks routes
 //Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@analyzeBusiness');

@@ -97,7 +97,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-lg-6 col-sm-6">
+        <div class="col-md-3 col-lg-3 col-sm-3">
             <div class="form-group">
                 <label for="">Opening Time</label>
                 <input type="time" class="form-control" wire:model.debounce.9000ms="opening_time" placeholder="Opening Time">
@@ -106,11 +106,29 @@
                 @enderror
             </div>
         </div>
-        <div class="col-md-6 col-lg-6 col-sm-6">
+        <div class="col-md-3 col-lg-3 col-sm-3">
             <div class="form-group">
                 <label for="">Closing Time</label>
                 <input type="time" class="form-control" wire:model.debounce.9000ms="closing_time" placeholder="Closing Time">
                 @error('closing_time')
+                    <i class="text-danger mt-2">{{$message}}</i>
+                @enderror
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-3">
+            <div class="form-group">
+                <label for="">Clock-in Grace Period <small>(minutes)</small> <abbr data-toggle="tooltip" data-placement="top" title="" data-original-title="A period after which the clock-in button will no longer be accessible."><i class="ti-help"></i></abbr></label>
+                <input type="number" class="form-control" wire:model.debounce.9000ms="grace_period" placeholder="Grace Period">
+                @error('grace_period')
+                    <i class="text-danger mt-2">{{$message}}</i>
+                @enderror
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-3 col-sm-3">
+            <div class="form-group">
+                <label for="">Timezone</label>
+                <input type="number" class="form-control" wire:model.debounce.9000ms="timezone" placeholder="Grace Period">
+                @error('timezone')
                     <i class="text-danger mt-2">{{$message}}</i>
                 @enderror
             </div>
