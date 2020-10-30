@@ -47,9 +47,7 @@ class ActivityStreamController extends Controller
         $message->tenant_id = Auth::user()->tenant_id;
         $message->save();
         $message_id = $message->id;
-        //notify
-        $user = $message->user;
-        $user->notify(new NewPostNotification($message));
+
 
         if(!empty($request->file('attachment'))){
             $extension = $request->file('attachment');
@@ -68,8 +66,8 @@ class ActivityStreamController extends Controller
                 $receiver->post_type = 'message';
                 $receiver->tenant_id = Auth::user()->tenant_id;
                 $receiver->save();
-                $user = User::find($person);
-                $user->notify(new NewPostNotification($message));
+                $rec = User::find($person);
+                $rec->notify(new NewPostNotification($message));
 
             }
         }else if($request->target == 0){

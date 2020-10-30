@@ -214,7 +214,7 @@
                                     @case('pptx')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/ppt.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -226,7 +226,7 @@
                                             </div>
                                         </div>
                                         <div class="f-right v-middle text-muted">
-                                            <a href="/assets/uploads/requisition/{{$request->postAttachment->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                         </div>
                                     </li>
 
@@ -254,7 +254,7 @@
                                     @case('csv')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$file->name ?? 'No name'}}">
+                                            <img src="/assets/formats/csv.png" height="32" width="32" alt="{{$file->name ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -330,7 +330,7 @@
                                     @case('doc')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/doc.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -349,7 +349,7 @@
                                     @case('docx')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/doc.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -368,7 +368,7 @@
                                     @case('jpeg')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/jpg.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -387,7 +387,7 @@
                                     @case('jpg')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/jpg.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -406,7 +406,7 @@
                                     @case('png')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/png.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -425,7 +425,7 @@
                                     @case('gif')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/file.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -444,7 +444,7 @@
                                     @case('ppt')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/ppt.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -463,7 +463,7 @@
                                     @case('txt')
                                     <li class="media d-flex m-b-10">
                                         <div class="m-r-20 v-middle">
-                                            <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                            <img src="/assets/formats/txt.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
                                         </div>
                                         <div class="media-body">
                                             <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
@@ -479,14 +479,30 @@
                                         </div>
                                     </li>
                                     @break
+                                    @default
+                                    <li class="media d-flex m-b-10">
+                                        <div class="m-r-20 v-middle">
+                                            <img src="/assets/formats/file.png" height="32" width="32" alt="{{$request->post_title ?? 'No name'}}">
+                                        </div>
+                                        <div class="media-body">
+                                            <a href="#" class="m-b-5 d-block">{{strlen($request->post_title) > 25 ? substr($request->post_title, 0,25).'...' : $request->post_title }}</a>
+                                            <div class="text-muted">
+                                                <span>
+                                                    Uploaded by
+                                                    <a href="{{route('view-profile', $request->user->url)}}">{{$request->user->first_name ?? ''}} {{$request->surname ?? ''}}</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="f-right v-middle text-muted">
+                                            <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        </div>
+                                    </li>
                                 @endswitch
                         @endforeach
                     </ul>
                 </div>
             </div>
         </div>
-        <!-- Task-detail-right start -->
-        <!-- Task-detail-left start -->
         <div class="col-xl-8 col-lg-12 pull-xl-4">
             <div class="card">
                 <div class="card-header">
@@ -609,6 +625,5 @@
                 </div>
             </div>
         </div>
-        <!-- Task-detail-left end -->
     </div>
 </div>

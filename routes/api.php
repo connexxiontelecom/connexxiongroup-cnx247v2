@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::get('/access_token', 'CNX247\API\TwilioAccessTokenController@generateToken');
 Route::get('/task-calendar', 'CNX247\API\TaskControllerAPI@getTaskCalendarData');
+Route::post('/conversation/call', 'CNX247\Backend\TokenController@newCall');

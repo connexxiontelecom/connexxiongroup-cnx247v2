@@ -12,5 +12,5 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-mix.js('resources/js/twilio.js', 'public/js')
+mix.js('resources/js/browser-calls.js', 'public/js').extract(['twilio-client'])
     .sass('resources/sass/app.scss', 'public/css');

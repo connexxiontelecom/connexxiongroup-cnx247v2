@@ -268,17 +268,22 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="form-elements-advance.htm">
-                            <span class="pcoded-mtext">Budget</span>
+                        <a href="{{route('budget-profile')}}">
+                            <span class="pcoded-mtext">Budget Profile</span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="#">
+                        <a href="{{route('budget-setup')}}">
+                            <span class="pcoded-mtext">Budget Setup</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('opening-balance')}}">
                             <span class="pcoded-mtext">Opening Balance</span>
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="form-elements-advance.htm">
+                        <a href="{{route('accounting-vat')}}">
                             <span class="pcoded-mtext">VAT</span>
                         </a>
                     </li>

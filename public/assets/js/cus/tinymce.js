@@ -9,6 +9,7 @@ $(function() {
             theme: "silver",
             branding:false,
             contextmenu: "paste | link image inserttable | cell row column deletetable",
+            paste_data_images:true,
             plugins: [
                 "advlist autolink lists link charmap print preview hr anchor pagebreak",
                 "searchreplace wordcount visualblocks visualchars code fullscreen"
@@ -38,6 +39,7 @@ $(function() {
             theme: "silver",
             branding:false,
             contextmenu: "paste | link image inserttable | cell row column deletetable",
+            paste_data_images:true,
             plugins: [
                 "advlist autolink lists link charmap print preview hr anchor pagebreak",
                 "searchreplace wordcount visualblocks visualchars code fullscreen"

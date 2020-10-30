@@ -42,6 +42,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/bower_components/offline/css/offline-theme-slide.css">
     <link rel="stylesheet" type="text/css" href="/assets/bower_components/offline/css/offline-language-english.css">
     <link rel="stylesheet" href="{{asset('assets/css/cus/parsley.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/cus/toastify.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/cus/progressBar.css')}}">
     <style>
         .card{
@@ -256,6 +257,7 @@
 <script type="text/javascript" src="/assets/pages/offline/offline-custom.js"></script>
 <script type="text/javascript" src="{{asset('/assets/js/cus/axios.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('/assets/js/cus/notify.js')}}"></script>
+<script type="text/javascript" src="{{asset('/assets/js/cus/toastify.min.js')}}"></script>
 <script type="text/javascript" src="/assets/bower_components/intro.js/js/intro.js"></script>
 <script src="https://js.pusher.com/6.0/pusher.min.js"></script>
 <script src="{{asset('/assets/js/cus/parsley.min.js')}}"></script>
