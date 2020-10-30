@@ -19,7 +19,7 @@ class ChartOfAccountController extends Controller
             'bank'=>'0',
             'glcode'=>1,
             'parent_account'=>0,
-            'type'=>'General'
+            'type'=>'1'
         ],
         [
             'account_name'=>'Liability',
@@ -27,7 +27,7 @@ class ChartOfAccountController extends Controller
             'bank'=>'0',
             'glcode'=>2,
             'parent_account'=>0,
-            'type'=>'General'
+            'type'=>'1'
         ],
         [
             'account_name'=>'Equity',
@@ -35,7 +35,7 @@ class ChartOfAccountController extends Controller
             'bank'=>'0',
             'glcode'=>3,
             'parent_account'=>0,
-            'type'=>'General'
+            'type'=>'1'
         ],
         [
             'account_name'=>'Revenue',
@@ -43,7 +43,7 @@ class ChartOfAccountController extends Controller
             'glcode'=>4,
             'bank'=>'0',
             'parent_account'=>0,
-            'type'=>'General'
+            'type'=>'1'
         ],
         [
             'account_name'=>'Expenses',
@@ -51,7 +51,7 @@ class ChartOfAccountController extends Controller
             'bank'=>'0',
             'glcode'=>5,
             'parent_account'=>0,
-            'type'=>'General'
+            'type'=>'1'
         ]
         );
 
@@ -83,7 +83,7 @@ class ChartOfAccountController extends Controller
                 $table->integer('bank')->default(0);
                 $table->unsignedBigInteger('glcode');
                 $table->integer('parent_account')->nullable();
-                $table->string('type')->default('General');
+                $table->tinyInteger('type')->default(1)->comment('0=Detail, 1=General');
                 $table->timestamps();
             });
             #Insert default records into table
@@ -101,6 +101,7 @@ class ChartOfAccountController extends Controller
                 $table->integer('bank')->nullable();
                 $table->double('ob')->default(0);
                 $table->dateTime('transaction_date')->default(0);
+                $table->tinyInteger('posted')->default(0)->nullable();
                 $table->timestamps();
             });
         }

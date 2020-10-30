@@ -102,7 +102,9 @@ class ChatnCallsController extends Controller
     * Chat-n-calls view
     */
     public function showChatnCallsView(){
-        $users = DB::select("select users.id, users.first_name, users.avatar, users.email, users.surname, users.mobile, users.position, count(is_read) as unread
+        $users = DB::select("select users.id, users.first_name, users.avatar,
+        users.email, users.surname, users.mobile, users.position, count(is_read) as unread,
+        messages.created_at as message_date
         FROM users
         LEFT  JOIN  messages
         ON users.id = messages.from_id
@@ -110,8 +112,8 @@ class ChatnCallsController extends Controller
         AND messages.to_id = " . Auth::id() . "
         WHERE users.id != " . Auth::id() . "
         AND users.tenant_id = " .Auth::user()->tenant_id. "
-        GROUP BY users.id, users.first_name, users.avatar, users.email, users.surname, users.mobile, users.position
-        ORDER BY messages.id DESC ");
+        GROUP BY  messages.created_at, users.id, users.first_name, users.avatar, users.email, users.surname, users.mobile, users.position
+        ORDER BY messages.created_at DESC ");
 
         return view('backend.chat.view.chat-n-calls', ['users'=>$users]);
     }

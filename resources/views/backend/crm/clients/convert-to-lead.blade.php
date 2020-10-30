@@ -312,7 +312,7 @@ Convert to Lead
         function calculateSubTotal(row){
             const $row = $(row);
             const inputs = $row.find('input');
-            const subtotal = inputs[0].value * inputs[1].value;
+            const subtotal = inputs[1].value * inputs[2].value;
            // $row.find('td:nth-last-child(3)').text(formatAsCurrency(subtotal));
             $row.find('td:nth-last-child(2) input[type=text]').val(subtotal);
             return subtotal;
