@@ -19,6 +19,7 @@
     <link href="{{asset('/frontend/css/colors/default.css')}}" rel="stylesheet" id="color-opt">
     <link href="{{asset('/frontend/css/swiper.min.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('/frontend/css/materialdesignicons.min.css')}}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
 
     @yield('extra-styles')
     @livewireStyles
