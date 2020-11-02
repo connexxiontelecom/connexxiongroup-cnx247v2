@@ -49,8 +49,8 @@
           </div>
         </div>
       </div>
-      <div class="swiper-button-next border rounded-circle text-center"></div>
-      <div class="swiper-button-prev border rounded-circle text-center"></div>
+{{--      <div class="swiper-button-next border rounded-circle text-center"></div>--}}
+{{--      <div class="swiper-button-prev border rounded-circle text-center"></div>--}}
     </div>
   </section>
   <section class="section">
@@ -61,31 +61,33 @@
             <div class="row">
               <div class="col-lg-3 col-md-6 col-12">
                 <div class="card features explore-feature p-4 px-md-3 border-0 rounded-md shadow text-center">
+{{--                  <div class="icons rounded h2 text-center text-primary px-3">--}}
+{{--                    <i class="uil uil-airplay"></i>--}}
+{{--                  </div>--}}
                   <div class="icons rounded h2 text-center text-primary px-3">
-                    <i class="uil uil-airplay"></i>
+                    <img src="{{asset('/frontend/images/icon/big.svg')}}" class="avatar avatar-small" alt="">
                   </div>
-
                   <div class="card-body p-0 content">
-                    <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Best Financial Advice</a></h5>
-                    <p class="text-muted">The most well-known which is said to have originated</p>
-
-{{--                    <a href="javascript:void(0)" class="text-primary">Read More <i data-feather="chevron-right" class="fea icon-sm"></i></a>--}}
+                    <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Structure</a></h5>
+                    <p class="text-muted">
+                      Tailored modules that help to promote your unique business processes, increase
+                      productivity and prevent overwhelming you with information.
+                    </p>
                   </div>
                 </div>
               </div><!--end col-->
 
               <div class="col-lg-3 col-md-6 col-12 mt-4 mt-md-0 pt-2 pt-md-0">
                 <div class="card features explore-feature p-4 px-md-3 border-0 rounded-md shadow text-center">
-                  <div class="image position-relative d-inline-block">
-{{--                    <i class="uil uil-clipboard-alt"></i>--}}
-                    <img src="{{asset('/frontend/images/icon/calendar.svg')}}" class="avatar avatar-small" alt="">
+                  <div class="icons rounded h2 text-center text-primary px-3">
+                    <img src="{{asset('/frontend/images/icon/cloud.svg')}}" class="avatar avatar-small" alt="">
                   </div>
-
                   <div class="card-body p-0 content">
-                    <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Authorised Finance Brand</a></h5>
-                    <p class="text-muted">The most well-known which is said to have originated</p>
-
-{{--                    <a href="javascript:void(0)" class="text-primary">Read More <i data-feather="chevron-right" class="fea icon-sm"></i></a>--}}
+                    <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Cohesion</a></h5>
+                    <p class="text-muted">
+                      Digital space that transcends the local office setting and provides access to your organization tasks
+                      across devices so you don't waste any of your time.
+                    </p>
                   </div>
                 </div>
               </div><!--end col-->
@@ -93,14 +95,14 @@
               <div class="col-lg-3 col-md-6 col-12 mt-4 mt-lg-0 pt-2 pt-lg-0">
                 <div class="card features explore-feature p-4 px-md-3 border-0 rounded-md shadow text-center">
                   <div class="icons rounded h2 text-center text-primary px-3">
-                    <i class="uil uil-credit-card-search"></i>
+                    <img src="{{asset('/frontend/images/icon/computer.svg')}}" class="avatar avatar-small" alt="">
                   </div>
-
                   <div class="card-body p-0 content">
-                    <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Compehensive Advices</a></h5>
-                    <p class="text-muted">The most well-known which is said to have originated</p>
-
-{{--                    <a href="javascript:void(0)" class="text-primary">Read More <i data-feather="chevron-right" class="fea icon-sm"></i></a>--}}
+                    <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Accessibility</a></h5>
+                    <p class="text-muted">
+                      Software interface that eliminates complexity and bloatware allowing you to focus on what's
+                      important so you can get more things done with less.
+                    </p>
                   </div>
                 </div>
               </div><!--end col-->
@@ -108,14 +110,14 @@
               <div class="col-lg-3 col-md-6 col-12 mt-4 mt-lg-0 pt-2 pt-lg-0">
                 <div class="card features explore-feature p-4 px-md-3 border-0 rounded-md shadow text-center">
                   <div class="icons rounded h2 text-center text-primary px-3">
-                    <i class="uil uil-ruler-combined"></i>
+                    <img src="{{asset('/frontend/images/icon/customer-service.svg')}}" class="avatar avatar-small" alt="">
                   </div>
-
                   <div class="card-body p-0 content">
-                    <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Best Tax Advantages</a></h5>
-                    <p class="text-muted">The most well-known which is said to have originated</p>
-
-{{--                    <a href="javascript:void(0)" class="text-primary">Read More <i data-feather="chevron-right" class="fea icon-sm"></i></a>--}}
+                    <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Collaboration</a></h5>
+                    <p class="text-muted">
+                      Software tools that minimize the necessary steps and enhances collaborative activities between multiple departments to
+                      accomplish complex tasks.
+                    </p>
                   </div>
                 </div>
               </div><!--end col-->
