@@ -148,7 +148,7 @@
 .btn-outline-primary.active,
 .btn-outline-primary.focus,
 .btn-outline-primary:not(:disabled):not(.disabled):active {
-    box-shadow: 0 3px 5px 0 rgba(47, 85, 212, 0.3);
+    box-shadow: 0 3px 5px 0 rgba(75, 148, 74, 0.3);
 }
 
 .btn-primary:hover,
