@@ -13,6 +13,8 @@
     <meta name="website" content="http://www.cnx247.com" />
     <meta name="Version" content="v2.5.1" />
     <link href="{{asset('/frontend/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+    <link href="{{asset('/frontend/css/magnific-popup.css')}}" rel="stylesheet" type="text/css" />
+
     <link rel="stylesheet" href="{{asset('/frontend/css/owl.carousel.min.css')}}"/>
     <link rel="stylesheet" href="{{asset('/frontend/css/owl.theme.default.min.css')}}"/>
     <link href="{{asset('/frontend/css/style.css')}}" rel="stylesheet" type="text/css" id="theme-opt" />
