@@ -131,7 +131,7 @@
         <div class="col-12 text-center">
           <div class="section-title mb-4 pb-2">
             <h4 class="title mb-3">How We Transform Your Business</h4>
-            <p class="text-muted para-desc mb-0 mx-auto">Start working with <span class="text-primary font-weight-bold">CNX247</span> modules to centralize your business processes, simplify file management, and enhance teamwork.</p>
+            <p class="text-muted para-desc mb-0 mx-auto">Start working with <span class="text-primary font-weight-bold">CNX247</span> modules to centralize your business processes, simplify file storage, and enhance teamwork.</p>
           </div>
         </div><!--end col-->
       </div><!--end row-->
@@ -143,7 +143,7 @@
             </span>
             <div class="card-body p-0 content">
               <h5>Accounting</h5>
-              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+              <p class="para text-muted mb-0">Financial tools to enhance your back office operations.</p>
             </div>
             <span class="big-icon text-center">
               <i class="uil uil-chart-line"></i>
@@ -158,7 +158,7 @@
             </span>
             <div class="card-body p-0 content">
               <h5>File Management</h5>
-              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+              <p class="para text-muted mb-0">Share and organize files securely among your team.</p>
             </div>
             <span class="big-icon text-center">
               <i class="uil uil-folder"></i>
@@ -173,7 +173,7 @@
             </span>
             <div class="card-body p-0 content">
               <h5>CRM</h5>
-              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+              <p class="para text-muted mb-0">Convert leads and engage with clients to grow revenue.</p>
             </div>
             <span class="big-icon text-center">
               <i class="uil uil-briefcase-alt"></i>
@@ -188,7 +188,7 @@
             </span>
             <div class="card-body p-0 content">
               <h5>Logistics</h5>
-              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+              <p class="para text-muted mb-0">Centralized management of your company's vehicles.</p>
             </div>
             <span class="big-icon text-center">
               <i class="uil uil-map"></i>
@@ -203,7 +203,7 @@
             </span>
             <div class="card-body p-0 content">
               <h5>Procurement</h5>
-              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+              <p class="para text-muted mb-0">Order management tools to streamline your purchases.</p>
             </div>
             <span class="big-icon text-center">
               <i class="uil uil-transaction"></i>
@@ -218,7 +218,7 @@
             </span>
             <div class="card-body p-0 content">
               <h5>HR Management</h5>
-              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+              <p class="para text-muted mb-0">Tools for HR processes so you can manage your team.</p>
             </div>
             <span class="big-icon text-center">
               <i class="uil uil-users-alt"></i>
@@ -233,7 +233,7 @@
             </span>
             <div class="card-body p-0 content">
               <h5>Communication</h5>
-              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+              <p class="para text-muted mb-0">Keep in touch with your team, wherever you are.</p>
             </div>
             <span class="big-icon text-center">
               <i class="uil uil-envelopes"></i>
@@ -248,7 +248,7 @@
             </span>
             <div class="card-body p-0 content">
               <h5>Project Management</h5>
-              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+              <p class="para text-muted mb-0">Plan and assign tasks efficiently for your projects.</p>
             </div>
             <span class="big-icon text-center">
               <i class="uil uil-schedule"></i>
