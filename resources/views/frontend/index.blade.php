@@ -126,6 +126,137 @@
         </div>
       </div><!--end row-->
     </div><!--end container-->
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-12 text-center">
+          <div class="section-title mb-4 pb-2">
+            <h4 class="title mb-3">How We Transform Your Business</h4>
+            <p class="text-muted para-desc mb-0 mx-auto">Start working with <span class="text-primary font-weight-bold">CNX247</span> modules to centralize your business processes, simplify file management, and enhance teamwork.</p>
+          </div>
+        </div><!--end col-->
+      </div><!--end row-->
+      <div class="row">
+        <div class="col-lg-3 col-md-4 mt-4 pt-2">
+          <div class="card features fea-primary rounded p-4 bg-light text-center position-relative overflow-hidden border-0">
+            <span class="h1 icon2 text-primary">
+              <i class="uil uil-chart-line"></i>
+            </span>
+            <div class="card-body p-0 content">
+              <h5>Accounting</h5>
+              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+            </div>
+            <span class="big-icon text-center">
+              <i class="uil uil-chart-line"></i>
+            </span>
+          </div>
+        </div><!--end col-->
+
+        <div class="col-lg-3 col-md-4 mt-4 pt-2">
+          <div class="card features fea-primary rounded p-4 bg-light text-center position-relative overflow-hidden border-0">
+            <span class="h1 icon2 text-primary">
+              <i class="uil uil-folder"></i>
+            </span>
+            <div class="card-body p-0 content">
+              <h5>File Management</h5>
+              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+            </div>
+            <span class="big-icon text-center">
+              <i class="uil uil-folder"></i>
+            </span>
+          </div>
+        </div><!--end col-->
+
+        <div class="col-lg-3 col-md-4 mt-4 pt-2">
+          <div class="card features fea-primary rounded p-4 bg-light text-center position-relative overflow-hidden border-0">
+            <span class="h1 icon2 text-primary">
+              <i class="uil uil-briefcase-alt"></i>
+            </span>
+            <div class="card-body p-0 content">
+              <h5>CRM</h5>
+              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+            </div>
+            <span class="big-icon text-center">
+              <i class="uil uil-briefcase-alt"></i>
+            </span>
+          </div>
+        </div><!--end col-->
+
+        <div class="col-lg-3 col-md-4 mt-4 pt-2">
+          <div class="card features fea-primary rounded p-4 bg-light text-center position-relative overflow-hidden border-0">
+            <span class="h1 icon2 text-primary">
+              <i class="uil uil-map"></i>
+            </span>
+            <div class="card-body p-0 content">
+              <h5>Logistics</h5>
+              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+            </div>
+            <span class="big-icon text-center">
+              <i class="uil uil-map"></i>
+            </span>
+          </div>
+        </div><!--end col-->
+
+        <div class="col-lg-3 col-md-4 mt-4 pt-2">
+          <div class="card features fea-primary rounded p-4 bg-light text-center position-relative overflow-hidden border-0">
+            <span class="h1 icon2 text-primary">
+              <i class="uil uil-transaction"></i>
+            </span>
+            <div class="card-body p-0 content">
+              <h5>Procurement</h5>
+              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+            </div>
+            <span class="big-icon text-center">
+              <i class="uil uil-transaction"></i>
+            </span>
+          </div>
+        </div><!--end col-->
+
+        <div class="col-lg-3 col-md-4 mt-4 pt-2">
+          <div class="card features fea-primary rounded p-4 bg-light text-center position-relative overflow-hidden border-0">
+            <span class="h1 icon2 text-primary">
+              <i class="uil uil-users-alt"></i>
+            </span>
+            <div class="card-body p-0 content">
+              <h5>HR Management</h5>
+              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+            </div>
+            <span class="big-icon text-center">
+              <i class="uil uil-users-alt"></i>
+            </span>
+          </div>
+        </div><!--end col-->
+
+        <div class="col-lg-3 col-md-4 mt-4 pt-2">
+          <div class="card features fea-primary rounded p-4 bg-light text-center position-relative overflow-hidden border-0">
+            <span class="h1 icon2 text-primary">
+              <i class="uil uil-envelopes"></i>
+            </span>
+            <div class="card-body p-0 content">
+              <h5>Communication</h5>
+              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+            </div>
+            <span class="big-icon text-center">
+              <i class="uil uil-envelopes"></i>
+            </span>
+          </div>
+        </div><!--end col-->
+
+        <div class="col-lg-3 col-md-4 mt-4 pt-2">
+          <div class="card features fea-primary rounded p-4 bg-light text-center position-relative overflow-hidden border-0">
+            <span class="h1 icon2 text-primary">
+              <i class="uil uil-schedule"></i>
+            </span>
+            <div class="card-body p-0 content">
+              <h5>Project Management</h5>
+              <p class="para text-muted mb-0">It is a long established fact that a reader.</p>
+            </div>
+            <span class="big-icon text-center">
+              <i class="uil uil-schedule"></i>
+            </span>
+          </div>
+        </div><!--end col-->
+      </div><!--end row-->
+    </div>
     {{--    <div class="container">--}}
     {{--        <div class="row">--}}
     {{--            <div class="col-md-4 col-12">--}}
