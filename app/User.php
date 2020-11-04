@@ -8,7 +8,8 @@ use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\Access\Authorizable;
 use Spatie\Permission\Traits\HasRoles;
 use Cache;
-class User extends Authenticatable
+use Tymon\JWTAuth\Contracts\JWTSubject;
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
     use HasRoles;
@@ -41,6 +42,16 @@ class User extends Authenticatable
     ];
 
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+
+
+    }
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
 
     /*
