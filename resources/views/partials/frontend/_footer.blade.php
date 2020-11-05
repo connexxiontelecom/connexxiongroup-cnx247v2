@@ -73,6 +73,9 @@
 <script src="{{asset('/frontend/js/feather.min.js')}}"></script>
 <script src="{{asset('/frontend/js/swiper.min.js')}}"></script>
 <script src="{{asset('/frontend/js/swiper.init.js')}}"></script>
+<script src="{{asset('/frontend/js/jquery.flexslider-min.js')}}"></script>
+<script src="{{asset('/frontend/js/flexslider.init.js')}}"></script>
+<script src="https://unicons.iconscout.com/release/v2.1.9/script/monochrome/bundle.js"></script>
 
 <script type="text/javascript" src="{{asset('/assets/js/cus/axios.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('/assets/js/cus/notify.js')}}"></script>
