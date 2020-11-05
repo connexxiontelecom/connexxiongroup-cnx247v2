@@ -110,47 +110,60 @@
 <!-- FEATURES START -->
 <section class="section">
   <div class="container">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card course-feature text-center overflow-hidden rounded shadow border-0">
-          <div class="card-body py-5">
-            <div class="icon">
-              <img src="{{asset('/frontend/images/icon/big.svg')}}" class="avatar avatar-small" alt="">
-            </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="features-absolute">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-12">
+              <div class="card features explore-feature p-4 px-md-3 border-0 rounded-md shadow text-center">
+                <div class="icons rounded h2 text-center text-primary px-3">
+                  <img src="{{asset('/frontend/images/icon/big.svg')}}" class="avatar avatar-small" alt="">
+                </div>
+                <div class="card-body p-0 content">
+                  <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Structure</a></h5>
+                  <p class="text-muted">Tailored modules that help to promote your unique business processes, increase productivity and prevent overwhelming you with information.</p>
+                </div>
+              </div>
+            </div><!--end col-->
 
-            <h4 class="mt-3"><a href="javascript:void(0)" class="title text-dark">Structure</a></h4>
-            <p class="text-muted">Tailored modules that help to promote your unique business processes, increase productivity and prevent overwhelming you with information.</p>
-            <img src="{{asset('/frontend/images/icon/big.svg')}}" class="full-img" height="300" alt="">
+            <div class="col-lg-3 col-md-6 col-12 mt-4 mt-md-0 pt-2 pt-md-0">
+              <div class="card features explore-feature p-4 px-md-3 border-0 rounded-md shadow text-center">
+                <div class="icons rounded h2 text-center text-primary px-3">
+                  <img src="{{asset('/frontend/images/icon/cloud.svg')}}" class="avatar avatar-small" alt="">
+                </div>
+                <div class="card-body p-0 content">
+                  <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Cohesion</a></h5>
+                  <p class="text-muted">Digital space that transcends the local office setting and provides access to your organization tasks across devices so you don't waste your time.</p>
+                </div>
+              </div>
+            </div><!--end col-->
+
+            <div class="col-lg-3 col-md-6 col-12 mt-4 mt-lg-0 pt-2 pt-lg-0">
+              <div class="card features explore-feature p-4 px-md-3 border-0 rounded-md shadow text-center">
+                <div class="icons rounded h2 text-center text-primary px-3">
+                  <img src="{{asset('/frontend/images/icon/computer.svg')}}" class="avatar avatar-small" alt="">
+                </div>
+                <div class="card-body p-0 content">
+                  <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Accessibility</a></h5>
+                  <p class="text-muted">Software interface that eliminates complexity and bloatware allowing you to focus on what is important to you so you can get more done with less.</p>
+                </div>
+              </div>
+            </div><!--end col-->
+
+            <div class="col-lg-3 col-md-6 col-12 mt-4 mt-lg-0 pt-2 pt-lg-0">
+              <div class="card features explore-feature p-4 px-md-3 border-0 rounded-md shadow text-center">
+                <div class="icons rounded h2 text-center text-primary px-3">
+                  <img src="{{asset('/frontend/images/icon/customer-service.svg')}}" class="avatar avatar-small" alt="">
+                </div>
+                <div class="card-body p-0 content">
+                  <h5 class="mt-4"><a href="javascript:void(0)" class="title text-dark">Collaboration</a></h5>
+                  <p class="text-muted">Software tools that minimize the necessary steps and enhances collaborative activities between multiple departments to accomplish complex tasks.</p>
+                </div>
+              </div>
+            </div><!--end col-->
           </div>
         </div>
-      </div><!--end col-->
-
-      <div class="col-md-4">
-        <div class="card course-feature text-center overflow-hidden rounded shadow border-0">
-          <div class="card-body py-5">
-            <div class="icon">
-              <img src="{{asset('/frontend/images/icon/cloud.svg')}}" class="avatar avatar-small" alt="">
-            </div>
-
-            <h4 class="mt-3"><a href="javascript:void(0)" class="title text-dark">Cohesion</a></h4>
-            <p class="text-muted">Digital space that transcends the local office setting and provides access to your organization tasks across devices so you don't waste your time.</p>
-            <img src="{{asset('/frontend/images/icon/cloud.svg')}}" class="full-img" height="300" alt="">
-          </div>
-        </div>
-      </div><!--end col-->
-
-      <div class="col-md-4">
-        <div class="card course-feature text-center overflow-hidden rounded shadow border-0">
-          <div class="card-body py-5">
-            <div class="icon">
-              <img src="{{asset('/frontend/images/icon/customer-service.svg')}}" class="avatar avatar-small" alt="">
-            </div>
-            <h4 class="mt-3"><a href="javascript:void(0)" class="title text-dark">Collaboration</a></h4>
-            <p class="text-muted">Software tools that minimize the necessary steps and enhances collaboration between your departments to accomplish complex tasks.</p>
-            <img src="{{asset('/frontend/images/icon/customer-service.svg')}}" class="full-img" height="300" alt="">
-          </div>
-        </div>
-      </div><!--end col-->
+      </div>
     </div><!--end row-->
   </div><!--end container-->
 </section><!--end section-->
@@ -288,110 +301,71 @@
       </div><!--end col-->
     </div><!--end row-->
   </div>
-  <div class="container mt-100 mt-60">
+  <div class="container mt-100">
     <div class="row justify-content-start">
       <div class="col-12 text-left">
         <div class="section-title mb-4 pb-2">
-          <h4 class="title mb-4"><span class="text-primary">Landrick</span> App Showcase</h4>
-          <p class="text-muted mb-0 mx-auto">Start working with <span class="text-primary font-weight-bold">Landrick</span> that can provide
-            <br> everything you need to generate awareness, drive traffic, connect.</p>
+          <h4 class="title mb-2"><span class="text-primary">Unlimited</span> Productivity</h4>
+          <p class="text-muted mb-0 mx-auto">
+            <span class="text-primary font-weight-bold">CNX247</span> allows you bring your office with you on the go. Keep up
+            <br> with all the latest activities, assign and view your daily tasks, and
+            <br> generate or respond to the workflows in your organization remotely.
+          </p>
         </div>
       </div><!--end col-->
     </div><!--end row-->
-      <div class="row justify-content-start">
-        <div class="col-lg-8 col-md-12 mt-4 pt-2 text-left">
-          <ul class="nav nav-pills nav-justified flex-column flex-sm-row rounded" id="pills-tab" role="tablist">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-5">
+          <ul class="nav nav-pills nav-justified flex-column rounded" id="pills-tab" role="tablist">
             <li class="nav-item">
               <a class="nav-link rounded active" id="pills-cloud-tab" data-toggle="pill" href="#pills-cloud" role="tab" aria-controls="pills-cloud" aria-selected="false">
-                <div class="text-center pt-1 pb-1">
-                  <h4 class="title font-weight-normal mb-0">High Performance</h4>
+                <div class="p-3 text-left">
+                  <h4 class="title font-weight-bold">Activity Stream</h4>
+                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>
                 </div>
               </a><!--end nav link-->
             </li><!--end nav item-->
+
             <li class="nav-item">
-              <a class="nav-link rounded" id="pills-smart-tab" data-toggle="pill" href="#pills-smart" role="tab" aria-controls="pills-smart" aria-selected="false">
-                <div class="text-center pt-1 pb-1">
-                  <h4 class="title font-weight-normal mb-0">Creative Design</h4>
+              <a class="nav-link border-top rounded" id="pills-smart-tab" data-toggle="pill" href="#pills-smart" role="tab" aria-controls="pills-smart" aria-selected="false">
+                <div class="p-3 text-left">
+                  <h4 class="title font-weight-bold">Project & Task Management</h4>
+                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>
                 </div>
               </a><!--end nav link-->
             </li><!--end nav item-->
+
             <li class="nav-item">
-              <a class="nav-link rounded" id="pills-apps-tab" data-toggle="pill" href="#pills-apps" role="tab" aria-controls="pills-apps" aria-selected="false">
-                <div class="text-center pt-1 pb-1">
-                  <h4 class="title font-weight-normal mb-0">24 / 7 Support</h4>
+              <a class="nav-link border-top rounded" id="pills-apps-tab" data-toggle="pill" href="#pills-apps" role="tab" aria-controls="pills-apps" aria-selected="false">
+                <div class="p-3 text-left">
+                  <h4 class="title font-weight-bold">Workflows</h4>
+                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>
                 </div>
               </a><!--end nav link-->
             </li><!--end nav item-->
           </ul><!--end nav pills-->
-        </div>
-      </div>
-      <div class="row">
-      <div class="col-12 mt-4 pt-2">
-        <div class="tab-content" id="pills-tabContent">
-          <div class="tab-pane fade show active" id="pills-cloud" role="tabpanel" aria-labelledby="pills-cloud-tab">
-            <div class="row align-items-center">
-              <div class="col-md-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                <div class="section-title">
-                  <h4 class="title mb-4"><i class="mdi mdi-chevron-double-right text-primary"></i> High Performing Landing App</h4>
-                  <p class="text-muted">You can combine all the Landrick templates into a single one, you can take a component from the Application theme and use it in the Website.</p>
-                  <ul class="list-unstyled text-muted">
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Digital Marketing Solutions for Tomorrow</li>
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Our Talented & Experienced Marketing Agency</li>
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Create your own skin to match your brand</li>
-                  </ul>
-                  <a href="javascript:void(0)" class="mt-3 h6 text-primary">Find Out More <i class="mdi mdi-chevron-right"></i></a>
-                </div>
-              </div><!--end col-->
-              <div class="col-md-6">
-                <img src="{{asset('/frontend/images/saas/1.png')}}" class="img-fluid mx-auto d-block" alt="">
-              </div><!--end col-->
-            </div><!--end row-->
-          </div><!--end teb pane-->
+        </div><!--end col-->
 
-          <div class="tab-pane fade" id="pills-smart" role="tabpanel" aria-labelledby="pills-smart-tab">
-            <div class="row align-items-center">
-              <div class="col-md-6">
-                <img src="images/app/3.png" class="img-fluid mx-auto d-block" alt="">
-              </div><!--end col-->
+        <div class="col-md-7 col-12 mt-4 pt-2 mt-sm-0 pt-sm-0">
+          <div class="position-relative">
+            <div class="tab-content ml-lg-4" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-cloud" role="tabpanel" aria-labelledby="pills-cloud-tab">
+                <img src="{{asset('/frontend/images/activity-stream-2.png')}}" width="150%" class="mx-auto" alt="">
+              </div><!--end teb pane-->
 
-              <div class="col-md-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                <div class="section-title">
-                  <h4 class="title mb-4"><i class="mdi mdi-chevron-double-right text-primary"></i> Creative Design and Clean Code</h4>
-                  <p class="text-muted">You can combine all the Landrick templates into a single one, you can take a component from the Application theme and use it in the Website.</p>
-                  <ul class="list-unstyled text-muted">
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Digital Marketing Solutions for Tomorrow</li>
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Our Talented & Experienced Marketing Agency</li>
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Create your own skin to match your brand</li>
-                  </ul>
-                  <a href="javascript:void(0)" class="mt-3 h6 text-primary">Find Out More <i class="mdi mdi-chevron-right"></i></a>
-                </div>
-              </div>  <!--end col-->
-            </div>    <!--end row-->
-          </div><!--end teb pane-->
+              <div class="tab-pane fade" id="pills-smart" role="tabpanel" aria-labelledby="pills-smart-tab">
+                <img src="{{asset('/frontend/images/activity-stream-2.png')}}" width="150%" class="mx-auto" alt="">
+              </div><!--end teb pane-->
 
-          <div class="tab-pane fade" id="pills-apps" role="tabpanel" aria-labelledby="pills-apps-tab">
-            <div class="row align-items-center">
-              <div class="col-md-6">
-                <img src="images/app/4.png" class="img-fluid mx-auto d-block" alt="">
-              </div><!--end col-->
-
-              <div class="col-md-6 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                <div class="section-title">
-                  <h4 class="title mb-4"><i class="mdi mdi-chevron-double-right text-primary"></i> 24 / 7 App Supports and Responsive</h4>
-                  <p class="text-muted">You can combine all the Landrick templates into a single one, you can take a component from the Application theme and use it in the Website.</p>
-                  <ul class="list-unstyled text-muted">
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Digital Marketing Solutions for Tomorrow</li>
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Our Talented & Experienced Marketing Agency</li>
-                    <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Create your own skin to match your brand</li>
-                  </ul>
-                  <a href="javascript:void(0)" class="mt-3 h6 text-primary">Find Out More <i class="mdi mdi-chevron-right"></i></a>
-                </div>
-              </div>  <!--end col-->
-            </div>    <!--end row-->
-          </div><!--end teb pane-->
-        </div><!--end tab content-->
-      </div><!--end col-->
-    </div><!--end row-->
+              <div class="tab-pane fade" id="pills-apps" role="tabpanel" aria-labelledby="pills-apps-tab">
+                <img src="images/digital/3.png" class="img-fluid mx-auto d-block" alt="">
+              </div><!--end teb pane-->
+            </div><!--end tab content-->
+          </div>
+        </div><!--end col-->
+      </div><!--end row-->
+    </div><!--end container-->
   </div><!--end container-->
 
   <div class="container mt-100 mt-60">
