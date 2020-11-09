@@ -322,7 +322,8 @@
               <a class="nav-link rounded active" id="pills-cloud-tab" data-toggle="pill" href="#pills-cloud" role="tab" aria-controls="pills-cloud" aria-selected="false">
                 <div class="p-3 text-left">
                   <h4 class="title font-weight-bold">Activity Stream</h4>
-                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>
+                  <p class="text-muted tab-para mb-0">Keep up with all the latest activities, news & events that concern you and your organization as a whole regardless of where you are or the role you play.</p>
+{{--                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>--}}
                 </div>
               </a><!--end nav link-->
             </li><!--end nav item-->
@@ -331,7 +332,8 @@
               <a class="nav-link border-top rounded" id="pills-smart-tab" data-toggle="pill" href="#pills-smart" role="tab" aria-controls="pills-smart" aria-selected="false">
                 <div class="p-3 text-left">
                   <h4 class="title font-weight-bold">Project & Task Management</h4>
-                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>
+                  <p class="text-muted tab-para mb-0">Breakdown projects into manageable tasks and monitor each task through its various stages from start to finish with the end goal of successfully completing it.</p>
+{{--                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>--}}
                 </div>
               </a><!--end nav link-->
             </li><!--end nav item-->
@@ -340,7 +342,7 @@
               <a class="nav-link border-top rounded" id="pills-apps-tab" data-toggle="pill" href="#pills-apps" role="tab" aria-controls="pills-apps" aria-selected="false">
                 <div class="p-3 text-left">
                   <h4 class="title font-weight-bold">Workflows</h4>
-                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>
+                  <p class="text-muted tab-para mb-0">Automate the multilevel approval workflow processes in your organization to get things done quickly and effectively.</p>
                 </div>
               </a><!--end nav link-->
             </li><!--end nav item-->
@@ -351,15 +353,15 @@
           <div class="position-relative">
             <div class="tab-content ml-lg-4" id="pills-tabContent">
               <div class="tab-pane fade show active" id="pills-cloud" role="tabpanel" aria-labelledby="pills-cloud-tab">
-                <img src="{{asset('/frontend/images/activity-stream-2.png')}}" width="150%" class="mx-auto" alt="">
+                <img src="{{asset('/frontend/images/activity-stream.png')}}" width="150%" class="mx-auto" alt="">
               </div><!--end teb pane-->
 
               <div class="tab-pane fade" id="pills-smart" role="tabpanel" aria-labelledby="pills-smart-tab">
-                <img src="{{asset('/frontend/images/activity-stream-2.png')}}" width="150%" class="mx-auto" alt="">
+                <img src="{{asset('/frontend/images/task-projects.png')}}" width="150%" class="mx-auto" alt="">
               </div><!--end teb pane-->
 
               <div class="tab-pane fade" id="pills-apps" role="tabpanel" aria-labelledby="pills-apps-tab">
-                <img src="images/digital/3.png" class="img-fluid mx-auto d-block" alt="">
+                <img src="{{asset('/frontend/images/workflows.png')}}" width="150%" class="mx-auto" alt="">
               </div><!--end teb pane-->
             </div><!--end tab content-->
           </div>
