@@ -34,6 +34,10 @@ class Tenant extends Model
     public function industry(){
         return $this->belongsTo(Industry::class, 'industry_id');
     }
+    //default account settings-tenant relationship
+    public function getDefaults(){
+        return $this->belongsTo(DefaultAccount::class, 'tenant_id');
+    }
 
 
 

@@ -32,6 +32,13 @@ class CreateInvoicesTable extends Migration
             $table->string('slug')->nullable();
             $table->tinyInteger('status')->default(0); //pending
             $table->double('paid_amount')->default(0);
+            #Posting
+            $table->unsignedBigInteger('posted_by')->nullable();
+            $table->tinyInteger('posted')->default(0)->comment('0=not posted, 1=posted');
+            $table->dateTime('post_date')->nullable();
+            $table->tinyInteger('trash')->default(0)->comment('0=not, 1=trashed');
+            $table->unsignedBigInteger('trashed_by')->nullable();
+            $table->dateTime('trash_date')->nullable();
             $table->timestamps();
         });
     }

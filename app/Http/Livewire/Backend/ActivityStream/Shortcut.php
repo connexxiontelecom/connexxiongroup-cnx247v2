@@ -59,6 +59,8 @@ class Shortcut extends Component
         $this->assisting = ResponsiblePerson::where('user_id',Auth::user()->id)
                                 ->where('tenant_id', Auth::user()->tenant_id)
                                 ->count();
+                                //$moment = Carbon::createFromFormat('Y-m-d', $now);
+                                //$birth = Carbon::createFromFormat('Y-m-d', $now->addMonths(3));
         $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
                                 ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
                                 ->take(10)->get();

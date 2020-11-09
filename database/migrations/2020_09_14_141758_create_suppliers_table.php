@@ -18,6 +18,7 @@ class CreateSuppliersTable extends Migration
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('added_by');
             $table->unsignedBigInteger('industry');
+            $table->unsignedBigInteger('glcode');
             $table->string('company_name');
             $table->string('company_email');
             $table->string('company_phone');

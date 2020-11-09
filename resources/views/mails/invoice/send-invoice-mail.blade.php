@@ -447,7 +447,7 @@
           <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; margin: 0; padding: 0;">
             <tr>
               <td class="email-masthead" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; text-align: center; padding: 25px 0;" align="center">
-                <a href="https://example.com" class="f-fallback email-masthead_name" style="color: #A8AAAF; font-size: 16px; font-weight: bold; text-decoration: none; text-shadow: 0 1px 0 white;">
+                <a href="{{Auth::user()->tenant->website ?? 'https://www.cnx247.com'}}" class="f-fallback email-masthead_name" style="color: #A8AAAF; font-size: 16px; font-weight: bold; text-decoration: none; text-shadow: 0 1px 0 white;">
                     <img class="img-fluid ml-5 mt-3" src="{{asset('/assets/images/company-assets/logos/'.Auth::user()->tenant->logo ?? 'logo.png')}}" alt="{{Auth::user()->tenant->company_name ?? 'CNX247 ERP Solution'}}" height="75" width="120" style="display:block;">
               </a>
               </td>
@@ -496,28 +496,24 @@
                           <tr>
                             <td colspan="2" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px;">
                               <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; margin: 0; padding: 25px 0 0;">
-                                <tr>
-                                  <th width="75%" class="purchase_heading" align="left" style="font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding-bottom: 8px; border-bottom-width: 1px; border-bottom-color: #EAEAEC; border-bottom-style: solid;">
-                                    <p class="f-fallback" style="font-size: 12px; line-height: 1.625; color: #85878E; margin: 0;">Description</p>
-                                  </th>
-                                  <th width="5%" class="" align="left" style="font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding-bottom: 8px; border-bottom-width: 1px; border-bottom-color: #EAEAEC; border-bottom-style: solid;">
-                                    <p class="f-fallback" style="font-size: 12px; line-height: 1.625; color: #85878E; margin: 0;">Quantity</p>
-                                  </th>
-                                  <th width="5%" class="" align="left" style="font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding-bottom: 8px; border-bottom-width: 1px; border-bottom-color: #EAEAEC; border-bottom-style: solid;">
-                                    <p class="f-fallback" style="font-size: 12px; line-height: 1.625; color: #85878E; margin: 0;">Amount({{Auth::user()->tenant->currency->symbol ?? 'N'}})</p>
-                                  </th>
-                                  <th width="5%" class="" align="right" style="font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding-bottom: 8px; border-bottom-width: 1px; border-bottom-color: #EAEAEC; border-bottom-style: solid;">
-                                    <p class="f-fallback" style="font-size: 12px; line-height: 1.625; color: #85878E; margin: 0;">Total({{Auth::user()->tenant->currency->symbol ?? 'N'}})</p>
-                                  </th>
-                                </tr>
-                                @foreach($invoice->invoiceItem as $item)
-                                    <tr>
-                                        <td width="75%" class="purchase_item" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 15px; color: #51545E; line-height: 18px; padding: 10px 0;"><span class="f-fallback">{{$item->description ?? ''}}</span></td>
-                                        <td width="5%" class="purchase_item" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 15px; color: #51545E; line-height: 18px; padding: 10px 0;"><span class="f-fallback">{{number_format($item->quantity)}}</span></td>
-                                        <td width="5%" class="purchase_item" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 15px; color: #51545E; line-height: 18px; padding: 10px 0;"><span class="f-fallback">${{number_format($item->unit_cost, 2)}}</span></td>
-                                        <td width="5%" class="purchase_item" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 15px; color: #51545E; line-height: 18px; padding: 10px 0;"><span class="f-fallback">${{number_format($item->total, 2)}}</span></td>
-                                    </tr>
-                                 @endforeach
+                                  <tr>
+                                      <th style="box-sizing: border-box; position: relative; font-family: 'Nunito Sans', Helvetica, Arial, sans-serif; font-size: 16px; text-align:left;">Description</th>
+                                      <th style="box-sizing: border-box; position: relative; font-family: 'Nunito Sans', Helvetica, Arial, sans-serif; font-size: 16px; text-align:left;">Quantity</th>
+                                      <th style="box-sizing: border-box; position: relative; font-family: 'Nunito Sans', Helvetica, Arial, sans-serif; font-size: 16px; text-align:left;">Amount</th>
+                                      <th style="box-sizing: border-box; position: relative; font-family: 'Nunito Sans', Helvetica, Arial, sans-serif; font-size: 16px; text-align:left;">Total</th>
+                                  </tr>
+                                  @foreach ($invoice->invoiceItem as $item)
+                                      <tr>
+                                          <td>{{$item->description}}</td>
+                                          <td style="text-align: center">{{number_format($item->quantity)}}</td>
+                                          <td>{{number_format($item->unit_cost, 2)}}</td>
+                                          <td>{{number_format($item->quantity * $item->unit_cost,2)}}</td>
+                                      </tr>
+                                  @endforeach
+
+                              </table>
+                                <table class="purchase_content" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; margin: 0; padding: 25px 0 0;">
+
                                 <tr>
                                   <td width="80%" class="purchase_footer" valign="middle" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding-top: 15px; border-top-width: 1px; border-top-color: #EAEAEC; border-top-style: solid;">
                                     <p class="f-fallback purchase_total purchase_total--label" style="font-size: 16px; line-height: 1.625; text-align: right; font-weight: bold; color: #333333; margin: 0; padding: 0 15px 0 0;" align="right">Sub-total</p>
@@ -532,14 +528,6 @@
                                   </td>
                                   <td width="20%" class="purchase_footer" valign="middle" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding-top: 15px; border-top-width: 1px; border-top-color: #EAEAEC; border-top-style: solid;">
                                     <p class="f-fallback purchase_total" style="font-size: 16px; line-height: 1.625; text-align: right; font-weight: bold; color: #333333; margin: 0;" align="right">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->tax_value,2) ?? 0}}</p>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td width="80%" class="purchase_footer" valign="middle" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding-top: 15px; border-top-width: 1px; border-top-color: #EAEAEC; border-top-style: solid;">
-                                    <p class="f-fallback purchase_total purchase_total--label" style="font-size: 16px; line-height: 1.625; text-align: right; font-weight: bold; color: #333333; margin: 0; padding: 0 15px 0 0;" align="right">Discount ({{$invoice->discount_rate}}%): </p>
-                                  </td>
-                                  <td width="20%" class="purchase_footer" valign="middle" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding-top: 15px; border-top-width: 1px; border-top-color: #EAEAEC; border-top-style: solid;">
-                                    <p class="f-fallback purchase_total" style="font-size: 16px; line-height: 1.625; text-align: right; font-weight: bold; color: #333333; margin: 0;" align="right">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->discount_value,2) ?? 0}}</p>
                                   </td>
                                 </tr>
                                 <tr>
