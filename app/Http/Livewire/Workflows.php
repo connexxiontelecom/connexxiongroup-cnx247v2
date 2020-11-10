@@ -12,17 +12,27 @@ use App\BusinessLog;
 use App\User;
 use Auth;
 use Hash;
+use Livewire\WithPagination;
+
 class Workflows extends Component
 {
-    public $requests;
+    use WithPagination;
+    //public $requests;
     public $verificationCode;
     public $actionStatus = 0;
     public $verificationPostId;
     public $transactionPassword;
     public $userAction; //approved/declined
+
     public function render()
     {
-        return view('livewire.workflows');
+        return view('livewire.workflows',['requests'=>Post::whereIn('post_type',
+            ['purchase-request', 'expense-report',
+                'leave-request', 'business-trip',
+                'general-request'])
+            ->where('tenant_id',Auth::user()->tenant_id)
+            ->orderBy('id', 'DESC')
+            ->get()]);
     }
 
     public function mount(){
@@ -46,7 +56,7 @@ class Workflows extends Component
         $this->getContent();
     }
     public function inprogressWorkflows(){
-        $this->requests = Post::whereIn('post_type',
+       $this->requests = Post::whereIn('post_type',
                           ['purchase-request', 'expense-report',
                           'leave-request', 'business-trip',
                           'general-request'])
@@ -61,10 +71,10 @@ class Workflows extends Component
                           'general-request'])
                           ->where('post_status', 'approved')
                           ->orderBy('id', 'DESC')
-                          ->get();
+                          ->paginate(1);
     }
     public function declinedWorkflows(){
-        $this->requests = Post::whereIn('post_type',
+       $this->requests = Post::whereIn('post_type',
                           ['purchase-request', 'expense-report',
                           'leave-request', 'business-trip',
                           'general-request'])
