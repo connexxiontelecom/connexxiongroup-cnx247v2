@@ -137,13 +137,13 @@
             </div>
         </div>
         <div class="card card-border-info" style="margin-top:-30px;">
-            
+
             <div class="card-header">
                 <h5 class="card-header-text">
                     <i class="icofont icofont-users-alt-4"></i> Responsible Person(s)
                 </h5>
-            <button id="AddRespPersons" class="btn btn-sm btn-primary f-right btn-mini" 
-            style="margin-bottom: 10px"  {{-- wire:click="markAsComplete({{$task->id}})"  --}} 
+            <button id="AddRespPersons" class="btn btn-sm btn-primary f-right btn-mini"
+            style="margin-bottom: 10px"  {{-- wire:click="markAsComplete({{$task->id}})"  --}}
             title="Add a responsible person" data-toggle="modal" data-target="#modal-1" >
                 <i class="fa fa-plus-square"></i>Add person</button>
             </div>
@@ -154,7 +154,7 @@
 
                 <div class="row">
                     <div class="form-group  col-md-12">
-                     
+
                     <input type="hidden" name="taskId" value="{{$project->id}}">
                     <input type="hidden" name="url" value="{{$link}}">
                         <select name="responsible_persons[]" class="js-example-basic-multiple col-sm-12" multiple="multiple">
@@ -185,7 +185,7 @@
                         </div>
                         <div class="media-body">
                             <h6><a href="{{ route('view-profile', $person->user->url) }}">{{$person->user->first_name }}  {{ $person->user->surname ?? '' }}</a>
-                            
+
                               <button  class="btn btn-sm btn-danger f-right  btn-mini" data-toggle="tooltip" data-placement="top"
                                 data-original-title="Remove Person" style="margin-left: 10px" wire:click="removeResponsiblePerson({{$person->user->id}})"  title="Remove person" >
                                 <i class="fa fa-trash-o"></i>
@@ -207,7 +207,7 @@
             <div class="card-header">
                 <h5 class="card-header-text">
                     <i class="icofont icofont-users-alt-4"></i> Participant(s)
-                    
+
                 </h5>
 
 
@@ -366,10 +366,10 @@
         @include('livewire.backend.project.common._project-slab')
         <div class="card">
             <div class="card-block">
-                <h5 class="sub-title">
-                    <i class="icofont icofont-tasks-alt m-r-5"></i> {{$project->post_title }}
+                <h3 style="text-transform:uppercase;">
+                    <i class="icofont icofont-tasks-alt m-r-5"></i>  {{$project->post_title }}
                      @if ($project->post_status == 'completed')
-                <label for="" class="label btn-success">Completed</label>
+                <sup><label for="" class="label btn-success">Completed</label></sup>
                 @elseif($project->post_status == 'in-progress')
                 <label for="" class="label btn-warning">in-progress</label>
 
@@ -386,8 +386,20 @@
                 <label for="" class="label btn-success">Resolved</label>
 
                 @endif
-                </h5>
-                
+                <a href="{{route('project-board')}}" class="btn btn-mini btn-warning float-right"> <i class="icofont icofont-tasks mr-2"></i> Project Board</a>
+                </h3>
+                <hr>
+                <nav class="navbar navbar-light bg-faded m-b-30 p-10">
+                    <div class="row">
+                        <div class="d-inline-block">
+                            <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
+                            <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
+                            <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
+                            <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
+                        </div>
+                    </div>
+                </nav>
+
 
 
 
@@ -576,7 +588,7 @@
                                                 <div class="accordion-heading" role="tab" id="heading_"{{$milestone->id}}>
                                                     <h3 class="card-title accordion-title">
                                                     <a class="accordion-msg scale_active collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{$milestone->id}}" aria-expanded="false" aria-controls="collapse_{{$milestone->id}}">
-                                                        <img data-toggle="tooltip" data-placement="top" title="" data-original-title="Created by: {{$milestone->user->first_name ?? ''}} {{$milestone->user->surname ?? ''}}" src="/assets/images/avatars/thumbnails/{{$milestone->user->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$milestone->user->first_name ?? ''}}"> {{$milestone->title}} 
+                                                        <img data-toggle="tooltip" data-placement="top" title="" data-original-title="Created by: {{$milestone->user->first_name ?? ''}} {{$milestone->user->surname ?? ''}}" src="/assets/images/avatars/thumbnails/{{$milestone->user->avatar ?? 'avatar.png'}}" class="img-30" alt="{{$milestone->user->first_name ?? ''}}"> {{$milestone->title}}
                                                         <span class="float-right">
                                                             Date: <label class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($milestone->created_at))}}</label>
                                                             Due Date:  <label class="label label-danger">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($milestone->due_date))}}</label>
@@ -586,7 +598,7 @@
                                                 </div>
                                                 <div id="collapse_{{$milestone->id}}" class="panel-collapse in collapse" role="tabpanel" aria-labelledby="heading_{{$milestone->id}}" style="">
                                                     <div class="accordion-content accordion-desc">
-                                                        <p class="mb-3">Status: 
+                                                        <p class="mb-3">Status:
                                                             @if($milestone->status == 0)
                                                                 <label class="label label-warning">Open</label>
                                                             @else

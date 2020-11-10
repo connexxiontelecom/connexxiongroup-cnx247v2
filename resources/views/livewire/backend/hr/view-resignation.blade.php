@@ -12,7 +12,7 @@
 
                     @endif</h4>
                     <div class="btn-group float-right">
-                        <a href="{{route('queries')}}" class="btn btn-mini btn-secondary"> <i class="ti-back-left mr-2"></i> Back</a>
+                        <a href="{{route('resignation')}}" class="btn btn-mini btn-secondary"> <i class="ti-back-left mr-2"></i> Back</a>
                         @if ($resign->user_id == Auth::user()->id)
                             <button type="button" wire:click="cancel({{$resign->id}})" class="btn btn-warning btn-mini"><i class="ti-close mr-2"></i>Cancel</button>
                         @endif

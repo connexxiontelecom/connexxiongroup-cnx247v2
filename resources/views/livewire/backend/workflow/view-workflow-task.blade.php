@@ -791,21 +791,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <div class="col-md-12 btn-add-task">
-                        <div class="input-group input-group-button">
-                            <input type="text" wire:model.debounce.10000ms="review" class="form-control" placeholder="Leave review...">
+                @if (!$request->user_id == Auth::user()->id)
+                    <div class="card-footer">
+                        <div class="col-md-12 btn-add-task">
+                            <div class="form-group">
+                                <label for="">Review</label>
+                                <textarea wire:model.debounce.10000ms="review" class="form-control" style="resize: none;" placeholder="Leave review..."></textarea>
 
-                            <span class="input-group-addon btn btn-primary btn-sm" wire:click="leaveReviewBtn({{$request->id }})">
-                                <i class="icofont icofont-plus f-w-600"></i>
-                                Review
-                            </span>
+                                <button class="float-right mt-2 btn btn-primary btn-mini" wire:click="leaveReviewBtn({{$request->id }})">
+                                    <i class="icofont icofont-plus f-w-600"></i>
+                                    Review
+                                </button>
+                            </div>
+                            @error('review')
+                            <i class="text-danger">{{$message}}</i>
+                            @enderror
                         </div>
-                        @error('review')
-                        <i class="text-danger">{{$message}}</i>
-                        @enderror
                     </div>
-                </div>
+                @endif
             </div>
             <div class="card comment-block">
                 <div class="card-header">
@@ -835,13 +838,14 @@
                     </ul>
                     <div class="md-float-material d-flex">
                         <div class="col-md-12 btn-add-task">
-                            <div class="input-group input-group-button">
-                                <input type="text" wire:model.debounce.10000ms="comment" class="form-control" placeholder="Leave comment...">
+                            <div class="form-group">
+                                <label for="">Comment</label>
+                                <textarea wire:model.debounce.10000ms="comment" class="form-control" style="resize: none;" placeholder="Leave comment..."></textarea>
 
-                                <span class="input-group-addon btn btn-primary btn-sm" wire:click="leaveCommentBtn({{$request->id }})">
+                                <button class="btn btn-primary btn-mini mt-2 float-right" wire:click="leaveCommentBtn({{$request->id }})">
                                     <i class="icofont icofont-plus f-w-600"></i>
                                     Comment
-                                </span>
+                                </button>
                             </div>
                             @error('comment')
                             <i class="text-danger">{{$message}}</i>

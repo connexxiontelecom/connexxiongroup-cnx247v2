@@ -329,6 +329,8 @@ Route::get('/project/project-board', 'CNX247\Backend\ProjectController@projectBo
 Route::get('/project/new', 'CNX247\Backend\ProjectController@newProject')->name('new-project');
 Route::post('/project/new', 'CNX247\Backend\ProjectController@storeProject');
 Route::get('/project/view/{url}', 'CNX247\Backend\ProjectController@viewProject')->name('view-project');
+Route::get('/project/budget/{url}', 'CNX247\Backend\ProjectController@projectBudget')->name('project-budget');
+Route::post('/project/budget', 'CNX247\Backend\ProjectController@storeProjectBudget')->name('store-project-budget');
 Route::get('/project/calendar', 'CNX247\Backend\ProjectController@projectCalendar')->name('project-calendar'); //[view]
 Route::get('/project-calendar', 'CNX247\Backend\ProjectController@getProjectCalendarData'); //[Data source]
 Route::get('/project/gantt-chart', 'CNX247\Backend\ProjectController@projectGanttChart')->name('project-gantt-chart');

@@ -112,7 +112,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12 d-flex justify-content-center">
-                                                <button class="btn btn-primary btn-sm" type="submit" id="submitAppreciation">Submit</button>
+                                                <button class="btn btn-primary btn-mini" type="submit" id="submitAppreciation">Submit</button>
 
                                             </div>
                                             <div class="col-md-12 d-flex justify-content-center mt-1 ">

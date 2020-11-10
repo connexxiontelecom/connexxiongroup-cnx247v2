@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Notifications\NewPostNotification;
 use App\Post;
 use App\ResponsiblePerson;
+use App\ProjectBudget;
 use App\Participant;
 use App\Observer;
 use App\Priority;
@@ -126,7 +127,38 @@ class ProjectController extends Controller
     * New task
     */
     public function viewProject(){
+
         return view('backend.project.view-project');
+    }
+    public function projectBudget($url){
+
+        $project = Post::where('post_url', $url)
+                        ->where('tenant_id',Auth::user()->tenant_id)->first();
+        if(!empty($project)){
+            $budgets = ProjectBudget::where('project_id', $project->id)->get();
+            return view('backend.project.budget',['project'=>$project, 'budgets'=>$budgets]);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Record not found.");
+            return back();
+        }
+    }
+
+    public function storeProjectBudget(Request $request){
+        $this->validate($request,[
+            'budget_head'=>'required',
+            'amount'=>'required'
+        ]);
+        $budget = new ProjectBudget;
+        $budget->budget_title = $request->budget_head;
+        $budget->budget_amount = $request->amount;
+        $budget->comment = $request->comment;
+        $budget->created_by = Auth::user()->id;
+        $budget->tenant_id = Auth::user()->tenant_id;
+        $budget->project_id = $request->projectId;
+        $budget->save();
+        session()->flash("success", "<strong>Success!</strong> Budget saved.");
+        return back();
+
     }
     /*
     * Project calendar
