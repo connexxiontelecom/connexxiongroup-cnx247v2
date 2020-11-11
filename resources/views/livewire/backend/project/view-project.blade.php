@@ -363,40 +363,52 @@
 
     </div>
     <div class="col-xl-8 col-lg-12 pull-xl-4 filter-bar">
-        @include('livewire.backend.project.common._project-slab')
         <div class="card">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="card-footer bg-c-pink">
+                            <h5 class="sub-title text-white" style="text-transform:uppercase;">
+                                <i class="icofont icofont-tasks-alt m-r-5 text-white"></i>  {{$project->post_title }}
+                                 @if ($project->post_status == 'completed')
+                            <sup><label for="" class="label btn-success">Completed</label></sup>
+                            @elseif($project->post_status == 'in-progress')
+                            <label for="" class="label btn-warning">in-progress</label>
+
+                            @elseif($project->post_status == 'closed')
+                            <label for="" class="label btn-warning">Closed</label>
+
+                            @elseif($project->post_status == 'on-hold')
+                            <label for="" class="label btn-warning">On-Hold</label>
+
+                            @elseif($project->post_status == 'at-risk')
+                            <label for="" class="label btn-danger">At-Risk</label>
+
+                            @elseif($project->post_status == 'resolved')
+                            <label for="" class="label btn-success">Resolved</label>
+
+                            @endif
+                            <a href="{{route('project-board')}}" class="btn btn-mini btn-warning float-right"> <i class="icofont icofont-tasks mr-2"></i> Project Board</a>
+                            </h5>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
             <div class="card-block">
-                <h3 style="text-transform:uppercase;">
-                    <i class="icofont icofont-tasks-alt m-r-5"></i>  {{$project->post_title }}
-                     @if ($project->post_status == 'completed')
-                <sup><label for="" class="label btn-success">Completed</label></sup>
-                @elseif($project->post_status == 'in-progress')
-                <label for="" class="label btn-warning">in-progress</label>
-
-                @elseif($project->post_status == 'closed')
-                <label for="" class="label btn-warning">Closed</label>
-
-                @elseif($project->post_status == 'on-hold')
-                <label for="" class="label btn-warning">On-Hold</label>
-
-                @elseif($project->post_status == 'at-risk')
-                <label for="" class="label btn-danger">At-Risk</label>
-
-                @elseif($project->post_status == 'resolved')
-                <label for="" class="label btn-success">Resolved</label>
-
-                @endif
-                <a href="{{route('project-board')}}" class="btn btn-mini btn-warning float-right"> <i class="icofont icofont-tasks mr-2"></i> Project Board</a>
-                </h3>
                 <hr>
-                <nav class="navbar navbar-light bg-faded m-b-30 p-10">
+                <nav class="navbar navbar-light bg-faded m-b-30 p-2">
                     <div class="row">
                         <div class="d-inline-block">
                             <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
                             <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
-                            <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
-                            <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
                         </div>
+                    </div>
+                    <div class="nav-item nav-grid">
+                        <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
+                        <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
+                        <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  temp </a>
                     </div>
                 </nav>
 

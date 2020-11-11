@@ -8,6 +8,7 @@ use App\Notifications\NewPostNotification;
 use App\Post;
 use App\ResponsiblePerson;
 use App\ProjectBudget;
+use App\ProjectDetail;
 use App\Participant;
 use App\Observer;
 use App\Priority;
@@ -17,6 +18,7 @@ use App\Link;
 use App\User;
 use App\Budget;
 use Auth;
+use DB;
 class ProjectController extends Controller
 {
     public function __construct()
@@ -422,6 +424,36 @@ class ProjectController extends Controller
             }
         }
         return redirect()->route('view-project', ["url" => $request->url]);
+    }
+
+    public function projectInvoice($slug){
+        $project = Post::where('post_url', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($project)){
+            $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->select()->get();
+            return view('backend.project.invoice', ['project'=>$project, 'accounts'=>$accounts]);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> No record found.");
+            return back();
+        }
+    }
+
+    public function storeProjectInvoice(Request $request){
+        if(count($request->accounts) > 0){
+            for($i = 0; $i<count($request->accounts); $i++){
+                $invoice = new ProjectDetail;
+                $invoice->project_id = $request->ref_no;
+                $invoice->ref_no = $request->ref_no;
+                $invoice->tenant_id = Auth::user()->tenant_id;
+                $invoice->created_by = Auth::user()->id;
+                $invoice->description = $request->description[$i];
+                $invoice->glcode = $request->accounts[$i];
+                $invoice->save();
+            }
+            session()->flash("success", "<strong>Success! </strong> Invoice submitted.");
+            return redirect()->route('project-board');
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Something went wrong. Try again.");
+        }
     }
 
 }
