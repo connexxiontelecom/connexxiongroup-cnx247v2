@@ -13,7 +13,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="dt-responsive table-responsive">
-                                                    <table id="new-cons" class="table table-striped table-bordered nowrap">
+                                                    <table id="datatable-request" class="table table-bordered table-striped table-md">
                                                         <thead>
                                                             <tr class="text-uppercase">
                                                                 <th>#</th>
@@ -53,6 +53,9 @@
                                                             @endforeach
                                                         </tbody>
                                                     </table>
+                                                    <div class="col-md-12 col-lg-12 d-flex justify-content-center" style="cursor: pointer;">
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
