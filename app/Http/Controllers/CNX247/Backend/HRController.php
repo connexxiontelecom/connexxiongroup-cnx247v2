@@ -65,7 +65,9 @@ class HRController extends Controller
     * Get list of all employees
     */
     public function index(){
-        return view('backend.hr.employees');
+        $data['employeees'] = User::where('tenant_id', Auth::user()->tenant_id)->get();
+       //print_r($data);
+        return view('backend.hr.employees', $data);
     }
 
     /*

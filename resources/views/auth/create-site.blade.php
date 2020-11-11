@@ -219,12 +219,12 @@
                                         @else
                                          <input type="hidden" name="amount" value="{{ ($chosen_plan->price * 100)}}">
                                         @endif
-                                        
+
                                         <input type="hidden" name="currency" value="NGN">
                                         <input type="hidden" id="duration" value="{{$chosen_plan->duration}}">
                                         <input type="hidden" id="plan" value="{{$chosen_plan->plan_id}}">
                                         <input type="hidden" name="metadata[]" id="metadata">
-                                        <input type="hidden" name="reference" value="{{ Paystack::genTranxRef() }}">
+{{--                                        <input type="hidden" name="reference" value="{{ Paystack::genTranxRef() }}">--}}
                                         <button class="btn btn-primary btn-block" type="submit" id="proceedToPay">Proceed to make Payment</button>
                                     </div>
                                     <div class="mx-auto">
