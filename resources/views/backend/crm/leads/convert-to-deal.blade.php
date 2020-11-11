@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('title')
-Convert to Deal
+Receive Payment
 @endsection
 
 @section('extra-styles')
-
+<link rel="stylesheet" type="text/css" href="/assets/css/component.css">
+<link rel="stylesheet" type="text/css" href="/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
+    <link rel="stylesheet" type="text/css" href="/assets/bower_components/multiselect/css/multi-select.css">
+    <link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
 <style>
 /* The heart of the matter */
 
@@ -77,35 +80,45 @@ Convert to Deal
                     <p><a href="mailto:{{$client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[ {{$client->email ?? ''}} ]</a></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
-                    <h6>Order Information :</h6>
-                    <table class="table table-responsive invoice-table invoice-order table-borderless">
-                        <tbody>
-                            <tr>
-                                <th>Issue Date :</th>
-                                <td>
-                                    <input type="date" name="issue_date" placeholder="Date" class="form-control">
-                                    @error('issue_date')
-                                        <i class="text-danger mt-2">{{$message}}</i>
-                                    @enderror
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Due Date :</th>
-                                <td>
-                                    <input type="date" name="due_date" class="form-control" placeholder="Due Date">
-                                    @error('due_date')
-                                        <i class="text-danger mt-2">{{$message}}</i>
-                                    @enderror
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-4 col-sm-6">
-                    <h6 class="m-b-20">Receipt Number <span>#{{$receipt_no}}</span></h6>
-                    <h6 class="text-uppercase text-primary">Balance :
-                        <span class="balance">0.00</span>
+                    <h6 class="m-b-20">Balance: <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoices->sum('total') - $invoices->sum('cash') - $invoices->sum('paid_amount'),2)}}</span></h6>
+                    <h6 class="text-uppercase text-primary">Amount Received :
+                        <span class="balance">{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span class="amount-received"></span> </span>
                     </h6>
+                </div>
+                <div class="col-md-12 col-sm-12">
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Payment Date</label>
+                                <input type="date" name="payment_date" placeholder="Date" class="form-control">
+                                @error('payment_date')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Payment Method</label>
+                                <select name="payment_method" class="form-control">
+                                    <option value="1">Cash</option>
+                                    <option value="2">Bank Transfer</option>
+                                    <option value="3">Cheque</option>
+                                </select>
+                                @error('payment_method')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Reference No.</label>
+                                <input type="text" placeholder="Reference No." class="form-control" name="reference_no">
+                                @error('reference_no')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -114,44 +127,51 @@ Convert to Deal
                         <table class="table  invoice-detail-table">
                             <thead>
                                 <tr class="thead-default">
+                                    <th style="width:20px;">
+                                    </th>
                                     <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>Amount</th>
-                                    <th>Total</th>
-                                    <th class="text-danger">Action</th>
+                                    <th>Issue Date</th>
+                                    <th>Due Date</th>
+                                    <th>Amount Due</th>
+                                    <th>Amount Paid</th>
+                                    <th>Payment</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr class="item">
-                                    <td>
-                                        <input type="text" name="description[]" placeholder="Description" class="form-control">
-                                        @error('description')
-                                            <i class="text-danger mt-2">{{$message}}</i>
-                                        @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" placeholder="Quantity" name="quantity[]" class="form-control">
-                                        @error('quantity')
-                                            <i class="text-danger mt-2">{{$message}}</i>
-                                        @enderror
-                                    </td>
-                                    <td>
-                                        <input type="number" placeholder="Unit Cost" step="0.01" class="form-control" name="unit_cost[]">
-                                        @error('unit_cost')
-                                            <i class="text-danger mt-2">{{$message}}</i>
-                                        @enderror
-                                    </td>
-                                    <td><input type="text" name="total[]" readonly style="width: 120px;"></td>
-                                    <td>
-                                        <i class="ti-trash text-danger remove-line" style="cursor: pointer;"></i>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td colspan="5">
-                                        <button class="btn btn-mini btn-primary add-line"> <i class="ti-plus mr-2"></i> Add Line</button>
-                                    </td>
-                                </tr>
+                            <tbody id="products">
+                                @foreach($invoices as $item)
+                                    <tr class="item">
+                                        <td>
+                                            <div class="checkbox-fade fade-in-primary">
+                                                <label>
+                                                    <input type="checkbox" value="" data-amount="{{ number_format((float)($item->total - $item->paid_amount), 2, '.', '')}}" class="select-invoice">
+                                                    <span class="cr">
+                                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                    </span>
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <p><a target="_blank" href="{{route('print-invoice', $item->slug)}}">Invoice #{{$item->invoice_no}} ({{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->created_at))}})</a></p>
+                                                <input type="hidden" value="{{$item->id}}" name="invoices[]">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p>{{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->issue_date))}}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->due_date))}}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($item->total - $item->paid_amount),2)}}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->paid_amount ?? 0,2)}}</p>
+                                        </td>
+                                        <td><input type="number" step="0.01" class="form-control payment" name="payment[]" style="width: 120px;"></td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -162,62 +182,8 @@ Convert to Deal
                     <table class="table table-responsive invoice-table invoice-total">
                         <tbody>
                             <tr>
-                                <th>Sub Total :</th>
-                                <td class="sub-total">0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Taxes (%) :</th>
-                                <td>
-                                    <input type="text" placeholder="Tax Rate" step="0.01" class="form-control" id="tax_rate">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Tax amount</th>
-                                <td>
-                                    <input type="text" readonly placeholder="Tax Amount" class="form-control" id="tax_amount">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Discount (%) :</th>
-                                <td>
-                                    <input type="text" placeholder="Discount Rate" class="form-control" id="discount_rate">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Discounted amount :</th>
-                                <td>
-                                    <input type="text" readonly placeholder="Discount Amount" class="form-control" id="discounted_amount">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Cash :</th>
-                                <td>
-                                    <input type="text" placeholder="Cash Amount" class="form-control" id="cash_amount" name="cash_amount">
-                                </td>
-                            </tr>
-                            <tr class="text-info">
-                                <td>
-                                    <hr>
-                                    <h5 class="text-primary">Total :</h5>
-                                </td>
-                                <td>
-                                    <hr>
-                                    <h5 class="text-primary total">0.00</h5>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody class="float-left pl-3">
-                            <tr>
-                                <th class="text-left"> <strong>Account Name:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-left"><strong>Account Number:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-left"><strong>Bank:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->bank_name ?? ''}}</td>
+                                <th>Amount Received :</th>
+                                <td class="amount-receive">{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span class="amount-received">0.00</span> </td>
                             </tr>
                         </tbody>
                     </table>
@@ -232,17 +198,8 @@ Convert to Deal
             <div class="row text-center">
                 <div class="col-sm-12 invoice-btn-group text-center">
                     <input type="hidden" name="clientId" value="{{$client->id}}">
-                    <input type="hidden" name="invoiceNo" value="{{$receipt_no}}">
-
-                    <input type="hidden" name="subTotal" id="subTotal"/>
-                    <input type="hidden" name="totalAmount" id="totalAmount"/>
-
-                    <input type="hidden" name="taxValue"  id="taxValue">
-                    <input type="hidden" name="discountValue"  id="discountValue">
-
-                    <input type="hidden" name="hiddenTaxRate"  id="hiddenTaxRate">
-                    <input type="hidden" name="hiddenDiscountRate"  id="hiddenDiscountRate">
-                    <button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Convert {{$client->first_name ?? ''}} to Lead</button>
+                    <input type="hidden" name="totalAmount" value="{{$invoices->sum('total') - $invoices->sum('cash')}}" id="totalAmount"/>
+                    <button type="submit" id="issueReceiptBtn" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-check"></i> Submit</button>
                     <a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
                 </div>
             </div>
@@ -256,107 +213,40 @@ Convert to Deal
 
 @endsection
 @section('extra-scripts')
-
+<script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
+<script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
 <script>
     $(document).ready(function(){
         var grand_total = 0;
-        $('.invoice-detail-table').on('mouseup keyup', 'input[type=number]', ()=> calculateTotals());
-
-        $(document).on('click', '.add-line', function(e){
-            e.preventDefault();
-            const $lastRow = $('.item:last');
-            const $newRow = $lastRow.clone();
-
-            $newRow.find('input').val('');
-            $newRow.find('td:nth-last-child(2) input[type=text]').text('0.00');
-            $newRow.insertAfter($lastRow);
-
-            $newRow.find('input:first').focus();
+        var invoice_total = 0;
+        $(".select-invoice").on('change', function() {
+            var amount = $(this).data('amount');
+                if ($(this).is(':checked')){
+                    $(this).closest('tr').find('.payment').val(amount);
+                    $('.amount-received').text(parseFloat(invoice_total).toLocaleString());
+                    setTotal();
+                }else{
+                    var sub_amount = $(this).closest('tr').find('.payment').val();
+                    cur = invoice_total - sub_amount;
+                    invoice_total = cur;
+                    $('.amount-received').text(parseFloat(invoice_total).toLocaleString());
+                    var sub_amount = $(this).closest('tr').find('.payment').val('');
+                    setTotal();
+                }
         });
-
-        //Remove line
-        $(document).on('click', '.remove-line', function(e){
-            e.preventDefault();
-            $(this).closest('tr').remove();
-            calculateTotals();
-        });
-
-        //calculate totals
-        function calculateTotals(){
-            const subTotals = $('.item').map((idx, val)=> calculateSubTotal(val)).get();
-            const total = subTotals.reduce((a, v)=> a + Number(v), 0);
-            grand_total = total;
-            $('.sub-total').text(formatAsCurrency(grand_total));
-            $('#subTotal').val(grand_total);
-            $('#totalAmount').val(grand_total);
-            $('.total').text(formatAsCurrency(total));
-            $('.balance').text(formatAsCurrency(total));
-        }
-
-        //calculate subtotals
-        function calculateSubTotal(row){
-            const $row = $(row);
-            const inputs = $row.find('input');
-            const subtotal = inputs[1].value * inputs[2].value;
-           // $row.find('td:nth-last-child(3)').text(formatAsCurrency(subtotal));
-            $row.find('td:nth-last-child(2) input[type=text]').val(subtotal);
-            return subtotal;
-        }
-
-        //calculate tax
-        $(document).on('blur', '#tax_rate', function(e){
-            e.preventDefault();
-            $('#hiddenTaxRate').val($(this).val());
-            var discount_rate = null;
-            if($('#discount_rate').val() == ''){
-                discount_rate = 0;
-            }else{
-                discount_rate = $('#discount_rate').val();
-            }
-            var rate = $(this).val();
-            //$('#tax_rate').val(rate);
-
-            var tax_value = ($('#totalAmount').val() * rate)/100;
-            var discount_value = ($('#subTotal').val() * discount_rate )/100;
-            $('#taxValue').val(tax_value);
-            $('#tax_amount').val(tax_value);
-            $('#discounted_amount').val(discount_value);
-            var total = +$('#totalAmount').val()  + +tax_value;
-            $('#totalAmount').val(total);
-            $('.total').text(formatAsCurrency(total));
-            $('.balance').text(formatAsCurrency(total));
-        });
-        //calculate discount
-        $(document).on('blur', '#discount_rate', function(e){
-            e.preventDefault();
-            $('#hiddenDiscountRate').val($(this).val());
-                var rate = null;
-            if($('#tax_rate').val() == ''){
-                rate = 0;
-            }else{
-                rate = $('#tax_rate').val();
-            }
-
-            var discount_rate = $(this).val();
-            var discount_value = ($('#subTotal').val() * discount_rate)/100;
-            $('#discountValue').val(discount_value);
-            //discount
-            $('#discounted_amount').val(discount_value);
-            var total = ($('#subTotal').val() - discount_value ) - ($('#subTotal').val() * rate)/100;
-            $('#totalAmount').val(total);
-            $('.total').text(formatAsCurrency(total));
-            $('.balance').text(formatAsCurrency(total));
-        });
-        //format as currency
-        function formatAsCurrency(amount){
-            return "₦"+Number(amount).toFixed(2);
-        }
-
-        $(document).on('blur', '#cash_amount', function(e){
-            var cash = $(this).val();
-            var total = $('#totalAmount').val() - cash;
-            $('.balance').text(formatAsCurrency(total));
+        $(document).on("change", ".payment", function() {
+            setTotal();
         });
     });
+
+    function setTotal(){
+        var sum = 0;
+        $(".payment").each(function(){
+            sum += +$(this).val();
+        });
+            $(".amount-received").text(sum.toLocaleString());
+    }
 </script>
 @endsection

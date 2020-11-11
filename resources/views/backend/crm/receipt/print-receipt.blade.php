@@ -73,30 +73,36 @@
                     <p><a href="mailto:{{$receipt->client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[{{$receipt->client->email ?? ''}}]</a></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
-                    <h6>Order Information :</h6>
                     <table class="table table-responsive invoice-table invoice-order table-borderless">
                         <tbody>
                             <tr>
-                                <th>Issue Date :</th>
+                                <th>Date :</th>
                                 <td>{{date('d F, Y', strtotime($receipt->issue_date))}}</td>
                             </tr>
                             <tr>
-                                <th>Due Date :</th>
-                                <td>{{date('d F, Y', strtotime($receipt->due_date))}}</td>
-                            </tr>
-                            <tr>
-                                <th>Status :</th>
+                                <th>Payment Type: </th>
                                 <td>
-                                    <span class="label label-warning">Pending</span>
+                                    <span class="label label-warning">
+                                        @switch($receipt->payment_type)
+                                                @case(1)
+                                                     Cash
+                                                    @break
+                                                @case(2)
+                                                     Bank Transfer
+                                                    @break
+                                                @default
+                                                     Cheque
+                                            @endswitch
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="col-md-4 col-sm-6">
-                    <h6 class="m-b-20">Invoice Number <span>#{{$receipt->receipt_no}}</span></h6>
+                    <h6 class="m-b-20">Ref.<span>#{{$receipt->ref_no}}</span></h6>
                     <h6 class="text-uppercase text-primary">Total Due :
-                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->total,2)}}</span>
+                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->amount,2)}}</span>
                     </h6>
                 </div>
             </div>
@@ -107,20 +113,18 @@
                             <thead>
                                 <tr class="thead-default">
                                     <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>Amount</th>
-                                    <th>Total</th>
+                                    <th>Amount Due</th>
+                                    <th>Payment</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($receipt->receiptItem as $item)
+                                @foreach ($invoices as $item)
                                     <tr>
                                         <td>
-                                            <p>{{$item->description ?? ''}}</p>
+                                            <p>Receipt for Invoice # {{$item->invoice_id}}</p>
                                         </td>
                                         <td>{{number_format($item->quantity)}}</td>
-                                        <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->unit_cost, 2)}}</td>
-                                        <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->total, 2)}}</td>
+                                        <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->payment, 2)}}</td>
                                     </tr>
 
                                 @endforeach
@@ -201,9 +205,28 @@
             axios.post('/send/receipt/email/',{id:$(this).val()})
             .then(response=>{
                 $('#sendEmailAddon').text('Done!');
+                Toastify({
+                text: "Receipt sent via mail.",
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: 'right', // `left`, `center` or `right`
+                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                }).showToast();
+
             })
             .catch(error=>{
                 $('#sendEmailAddon').text('Error!');
+                Toastify({
+                text: "Ooops! Something went wrong. Try again.",
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: 'right', // `left`, `center` or `right`
+                backgroundColor: "linear-gradient(to right, #FF0000, #DE0000)",
+                }).showToast();
             });
         });
     });

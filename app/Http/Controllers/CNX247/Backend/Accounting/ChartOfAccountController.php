@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CNX247\Backend\Accounting;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\DefaultAccount;
 use App\Policy;
 use Auth;
 use DB;
@@ -18,6 +19,14 @@ class ChartOfAccountController extends Controller
             'account_type'=>1,
             'bank'=>'0',
             'glcode'=>1,
+            'parent_account'=>0,
+            'type'=>'1'
+        ],
+        [
+            'account_name'=>'Cash',
+            'account_type'=>1,
+            'bank'=>'0',
+            'glcode'=>10002,
             'parent_account'=>0,
             'type'=>'1'
         ],
@@ -52,6 +61,30 @@ class ChartOfAccountController extends Controller
             'glcode'=>5,
             'parent_account'=>0,
             'type'=>'1'
+        ],
+        [
+            'account_name'=>'Accounts Receivable (A/R)',
+            'account_type'=>1,
+            'bank'=>'0',
+            'glcode'=>10001,
+            'parent_account'=>0,
+            'type'=>'1'
+        ],
+        [
+            'account_name'=>'Accounts Payable (A/P)',
+            'account_type'=>2,
+            'bank'=>'0',
+            'glcode'=>20001,
+            'parent_account'=>0,
+            'type'=>'1'
+        ],
+        [
+            'account_name'=>'Retained Earning',
+            'account_type'=>3,
+            'bank'=>'0',
+            'glcode'=>301,
+            'parent_account'=>0,
+            'type'=>'0'
         ]
         );
 
@@ -230,4 +263,31 @@ class ChartOfAccountController extends Controller
         }
         return response()->json(['message'=>'Success! Opening balance saved.'], 200);
     }
+
+    public function ledgerDefaultsVariables(){
+        $accounts = DB::table(Auth::user()->tenant_id.'_coa')->select()->get();
+        $defaults = DB::table(Auth::user()->tenant_id.'_coa as c')
+                            ->join('default_accounts as d', 'd.glcode', '=', 'c.glcode')
+                            ->select('d.glcode as dcode', 'c.account_name', 'd.handle')
+                            ->get();
+        return view('backend.accounting.setup.ledger.defaults-variables', ['accounts'=>$accounts,'defaults'=>$defaults]);
+    }
+
+    public function updateDefaultsVariables(Request $request){
+        $this->validate($request,[
+            'account.*'=>'required',
+            'handle'=>'required'
+        ]);
+
+         for($i = 0; $i<count($request->handle); $i++){
+            $update = DefaultAccount::where('tenant_id', Auth::user()->tenant_id)->where('handle', $request->handle[$i])->first();
+            $update->handle = $request->handle[$i];
+            $update->glcode = $request->account[$i];
+            $update->set_by = Auth::user()->id;
+            $update->save();
+        }
+        session()->flash("success", "<strong>Success!</strong> Changes saved.");
+        return back();
+    }
+
 }

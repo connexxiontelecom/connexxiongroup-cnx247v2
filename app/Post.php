@@ -82,6 +82,8 @@ class Post extends Model
         return $this->hasMany(PostSubmission::class, 'post_id');
     }
 
-
+    public function submittedBy(){
+        return $this->belongsTo(User::class, 'submitted_by');
+    }
 
 }

@@ -21,7 +21,11 @@
             <li class="">
                 <a href="{{ route('chat-n-calls') }}">
                     <span class="pcoded-micon"><i class="ti-comment-alt"></i></span>
-                    <span class="pcoded-mtext">Chat & Calls</span>
+                    <span class="pcoded-mtext">Chat & Calls
+                        @if(count($unreadMessages) > 0)
+                        <label for="" class="badge badge-danger">{{number_format(count($unreadMessages))}}</label>
+                    @endif
+                    </span>
                 </a>
             </li>
             <li class="">
@@ -76,11 +80,6 @@
                             <span class="pcoded-mtext">My Events</span>
                         </a>
                     </li>
-                    <!-- <li class="">
-                        <a href="#">
-                            <span class="pcoded-mtext">Company Calendar</span>
-                        </a>
-                    </li> -->
                 </ul>
             </li>
         </ul>
@@ -122,11 +121,6 @@
                             <span class="pcoded-mtext">IdeaBox</span>
                         </a>
                     </li>
-                    <!--<li class=" ">
-                        <a href="route('complaints')}}">
-                            <span class="pcoded-mtext">Complaints</span>
-                        </a>
-                    </li> -->
                     <li class=" ">
                         <a href="{{route('queries')}}">
                             <span class="pcoded-mtext">Queries</span>
@@ -151,11 +145,6 @@
                     <span class="pcoded-mtext">Timesheet</span>
                 </a>
                 <ul class="pcoded-submenu">
-                    <!--<li class=" ">
-                        <a href="route('timesheet')}}">
-                            <span class="pcoded-mtext">Timesheet</span>
-                        </a>
-                    </li> -->
                     <li class=" ">
                         <a href="{{route('attendance')}}">
                             <span class="pcoded-mtext">Attendance</span>
@@ -240,16 +229,6 @@
                             <span class="pcoded-mtext">Email Campaigns</span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="{{route('admin-support')}}">
-                            <span class="pcoded-mtext">Support Ticket</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('feedbacks')}}">
-                            <span class="pcoded-mtext">Feedback</span>
-                        </a>
-                    </li>
                 </ul>
             </li>
         </ul>
@@ -288,8 +267,98 @@
                         </a>
                     </li>
                     <li class=" ">
-                        <a href="#">
-                            <span class="pcoded-mtext">Requisition Setup</span>
+                        <a href="{{route('ledger-default-variables')}}">
+                            <span class="pcoded-mtext">Ledger Defaults</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="icofont icofont-deal"></i></span>
+                    <span class="pcoded-mtext">Vendors</span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class=" ">
+                        <a href="{{route('vendor-bills')}}">
+                            <span class="pcoded-mtext">Vendor Bills</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="icofont icofont-transparent"></i></span>
+                    <span class="pcoded-mtext">Customers</span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class=" ">
+                        <a href="{{route('clients')}}">
+                            <span class="pcoded-mtext">Customers</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('invoice-list')}}">
+                            <span class="pcoded-mtext">Invoices</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="icofont icofont-paper-plane"></i></span>
+                    <span class="pcoded-mtext">Postings</span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class=" ">
+                        <a href="{{route('receipt-posting')}}">
+                            <span class="pcoded-mtext">Receipt</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('payments')}}">
+                            <span class="pcoded-mtext">Payment</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('journal-entries')}}">
+                            <span class="pcoded-mtext">Journal Voucher</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('budget-setup')}}">
+                            <span class="pcoded-mtext">Workflow</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="pcoded-item pcoded-left-item">
+            <li class="pcoded-hasmenu">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="icofont icofont-coins"></i></span>
+                    <span class="pcoded-mtext">Reports</span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class=" ">
+                        <a href="{{route('trial-balance')}}">
+                            <span class="pcoded-mtext">Trial Balance</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('balance-sheet')}}">
+                            <span class="pcoded-mtext">Balance Sheet</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('profit-o-loss')}}">
+                            <span class="pcoded-mtext">Profit/Loss</span>
                         </a>
                     </li>
                 </ul>
@@ -305,17 +374,23 @@
                 <ul class="pcoded-submenu">
                     <li class=" ">
                         <a href="{{route('new-supplier')}}">
-                            <span class="pcoded-mtext">Add New Supplier</span>
+                            <span class="pcoded-mtext">Add New Vendor</span>
                         </a>
                     </li>
                     <li class=" ">
                         <a href="{{route('suppliers')}}">
-                            <span class="pcoded-mtext">Suppliers</span>
+                            <span class="pcoded-mtext">Vendors</span>
                         </a>
                     </li>
+
                     <li class=" ">
                         <a href="{{route('purchase-orders')}}">
                             <span class="pcoded-mtext">Purchase Orders</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('vendor-services')}}">
+                            <span class="pcoded-mtext">Services</span>
                         </a>
                     </li>
                 </ul>
@@ -386,6 +461,16 @@
                     <span class="pcoded-mtext">Administration</span>
                 </a>
                 <ul class="pcoded-submenu">
+                    <li class=" ">
+                        <a href="{{route('admin-support')}}">
+                            <span class="pcoded-mtext">Support Ticket</span>
+                        </a>
+                    </li>
+                    <li class=" ">
+                        <a href="{{route('feedbacks')}}">
+                            <span class="pcoded-mtext">Feedback</span>
+                        </a>
+                    </li>
                     <li class=" ">
                         <a href="{{route('tenants')}}">
                             <span class="pcoded-mtext">Tenants</span>

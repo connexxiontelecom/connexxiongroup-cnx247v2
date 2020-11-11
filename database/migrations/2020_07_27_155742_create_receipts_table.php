@@ -18,18 +18,16 @@ class CreateReceiptsTable extends Migration
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('issued_by')->nullable();
-            $table->integer('receipt_no');
-            $table->tinyInteger('tax_inclusive')->nullable(); //1=yes; 0=no
+            $table->string('ref_no');
             $table->dateTime('issue_date');
-            $table->dateTime('due_date');
-            $table->double('total');
-            $table->double('sub_total');
-            $table->double('tax_rate')->nullable();
-            $table->double('discount_rate')->nullable();
-            $table->double('tax_value')->default(0)->nullable();
-            $table->double('discount_value')->default(0)->nullable();
+            $table->double('amount');
+            $table->tinyInteger('payment_type')->default(1);
             $table->string('slug')->nullable();
+            $table->string('memo')->nullable();
             $table->timestamps();
+            $table->tinyInteger('posted')->default(0);
+            $table->tinyInteger('trash')->default(0);
+            $table->dateTime('date_posted')->default(0);
         });
     }
 

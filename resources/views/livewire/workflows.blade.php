@@ -20,7 +20,7 @@
         </div>
         @endif
         <div class="dt-responsive table-responsive">
-            <table id="new-cons" class="table table-striped table-bordered nowrap">
+            <table id="datatable-assignment" class="table table-striped table-bordered nowrap">
                 <thead>
                     <tr class="text-uppercase">
                         <th>#</th>
@@ -126,8 +126,11 @@
 
                         @endforeach
                     @endforeach
+
+
                 </tbody>
+
             </table>
-        </div>
+
     </div>
 </div>

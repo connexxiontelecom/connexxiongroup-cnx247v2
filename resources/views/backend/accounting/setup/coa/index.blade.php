@@ -36,477 +36,107 @@
                 <button class="btn btn-mini btn-primary float-right" type="button" data-toggle="modal" data-target="#addNewAccountModal"><i class="ti-plus mr-2"></i>Add New Account</button>
             </div>
             <div class="card-block accordion-block">
-                <div id="accordion" role="tablist" aria-multiselectable="true">
-                    <div class="accordion-panel">
-                        <div class="accordion-heading" role="tab" id="headingOne">
-                            <h3 class="card-title accordion-title">
-                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Assets
-                            </a>
-                        </h3>
-                        </div>
-                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                            <div class="accordion-content accordion-desc">
-                                <div class="dt-responsive table-responsive">
-                                    <table class="table table-striped table-bordered nowrap portableTables">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @php
-                                            $serial = 1;
-                                        @endphp
-                                        @foreach($charts as $chart)
-                                            @if ($chart->account_type == 1)
-                                                <tr>
-                                                    <td>{{$serial++}}</td>
-                                                    <td>{{$chart->glcode}}</td>
-                                                    <td>{{$chart->account_name}}</td>
-                                                    <td>{{$chart->account_type}}</td>
-                                                    <td>
-                                                        @switch($chart->parent_account)
-                                                            @case('0')
-                                                            Parent Account
-                                                            @break
-                                                            @case('1')
-                                                            Asset Account
-                                                            @break
-                                                            @case('2')
-                                                            Liability Account
-                                                            @break
-                                                            @case('3')
-                                                            Equity Account
-                                                            @break
-                                                            @case('4')
-                                                            Revenue Account
-                                                            @break
-                                                            @case('5')
-                                                            Expense Account
-                                                            @break
-                                                        @endswitch
-                                                    </td>
-                                                    <td>{{$chart->type}}</td>
-                                                    <td>
-                                                        @if($chart->bank == 1)
-                                                            Bank
-                                                        @else
-                                                            Not Bank
-                                                        @endif
-                                                    </td>
-                                                    <td>{{$chart->narration ?? ''}}</td>
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <a href=""><i class="ti-pencil text-warning mr-2"></i></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-panel">
-                        <div class="accordion-heading" role="tab" id="headingTwo">
-                            <h3 class="card-title accordion-title">
-                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                               Liabilities
-                            </a>
-                        </h3>
-                        </div>
-                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                            <div class="accordion-content accordion-desc">
-                                <div class="dt-responsive table-responsive">
-                                    <table  class="table table-striped table-bordered nowrap portableTables">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @php
-                                            $serial = 1;
-                                        @endphp
-                                        @foreach($charts as $chart)
-                                            @if ($chart->account_type == 2)
-                                                <tr>
-                                                    <td>{{$serial++}}</td>
-                                                    <td>{{$chart->glcode}}</td>
-                                                    <td>{{$chart->account_name}}</td>
-                                                    <td>{{$chart->account_type}}</td>
-                                                    <td>
-                                                        @switch($chart->parent_account)
-                                                            @case('0')
-                                                            Parent Account
-                                                            @break
-                                                            @case('1')
-                                                            Asset Account
-                                                            @break
-                                                            @case('2')
-                                                            Liability Account
-                                                            @break
-                                                            @case('3')
-                                                            Equity Account
-                                                            @break
-                                                            @case('4')
-                                                            Revenue Account
-                                                            @break
-                                                            @case('5')
-                                                            Expense Account
-                                                            @break
-                                                        @endswitch
-                                                    </td>
-                                                    <td>{{$chart->type}}</td>
-                                                    <td>
-                                                        @if($chart->bank == 1)
-                                                            Bank
-                                                        @else
-                                                            Not Bank
-                                                        @endif
-                                                    </td>
-                                                    <td>{{$chart->narration ?? ''}}</td>
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <a href=""><i class="ti-pencil text-warning mr-2"></i></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-panel">
-                        <div class=" accordion-heading" role="tab" id="headingThree">
-                            <h3 class="card-title accordion-title">
-                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                               Equity
-                            </a>
-                        </h3>
-                        </div>
-                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                            <div class="accordion-content accordion-desc">
-                                <div class="dt-responsive table-responsive">
-                                    <table class="table table-striped table-bordered nowrap portableTables">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @php
-                                            $serial = 1;
-                                        @endphp
-                                        @foreach($charts as $chart)
-                                            @if ($chart->account_type == 3)
-                                                <tr>
-                                                    <td>{{$serial++}}</td>
-                                                    <td>{{$chart->glcode}}</td>
-                                                    <td>{{$chart->account_name}}</td>
-                                                    <td>{{$chart->account_type}}</td>
-                                                    <td>
-                                                        @switch($chart->parent_account)
-                                                            @case('0')
-                                                            Parent Account
-                                                            @break
-                                                            @case('1')
-                                                            Asset Account
-                                                            @break
-                                                            @case('2')
-                                                            Liability Account
-                                                            @break
-                                                            @case('3')
-                                                            Equity Account
-                                                            @break
-                                                            @case('4')
-                                                            Revenue Account
-                                                            @break
-                                                            @case('5')
-                                                            Expense Account
-                                                            @break
-                                                        @endswitch
-                                                    </td>
-                                                    <td>{{$chart->type}}</td>
-                                                    <td>
-                                                        @if($chart->bank == 1)
-                                                            Bank
-                                                        @else
-                                                            Not Bank
-                                                        @endif
-                                                    </td>
-                                                    <td>{{$chart->narration ?? ''}}</td>
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <a href=""><i class="ti-pencil text-warning mr-2"></i></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-panel">
-                        <div class=" accordion-heading" role="tab" id="headingFour">
-                            <h3 class="card-title accordion-title">
-                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                               Revenue
-                            </a>
-                        </h3>
-                        </div>
-                        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-                            <div class="accordion-content accordion-desc">
-                                <div class="dt-responsive table-responsive">
-                                    <table class="table table-striped table-bordered nowrap portableTables">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @php
-                                            $serial = 1;
-                                        @endphp
-                                        @foreach($charts as $chart)
-                                            @if ($chart->account_type == 4)
-                                                <tr>
-                                                    <td>{{$serial++}}</td>
-                                                    <td>{{$chart->glcode}}</td>
-                                                    <td>{{$chart->account_name}}</td>
-                                                    <td>{{$chart->account_type}}</td>
-                                                    <td>
-                                                        @switch($chart->parent_account)
-                                                            @case('0')
-                                                            Parent Account
-                                                            @break
-                                                            @case('1')
-                                                            Asset Account
-                                                            @break
-                                                            @case('2')
-                                                            Liability Account
-                                                            @break
-                                                            @case('3')
-                                                            Equity Account
-                                                            @break
-                                                            @case('4')
-                                                            Revenue Account
-                                                            @break
-                                                            @case('5')
-                                                            Expense Account
-                                                            @break
-                                                        @endswitch
-                                                    </td>
-                                                    <td>{{$chart->type}}</td>
-                                                    <td>
-                                                        @if($chart->bank == 1)
-                                                            Bank
-                                                        @else
-                                                            Not Bank
-                                                        @endif
-                                                    </td>
-                                                    <td>{{$chart->narration ?? ''}}</td>
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <a href=""><i class="ti-pencil text-warning mr-2"></i></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-panel">
-                        <div class=" accordion-heading" role="tab" id="headingFive">
-                            <h3 class="card-title accordion-title">
-                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                               Expenses
-                            </a>
-                        </h3>
-                        </div>
-                        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-                            <div class="accordion-content accordion-desc">
-                                <div class="dt-responsive table-responsive">
-                                    <table class="table table-striped table-bordered nowrap portableTables">
-                                        <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @php
-                                            $serial = 1;
-                                        @endphp
-                                        @foreach($charts as $chart)
-                                            @if ($chart->account_type == 5)
-                                                <tr>
-                                                    <td>{{$serial++}}</td>
-                                                    <td>{{$chart->glcode}}</td>
-                                                    <td>{{$chart->account_name}}</td>
-                                                    <td>{{$chart->account_type}}</td>
-                                                    <td>
-                                                        @switch($chart->parent_account)
-                                                            @case('0')
-                                                            Parent Account
-                                                            @break
-                                                            @case('1')
-                                                            Asset Account
-                                                            @break
-                                                            @case('2')
-                                                            Liability Account
-                                                            @break
-                                                            @case('3')
-                                                            Equity Account
-                                                            @break
-                                                            @case('4')
-                                                            Revenue Account
-                                                            @break
-                                                            @case('5')
-                                                            Expense Account
-                                                            @break
-                                                        @endswitch
-                                                    </td>
-                                                    <td>{{$chart->type}}</td>
-                                                    <td>
-                                                        @if($chart->bank == 1)
-                                                            Bank
-                                                        @else
-                                                            Not Bank
-                                                        @endif
-                                                    </td>
-                                                    <td>{{$chart->narration ?? ''}}</td>
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <a href=""><i class="ti-pencil text-warning mr-2"></i></a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                        </tbody>
-                                        <tfoot>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>GLCode</th>
-                                            <th>Account Name</th>
-                                            <th>Account Type</th>
-                                            <th>Parent Account</th>
-                                            <th>Type</th>
-                                            <th>Bank</th>
-                                            <th>Narration</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-xs-12 col-sm-12">
+                    <table id="complex-header" class="table table-striped table-bordered nowrap dataTable" role="grid" aria-describedby="complex-header_info" style="width: 100%; margin:0px auto;">
+                        <thead>
+                        <tr role="row">
+                            <th class="sorting_asc text-left" tabindex="0" style="width: 50px;">S/No.</th>
+                            <th class="sorting_asc text-left" tabindex="0" style="width: 50px;">ACCOUNT CODE</th>
+                            <th class="sorting_asc text-left" tabindex="0" style="width: 150px;">ACCOUNT NAME</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @php
+                            $a = 1;
+                        @endphp
+                        <tr role="row" class="odd">
+                            <td class="sorting_1" colspan="3"><strong style="font-size:16px; text-transform:uppercase;">Assets</strong></td>
+                        </tr>
+                        @foreach($charts as $report)
+                            @switch($report->account_type)
+                                @case(1)
+                                @if ($report->glcode != 1)
+                                    <tr role="row" class="odd">
+                                        <td class="text-left">{{$a++}}</td>
+                                        <td class="sorting_1 text-left">{{$report->glcode ?? ''}}</td>
+                                        <td class="text-left">{{$report->account_name ?? ''}}</td>
+                                    </tr>
+                                @endif
+                                @break
+                            @endswitch
+                        @endforeach
+
+                        <tr role="row" class="odd">
+                            <td class="sorting_1"  colspan="3">
+                                <strong style="font-size:16px; text-transform:uppercase;">Liability</strong>
+                            </td>
+                        </tr>
+                        @foreach($charts as $report)
+                            @switch($report->account_type)
+                                @case(2)
+                                @if ($report->glcode != 2)
+                                    <tr role="row" class="odd">
+                                        <td class="text-left">{{$a++}}</td>
+                                        <td class="sorting_1 text-left">{{$report->glcode ?? ''}}</td>
+                                        <td class="text-left">{{$report->account_name ?? ''}}</td>
+                                    </tr>
+
+                                @endif
+                                @break
+                            @endswitch
+                        @endforeach
+                        <tr role="row" class="odd">
+                            <td class="sorting_1"  colspan="3"><strong style="font-size:16px; text-transform:uppercase;">Equity</strong></td>
+                        </tr>
+                        @foreach($charts as $report)
+                            @switch($report->account_type)
+                                @case(3)
+                                @if ($report->glcode != 3)
+                                    <tr role="row" class="odd">
+                                        <td class="text-left">{{$a++}}</td>
+                                        <td class="sorting_1 text-left">{{$report->glcode ?? ''}}</td>
+                                        <td class="text-left">{{$report->account_name ?? ''}}</td>
+                                    </tr>
+
+                                @endif
+                                @break
+                            @endswitch
+                        @endforeach
+                        <tr role="row" class="odd">
+                            <td class="sorting_1"  colspan="3"><strong style="font-size:16px; text-transform:uppercase;">Revenue</strong></td>
+                        </tr>
+                        @foreach($charts as $report)
+                            @switch($report->account_type)
+                                @case(4)
+                                @if ($report->glcode != 4)
+                                    <tr role="row" class="odd">
+                                        <td class="text-left">{{$a++}}</td>
+                                        <td class="sorting_1 text-left">{{$report->glcode ?? ''}}</td>
+                                        <td class="text-left">{{$report->account_name ?? ''}}</td>
+                                    </tr>
+
+                                @endif
+                        @break
+                        @endswitch
+                        @endforeach
+                        <tr role="row" class="odd">
+                            <td class="sorting_1"  colspan="3"><strong style="font-size:16px; text-transform:uppercase;">Expenses</strong></td>
+                        </tr>
+                        @foreach($charts as $report)
+                            @switch($report->account_type)
+                                @case(5)
+                                @if ($report->glcode != 5)
+                                <tr role="row" class="odd">
+                                    <td class="text-left">{{$a++}}</td>
+                                    <td class="sorting_1 text-left">{{$report->glcode ?? ''}}</td>
+                                    <td class="text-left">{{$report->account_name ?? ''}}</td>
+                                </tr>
+
+                                @endif
+                        @break
+                        @endswitch
+                        @endforeach
+                    </table>
                 </div>
             </div>
         </div>
