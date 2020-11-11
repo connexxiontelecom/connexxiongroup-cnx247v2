@@ -130,37 +130,43 @@
                         <div class="card card-border-primary">
                             <div class="card-header">
                                 <h5>{{$receipt->client->first_name ?? ''}}  {{$receipt->client->surname ?? ''}}</h5>
-                                <div class="dropdown-secondary dropdown f-right">
-                                    <button class="btn btn-primary btn-mini waves-effect waves-light" type="button" aria-haspopup="true" aria-expanded="false">Overdue</button>
-                                    <span class="f-left m-r-5 text-inverse">Status : </span>
-                                </div>
                             </div>
                             <div class="card-block">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <ul class="list list-unstyled">
-                                            <li>Receipt#: {{$receipt->receipt_no}}</li>
-                                            <li>Issued on: <span class="text-semibold">{{date('d F, Y', strtotime($receipt->issue_date))}}</span></li>
+                                            <li><strong>Ref. #:</strong> {{$receipt->ref_no}}</li>
                                         </ul>
                                     </div>
                                     <div class="col-sm-6">
                                         <ul class="list list-unstyled text-right">
-                                            <li>{{number_format($receipt->total,2)}}</li>
-                                            <li>Method: <span class="text-semibold">SWIFT</span></li>
+                                            <li><strong>Payment: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($receipt->amount,2)}}</li>
+                                            <li><strong>Method:</strong> <span class="text-semibold">
+                                            @switch($receipt->payment_type)
+                                                @case(1)
+                                                    Cash
+                                                    @break
+                                                @case(2)
+                                                    Bank Transfer
+                                                    @break
+                                                @default
+                                                    Cheque
+                                            @endswitch
+                                        </span></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer">
                                 <div class="task-list-table">
-                                    <p class="task-due"><strong> Due : </strong><strong class="label label-danger">{{date('d F, Y', strtotime($receipt->due_date))}}</strong></p>
+                                    <p class="task-due"><strong> Date : </strong><strong class="label label-danger">{{date('d F, Y', strtotime($receipt->issue_date))}}</strong></p>
                                 </div>
                                 <div class="task-board m-0">
                                     <a href="{{route('print-receipt',$receipt->slug)}}" class="btn btn-info btn-mini b-none"><i class="icofont icofont-eye-alt m-0"></i></a>
                                     <div class="dropdown-secondary dropdown">
                                         <button class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown14" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
                                         <div class="dropdown-menu" aria-labelledby="dropdown14" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                            <a class="dropdown-item waves-light waves-effect" href="{{route('print-receipt', $receipt->slug)}}"><i class="icofont icofont-ui-alarm"></i> Print Invoice</a>
+                                            <a class="dropdown-item waves-light waves-effect" href="{{route('print-receipt', $receipt->slug)}}"><i class="icofont icofont-ui-alarm"></i> Print Receipt</a>
                                         </div>
                                     </div>
                                 </div>

@@ -7,7 +7,6 @@
             <a href="{{ route('task-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
             <a href="{{route('task-board')}}#participatingObserving" class="btn btn-secondary btn-mini btn-round text-white"><i class="icofont icofont-unity-hand "></i>  Participating | Observing </a>
             <!-- <a href="{{-- {{route('task-board')}} --}}#myTask" class="btn btn-primary btn-mini btn-round text-white"><i class="ti-user "></i>  My Task(s) </a> -->
-            <a href="{{route('view-assigment-submissions')}}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-paper-plane "></i>  Submissions </a>
         </div>
     </div>
     <div class="nav-item nav-grid">

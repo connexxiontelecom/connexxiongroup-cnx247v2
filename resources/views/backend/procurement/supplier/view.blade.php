@@ -58,6 +58,10 @@
                                                 <p class="m-b-10 f-w-600">Phone</p>
                                                 <h6 class="text-muted f-w-400">{{$supplier->company_phone ?? ''}}</h6>
                                             </div>
+                                            <div class="col-sm-6">
+                                                <p class="m-b-10 f-w-600">Vendor Account</p>
+                                                <h6 class="text-muted f-w-400">{{$account->account_name ?? ''}}</h6>
+                                            </div>
                                         </div>
                                         <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Contact Person</h6>
                                         <div class="row">
@@ -88,7 +92,7 @@
                                     <div class="media">
                                         <a class="media-left" href="{{route('view-profile', $review->user->url)}}">
                                             <img class="img-30" src="/assets/images/avatars/thumbnails/{{$review->user->avatar ?? 'avatar.png'}}" alt="{{$review->first_name ?? ''}}">
-                                        </a>                
+                                        </a>
                                         <div class="media-body">
                                             <div class="col-xs-12">
                                                 <a href="{{route('view-profile', $review->user->url)}}">

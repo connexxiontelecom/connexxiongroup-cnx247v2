@@ -267,7 +267,7 @@ Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name(
 Route::get('/crm/client/convert-to-lead/{slug}', 'CNX247\Backend\CRMController@convertClientToLead')->name('convert-to-lead');
 Route::post('/crm/client/raise-an-invoice', 'CNX247\Backend\CRMController@raiseAnInvoice')->name('raise-an-invoice');
 Route::get('/crm/invoice/receive-payment/{slug}', 'CNX247\Backend\CRMController@receivePayment')->name('receive-payment');
-Route::post('/crm/invoice/receive-payment', 'CNX247\Backend\CRMController@postPayment')->name('post-payment');
+Route::post('/crm/invoice/receive-payment', 'CNX247\Backend\CRMController@receiveInvoicePayment')->name('receive-invoice-payment');
 #Social media
 Route::get('/facebook/connect-to-facebook', 'CNX247\Backend\FacebookController@connect')->name('connect-to-facebook');
 Route::get('/facebook/facebook-timeline', 'CNX247\Backend\FacebookController@facebookTimeline')->name('facebook-timeline');
@@ -329,6 +329,8 @@ Route::get('/project/project-board', 'CNX247\Backend\ProjectController@projectBo
 Route::get('/project/new', 'CNX247\Backend\ProjectController@newProject')->name('new-project');
 Route::post('/project/new', 'CNX247\Backend\ProjectController@storeProject');
 Route::get('/project/view/{url}', 'CNX247\Backend\ProjectController@viewProject')->name('view-project');
+Route::get('/project/budget/{url}', 'CNX247\Backend\ProjectController@projectBudget')->name('project-budget');
+Route::post('/project/budget', 'CNX247\Backend\ProjectController@storeProjectBudget')->name('store-project-budget');
 Route::get('/project/calendar', 'CNX247\Backend\ProjectController@projectCalendar')->name('project-calendar'); //[view]
 Route::get('/project-calendar', 'CNX247\Backend\ProjectController@getProjectCalendarData'); //[Data source]
 Route::get('/project/gantt-chart', 'CNX247\Backend\ProjectController@projectGanttChart')->name('project-gantt-chart');
@@ -338,7 +340,8 @@ Route::post('/delete/project', 'CNX247\Backend\ProjectController@deleteProject')
 Route::get('/project/edit/{url}', 'CNX247\Backend\ProjectController@editProject')->name('edit-project');
 Route::post('/project/update', 'CNX247\Backend\ProjectController@updateProject')->name('update-project');
 Route::post('/project/milestone', 'CNX247\Backend\ProjectController@createProjectMilestone');
-
+Route::get('/project/invoice/{slug}', 'CNX247\Backend\ProjectController@projectInvoice')->name('project-invoice');
+Route::post('/project/invoice', 'CNX247\Backend\ProjectController@storeProjectInvoice')->name('store-project-invoice');
 
 Route::post('/add-project-responsible', 'CNX247\Backend\ProjectController@addResponsiblePerson')->name('add-project-responsible');
 Route::post('/add-project-observers', 'CNX247\Backend\ProjectController@addObserver')->name('add-project-observers');
@@ -395,6 +398,23 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::get('/purchase-order/view/{slug}', 'CNX247\Backend\SupplierController@viewPurchaseOrder')->name('view-purchase-order');
     Route::get('/procurement/purchase-orders', 'CNX247\Backend\SupplierController@purchaseOrders')->name('purchase-orders');
     Route::post('/procurement/review/purchase-order', 'CNX247\Backend\SupplierController@reviewPurchaseOrder');
+    #Vendor bill
+    Route::get('/vendor-bills', 'CNX247\Backend\SupplierController@vendorBills')->name('vendor-bills');
+    Route::get('/new-vendor-bill', 'CNX247\Backend\SupplierController@newVendorBill')->name('new-vendor-bill');
+    Route::post('/new-vendor-bill', 'CNX247\Backend\SupplierController@storeVendorBill');
+    Route::get('/vendor-services', 'CNX247\Backend\SupplierController@vendorServices')->name('vendor-services');
+    Route::get('/vendor-services', 'CNX247\Backend\SupplierController@vendorServices')->name('vendor-services');
+    Route::post('/store-vendor-service', 'CNX247\Backend\SupplierController@storeVendorService')->name('store-vendor-service');
+    Route::post('/vendor-bill/details', 'CNX247\Backend\SupplierController@vendorDetails');
+    Route::get('/vendor-bill/view/{id}', 'CNX247\Backend\SupplierController@viewBill')->name('view-bill');
+    Route::get('/vendor/payment', 'CNX247\Backend\SupplierController@vendorPayment')->name('vendor-payment');
+    #Payment
+    Route::get('/vendor/payments', 'CNX247\Backend\SupplierController@payments')->name('payments');
+    Route::get('/vendor/payment/new', 'CNX247\Backend\SupplierController@newPayment')->name('new-payment');
+    Route::post('/vendor/payment/new', 'CNX247\Backend\SupplierController@storePayment');
+    Route::get('/vendor/payment/detail/{slug}', 'CNX247\Backend\SupplierController@paymentDetail')->name('payment-detail');
+    Route::get('/vendor/payment/trash/{slug}', 'CNX247\Backend\SupplierController@trashPayment')->name('trash-payment');
+    Route::get('/vendor/payment/post/{slug}', 'CNX247\Backend\SupplierController@postPayment')->name('post-payment');
     #Procurement supplier account
     Route::get('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@login')->name('supplier.login');
     Route::post('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@loginNow');
@@ -449,6 +469,27 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::post('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@postVat');
     Route::get('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@openingBalance')->name('opening-balance');
     Route::post('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@postOpeningBalance');
+    Route::get('/accounting/setup/ledger-default-variables', 'CNX247\Backend\Accounting\ChartOfAccountController@ledgerDefaultsVariables')->name('ledger-default-variables');
+    Route::post('/accounting/setup/ledger-default-variables', 'CNX247\Backend\Accounting\ChartOfAccountController@updateDefaultsVariables');
+    #Report
+    Route::get('/accounting/report/trial-balance', 'CNX247\Backend\Accounting\ReportController@trialBalanceView')->name('trial-balance');
+    Route::post('/accounting/report/trial-balance', 'CNX247\Backend\Accounting\ReportController@trialBalance');
+    Route::get('/balance-sheet', 'CNX247\Backend\Accounting\ReportController@balanceSheetView')->name('balance-sheet');
+    Route::post('/balance-sheet', 'CNX247\Backend\Accounting\ReportController@balanceSheet');
+    Route::get('/profit-o-loss', 'CNX247\Backend\Accounting\ReportController@profitOrLossView')->name('profit-o-loss');
+    Route::post('/profit-o-loss', 'CNX247\Backend\Accounting\ReportController@profitOrLoss');
+    #Posting
+    Route::get('/accounting/posting/receipt', 'CNX247\Backend\Accounting\PostingController@receipt')->name('receipt-posting');
+    Route::get('/accounting/posting/detail/{slug}', 'CNX247\Backend\Accounting\PostingController@receiptDetail')->name('receipt-posting-detail');
+    Route::get('/accounting/posting/receipt/{slug}/post', 'CNX247\Backend\Accounting\PostingController@postReceipt')->name('receipt-posting-post');
+    Route::get('/accounting/posting/trash-receipt/{slug}', 'CNX247\Backend\Accounting\PostingController@trashReceipt')->name('trash-receipt-posting');
+    #Journal Entry
+    Route::get('/journal-entries', 'CNX247\Backend\Accounting\JournalEntryController@journalEntries')->name('journal-entries');
+    Route::get('/new-journal-entry', 'CNX247\Backend\Accounting\JournalEntryController@create')->name('new-journal-entry');
+    Route::post('/new-journal-entry', 'CNX247\Backend\Accounting\JournalEntryController@store');
+    Route::get('/view-journal-entry/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@view')->name('view-journal-entry');
+    Route::get('/journal-entry/trash/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@trashJV')->name('trash-jv');
+    Route::get('/journal-entry/post/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@postJV')->name('post-jv');
     #Budget route
     Route::get('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@index')->name('budget-profile');
     Route::post('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@budgetProfile');

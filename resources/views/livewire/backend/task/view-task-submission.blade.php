@@ -17,9 +17,9 @@
                                                 @if($task->status == 'in-progress')
                                                     <i class="icofont icofont-ui-clock text-warning" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{$task->status}}"></i>
                                                 @elseif($task->status == 'approved')
-                                                    <i class="icofont icofont-tick-mark text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{$task->status}}"></i>  
+                                                    <i class="icofont icofont-tick-mark text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{$task->status}}"></i>
                                                 @else
-                                                    <i class="icofont icofont-ui-block text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{$task->status}}"></i>  
+                                                    <i class="icofont icofont-ui-block text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{$task->status}}"></i>
                                                 @endif
                                                 <a href="{{ route('view-task', $task->getPost->post_url) }}" class="card-title">{{$task->getPost->post_title}}</a>
                                                 <span class="label label-primary f-right">Date: {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($task->getPost->created_at) )}}</span>

@@ -21,6 +21,7 @@ use App\ReceiptItem;
 use App\Product;
 use App\Feedback;
 use App\ProductCategory;
+use App\DefaultAccount;
 use Auth;
 use Image;
 use DB;
@@ -165,7 +166,6 @@ class CRMController extends Controller
             'description.*'=>'required',
             'quantity.*'=>'required'
         ]);
-        //return dd($request->all());
         $totalAmount = 0;
         if(!empty($request->total)){
             for($i = 0; $i<count($request->total); $i++){
@@ -180,7 +180,6 @@ class CRMController extends Controller
                 array_push($productGlCodes, $product->glcode);
             }
         }
-        //return $productGlCodes;
         //Check if client already exist
         $clientExist = Lead::where('client_id', $request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
         if(empty($clientExist)){
@@ -188,7 +187,6 @@ class CRMController extends Controller
             $lead->client_id = $request->clientId;
             $lead->tenant_id = Auth::user()->tenant_id;
             $lead->converted_by = Auth::user()->id;
-            //$lead->slug = substr(sha1(time()), 23,40);
             $lead->save();
         }
 
@@ -202,10 +200,10 @@ class CRMController extends Controller
         $invoice->due_date = $request->due_date;
         $invoice->total = $request->totalAmount;
         $invoice->sub_total = $request->subTotal;
-        $invoice->tax_rate = $request->hiddenTaxRate ?? 0;
-        $invoice->discount_rate = $request->hiddenDiscountRate ?? 0;
-        $invoice->tax_value = $request->taxValue ?? 0;
-        $invoice->discount_value = $request->discountValue ?? 0;
+        $invoice->tax_rate = $request->tax_rate ?? 0;
+        $invoice->discount_rate = $request->discount_rate ?? 0;
+        $invoice->tax_value = $request->tax_amount ?? 0;
+        $invoice->discount_value = $request->discounted_amount ?? 0;
         $invoice->cash = $request->cash_amount ?? 0;
         $invoice->slug = substr(sha1(time()), 23,40);
         $invoice->save();
@@ -224,28 +222,56 @@ class CRMController extends Controller
             $item->tenant_id = Auth::user()->tenant_id;
             $item->save();
         }
+        $invoiceGL = DefaultAccount::where('handle', 'invoice')->where('tenant_id', Auth::user()->tenant_id)->first();
+        $receiptGL = DefaultAccount::where('handle', 'receipt')->where('tenant_id', Auth::user()->tenant_id)->first();
+        $detail = InvoiceItem::where('invoice_id', $invoice->id)->where('tenant_id', Auth::user()->tenant_id)->get();
         #Check for accounting module
-        $trans_ref = strtoupper(substr(sha1(time()), 35,40).$request->invoiceNo);
         if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
-            //$services = InvoiceItem::where('tenant_id', Auth::user()->tenant_id)->whereIn('invoice_id', [$serviceIds])->get();
-            $productArray = [];
-            for($n = 0; $n<count($request->description); $n++ ){
-                $productGl = [
-                    'glcode'=>$productGlCodes[$n],
-                    'posted_by'=>Auth::user()->id,
-                    'narration'=>"Invoice generation for ",
-                    'dr_amount'=>0,
-                    'cr_amount'=>$request->unit_cost[$n],
-                    'ref_no'=>$trans_ref,
-                    'bank'=>0,
-                    'ob'=>0,
-                    'created_at'=>$request->issue_date,
+                # Post GL
+                $invoicePost = [
+                    'glcode' => $invoiceGL->glcode,
+                    'posted_by' => Auth::user()->id,
+                    'narration' => 'Invoice generation for ' . $invoice->client->first_name ?? '',
+                    'dr_amount' => $invoice->sub_total + ($invoice->sub_total*$invoice->tax_rate)/100,
+                    'cr_amount' => 0,
+                    'ref_no' => $invoice->invoice_no ?? '',
+                    'bank' => 0,
+                    'ob' => 0,
+                    'transaction_date' => $invoice->created_at,
+                    'created_at' => $invoice->created_at
                 ];
-                array_push($productArray, $productGl);
-            }
-            #Register service in GL table
-            DB::table(Auth::user()->tenant_id.'_gl')->insert($productArray);
+                DB::table(Auth::user()->tenant_id . '_gl')->insert($invoicePost);
+                $VATPost = [
+                    'glcode' => $receiptGL->glcode,
+                    'posted_by' => Auth::user()->id,
+                    'narration' => 'VAT on invoice no. '.$invoice->invoice_no.' for '.$invoice->client->first_name,
+                    'dr_amount' => 0,
+                    'cr_amount' => ($invoice->sub_total*$invoice->tax_rate)/100 ?? 0,
+                    'ref_no' => $invoice->invoice_no ?? '',
+                    'bank' => 0,
+                    'ob' => 0,
+                    'transaction_date' => $invoice->created_at,
+                    'created_at' => $invoice->created_at
+                ];
+                DB::table(Auth::user()->tenant_id . '_gl')->insert($VATPost);
+                foreach($detail as $d){
+                    $receiptPost = [
+                        'glcode' => $receiptGL->glcode,
+                        'posted_by' => Auth::user()->id,
+                        'narration' => 'Invoice generation for ' . $d->description,
+                        'dr_amount' => 0,
+                        'cr_amount' => $d->quantity * $d->unit_cost ?? 0,
+                        'ref_no' => $invoice->invoice_no ?? '',
+                        'bank' => 0,
+                        'ob' => 0,
+                        'transaction_date' => $invoice->created_at,
+                        'created_at' => $invoice->created_at
+                    ];
+                    DB::table(Auth::user()->tenant_id . '_gl')->insert($receiptPost);
+                }
+
         }
+
         #Register log
         $log = new ClientLog;
         $log->tenant_id = Auth::user()->tenant_id;
@@ -253,7 +279,7 @@ class CRMController extends Controller
         $log->user_id = Auth::user()->id;
         $log->log = Auth::user()->first_name.' '.Auth::user()->surname.' Converted contact to lead.';
         $log->save();
-        session()->flash("success", "<strong>Success! </strong> Invoice generated. Proceed to print it or send via mail.");
+        session()->flash("success", "<strong>Success! </strong> Client converted to lead. Invoice generated.");
         return redirect()->route('invoice-list');
     }
 
@@ -317,8 +343,50 @@ class CRMController extends Controller
         }
     }
 
-    public function postPayment(Request $request){
-        return dd($request->all());
+    public function receiveInvoicePayment(Request $request){
+         $this->validate($request,[
+            'payment_date'=>'required|date',
+            'payment_method'=>'required',
+            'reference_no'=>'required'
+        ]);
+        $totalAmount = 0;
+        if(!empty($request->payment)){
+            for($i = 0; $i<count($request->payment); $i++){
+                $totalAmount += $request->payment[$i];
+            }
+        }
+        //Check if deal already exist
+        $dealExist = Deal::where('client_id', $request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(empty($dealExist)){
+            $lead = new Deal;
+            $lead->client_id = $request->clientId;
+            $lead->tenant_id = Auth::user()->tenant_id;
+            $lead->converted_by = Auth::user()->id;
+            $lead->save();
+        }
+        $receipt = new Receipt();
+        $receipt->tenant_id = Auth::user()->tenant_id;
+        $receipt->issued_by = Auth::user()->id;
+        $receipt->client_id = $request->clientId;
+        $receipt->issue_date = $request->payment_date;
+        $receipt->amount = $totalAmount;
+        $receipt->payment_type = $request->payment_method;
+        $receipt->ref_no = $request->reference_no;
+        $receipt->memo = $request->memo;
+        $receipt->slug = substr(sha1(time()), 28,40);
+        $receipt->save();
+        $receiptId = $receipt->id;
+        #Details
+        for($j = 0; $j<count($request->invoices); $j++){
+            $detail = new ReceiptItem;
+            $detail->tenant_id = Auth::user()->tenant_id;
+            $detail->invoice_id = $request->invoices[$j];
+            $detail->receipt_id = $receiptId;
+            $detail->payment = $request->payment[$j];
+            $detail->save();
+            session()->flash("success", "<strong>Success!</strong> Receipt saved!");
+            return redirect()->route('receipt-list');
+        }
     }
 
     /*
@@ -368,13 +436,6 @@ class CRMController extends Controller
         }else{
             return "Invoice not found";
         }
-        #Register log
-        $log = new ClientLog;
-        $log->tenant_id = Auth::user()->tenant_id;
-        $log->client_id = $invoice->client_id;
-        $log->user_id = Auth::user()->id;
-        $log->log = Auth::user()->first_name.' '.Auth::user()->surname.' printed invoice('.$invoice->invoice_no.")";
-        $log->save();
     }
 
     /*
@@ -398,62 +459,79 @@ class CRMController extends Controller
     * Convert lead to deal
     */
     public function convertLeadToDeal($slug){
-        $client = Client::where('slug', $slug)->first();
-        $receipt = Receipt::orderBy('id', 'DESC')->first();
+        $client = Client::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $receipt = Receipt::orderBy('id', 'DESC')->where('tenant_id', Auth::user()->tenant_id)->first();
+        $charts = DB::table(Auth::user()->tenant_id.'_coa')->orderBy('glcode', 'ASC')->get();
+        $invoices = Invoice::where('client_id', $client->id)
+                            ->where('tenant_id', Auth::user()->tenant_id)
+                            ->where('posted',0)
+                            ->where('trash',0)
+                            //->having('')
+                            ->get();
         $receiptNo = null;
-        if(!empty($invoice) ){
-            $receiptNo = $receipt->receipt_no + rand(11, 99);
+        if(!empty($receipt) ){
+            $receiptNo = $receipt->receipt_no + 1;
         }else{
             $receiptNo = rand(111, 999);
         }
-        return view('backend.crm.leads.convert-to-deal', ['client'=>$client, 'receipt_no'=>$receiptNo]);
+        return view('backend.crm.leads.convert-to-deal', [
+            'client'=>$client,
+            'receipt_no'=>$receiptNo,
+            'invoices'=>$invoices,
+            'charts'=>$charts
+        ]);
     }
 
     /*
     * Convert lead to deal
     */
     public function raiseReceipt(Request $request){
+        //return dd($request->all());
         $this->validate($request,[
-            'issue_date'=>'required',
-            'due_date'=>'required',
-            'description.*'=>'required',
-            'quantity.*'=>'required'
+            'payment_date'=>'required',
+            'invoices.*'=>'required',
+            'payment.*'=>'required',
+            'reference_no'=>'required',
+            'payment_method'=>'required',
         ]);
-        $deal = new Deal;
-        $deal->client_id = $request->clientId;
-        $deal->tenant_id = Auth::user()->tenant_id;
-        $deal->converted_by = Auth::user()->id;
-        //$lead->slug = substr(sha1(time()), 23,40);
-        $deal->save();
+        $totalAmount = 0;
+        for($i = 0; $i<count($request->payment); $i++){
+            $totalAmount += $request->payment[$i];
+        }
+        $client = Deal::where('tenant_id', Auth::user()->tenant_id)->where('client_id', $request->clientId)->first();
+        if(empty($client)){
+            $deal = new Deal;
+            $deal->client_id = $request->clientId;
+            $deal->tenant_id = Auth::user()->tenant_id;
+            $deal->converted_by = Auth::user()->id;
+            //$lead->slug = substr(sha1(time()), 23,40);
+            $deal->save();
+        }
         #Generate receipt
         $receipt = new Receipt;
-        $receipt->receipt_no = $request->receiptNo;
         $receipt->client_id = $request->clientId;
         $receipt->tenant_id = Auth::user()->tenant_id;
-        $receipt->issue_date = $request->issue_date;
+        $receipt->issue_date = $request->payment_date;
         $receipt->issued_by = Auth::user()->id;
-        $receipt->due_date = $request->due_date;
-        $receipt->total = $request->receiptTotal;
-        $receipt->sub_total = $request->receiptSubtotal;
-        $receipt->tax_rate = $request->taxRate ?? 0;
-        $receipt->discount_rate = $request->discountRate ?? 0;
-        $receipt->tax_value = $request->taxValue ?? 0;
-        $receipt->discount_value = $request->discountValue ?? 0;
+        $receipt->ref_no = $request->reference_no;
+        $receipt->payment_type = $request->payment_method;
+        $receipt->amount = $totalAmount;
         $receipt->slug = substr(sha1(time()), 23,40);
         $receipt->save();
         #receiptId
         $receiptId = $receipt->id;
         #Enter receipt items
-        for($i = 0; $i<count($request->description); $i++ ){
+        for($i = 0; $i<count($request->invoices); $i++ ){
             $item = new ReceiptItem;
-            $item->description = $request->description[$i];
-            $item->quantity = $request->quantity[$i];
-            $item->unit_cost = $request->unit_cost[$i];
-            $item->total = $request->total[$i];
+            $item->payment = $request->payment[$i];
             $item->receipt_id = $receiptId;
-            $item->client_id = $request->clientId;
+            $item->invoice_id = $request->invoices[$i];
             $item->tenant_id = Auth::user()->tenant_id;
             $item->save();
+            #Update invoice
+            $update = Invoice::where('id', $request->invoices[$i])->where('tenant_id', Auth::user()->tenant_id)->first();
+            $update->paid_amount += $request->payment[$i];
+            $update->save();
         }
         #Register log
         $log = new ClientLog;
@@ -463,7 +541,7 @@ class CRMController extends Controller
         $log->log = Auth::user()->first_name.' '.Auth::user()->surname.' Converted contact to deal.';
         $log->save();
         session()->flash("success", "<strong>Success! </strong> Invoice generated. Proceed to print it or send via mail.");
-        return redirect()->back();
+        return redirect()->route('receipt-list');
     }
 
 
@@ -476,16 +554,16 @@ class CRMController extends Controller
         $monthly = Receipt::where('tenant_id', Auth::user()->tenant_id)
                             ->whereMonth('created_at', date('m'))
                             ->whereYear('created_at', date('Y'))
-                            ->sum('total');
+                            ->sum('amount');
         $last_month = Receipt::where('tenant_id', Auth::user()->tenant_id)
                              ->whereMonth('created_at', '=', $now->subMonth()->month)
-                            ->sum('total');
+                            ->sum('amount');
         $thisYear = Receipt::where('tenant_id', Auth::user()->tenant_id)
                             ->whereYear('created_at', date('Y'))
-                            ->sum('total');
+                            ->sum('amount');
         $this_week = Receipt::where('tenant_id', Auth::user()->tenant_id)
                             ->whereBetween('created_at', [$now->startOfWeek()->format('Y-m-d H:i'), $now->endOfWeek()->format('Y-m-d H:i')])
-                            ->sum('total');
+                            ->sum('amount');
         return view('backend.crm.receipt.index',
         ['receipts'=>$receipts,
         'monthly'=>$monthly,
@@ -501,8 +579,9 @@ class CRMController extends Controller
     public function printReceipt($slug){
         $receipt = Receipt::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
         if(!empty($receipt)){
+            $invoices = ReceiptItem::where('tenant_id', Auth::user()->tenant_id)->where('receipt_id', $receipt->id)->get();
 
-            return view('backend.crm.receipt.print-receipt', ['receipt'=>$receipt]);
+            return view('backend.crm.receipt.print-receipt', ['receipt'=>$receipt, 'invoices'=>$invoices]);
         }else{
             return "receipts not found";
         }
