@@ -43,13 +43,16 @@
                                 <thead>
                                 <tr class="text-uppercase">
                                     <th>#</th>
-                                    <th>Project Name</th>
-                                    <th>Project Description</th>
+                                    <th>Project </th>
+                                    <th>Created By</th>
                                     <th>Project Status</th>
                                     <th>Project Due Date</th>
                                     <th>Responsible Persons</th>
                                     <th>Action</th>
                                 </tr>
+
+
+
                                 </thead>
                                 <tbody>
                             @foreach ($projects as $task)
@@ -64,8 +67,11 @@
                                                 <a href="{{ route('view-project', $task->post_url) }}" class="card-title">{{$task->post_title}}</a>
                                             </td>
                                             <td>
-                                                {!! strlen(strip_tags($task->post_content)) > 110 ? substr(strip_tags($task->post_content), 0, 110).'...' : strip_tags($task->post_content) !!}
+                                                <a href="/activity-stream/profile/{{$task->user->url}}">
+                                                    <img class="img-fluid img-radius" width="30" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{$task->user->first_name}} {{$task->user->surname ?? ''}}" src="/assets/images/avatars/thumbnails/{{ $task->user->avatar ?? '/assets/images/avatar.png' }}" alt="{{$person->user->first_name}} {{$task->user->surname ?? ''}}">
+                                                    <strong style="font-size: xx-small">   {{$task->user->first_name}} {{$task->user->surname ?? ''}} </strong>
 
+                                                </a>
                                             </td>
 
                                             <td>
@@ -170,7 +176,6 @@
 </div>
 @push('project-script')
     <script src="/assets/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-
     <script src="/assets/pages/data-table/extensions/responsive/js/dataTables.responsive.min.js"></script>
     <script src="/assets/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="/assets/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
