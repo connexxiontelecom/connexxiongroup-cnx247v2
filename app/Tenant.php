@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Tenant extends Model
 {
     //tenant-user relationship
+    /**
+     * @var mixed
+     */
+    private $plan_id;
+
     public function user(){
         return $this->hasOne(User::class, 'tenant_id'); //tenant_id on users table
     }
@@ -37,6 +42,10 @@ class Tenant extends Model
     //default account settings-tenant relationship
     public function getDefaults(){
         return $this->belongsTo(DefaultAccount::class, 'tenant_id');
+    }
+
+    public function getUsers(){
+        return $this->hasMany(User::class, 'tenant_id');
     }
 
 

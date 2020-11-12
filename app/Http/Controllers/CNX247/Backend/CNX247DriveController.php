@@ -8,6 +8,7 @@ use App\Folder;
 use App\FileModel;
 use App\SharedFile;
 use App\User;
+use App\SharedFolder;
 use Auth;
 use Storage;
 use File;
@@ -40,12 +41,26 @@ class CNX247DriveController extends Controller
         //$directory = Storage::allDirectories(public_path());
         $files = Storage::allFiles($this->root);
         $directories = Storage::allDirectories($this->root);
+
+        $folders =
         $myFiles = FileModel::where('tenant_id', Auth::user()->tenant_id)
                             ->where('uploaded_by', Auth::user()->id)->get();
+
         $sharedFiles = SharedFile::where('tenant_id', Auth::user()->tenant_id)
                             ->where('shared_with', Auth::user()->id)->get();
+
+        $shardFolders = SharedFolder::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('shared_with', Auth::user()->id)->get();
+
+        $myFolders = Folder::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('created_by', Auth::user()->id)->get();
+
+        $publicFolders = Folder::where('tenant_id', Auth::user()->tenant_id)
+                            ->where('permission', 1);
+
         $size = FileModel::where('tenant_id', Auth::user()->tenant_id)
                             ->where('uploaded_by', Auth::user()->id)->sum('size');
+
         $employees = User::where('tenant_id', Auth::user()->tenant_id)->get();
         //return dd($files);
         return view('backend.cnx247drive.index',
@@ -54,7 +69,10 @@ class CNX247DriveController extends Controller
         'myFiles'=>$myFiles,
         'size'=>$size,
         'employees'=>$employees,
-        'sharedFiles'=>$sharedFiles
+        'sharedFiles'=>$sharedFiles,
+            'sharedFolders' => $shardFolders,
+            'myFolders' => $myFolders,
+            'publicFolders' => $publicFolders
         ]);
     }
 
@@ -185,6 +203,30 @@ class CNX247DriveController extends Controller
             return response()->json(['message'=>'Success! File shared.'],200);
         }else{
             return response()->json(['error'=>'Ooops File shareing failed.'],400);
+        }
+
+    }
+
+    public function newFolder(Request $request){
+        $this->validate($request,[
+            //'employees'=>'required',
+            'name_of_folder'=>'required',
+            'parent_folder' => 'required',
+            'visibility' => 'required'
+        ]);
+
+        $folder = new Folder;
+        $folder->parent_id = $request->parent_folder;
+        $folder->tenant_id = Auth::user()->tenant_id;
+        $folder->created_by = Auth::user()->id;
+        $folder->name = $request->name_of_folder;
+        $folder->permission = $request->visibility;
+        $folder->save();
+
+        if($folder){
+            return response()->json(['message'=>'Success! Folder Created.'],200);
+        }else{
+            return response()->json(['error'=>'Ooops an Error Occurred.'],400);
         }
 
     }
