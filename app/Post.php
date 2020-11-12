@@ -86,4 +86,8 @@ class Post extends Model
         return $this->belongsTo(User::class, 'submitted_by');
     }
 
+    public function projectInvoices(){
+        return $this->hasMany(ProjectDetail::class, 'project_id');
+    }
+
 }

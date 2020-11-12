@@ -109,6 +109,22 @@ Convert to Lead
                     <h6 class="text-uppercase text-primary">Balance :
                         <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="balance"></span>
                     </h6>
+                    @if ($status == 1 && empty($client->glcode))
+                    <div class="form-group">
+                        <label for="">Client Account</label>
+                        <select name="client_account" id="client_account" class="form-control js-example-basic-single">
+                            <option selected disabled>Select account</option>
+                            @foreach ($accounts as $account)
+                                <option value="{{$account->glcode}}">{{$account->account_name ?? ''}} - ({{$account->glcode ?? ''}})</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" value="{{$status}}" name="status">
+                        @error('client_account')
+                            <i class="text-danger mt-3 d-flex">{{$message}}</i>
+                        @enderror
+                    </div>
+
+                    @endif
                 </div>
             </div>
             <div class="row">
