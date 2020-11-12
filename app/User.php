@@ -91,6 +91,9 @@ class User extends Authenticatable
     public function isOnline(){
         return Cache::has('user-is-online'.$this->id);
     }
+    public function getUsers(){
+        return $this->hasMany(Tenant::class, 'tenant_id', 'tenant_id');
+    }
  /*    public function leaveWallet(){
         return $this->belongsTo(LeaveWallet::class);
     } */
