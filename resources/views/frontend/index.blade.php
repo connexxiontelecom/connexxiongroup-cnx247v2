@@ -332,7 +332,7 @@
               <a class="nav-link border-top rounded" id="pills-smart-tab" data-toggle="pill" href="#pills-smart" role="tab" aria-controls="pills-smart" aria-selected="false">
                 <div class="p-3 text-left">
                   <h4 class="title font-weight-bold">Project & Task Management</h4>
-                  <p class="text-muted tab-para mb-0">Breakdown projects into manageable tasks and monitor each task through its various stages from start to finish with the end goal of successfully completing it.</p>
+                  <p class="text-muted tab-para mb-0">Breakdown projects into manageable tasks and monitor each task through its various stages from start to finish with the goal of successfully completing it.</p>
 {{--                  <p class="text-muted tab-para mb-0">Dummy text is text that is used in the publishing industry or by web designers to occupy the space which will later be filled with 'real' content.</p>--}}
                 </div>
               </a><!--end nav link-->
@@ -353,15 +353,15 @@
           <div class="position-relative">
             <div class="tab-content ml-lg-4" id="pills-tabContent">
               <div class="tab-pane fade show active" id="pills-cloud" role="tabpanel" aria-labelledby="pills-cloud-tab">
-                <img src="{{asset('/frontend/images/activity-stream.png')}}" width="150%" class="mx-auto" alt="">
+                <img src="{{asset('/frontend/images/activity-stream-screen.png')}}" class="img-fluid mx-auto" alt="">
               </div><!--end teb pane-->
 
               <div class="tab-pane fade" id="pills-smart" role="tabpanel" aria-labelledby="pills-smart-tab">
-                <img src="{{asset('/frontend/images/task-projects.png')}}" width="150%" class="mx-auto" alt="">
+                <img src="{{asset('/frontend/images/task-screen.png')}}" class="img-fluid mx-auto" alt="">
               </div><!--end teb pane-->
 
               <div class="tab-pane fade" id="pills-apps" role="tabpanel" aria-labelledby="pills-apps-tab">
-                <img src="{{asset('/frontend/images/workflows.png')}}" width="150%" class="mx-auto" alt="">
+                <img src="{{asset('/frontend/images/workflow-screen.png')}}" class="img-fluid mx-auto" alt="">
               </div><!--end teb pane-->
             </div><!--end tab content-->
           </div>
@@ -370,133 +370,288 @@
     </div><!--end container-->
   </div><!--end container-->
 
-  <div class="container mt-100 mt-60">
-    <div class="row align-items-center">
-      <div class="col-lg-7 col-md-6 order-2 order-md-1 mt-4 mt-sm-0 pt-2 pt-sm-0">
-        <div class="section-title mr-lg-5">
-          <h4 class="title mb-4">Get Notified About Importent Email</h4>
-          <p class="text-muted">This prevents repetitive patterns from impairing the overall visual impression and facilitates the comparison of different typefaces. Furthermore, it is advantageous when the dummy text is relatively realistic.</p>
-          <ul class="list-unstyled text-muted">
-            <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Digital Marketing Solutions for Tomorrow</li>
-            <li class="mb-0"><span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Create your own skin to match your brand</li>
-          </ul>
-          <a href="javascript:void(0)" class="mt-3 h6 text-primary">Find Out More <i class="mdi mdi-chevron-right"></i></a>
-        </div>
-      </div>
+	<div class="container mt-100">
+		<div class="row justify-content-start">
+			<div class="col-12 text-left">
+				<div class="section-title mb-4 pb-2">
+					<h4 class="title mb-2"><span class="text-primary">Seamless</span> Collaboration</h4>
+					<p class="text-muted mb-0 mx-auto">
+						Send and receive messages, host meetings, and webinars,
+						<br> create, store, share, and collaborate on your files and documents
+						<br> all remotely with <span class="text-primary font-weight-bold">CNX247</span>.
+					</p>
+				</div>
+			</div><!--end col-->
+		</div><!--end row-->
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-md-5">
+					<ul class="nav nav-pills nav-justified flex-column rounded" id="pills-tab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link rounded active" id="pills-cloud-tab" data-toggle="pill" href="#pills-cloud-1" role="tab" aria-controls="pills-cloud" aria-selected="false">
+								<div class="p-3 text-left">
+									<h4 class="title font-weight-bold">Chats & Calls</h4>
+									<p class="text-muted tab-para mb-0">Send and receive messages and make phone calls to your team efficiently with the simple and interactive chat & call features.</p>
+								</div>
+							</a><!--end nav link-->
+						</li><!--end nav item-->
 
-      <div class="col-lg-5 col-md-6 order-1 order-md-2">
-        <img src="{{asset('/frontend/images/illustrator/app_development_SVG.svg')}}" alt="">
-      </div>
-    </div>
-  </div>
+						<li class="nav-item">
+							<a class="nav-link border-top rounded" id="pills-smart-tab" data-toggle="pill" href="#pills-smart-1" role="tab" aria-controls="pills-smart" aria-selected="false">
+								<div class="p-3 text-left">
+									<h4 class="title font-weight-bold">CNX247 Stream</h4>
+									<p class="text-muted tab-para mb-0">Easily set up web conferencing meetings from any location with CNX247 Stream to collaborate with your team across multiple locations.</p>
+								</div>
+							</a><!--end nav link-->
+						</li><!--end nav item-->
 
-    <div class="container mt-100 mt-60">
-      <div class="row justify-content-center">
-        <div class="col-12 text-center">
-          <div class="section-title mb-4 pb-2">
-            <h4 class="title mb-4">Satisfied  <span class="text-primary">Clients</span></h4>
-            <p class="text-muted para-desc mx-auto mb-0">Start working with <span class="text-primary font-weight-bold">Landrick</span> that can provide everything you need to generate awareness, drive traffic, connect.</p>
-          </div>
-        </div>
-      </div>
+						<li class="nav-item">
+							<a class="nav-link border-top rounded" id="pills-apps-tab" data-toggle="pill" href="#pills-apps-1" role="tab" aria-controls="pills-apps" aria-selected="false">
+								<div class="p-3 text-left">
+									<h4 class="title font-weight-bold">CNX247 Drive</h4>
+									<p class="text-muted tab-para mb-0">Upload and store documents, images, videos, and audios on CNX247 Drive for sharing with other individuals in your team.</p>
+								</div>
+							</a><!--end nav link-->
+						</li><!--end nav item-->
+					</ul><!--end nav pills-->
+				</div><!--end col-->
 
-      <div class="row justify-content-center">
-        <div class="col-lg-12 mt-4">
-          <div id="customer-testi" class="owl-carousel owl-theme">
-            <div class="media customer-testi m-2">
-              <img src="{{asset('/frontend/images/client/01.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">
-              <div class="media-body content p-3 shadow rounded bg-white position-relative">
-                <ul class="list-unstyled mb-0">
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                </ul>
-                <p class="text-muted mt-2">" It seems that only fragments of the original text remain in the Lorem Ipsum texts used today. "</p>
-                <h6 class="text-primary">- Thomas Israel <small class="text-muted">C.E.O</small></h6>
-              </div>
-            </div>
+				<div class="col-md-7 col-12 mt-4 pt-2 mt-sm-0 pt-sm-0">
+					<div class="position-relative">
+						<div class="tab-content ml-lg-4" id="pills-tabContent">
+							<div class="tab-pane fade show active" id="pills-cloud-1" role="tabpanel" aria-labelledby="pills-cloud-tab">
+								<img src="{{asset('/frontend/images/chats-calls-screen.png')}}" class="img-fluid mx-auto" alt="">
+							</div><!--end teb pane-->
 
-            <div class="media customer-testi m-2">
-              <img src="{{asset('/frontend/images/client/02.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">
-              <div class="media-body content p-3 shadow rounded bg-white position-relative">
-                <ul class="list-unstyled mb-0">
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star-half text-warning"></i></li>
-                </ul>
-                <p class="text-muted mt-2">" One disadvantage of Lorum Ipsum is that in Latin certain letters appear more frequently than others. "</p>
-                <h6 class="text-primary">- Barbara McIntosh <small class="text-muted">M.D</small></h6>
-              </div>
-            </div>
+							<div class="tab-pane fade" id="pills-smart-1" role="tabpanel" aria-labelledby="pills-smart-tab">
+								<img src="{{asset('/frontend/images/stream-screen.png')}}" class="img-fluid mx-auto" alt="">
+							</div><!--end teb pane-->
 
-            <div class="media customer-testi m-2">
-              <img src="images/client/03.jpg" class="avatar avatar-small mr-3 rounded shadow" alt="">
-              <div class="media-body content p-3 shadow rounded bg-white position-relative">
-                <ul class="list-unstyled mb-0">
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                </ul>
-                <p class="text-muted mt-2">" The most well-known dummy text is the 'Lorem Ipsum', which is said to have originated in the 16th century. "</p>
-                <h6 class="text-primary">- Carl Oliver <small class="text-muted">P.A</small></h6>
-              </div>
-            </div>
+							<div class="tab-pane fade" id="pills-apps-1" role="tabpanel" aria-labelledby="pills-apps-tab">
+								<img src="{{asset('/frontend/images/drive-screen.png')}}" class="img-fluid mx-auto" alt="">
+							</div><!--end teb pane-->
+						</div><!--end tab content-->
+					</div>
+				</div><!--end col-->
+			</div><!--end row-->
+		</div><!--end container-->
+	</div>
+	<div class="container mt-100 mt-60">
+		<div class="rounded bg-primary p-lg-5 p-4">
+			<div class="row align-items-end">
+				<div class="col-md-8">
+					<div class="section-title text-md-left text-center">
+						<h4 class="title mb-3 text-white title-dark">Start your free 2 week trial today</h4>
+						<p class="text-white-50 mb-0">Start working with CNX247 free today to see how we suit your business needs.</p>
+					</div>
+				</div><!--end col-->
+				<div class="col-md-4 mt-4 mt-sm-0">
+					<div class="text-md-right text-center">
+						<a href="javascript:void(0)" class="btn btn-light">Start Free</a>
+					</div>
+				</div><!--end col-->
+			</div><!--end row-->
+		</div>
+	</div><!--end container-->
+	<div class="container mt-100 mt-60">
+		<div class="row justify-content-center">
+			<div class="col-12">
+				<div class="section-title text-center mb-4 pb-2">
+					<h4 class="title mb-4">Our Pricing Plans Are Transparent</h4>
+					<p class="text-muted para-desc mb-0 mx-auto">View our available <a href="{{route('pricing')}}" class="text-primary">pricing</a> plan details and how they fit your teams' needs or you can get started for free. No credit card required.</p>
+				</div>
+			</div><!--end col-->
+		</div><!--end row-->
 
-            <div class="media customer-testi m-2">
-              <img src="{{asset('/frontend/images/client/04.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">
-              <div class="media-body content p-3 shadow rounded bg-white position-relative">
-                <ul class="list-unstyled mb-0">
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                </ul>
-                <p class="text-muted mt-2">" According to most sources, Lorum Ipsum can be traced back to a text composed by Cicero. "</p>
-                <h6 class="text-primary">- Christa Smith <small class="text-muted">Manager</small></h6>
-              </div>
-            </div>
+		<div class="row align-items-end">
+			<div class="col-lg-4 col-md-6 col-12 mt-4 pt-2">
+				<div class="pricing text-center rounded overflow-hidden shadow">
+					<div class="price-header border-bottom pt-5 pb-5">
+						<h1 class="text-primary"><i class="uil uil-invoice"></i></h1>
+						<h5 class="price-title">Sales Hub</h5>
+						<p class="mb-0 text-muted">Suitable for 1-10 users</p>
+					</div>
+					<div class="border-bottom py-4">
+						<h2 class="font-weight-bold">₦ 17,500</h2>
+						<h6 class="text-muted mb-0 font-weight-normal">Billed monthly</h6>
+						<a href="{{route('pricing')}}" class="btn btn-primary mt-4">View Details</a>
+					</div>
+					<div class="pricing-features text-left p-4">
+						<h5>What's included</h5>
+						<ul class="feature list-unstyled mb-0">
+							<li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>Email Campaign (10,000/mo)</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>Bulk SMS (500/mo)</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>Chat</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>CRM</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>CNX247 Drive (10GB)</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>Basic Accounting</li>
+						</ul>
+					</div>
+				</div><!--end price three-->
+			</div><!--end col-->
 
-            <div class="media customer-testi m-2">
-              <img src="{{asset('/frontend/images/client/05.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">
-              <div class="media-body content p-3 shadow rounded bg-white position-relative">
-                <ul class="list-unstyled mb-0">
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                </ul>
-                <p class="text-muted mt-2">" There is now an abundance of readable dummy texts. These are usually used when a text is required. "</p>
-                <h6 class="text-primary">- Dean Tolle <small class="text-muted">Developer</small></h6>
-              </div>
-            </div>
+			<div class="col-lg-4 col-md-6 col-12 mt-4 pt-2">
+				<div class="pricing text-center rounded overflow-hidden shadow-lg">
+					<div class="price-header border-bottom bg-primary pt-5 pb-5">
+						<h1 class="text-white-50"><i class="uil uil-briefcase-alt"></i></h1>
+						<h5 class="price-title text-white">Professional Hub</h5>
+						<p class="mb-0 text-light">Suitable for 1-50 users</p>
+					</div>
+					<div class="border-bottom py-5">
+						<h2 class="font-weight-bold">₦ 74,000</h2>
+						<h6 class="text-muted mb-0 font-weight-normal">Billed monthly</h6>
+						<a href="{{route('pricing')}}" class="btn btn-primary mt-4">View Details</a>
+					</div>
+					<div class="pricing-features text-left p-4">
+						<h5>What's included</h5>
+						<ul class="feature list-unstyled mb-0">
+							<li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>Calls (600 minutes/mo)</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>CNX247 Stream (10 hours)</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>Projects</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>Reports & Analytics</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>Human Resource</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-primary mr-2"></i>Full Accounting</li>
+						</ul>
+						<p></p>
+					</div>
+				</div><!--end price three-->
+			</div><!--end col-->
 
-            <div class="media customer-testi m-2">
-              <img src="{{asset('/frontend/images/client/06.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">
-              <div class="media-body content p-3 shadow rounded bg-white position-relative">
-                <ul class="list-unstyled mb-0">
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-                </ul>
-                <p class="text-muted mt-2">" Thus, Lorem Ipsum has only limited suitability as a visual filler for German texts. "</p>
-                <h6 class="text-primary">- Jill Webb <small class="text-muted">Designer</small></h6>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container pb-lg-4 mb-md-5 mb-4 mt-100 mt-60">
+			<div class="col-lg-4 col-md-6 col-12 mt-4 pt-2">
+				<div class="pricing text-center rounded overflow-hidden shadow">
+					<div class="price-header border-bottom pt-5 pb-5">
+						<h1 class="text-primary"><i class="uil uil-notes"></i></h1>
+						<h5 class="price-title">Project Hub</h5>
+						<p class="mb-0 text-muted">Suitable for 1-30 users</p>
+					</div>
+					<div class="border-bottom py-4">
+						<h2 class="font-weight-bold">₦ 35,750</h2>
+						<h6 class="text-muted mb-0 font-weight-normal">Billed monthly</h6>
+						<a href="{{route('pricing')}}" class="btn btn-primary mt-4">View Details</a>
+					</div>
+					<div class="pricing-features text-left p-4">
+						<h5>What's included</h5>
+						<ul class="feature list-unstyled mb-0">
+							<li class="text-muted"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>Activity Stream</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>CNX247 Stream (10 hours)</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>Projects</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>Reports & Analytics</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>Workgroups</li>
+							<li class="text-muted mt-2"><i data-feather="arrow-right" class="fea icon-sm text-dark mr-2"></i>CNX247 (30GB)</li>
+						</ul>
+					</div>
+				</div><!--end price three-->
+			</div><!--end col-->
+		</div><!--end row-->
+	</div><!--end container-->
+{{--	<div class="container mt-100 mt-60">--}}
+{{--      <div class="row justify-content-center">--}}
+{{--        <div class="col-12 text-center">--}}
+{{--          <div class="section-title mb-4 pb-2">--}}
+{{--            <h4 class="title mb-4">Satisfied  <span class="text-primary">Clients</span></h4>--}}
+{{--            <p class="text-muted para-desc mx-auto mb-0">Start working with <span class="text-primary font-weight-bold">Landrick</span> that can provide everything you need to generate awareness, drive traffic, connect.</p>--}}
+{{--          </div>--}}
+{{--        </div>--}}
+{{--      </div>--}}
+
+{{--      <div class="row justify-content-center">--}}
+{{--        <div class="col-lg-12 mt-4">--}}
+{{--          <div id="customer-testi" class="owl-carousel owl-theme">--}}
+{{--            <div class="media customer-testi m-2">--}}
+{{--              <img src="{{asset('/frontend/images/client/01.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">--}}
+{{--              <div class="media-body content p-3 shadow rounded bg-white position-relative">--}}
+{{--                <ul class="list-unstyled mb-0">--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                </ul>--}}
+{{--                <p class="text-muted mt-2">" It seems that only fragments of the original text remain in the Lorem Ipsum texts used today. "</p>--}}
+{{--                <h6 class="text-primary">- Thomas Israel <small class="text-muted">C.E.O</small></h6>--}}
+{{--              </div>--}}
+{{--            </div>--}}
+
+{{--            <div class="media customer-testi m-2">--}}
+{{--              <img src="{{asset('/frontend/images/client/02.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">--}}
+{{--              <div class="media-body content p-3 shadow rounded bg-white position-relative">--}}
+{{--                <ul class="list-unstyled mb-0">--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star-half text-warning"></i></li>--}}
+{{--                </ul>--}}
+{{--                <p class="text-muted mt-2">" One disadvantage of Lorum Ipsum is that in Latin certain letters appear more frequently than others. "</p>--}}
+{{--                <h6 class="text-primary">- Barbara McIntosh <small class="text-muted">M.D</small></h6>--}}
+{{--              </div>--}}
+{{--            </div>--}}
+
+{{--            <div class="media customer-testi m-2">--}}
+{{--              <img src="images/client/03.jpg" class="avatar avatar-small mr-3 rounded shadow" alt="">--}}
+{{--              <div class="media-body content p-3 shadow rounded bg-white position-relative">--}}
+{{--                <ul class="list-unstyled mb-0">--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                </ul>--}}
+{{--                <p class="text-muted mt-2">" The most well-known dummy text is the 'Lorem Ipsum', which is said to have originated in the 16th century. "</p>--}}
+{{--                <h6 class="text-primary">- Carl Oliver <small class="text-muted">P.A</small></h6>--}}
+{{--              </div>--}}
+{{--            </div>--}}
+
+{{--            <div class="media customer-testi m-2">--}}
+{{--              <img src="{{asset('/frontend/images/client/04.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">--}}
+{{--              <div class="media-body content p-3 shadow rounded bg-white position-relative">--}}
+{{--                <ul class="list-unstyled mb-0">--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                </ul>--}}
+{{--                <p class="text-muted mt-2">" According to most sources, Lorum Ipsum can be traced back to a text composed by Cicero. "</p>--}}
+{{--                <h6 class="text-primary">- Christa Smith <small class="text-muted">Manager</small></h6>--}}
+{{--              </div>--}}
+{{--            </div>--}}
+
+{{--            <div class="media customer-testi m-2">--}}
+{{--              <img src="{{asset('/frontend/images/client/05.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">--}}
+{{--              <div class="media-body content p-3 shadow rounded bg-white position-relative">--}}
+{{--                <ul class="list-unstyled mb-0">--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                </ul>--}}
+{{--                <p class="text-muted mt-2">" There is now an abundance of readable dummy texts. These are usually used when a text is required. "</p>--}}
+{{--                <h6 class="text-primary">- Dean Tolle <small class="text-muted">Developer</small></h6>--}}
+{{--              </div>--}}
+{{--            </div>--}}
+
+{{--            <div class="media customer-testi m-2">--}}
+{{--              <img src="{{asset('/frontend/images/client/06.jpg')}}" class="avatar avatar-small mr-3 rounded shadow" alt="">--}}
+{{--              <div class="media-body content p-3 shadow rounded bg-white position-relative">--}}
+{{--                <ul class="list-unstyled mb-0">--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                  <li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>--}}
+{{--                </ul>--}}
+{{--                <p class="text-muted mt-2">" Thus, Lorem Ipsum has only limited suitability as a visual filler for German texts. "</p>--}}
+{{--                <h6 class="text-primary">- Jill Webb <small class="text-muted">Designer</small></h6>--}}
+{{--              </div>--}}
+{{--            </div>--}}
+{{--          </div>--}}
+{{--        </div>--}}
+{{--      </div>--}}
+{{--    </div>--}}
+
+    <div class="container mb-md-1 mb-1 mt-100 mt-60">
       <div class="row justify-content-center">
         <div class="col-12 text-center">
           <div class="section-title">
@@ -512,11 +667,4 @@
       </div>
     </div>
   </section>
-  <div class="position-relative">
-    <div class="shape overflow-hidden text-footer">
-      <svg viewBox="0 0 2880 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M720 125L2160 0H2880V250H0V125H720Z" fill="currentColor"></path>
-      </svg>
-    </div>
-  </div>
 @endsection
