@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-header-text">
-                    <i class="icofont icofont-clock-time m-r-10"></i>project Duration
+                    <i class="icofont icofont-clock-time m-r-10"></i>Project Duration
                 </h5>
                 <div class="btn-group mt-2 d-flex justify-content-center" role="group">
                     <button type="button"  class="btn btn-success btn-mini waves-effect waves-light" data-toggle="tooltip" data-placement="top" title="" data-original-title="Start Date">
@@ -59,6 +59,12 @@
                                 <i class="icofont icofont-washing-machine"></i> Status:
                             </td>
                             <td class="text-right">{{$project->postStatus->name ?? '-'}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <i class="icofont icofont-money-bag"></i> <a href="#invoices"> Invoices:</a>
+                            </td>
+                            <td class="text-right"> <label for="" class="badge badge-danger">{{number_format(count($project->projectInvoices))}}</label> </td>
                         </tr>
                     </tbody>
                 </table>
@@ -403,12 +409,12 @@
                         <div class="d-inline-block">
                             <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
                             <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
+                            <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
                         </div>
                     </div>
                     <div class="nav-item nav-grid">
                         <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
                         <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
-                        <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  temp </a>
                     </div>
                 </nav>
 
@@ -632,6 +638,55 @@
                                     @else
                                         <p class="text-center">This project has no milestones</p>
                                     @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card comment-block" id="invoices">
+            <div class="card-block">
+                <h5 class="sub-title">
+                    <i class="icofont icofont-money-bag m-r-5"></i> Project Invoices
+                </h5>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-block accordion-block">
+                                <div class="dt-responsive table-responsive">
+                                    <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Account</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Created By</th>
+                                            <th>Posted By</th>
+                                            <th>Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $serial = 1;
+                                            @endphp
+
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Account</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Created By</th>
+                                            <th>Posted By</th>
+                                            <th>Date</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
                         </div>
