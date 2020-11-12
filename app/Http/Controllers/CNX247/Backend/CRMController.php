@@ -22,6 +22,7 @@ use App\Product;
 use App\Feedback;
 use App\ProductCategory;
 use App\DefaultAccount;
+use App\Policy;
 use Auth;
 use Image;
 use DB;
@@ -144,15 +145,40 @@ class CRMController extends Controller
     * Convert client to lead
     */
     public function convertClientToLead($slug){
+        $status = null;
         $client = Client::where('slug', $slug)->first();
         $invoice = Invoice::orderBy('id', 'DESC')->first();
         $products = Product::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
         $invoiceNo = null;
-        if(!empty($invoice) ){
-            $invoiceNo = $invoice->invoice_no + rand(11, 99);
+        if(!empty($client) ){
+            if(!empty($invoice) ){
+                $invoiceNo = $invoice->invoice_no + rand(11, 99);
+            }else{
+                $invoiceNo = rand(111, 999);
+            }
+            if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+                $status = 1; //subscribed for accounting package
+                $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->get();
+                return view('backend.crm.clients.convert-to-lead',
+                ['client'=>$client,
+                'invoice_no'=>$invoiceNo,
+                'products'=>$products,
+                'status'=>$status,
+                'accounts'=>$accounts
+                ]);
+            }else{
+                return view('backend.crm.clients.convert-to-lead',
+                ['client'=>$client,
+                'invoice_no'=>$invoiceNo,
+                'products'=>$products,
+                'status'=>0
+                ]);
+            }
         }else{
-            $invoiceNo = rand(111, 999);
+            session()->flash("error", "<strong>Ooops!</strong> No record found.");
+            return back();
         }
+
         return view('backend.crm.clients.convert-to-lead', ['client'=>$client, 'invoice_no'=>$invoiceNo, 'products'=>$products]);
     }
 
@@ -160,12 +186,23 @@ class CRMController extends Controller
     * Raise an invoice
     */
     public function raiseAnInvoice(Request $request){
-        $this->validate($request,[
-            'issue_date'=>'required',
-            'due_date'=>'required|after_or_equal:issue_date',
-            'description.*'=>'required',
-            'quantity.*'=>'required'
-        ]);
+        if($request->status == 1){
+            $this->validate($request,[
+                'issue_date'=>'required',
+                'due_date'=>'required|after_or_equal:issue_date',
+                'description.*'=>'required',
+                'quantity.*'=>'required',
+                'client_account'=>'required'
+            ]);
+        }else{
+            $this->validate($request,[
+                'issue_date'=>'required',
+                'due_date'=>'required|after_or_equal:issue_date',
+                'description.*'=>'required',
+                'quantity.*'=>'required'
+            ]);
+
+        }
         $totalAmount = 0;
         if(!empty($request->total)){
             for($i = 0; $i<count($request->total); $i++){
@@ -214,6 +251,7 @@ class CRMController extends Controller
             $pro = Product::find($request->description[$i]);
             $item = new InvoiceItem;
             $item->description = $pro->product_name ?? '';
+            $item->product_id = $pro->id;
             $item->quantity = $request->quantity[$i];
             $item->unit_cost = $request->unit_cost[$i];
             $item->total = $request->quantity[$i] * $request->unit_cost[$i];
@@ -222,14 +260,18 @@ class CRMController extends Controller
             $item->tenant_id = Auth::user()->tenant_id;
             $item->save();
         }
-        $invoiceGL = DefaultAccount::where('handle', 'invoice')->where('tenant_id', Auth::user()->tenant_id)->first();
-        $receiptGL = DefaultAccount::where('handle', 'receipt')->where('tenant_id', Auth::user()->tenant_id)->first();
+        $client = Client::where('id',$request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(empty($client->glcode)){
+            $client->glcode = $request->client_account;
+            $client->save();
+        }
         $detail = InvoiceItem::where('invoice_id', $invoice->id)->where('tenant_id', Auth::user()->tenant_id)->get();
+        $policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
         #Check for accounting module
         if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
                 # Post GL
                 $invoicePost = [
-                    'glcode' => $invoiceGL->glcode,
+                    'glcode' => $client->glcode,
                     'posted_by' => Auth::user()->id,
                     'narration' => 'Invoice generation for ' . $invoice->client->first_name ?? '',
                     'dr_amount' => $invoice->sub_total + ($invoice->sub_total*$invoice->tax_rate)/100,
@@ -242,7 +284,7 @@ class CRMController extends Controller
                 ];
                 DB::table(Auth::user()->tenant_id . '_gl')->insert($invoicePost);
                 $VATPost = [
-                    'glcode' => $receiptGL->glcode,
+                    'glcode' => $policy->glcode,
                     'posted_by' => Auth::user()->id,
                     'narration' => 'VAT on invoice no. '.$invoice->invoice_no.' for '.$invoice->client->first_name,
                     'dr_amount' => 0,
@@ -256,7 +298,7 @@ class CRMController extends Controller
                 DB::table(Auth::user()->tenant_id . '_gl')->insert($VATPost);
                 foreach($detail as $d){
                     $receiptPost = [
-                        'glcode' => $receiptGL->glcode,
+                        'glcode' => $d->getProduct->glcode,
                         'posted_by' => Auth::user()->id,
                         'narration' => 'Invoice generation for ' . $d->description,
                         'dr_amount' => 0,

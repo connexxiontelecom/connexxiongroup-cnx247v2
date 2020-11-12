@@ -447,6 +447,8 @@ class ProjectController extends Controller
                 $invoice->created_by = Auth::user()->id;
                 $invoice->description = $request->description[$i];
                 $invoice->glcode = $request->accounts[$i];
+                $invoice->amount = $request->amount[$i];
+                $invoice->slug = substr(sha1(time()), 32,40);
                 $invoice->save();
             }
             session()->flash("success", "<strong>Success! </strong> Invoice submitted.");

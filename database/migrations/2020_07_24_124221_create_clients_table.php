@@ -36,6 +36,7 @@ class CreateClientsTable extends Migration
             $table->string('city')->nullable();
             $table->string('postal_code')->nullable();
             $table->string('slug')->nullable();
+            $table->unsignedBigInteger('glcode')->nullable();
             $table->timestamps();
         });
     }
