@@ -40,7 +40,7 @@
 			<div class="row justify-content-center">
 				<div class="col-12 text-center">
 					<div class="section-title mb-4 pb-2">
-						<h4 class="title mb-4">Pricing Plans Suited To You</h4>
+						<h4 class="title mb-4">Pricing Plans That Suit You</h4>
 						<p class="text-muted para-desc mb-0 mx-auto">We chose a pricing approach that is well-suited for companies or organizations of various sizes. Whatever may be your budget, <span class="text-primary font-weight-bold">CNX247</span> offers flexible pricing plans that will get your business up and running while you devote your time to other things.</p>
 					</div>
 				</div>
