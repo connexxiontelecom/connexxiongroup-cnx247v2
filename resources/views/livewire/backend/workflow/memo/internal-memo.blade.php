@@ -75,10 +75,18 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+																	@if($storage_capacity == 1)
                                     <label class="">Attachment <br> <i>(Optional)</i></label>
                                     <div  class="col-sm-10 col-md-2">
                                         <input type="file" id="attachment" name="attachment">
                                     </div>
+
+																		@endif
+
+																	@if($storage_capacity == 0)
+
+																		Drive Capacity Full, Please Upgrade to Upload More Files
+																	@endif
                                 </div>
                                 <div class=" row m-t-30 d-flex justify-content-center">
                                     <div class="col-sm-10 col-md-12">
