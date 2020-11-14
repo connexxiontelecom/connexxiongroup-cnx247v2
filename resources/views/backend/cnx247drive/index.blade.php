@@ -15,7 +15,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-hard-disk bg-c-blue card1-icon"></i>
                     <span class="text-c-blue f-w-600">Space</span>
-                    <h4><sup class="text-danger">{{number_format(ceil($size/1000))}}MB</sup>/{{ $storage_size }} GB</h4>
+                    <h4><sup class="text-danger">{{number_format(ceil($size/1024))}}MB</sup>/{{ $storage_size }} GB</h4>
                     <div>
                         <span class="f-left m-t-10 text-muted">
                             <i class="text-c-blue f-16 feather icon-alert-triangle m-r-10"></i>Used storage
@@ -69,50 +69,71 @@
     </div>
 
     <div class="row">
+
         <div class="col-md-12">
             <div class="card">
-
-
-
-
-                <div class="card-header">
-                    <div class="btn-group float-right">
-                         <button type="button" class=" btn btn-warning btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new_folder"><i class="ti-plus mr-2"></i>New Folder</button>
-                        <button type="button" class="btn btn-primary btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new-file"><i class="ti-plus mr-2"></i>Upload File</button>
-                    </div>
-                </div>
-
-							<form action="{{route('search')}}" method="post">
-
-								@csrf
-								<div class="form-group row">
-									<div class="col-sm-3">
+							<div class="row">
+							<div class="col-md-6">
+								<div class="card-header">
+									<div class="btn-group float-left">
+										<button type="button" class=" btn btn-warning btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new_folder"><i class="ti-plus mr-2"></i>New Folder</button>
+										<button type="button" class="btn btn-primary btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new-file"><i class="ti-plus mr-2"></i>Upload File</button>
 									</div>
-									<div class="col-sm-6">
-										<input type="text" name="name" class="form-control form-control-round" required placeholder="Search Files or Folders">
-									</div>
+								</div>
 
-									<div class="col-sm-3">
-									</div>
 
+
+							</div>
+							<div class="col-md-6">
+
+								<div class="card-header">
+									<form action="{{route('search')}}" method="post">
+
+
+										@csrf
+										<div class="form-group row">
+											<div class="col-sm-3">
+											</div>
+											<div class="col-sm-6">
+												<input type="text" name="name" class="form-control form-control-round" required placeholder="Search..">
+											</div>
+
+											<div class="col-sm-3">
+											</div>
+
+
+										</div>
+
+										<div class="form-group row">
+											<div class="col-sm-4">
+											</div>
+											<div class="col-sm-4">
+												<button type="submit"  class="btn btn-primary btn-block btn-round waves-effect waves-light btn-mini"> Search</button>
+
+											</div>
+											<div class="col-sm-4">
+											</div>
+
+
+
+										</div>
+
+									</form>
 
 								</div>
 
-								<div class="form-group row">
-									<div class="col-sm-4">
-									</div>
-									<div class="col-sm-4">
-										<button type="submit"  class="btn btn-primary btn-block btn-round waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Search</button>
 
-									</div>
-									<div class="col-sm-4">
-									</div>
+
+							</div>
+							</div>
 
 
 
-								</div>
 
-							</form>
+
+
+
+
                 <div class="card-block">
                     <h5 class="sub-title">My Files</h5>
                     @if (session()->has('success'))
@@ -897,6 +918,9 @@
 
                 </div>
             </div>
+
+
+
         </div>
     </div>
 @endsection
