@@ -86,8 +86,17 @@
                                                 </div>
                                             </div>
                                                 <div class="form-group col-md-6">
+																									@if($storage_capacity == 1)
                                                     <label class="">Attachment <br> <i>(Optional)</i></label>
                                                     <input type="file" class="form-control-file" name="attachment">
+
+																									@endif
+
+																									@if($storage_capacity == 0)
+
+																										Drive Full, Please Upgrade to Upload More Files
+
+																									@endif
                                                 </div>
                                                 <div class=" row m-t-30 d-flex justify-content-center">
                                                     <div class="preloader3 loader-block mb-3" wire:loading wire:target="submitExpenseReport">
