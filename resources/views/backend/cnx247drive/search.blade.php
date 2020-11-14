@@ -15,7 +15,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-hard-disk bg-c-blue card1-icon"></i>
                     <span class="text-c-blue f-w-600">Space</span>
-                    <h4><sup class="text-danger">{{number_format(ceil($size/1000))}}MB</sup>/{{ $storage_size }} GB</h4>
+                    <h4><sup class="text-danger">{{number_format(ceil($size/1000))}}MB</sup>/50GB</h4>
                     <div>
                         <span class="f-left m-t-10 text-muted">
                             <i class="text-c-blue f-16 feather icon-alert-triangle m-r-10"></i>Used storage
@@ -77,9 +77,8 @@
 
                 <div class="card-header">
                     <div class="btn-group float-right">
-                         <button type="button" class=" btn btn-warning btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new_folder"><i class="ti-plus mr-2"></i>New Folder</button>
-                        <button type="button" class="btn btn-primary btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new-file"><i class="ti-plus mr-2"></i>Upload File</button>
-                    </div>
+
+                           </div>
                 </div>
 
 							<form action="{{route('search')}}" method="post">
@@ -89,7 +88,7 @@
 									<div class="col-sm-3">
 									</div>
 									<div class="col-sm-6">
-										<input type="text" name="name" class="form-control form-control-round" required placeholder="Search Files or Folders">
+										<input type="text" name="name" required class="form-control form-control-round" placeholder="Search Files or Folders">
 									</div>
 
 									<div class="col-sm-3">
@@ -113,6 +112,9 @@
 								</div>
 
 							</form>
+							<div class="card-block">
+							<h5 class="sub-title">Showing Results for..... {{ $name  }} .....</h5>
+							</div>
                 <div class="card-block">
                     <h5 class="sub-title">My Files</h5>
                     @if (session()->has('success'))
@@ -519,6 +521,7 @@
                     @endif
                     <div class="card-block " id="fileDirectory">
                         <div class="row">
+													@if(!empty($sharedFiles))
                             @foreach ($sharedFiles as $share)
                                 @foreach ($share->originalFile as $file)
                                     @switch(pathinfo($file->filename, PATHINFO_EXTENSION))
@@ -865,28 +868,33 @@
                                     @endswitch
                                 @endforeach
                             @endforeach
+													@endif
+
+															@if(!empty($sharedFolders))
+
+
 
 
 															@foreach ($sharedFolders as $folder)
-
-
 																<div class="col-md-1">
-																	<a href="{{route('shared-folder', $folder->folder_id)}}" title="{{$folder->name ?? 'No name'}}" data-original-title="{{$folder->name ?? 'No name'}}" style="cursor: pointer;" data-toggle="tooltip" title="{{ $folder->first_name }} {{ $folder->surname }}">
+																	<a href="{{route('shared-folder', $folder->folder_id)}}" title="{{$folder->name ?? 'No name'}}" data-original-title="{{$folder->name ?? 'No name'}}" style="cursor: pointer;">
 																		<img src="/assets/formats/folder.png" height="64" width="64" alt="{{$folder->name ?? 'No name'}}"><br>
 																		{{strlen($folder->name ?? 'No name') > 10 ? substr($folder->name ?? 'No name',0,7).'...' : $folder->name ?? 'No name'}}
-
 																	</a>
 
 																</div>
 															@endforeach
+															@endif
 
 
 															@foreach ($publicFolders as $folder)
 																<div class="col-md-1">
 																	<a href="{{route('shared-folder', $folder->id)}}" title="{{$folder->name ?? 'No name'}}" data-original-title="{{$folder->name ?? 'No name'}}" style="cursor: pointer;">
 																		<img src="/assets/formats/public-folder.png" height="64" width="64" alt="{{$folder->name ?? 'No name'}}"><br>
-																		{{strlen($folder->name ?? 'No name') > 10 ? substr($folder->name ?? 'No name',0,7).'...' : $folder->name ?? 'No name'}}
+																		{{strlen($folder->name ?? 'No name') > 10 ? substr($folder->name ?? 'No name',0,7).'...' : $folder->name ?? 'No name'}}<br>
+
 																	</a>
+
 
 																</div>
 															@endforeach
