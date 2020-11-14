@@ -493,8 +493,8 @@ class ProjectController extends Controller
             ]);
         }
         #update client
+        $updateClient = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->client)->first();
         if($request->setAccount == 1){
-            $updateClient = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->client)->first();
             $updateClient->glcode = $request->client_account;
             $updateClient->save();
         }
@@ -508,6 +508,7 @@ class ProjectController extends Controller
             $master->client_id = $request->client;
             $master->project_id = $request->ref_no;
             $master->issue_date = $request->date;
+            $master->due_date = $request->due_date;
             $master->total = $totalAmount;
             $master->issued_by = Auth::user()->id;
             $master->tenant_id = Auth::user()->tenant_id;
@@ -525,6 +526,55 @@ class ProjectController extends Controller
                     $invoice->client_id = $request->client;
                     $invoice->save();
                 }
+
+            #Check for accounting module
+            if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+                $policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
+                $detail = InvoiceItem::where('invoice_id', $master->id)->where('tenant_id', Auth::user()->tenant_id)->get();
+                # Post GL
+                $invoicePost = [
+                    'glcode' => $updateClient->glcode,
+                    'posted_by' => Auth::user()->id,
+                    'narration' => 'Invoice generation for ' . $updateClient->company_name ?? '',
+                    'dr_amount' => $totalAmount + ($totalAmount*$policy->vat)/100,
+                    'cr_amount' => 0,
+                    'ref_no' => $master->invoice_no ?? '',
+                    'bank' => 0,
+                    'ob' => 0,
+                    'transaction_date' => $master->created_at,
+                    'created_at' => $master->created_at
+                ];
+                DB::table(Auth::user()->tenant_id . '_gl')->insert($invoicePost);
+                $VATPost = [
+                    'glcode' => $policy->glcode,
+                    'posted_by' => Auth::user()->id,
+                    'narration' => 'VAT on invoice no. '.$master->invoice_no.' for '.$updateClient->company_name,
+                    'dr_amount' => 0,
+                    'cr_amount' => ($totalAmount*$policy->vat)/100 ?? 0,
+                    'ref_no' => $master->invoice_no ?? '',
+                    'bank' => 0,
+                    'ob' => 0,
+                    'transaction_date' => $master->created_at,
+                    'created_at' => $master->created_at
+                ];
+                DB::table(Auth::user()->tenant_id . '_gl')->insert($VATPost);
+                foreach($detail as $d){
+                    $receiptPost = [
+                        'glcode' => $d->glcode,
+                        'posted_by' => Auth::user()->id,
+                        'narration' => 'Invoice generation for ' . $d->description,
+                        'dr_amount' => 0,
+                        'cr_amount' => $d->total ?? 0,
+                        'ref_no' => $invoice->invoice_no ?? '',
+                        'bank' => 0,
+                        'ob' => 0,
+                        'transaction_date' => $invoice->created_at,
+                        'created_at' => $invoice->created_at
+                    ];
+                    DB::table(Auth::user()->tenant_id . '_gl')->insert($receiptPost);
+                }
+
+        }
 
             session()->flash("success", "<strong>Success! </strong> Invoice submitted.");
             return redirect()->route('view-project', $project->post_url);

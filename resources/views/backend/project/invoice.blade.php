@@ -90,9 +90,16 @@
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Invoice Number <span>#{{$invoice_no}}</span></h6>
                     <div class="form-group">
-                        <label for="">Date</label>
+                        <label for="">Issue Date</label>
                         <input type="date" name="date" placeholder="Date" class="form-control">
                         @error('date')
+                            <i class="text-danger mt-2">{{$message}}</i>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="">Due Date</label>
+                        <input type="date" name="due_date" class="form-control" placeholder="Due Date">
+                        @error('due_date')
                             <i class="text-danger mt-2">{{$message}}</i>
                         @enderror
                     </div>

@@ -124,7 +124,7 @@
                                 @foreach($items as $item)
                                     <tr class="item">
                                         <td>
-                                            {{$item->billService->product }}
+                                            {{$item->description ?? '' }}
                                         </td>
                                         <td>
                                             {{$item->quantity }}
@@ -136,7 +136,7 @@
                                     </tr>
                                 @endforeach
                             <tr>
-                                <td colspan="4" class="text-right"><strong>Total: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($bill->bill_amount,2)}}</td>
+                                <td colspan="4" class="text-right"><strong>Total: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($bill->bill_amount + $bill->vat_amount,2)}}</td>
                             </tr>
                             </tbody>
                         </table>

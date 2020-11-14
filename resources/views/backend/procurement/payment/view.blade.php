@@ -42,7 +42,7 @@
                                 <h5 class="sub-title">Payment Details</h5>
                                 <div class="form-group">
                                     <strong for="">Bank</strong>
-                                    <p>{{$payment->bank_id ?? ''}}</p>
+                                    <p>{{$payment->getBank->bank_name ?? ''}}</p>
                                 </div>
                                 <div class="form-group">
                                     <strong for="">Payment Amount</strong>

@@ -48,9 +48,7 @@
                                     <select name="bank" id="bank" class="text-white  js-example-basic-single form-control">
                                         <option disabled selected>Select bank</option>
                                         @foreach($banks as $bank)
-                                            @if($bank->bank == 1)
-                                                <option value="{{$bank->glcode}}">{{$bank->account_name ?? ''}} - {{$bank->glcode ?? ''}}</option>
-                                            @endif
+                                                <option value="{{$bank->bank_gl_code}}">{{$bank->bank_name ?? ''}}</option>
                                         @endforeach
                                     </select>
                                     @error('bank')
@@ -59,7 +57,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Payment Amount</label>
-                                    <input type="number" step="0.01" name="payment_amount" id="payment_amount" placeholder="Payment Amount" value="{{ $pending_bills->sum('bill_amount') }}" readonly class="form-control">
+                                    <input type="number" step="0.01" name="payment_amount" id="payment_amount" placeholder="Payment Amount" value="{{ $pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') }}" readonly class="form-control">
                                     @error('payment_amount')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
@@ -112,7 +110,7 @@
                                                 <td>
                                                     <div class="checkbox-fade fade-in-primary">
                                                         <label>
-                                                            <input type="checkbox" value="" data-amount="{{number_format($item->bill_amount ?? 0 - $item->paid_amount ?? 0, 0, ',', '')}}" class="select-invoice">
+                                                            <input type="checkbox" value="" data-amount="{{number_format($item->bill_amount - $item->paid_amount + $item->vat_amount, 0, ',', '')}}" class="select-invoice">
                                                             <span class="cr">
                                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                     </span>
@@ -131,10 +129,10 @@
                                                     <p>{{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->bill_date))}}</p>
                                                 </td>
                                                 <td>
-                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount,2)}}</p>
+                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount +  $item->vat_amount,2)}}</p>
                                                 </td>
                                                 <td>
-                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount ?? 0 - $item->paid_amount ?? 0,2)}}</p>
+                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount  - $item->paid_amount + $item->vat_amount,2)}}</p>
                                                 </td>
                                                 <td><input type="number" step="0.01" class="form-control payment" name="payment[]" style="width: 120px;"></td>
                                             </tr>

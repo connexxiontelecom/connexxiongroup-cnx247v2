@@ -266,15 +266,15 @@ class CRMController extends Controller
             $client->glcode = $request->client_account;
             $client->save();
         }
-        $detail = InvoiceItem::where('invoice_id', $invoice->id)->where('tenant_id', Auth::user()->tenant_id)->get();
-        $policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
         #Check for accounting module
         if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+            $detail = InvoiceItem::where('invoice_id', $invoice->id)->where('tenant_id', Auth::user()->tenant_id)->get();
+            $policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
                 # Post GL
                 $invoicePost = [
                     'glcode' => $client->glcode,
                     'posted_by' => Auth::user()->id,
-                    'narration' => 'Invoice generation for ' . $invoice->client->first_name ?? '',
+                    'narration' => 'Invoice generation for ' . $invoice->client->company_name ?? '',
                     'dr_amount' => $invoice->sub_total + ($invoice->sub_total*$invoice->tax_rate)/100,
                     'cr_amount' => 0,
                     'ref_no' => $invoice->invoice_no ?? '',
@@ -287,7 +287,7 @@ class CRMController extends Controller
                 $VATPost = [
                     'glcode' => $policy->glcode,
                     'posted_by' => Auth::user()->id,
-                    'narration' => 'VAT on invoice no. '.$invoice->invoice_no.' for '.$invoice->client->first_name,
+                    'narration' => 'VAT on invoice no. '.$invoice->invoice_no.' for '.$invoice->client->company_name,
                     'dr_amount' => 0,
                     'cr_amount' => ($invoice->sub_total*$invoice->tax_rate)/100 ?? 0,
                     'ref_no' => $invoice->invoice_no ?? '',
@@ -438,9 +438,9 @@ class CRMController extends Controller
                 $invoice->status = 1; //payment complete
             }
             $invoice->save();
+        }
             session()->flash("success", "<strong>Success!</strong> Receipt saved!");
             return redirect()->route('receipt-list');
-        }
     }
 
     /*

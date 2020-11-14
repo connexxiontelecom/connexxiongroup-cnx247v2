@@ -90,7 +90,7 @@ class PostingController extends Controller
                 //}
             }
             session()->flash("success", "<strong>Success!</strong> Receipt posted.");
-            return redirect()->route('receipt-list');
+            return redirect()->route('receipt-posting');
         }
     }
 }

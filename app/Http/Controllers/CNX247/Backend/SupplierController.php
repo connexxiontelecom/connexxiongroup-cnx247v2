@@ -17,6 +17,7 @@ use App\Service;
 use App\PayMaster;
 use App\PayDetail;
 use App\Invoice;
+use App\Bank;
 use Auth;
 use Schema;
 use DB;
@@ -365,14 +366,20 @@ class SupplierController extends Controller
 
 
     public function payments(){
-        $payments = PayMaster::where('posted', 0)->where('trash',0)->where('tenant_id', Auth::user()->tenant_id)->get();
+        $payments = DB::table('pay_masters as p')
+                    ->join('banks as b', 'p.bank_id', '=', 'b.bank_gl_code')
+                    ->select()
+                    ->where('p.posted', 0)
+                    ->where('p.trash',0)
+                    ->where('p.tenant_id', Auth::user()->tenant_id)
+                    ->get();
         return view('backend.procurement.payment.index',['payments'=>$payments]);
     }
 
     public function newPayment(){
-        $pending_bills  = BillMaster::where('paid_amount', 0)->where('tenant_id', Auth::user()->tenant_id)->get();
+        $pending_bills  = BillMaster::where('paid', 0)->where('tenant_id', Auth::user()->tenant_id)->get();
         $invoice = Invoice::where('status', 0)->where('tenant_id', Auth::user()->tenant_id)->get();
-        $banks = DB::table(Auth::user()->tenant_id.'_coa')->where('bank', 1)->get();
+        $banks = Bank::where('tenant_id', Auth::user()->tenant_id)->get();
         $totalAmount = 0;
         return view('backend.procurement.payment.create',['invoice'=>$invoice, 'banks'=>$banks, 'totalAmount'=>$totalAmount,'pending_bills'=>$pending_bills]);
     }
@@ -418,9 +425,10 @@ class SupplierController extends Controller
                 $detail->save();
                 #bill master
                 $bill = BillMaster::find($request->bills[$n]);
-                $bill->paid_amount = $request->payment[$n];
-                if($request->payment[$n] == $bill->bill_amount){
+                $bill->paid_amount += $request->payment[$n];
+                if($bill->paid_amount + $bill->vat_amount >= $bill->bill_amount){
                     $bill->status = 'paid';
+                    $bill->paid = 1;
                     $bill->save();
                 }
                 if($request->payment[$n] < $bill->bill_amount){
@@ -435,7 +443,13 @@ class SupplierController extends Controller
     }
 
     public function paymentDetail($slug){
-        $payment = PayMaster::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $payment = /* DB::table('pay_masters as p')
+                    ->join('banks as b', 'p.bank_id', '=', 'b.bank_gl_code')
+                    ->select()
+                    ->where('p.slug', $slug)
+                    ->where('p.tenant_id', Auth::user()->tenant_id)
+                    ->first(); */
+        PayMaster::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
         $items = PayDetail::where('pay_id', $payment->id)->where('tenant_id', Auth::user()->tenant_id)->get();
         if(!empty($payment) && count($items) > 0){
             return view('backend.procurement.payment.view',['payment'=>$payment, 'items'=>$items]);

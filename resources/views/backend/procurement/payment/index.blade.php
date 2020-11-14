@@ -57,7 +57,7 @@
                                                     <th>#</th>
                                                     <th>Bank</th>
                                                     <th>Date</th>
-                                                    <th> Amount</th>
+                                                    <th> Amount ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                                     <th> Ref. No.</th>
                                                     <th> Memo</th>
                                                     <th>Action</th>
@@ -70,9 +70,9 @@
                                                 @foreach($payments as $payment)
                                                     <tr>
                                                         <td>{{$serial++}}</td>
-                                                        <td>{{$payment->bank_id}}</td>
+                                                        <td>{{$payment->bank_name}}</td>
                                                         <td>{{!is_null($payment->date_inputed ) ? date('d F, Y', strtotime($payment->date_inputed )) : '-'}}</td>
-                                                        <td>N{{number_format($payment->amount,2) ?? ''}}</td>
+                                                        <td>{{number_format($payment->amount,2) ?? ''}}</td>
                                                         <td>{{$payment->ref_no ?? ''}}</td>
                                                         <td>{{$payment->memo ?? ''}}</td>
                                                         <td>
@@ -86,7 +86,7 @@
                                                     <th>#</th>
                                                     <th>Bank</th>
                                                     <th>Date</th>
-                                                    <th> Amount</th>
+                                                    <th> Amount ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                                     <th> Ref. No.</th>
                                                     <th> Memo</th>
                                                     <th>Action</th>
