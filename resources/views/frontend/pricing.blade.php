@@ -15,7 +15,7 @@
 
 @section('content')
 	<!-- Hero Start -->
-	<section class="bg-half bg-dark d-table w-100" style="background-image:url('{{asset('/frontend/images/bg-5.jpg')}}'); background-size:auto ;box-shadow:inset 0 0 0 2000px rgba(0, 0, 0, 0.65);">
+	<section class="bg-half bg-dark d-table w-100" style="background-image:url('{{asset('/frontend/images/bg-5.jpg')}}'); background-size:auto ;box-shadow:inset 0 0 0 2000px rgba(0, 0, 0, 0.60);">
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-lg-12 text-center">
@@ -40,28 +40,26 @@
 			<div class="row justify-content-center">
 				<div class="col-12 text-center">
 					<div class="section-title mb-4 pb-2">
-						<h4 class="title mb-4">Our Pricing</h4>
-						<p class="text-muted para-desc mb-0 mx-auto">We chose a pricing approach that is well-suited for companies or organizations of various sizes. Whatever may be your budget, <span class="text-primary font-weight-bold">{{config('app.name')}}</span> offers flexible pricing plans that will get your business up and running while you devote your time to other things.</p>
+						<h4 class="title mb-4">Pricing Plans That Suit You</h4>
+						<p class="text-muted para-desc mb-0 mx-auto">We chose a pricing approach that is well-suited for companies or organizations of various sizes. Whatever may be your budget, <span class="text-primary font-weight-bold">CNX247</span> offers flexible pricing plans that will get your business up and running while you devote your time to other things.</p>
 					</div>
 				</div>
 			</div>
-
 			<div class="row align-items-center">
-				<div class="col-12 mt-4 pt-2">
+				<div class="col-12 mt-0 pt-0">
 					<div class="text-center">
 						<ul class="nav nav-pills rounded-pill justify-content-center d-inline-block border py-1 px-2" id="pills-tab" role="tablist">
 							<li class="nav-item d-inline-block">
 								<a class="nav-link px-3 rounded-pill active monthly" id="Monthly" data-toggle="pill" href="#Month" role="tab" aria-controls="Month" aria-selected="true">Monthly</a>
 							</li>
 							<li class="nav-item d-inline-block">
-								<a class="nav-link px-3 rounded-pill monthly" id="Quarterly" data-toggle="pill" href="#Quarter" role="tab" aria-controls="Quarter" aria-selected="true">Quarterly</a>
+								<a class="nav-link px-3 rounded-pill monthly" id="Quarterly" data-toggle="pill" href="#Quarter" role="tab" aria-controls="Quarter" aria-selected="true">Quarterly <span class="badge badge-pill badge-outline-success"> -5%</span></a>
 							</li>
 							<li class="nav-item d-inline-block">
-								<a class="nav-link px-3 rounded-pill yearly" id="Yearly" data-toggle="pill" href="#Year" role="tab" aria-controls="Year" aria-selected="false">Yearly </a>
+								<a class="nav-link px-3 rounded-pill yearly" id="Yearly" data-toggle="pill" href="#Year" role="tab" aria-controls="Year" aria-selected="false">Yearly <span class="badge badge-pill badge-outline-success"> -9%</span></a>
 							</li>
 						</ul>
 					</div>
-
 					<div class="tab-content" id="pills-tabContent">
 						<div class="tab-pane fade active show" id="Month" role="tabpanel" aria-labelledby="Monthly">
 							<div class="row">
@@ -72,33 +70,150 @@
 												<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
 													<div class="card-body">
 														<h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2>
-														<div class="d-flex mb-4">
-															<span class="h5 mb-0 mt-0">{{$plan->currency->symbol}}</span>
-															<span class="price h5 mb-0">{{number_format($plan->price,2)}}</span>
-															<span class="h5 align-self-end mb-1">/mo</span>
+														<div class="d-flex mb-1">
+															<span class="h4 mb-0 mt-2">{{$plan->currency->symbol}} </span>
+															<span class="price h1 mb-0"> {{number_format($plan->price)}}</span>
+															<span class="h4 align-self-end">/mo</span>
 														</div>
-
-														<p class="text-center text-muted">
+														<small class="text-center text-muted mb-4">
 															{{$plan->description}}
-														</p>
-														<ul class="list-unstyled mb-0 pl-0">
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>Calls: {{$plan->calls != 0 ? number_format($plan->calls).' minutes/month' : '-'}}
+														</small>
+														<ul class="list-unstyled mt-4 mb-0 pl-0">
+															<li class="h6 text-muted mb-0">
+																@if($plan->calls != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Calls: {{number_format($plan->calls).' minutes/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Calls
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>Emails: {{$plan->emails != 0 ? number_format($plan->emails).'/month' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->emails != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Emails: {{number_format($plan->emails).'/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Emails
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>SMS: {{$plan->sms != 0 ? number_format($plan->sms).'/month' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->sms != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>SMS: {{number_format($plan->sms).'/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>SMS
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>Users: {{$plan->team_size != 0 ? number_format($plan->team_size).' users (max)' : '-'}}
+															<li class="h6 text-muted mb-0">
+																<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Users: {{number_format($plan->team_size).' max users'}}
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>CNXStream: {{$plan->stream != 0 ? number_format($plan->stream).' hours    ' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->stream != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Stream: {{number_format($plan->stream).' hrs/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Stream
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>CNXDrive: {{$plan->storage != 0 ? number_format($plan->storage).' GB' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->storage_size != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->chat != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Chat
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Chat
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->workflow != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workflow
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workflow
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->activity_stream != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Activity Stream
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Activity Stream
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->crm != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CRM
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CRM
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->project != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Project
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Project
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->reports != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Report & Analytics
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Report & Analytics
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->procurement != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Procurement
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Procurement
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->task != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Task
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Task
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->workgroup != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workgroup
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workgroup
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->clock_in != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Clock In & Out
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Clock In & Out
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->basic_accounting != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Basic Accounting
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Basic Accounting
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->full_accounting != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Full Accounting
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Full Accounting
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->hr != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>HR
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>HR
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->logistics != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Logistics
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Logistics
+																@endif
 															</li>
 														</ul>
 														<a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
@@ -108,7 +223,7 @@
 										@endif
 									@endforeach
 								@else
-									<p class="text-center">There're no plans </p>
+									<p class="text-center">There are no plans</p>
 								@endif
 							</div>
 						</div>
@@ -121,33 +236,150 @@
 												<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
 													<div class="card-body">
 														<h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2>
-														<div class="d-flex mb-4">
-															<span class="h5 mb-0 mt-0">{{$plan->currency->symbol}}</span>
-															<span class="price h5 mb-0">{{number_format($plan->price,2)}}</span>
-															<span class="h5 align-self-end mb-1">/mo</span>
+														<div class="d-flex mb-1">
+															<span class="h4 mb-0 mt-2">{{$plan->currency->symbol}}</span>
+															<span class="price h1 mb-0">{{number_format($plan->price)}}</span>
+															<span class="h4 align-self-end">/mo</span>
 														</div>
-
-														<p class="text-center text-muted">
+														<small class="text-center text-muted mb-4">
 															{{$plan->description}}
-														</p>
-														<ul class="list-unstyled mb-0 pl-0">
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>Calls: {{$plan->calls != 0 ? number_format($plan->calls).' minutes/month' : '-'}}
+														</small>
+														<ul class="list-unstyled mt-4 mb-0 pl-0">
+															<li class="h6 text-muted mb-0">
+																@if($plan->calls != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Calls: {{number_format($plan->calls).' minutes/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Calls
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>Emails: {{$plan->emails != 0 ? number_format($plan->emails).'/month' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->emails != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Emails: {{number_format($plan->emails).'/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Emails
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>SMS: {{$plan->sms != 0 ? number_format($plan->sms).'/month' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->sms != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>SMS: {{number_format($plan->sms).'/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>SMS
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>Users: {{$plan->team_size != 0 ? number_format($plan->team_size).' users (max)' : '-'}}
+															<li class="h6 text-muted mb-0">
+																<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Users: {{number_format($plan->team_size).' max users'}}
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>CNXStream: {{$plan->stream != 0 ? number_format($plan->stream).' hours    ' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->stream != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Stream: {{number_format($plan->stream).' hrs/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Stream
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                        <i class="uim uim-check-circle"></i></span>CNXDrive: {{$plan->storage != 0 ? number_format($plan->storage).' GB' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->storage_size != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->chat != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Chat
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Chat
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->workflow != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workflow
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workflow
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->activity_stream != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Activity Stream
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Activity Stream
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->crm != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CRM
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CRM
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->project != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Project
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Project
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->reports != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Report & Analytics
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Report & Analytics
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->procurement != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Procurement
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Procurement
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->task != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Task
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Task
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->workgroup != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workgroup
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workgroup
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->clock_in != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Clock In & Out
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Clock In & Out
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->basic_accounting != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Basic Accounting
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Basic Accounting
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->full_accounting != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Full Accounting
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Full Accounting
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->hr != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>HR
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>HR
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->logistics != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Logistics
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Logistics
+																@endif
 															</li>
 														</ul>
 														<a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
@@ -157,7 +389,7 @@
 										@endif
 									@endforeach
 								@else
-									<p class="text-center">There're no plans </p>
+									<p class="text-center">There are no plans </p>
 								@endif
 							</div>
 						</div>
@@ -171,33 +403,150 @@
 												<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
 													<div class="card-body">
 														<h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2>
-														<div class="d-flex mb-4">
-															<span class="h5 mb-0 mt-0">{{$plan->currency->symbol}}</span>
-															<span class="price h5 mb-0">{{number_format($plan->price,2)}}</span>
-															<span class="h5 align-self-end mb-1">/mo</span>
+														<div class="d-flex mb-1">
+															<span class="h4 mb-0 mt-2">{{$plan->currency->symbol}}</span>
+															<span class="price h1 mb-0">{{number_format($plan->price)}}</span>
+															<span class="h4 align-self-end">/mo</span>
 														</div>
-
-														<p class="text-center text-muted">
+														<small class="text-center text-muted mb-4">
 															{{$plan->description}}
-														</p>
-														<ul class="list-unstyled mb-0 pl-0">
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                    <i class="uim uim-check-circle"></i></span>Calls: {{$plan->calls != 0 ? number_format($plan->calls).' minutes/month' : '-'}}
+														</small>
+														<ul class="list-unstyled mt-4 mb-0 pl-0">
+															<li class="h6 text-muted mb-0">
+																@if($plan->calls != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Calls: {{number_format($plan->calls).' minutes/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Calls
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                    <i class="uim uim-check-circle"></i></span>Emails: {{$plan->emails != 0 ? number_format($plan->emails).'/month' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->emails != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Emails: {{number_format($plan->emails).'/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Emails
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                    <i class="uim uim-check-circle"></i></span>SMS: {{$plan->sms != 0 ? number_format($plan->sms).'/month' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->sms != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>SMS: {{number_format($plan->sms).'/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>SMS
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                    <i class="uim uim-check-circle"></i></span>Users: {{$plan->team_size != 0 ? number_format($plan->team_size).' users (max)' : '-'}}
+															<li class="h6 text-muted mb-0">
+																<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Users: {{number_format($plan->team_size).' max users'}}
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                    <i class="uim uim-check-circle"></i></span>CNXStream: {{$plan->stream != 0 ? number_format($plan->stream).' hours    ' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->stream != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Stream: {{number_format($plan->stream).' hrs/mo'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Stream
+																@endif
 															</li>
-															<li class="h6 text-muted mb-0"><span class="text-primary h5 mr-2">
-                                                                    <i class="uim uim-check-circle"></i></span>CNXDrive: {{$plan->storage != 0 ? number_format($plan->storage).' GB' : '-'}}
+															<li class="h6 text-muted mb-0">
+																@if($plan->storage_size != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->chat != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Chat
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Chat
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->workflow != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workflow
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workflow
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->activity_stream != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Activity Stream
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Activity Stream
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->crm != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CRM
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CRM
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->project != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Project
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Project
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->reports != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Report & Analytics
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Report & Analytics
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->procurement != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Procurement
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Procurement
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->task != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Task
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Task
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->workgroup != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workgroup
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workgroup
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->clock_in != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Clock In & Out
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Clock In & Out
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->basic_accounting != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Basic Accounting
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Basic Accounting
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->full_accounting != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Full Accounting
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Full Accounting
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->hr != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>HR
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>HR
+																@endif
+															</li>
+															<li class="h6 text-muted mb-0">
+																@if($plan->logistics != 0)
+																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Logistics
+																@else
+																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Logistics
+																@endif
 															</li>
 														</ul>
 														<a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
@@ -207,7 +556,7 @@
 										@endif
 									@endforeach
 								@else
-									<p class="text-center">There're no plans </p>
+									<p class="text-center">There are no plans </p>
 								@endif
 							</div>
 						</div>
@@ -215,173 +564,22 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="container mt-100 mt-60">
-			<div class="row justify-content-center">
-				<div class="col-12 text-center">
-					<div class="section-title mb-4 pb-2">
-						<h4 class="title mb-4">Client Reviews</h4>
-						<p class="text-muted para-desc mx-auto mb-0">In the words of an anonymous, "Great products advertises itself; but the recommendation of a satisfied client shouldn't be taken lightly." Share in the experience of our clients who have used our product and what they have to say.</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="row justify-content-center">
-				<div class="col-lg-12 mt-4">
-					<div id="customer-testi" class="owl-carousel owl-theme">
-						<div class="media customer-testi m-2">
-							<img src="images/client/01.jpg" class="avatar avatar-small mr-3 rounded shadow" alt="">
-							<div class="media-body content p-3 shadow rounded bg-white position-relative">
-								<ul class="list-unstyled mb-0">
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-								</ul>
-								<p class="text-muted mt-2">" It seems that only fragments of the original text remain in the Lorem Ipsum texts used today. "</p>
-								<h6 class="text-primary">- Thomas Israel <small class="text-muted">C.E.O</small></h6>
-							</div>
-						</div>
-
-						<div class="media customer-testi m-2">
-							<img src="images/client/02.jpg" class="avatar avatar-small mr-3 rounded shadow" alt="">
-							<div class="media-body content p-3 shadow rounded bg-white position-relative">
-								<ul class="list-unstyled mb-0">
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star-half text-warning"></i></li>
-								</ul>
-								<p class="text-muted mt-2">" One disadvantage of Lorum Ipsum is that in Latin certain letters appear more frequently than others. "</p>
-								<h6 class="text-primary">- Barbara McIntosh <small class="text-muted">M.D</small></h6>
-							</div>
-						</div>
-
-						<div class="media customer-testi m-2">
-							<img src="images/client/03.jpg" class="avatar avatar-small mr-3 rounded shadow" alt="">
-							<div class="media-body content p-3 shadow rounded bg-white position-relative">
-								<ul class="list-unstyled mb-0">
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-								</ul>
-								<p class="text-muted mt-2">" The most well-known dummy text is the 'Lorem Ipsum', which is said to have originated in the 16th century. "</p>
-								<h6 class="text-primary">- Carl Oliver <small class="text-muted">P.A</small></h6>
-							</div>
-						</div>
-
-						<div class="media customer-testi m-2">
-							<img src="images/client/04.jpg" class="avatar avatar-small mr-3 rounded shadow" alt="">
-							<div class="media-body content p-3 shadow rounded bg-white position-relative">
-								<ul class="list-unstyled mb-0">
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-								</ul>
-								<p class="text-muted mt-2">" According to most sources, Lorum Ipsum can be traced back to a text composed by Cicero. "</p>
-								<h6 class="text-primary">- Christa Smith <small class="text-muted">Manager</small></h6>
-							</div>
-						</div>
-
-						<div class="media customer-testi m-2">
-							<img src="images/client/05.jpg" class="avatar avatar-small mr-3 rounded shadow" alt="">
-							<div class="media-body content p-3 shadow rounded bg-white position-relative">
-								<ul class="list-unstyled mb-0">
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-								</ul>
-								<p class="text-muted mt-2">" There is now an abundance of readable dummy texts. These are usually used when a text is required. "</p>
-								<h6 class="text-primary">- Dean Tolle <small class="text-muted">Developer</small></h6>
-							</div>
-						</div>
-
-						<div class="media customer-testi m-2">
-							<img src="images/client/06.jpg" class="avatar avatar-small mr-3 rounded shadow" alt="">
-							<div class="media-body content p-3 shadow rounded bg-white position-relative">
-								<ul class="list-unstyled mb-0">
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-									<li class="list-inline-item"><i class="mdi mdi-star text-warning"></i></li>
-								</ul>
-								<p class="text-muted mt-2">" Thus, Lorem Ipsum has only limited suitability as a visual filler for German texts. "</p>
-								<h6 class="text-primary">- Jill Webb <small class="text-muted">Designer</small></h6>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</section>
-
-            <!-- FAQ n Contact Start -->
-            <section class="section bg-light">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <div class="media">
-                                <i data-feather="help-circle" class="fea icon-ex-md text-primary mr-2 mt-1"></i>
-                                <div class="media-body">
-                                    <h5 class="mt-0">How our <span class="text-primary">Landrick</span> work ?</h5>
-                                    <p class="answer text-muted mb-0">Due to its widespread use as filler text for layouts, non-readability is of great importance: human perception is tuned to recognize certain patterns and repetitions in texts.</p>
-                                </div>
-                            </div>
-                        </div><!--end col-->
-
-                        <div class="col-md-6 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
-                            <div class="media">
-                                <i data-feather="help-circle" class="fea icon-ex-md text-primary mr-2 mt-1"></i>
-                                <div class="media-body">
-                                    <h5 class="mt-0"> What is the main process open account ?</h5>
-                                    <p class="answer text-muted mb-0">If the distribution of letters and 'words' is random, the reader will not be distracted from making a neutral judgement on the visual impact</p>
-                                </div>
-                            </div>
-                        </div><!--end col-->
-
-                        <div class="col-md-6 col-12 mt-4 pt-2">
-                            <div class="media">
-                                <i data-feather="help-circle" class="fea icon-ex-md text-primary mr-2 mt-1"></i>
-                                <div class="media-body">
-                                    <h5 class="mt-0"> How to make unlimited data entry ?</h5>
-                                    <p class="answer text-muted mb-0">Furthermore, it is advantageous when the dummy text is relatively realistic so that the layout impression of the final publication is not compromised.</p>
-                                </div>
-                            </div>
-                        </div><!--end col-->
-
-                        <div class="col-md-6 col-12 mt-4 pt-2">
-                            <div class="media">
-                                <i data-feather="help-circle" class="fea icon-ex-md text-primary mr-2 mt-1"></i>
-                                <div class="media-body">
-                                    <h5 class="mt-0"> Is <span class="text-primary">Landrick</span> safer to use with my account ?</h5>
-                                    <p class="answer text-muted mb-0">The most well-known dummy text is the 'Lorem Ipsum', which is said to have originated in the 16th century. Lorem Ipsum is composed in a pseudo-Latin language which more or less corresponds to 'proper' Latin.</p>
-                                </div>
-                            </div>
-                        </div><!--end col-->
-                    </div><!--end row-->
-
-                    <div class="row mt-md-5 pt-md-3 mt-4 pt-2 mt-sm-0 pt-sm-0 justify-content-center">
-                        <div class="col-12 text-center">
-                            <div class="section-title">
-                                <h4 class="title mb-4">Have Question ? Get in touch!</h4>
-                                <p class="text-muted para-desc mx-auto">Start working with <span class="text-primary font-weight-bold">Landrick</span> that can provide everything you need to generate awareness, drive traffic, connect.</p>
-                                <div class="mt-4 pt-2">
-                                    <a href="page-contact-two.html" class="btn btn-primary">Contact us <i class="mdi mdi-arrow-right"></i></a>
-                                </div>
-                            </div>
-                        </div><!--end col-->
-                    </div><!--end row-->
-                </div><!--end container-->
-            </section><!--end section-->
-            <!-- FAQ n Contact End -->
-
+	<!-- FAQ n Contact Start -->
+	<section class="section bg-light">
+		<div class="container">
+			<div class="row mt-sm-0 pt-sm-0 justify-content-center">
+				<div class="col-12 text-center">
+					<div class="section-title">
+						<h4 class="title mb-4">Didn't Find a Suitable Plan?</h4>
+						<p class="text-muted para-desc mx-auto">We can discuss a custom-tailored solution for your business.</p>
+						<div class="mt-4 pt-2">
+							<a href="javascript:void(0)" class="btn btn-primary">Contact Us <i class="mdi mdi-arrow-right"></i></a>
+						</div>
+					</div>
+				</div><!--end col-->
+			</div><!--end row-->
+		</div><!--end container-->
+	</section><!--end section-->
+	<!-- FAQ n Contact End -->
 @endsection
