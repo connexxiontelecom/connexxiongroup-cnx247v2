@@ -135,6 +135,7 @@ Route::get('/signin', 'Auth\LoginController@signin')->name('signin');
 Route::get('/reset-password', 'Auth\LoginController@showResetPasswordForm')->name('reset-password');
 Route::get('/reset-password/{token}', 'Auth\LoginController@setPassword')->name('set-password');
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('/login', 'Auth\LoginController@login')->name('login');
 
 #Payment Gateway
 Route::get('/create-site/{timestamp}/{plan}', 'CNX247\Frontend\PaymentGatewayController@createSite')->name('create-site');
