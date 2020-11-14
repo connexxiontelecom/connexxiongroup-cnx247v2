@@ -57,10 +57,18 @@
                                 <input name="amount" id="amount" required type="number" class="form-control form-control-normal" placeholder="Amount" step="0.01">
                             </div>
                         </div>
+											@if($storage_capacity == 1)
                         <div class="form-group">
                             <label for="">Attachment</label>
                             <input type="file" id="uploadAttachment" class="form-control">
                         </div>
+											@endif
+
+											@if($storage_capacity == 0)
+
+												Drive Capacity Full, Please Upgrade to Attach More Files
+
+											@endif
                         <div class="form-group">
                             <label for="">Description</label>
                             <textarea name="" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>

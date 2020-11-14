@@ -5,6 +5,7 @@ use App\Driver;
 use App\FileModel;
 use App\PostAttachment;
 use App\WorkgroupAttachment;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 use Livewire\Component;
 //use App\Mail\RequisitionVerificationMail;
@@ -23,7 +24,7 @@ use App\User;
 use DatePeriod;
 use Auth;
 use Hash;
-use DB;
+
 
 class Shortcut extends Component
 {
@@ -47,10 +48,11 @@ class Shortcut extends Component
     public $transactionPassword;
     public $userAction; //approved/declined
     public $onlineCounter = 0;
+    public $storage;
     public function render()
     {
 
-			$plan_details = \Illuminate\Support\Facades\DB::table('plan_features')
+			$plan_details = DB::table('plan_features')
 				->where('plan_id', '=', Auth::user()->tenant->plan_id)
 				->first();
 
@@ -60,7 +62,7 @@ class Shortcut extends Component
 				->where('uploaded_by', Auth::user()->id)->sum('size');
 
 			$postAttachments = PostAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
-			//print_r($postAttachments);
+
 			$sum_post_attachment = 0;
 			foreach ($postAttachments as $postAttachment):
 				if(file_exists(public_path('assets\uploads\attachments\\'.$postAttachment->attachment))):
@@ -95,8 +97,17 @@ class Shortcut extends Component
 			endforeach;
 
 
-			$size = $sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size;
+			$size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size)/1000000000;
 
+			if($size >= $storage_size):
+
+				$storage = 0;
+
+			else:
+
+				$storage = 1;
+
+			endif;
 
 
         $now = Carbon::now();
@@ -150,7 +161,8 @@ class Shortcut extends Component
                                 ->where('tenant_id', Auth::user()->tenant_id)
                                 ->orderBy('id', 'DESC')->take(5)->get(),
                                 'events'=>$events,
-																	'storage_capacity' => $storage
+																	'storage_capacity' => $storage,
+
         ]);
     }
 

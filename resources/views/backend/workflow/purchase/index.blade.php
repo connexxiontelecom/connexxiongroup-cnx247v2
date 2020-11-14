@@ -51,8 +51,15 @@
                             </div>
                         </div>
                         <div class="form-group">
+													@if($storage_capacity == 1):
                             <label for="">Attachment</label>
                             <input type="file" id="uploadAttachment" class="form-control">
+														@endif
+
+													@if($storage_capacity == 0)
+														Drive Capacity full, Please Upgrade To Attach File
+
+														@endif
                         </div>
                         <div class="form-group">
                             <label for="">Description</label>
