@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Invoice;
 use App\Receipt;
+use App\Client;
 use App\ReceiptItem;
 use App\InvoiceItem;
 use App\DefaultAccount;
@@ -50,12 +51,13 @@ class PostingController extends Controller
             $receipt->posted = 1;
             $receipt->date_posted = now();
             $receipt->save();
-            $invoiceGL = DefaultAccount::where('handle', 'invoice')->where('tenant_id', Auth::user()->tenant_id)->first();
-            $receiptGL = DefaultAccount::where('handle', 'receipt')->where('tenant_id', Auth::user()->tenant_id)->first();
+            //$invoiceGL = DefaultAccount::where('handle', 'invoice')->where('tenant_id', Auth::user()->tenant_id)->first();
+            $client = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $receipt->client_id)->first();
+            //$receiptGL = DefaultAccount::where('handle', 'receipt')->where('tenant_id', Auth::user()->tenant_id)->first();
             $detail = ReceiptItem::where('receipt_id', $receipt->id)->where('tenant_id', Auth::user()->tenant_id)->get();
             # Post to GL
             $bankGl = [
-                'glcode' => $receiptGL->glcode,
+                'glcode' => $receipt->bank,
                 'posted_by' => Auth::user()->id,
                 'narration' => 'Payment received from ' . $receipt->client->first_name ?? '',
                 'dr_amount' => $receipt->amount,
@@ -69,14 +71,14 @@ class PostingController extends Controller
             ];
             DB::table(Auth::user()->tenant_id . '_gl')->insert($bankGl);
             foreach ($detail as $d) {
-                $items = InvoiceItem::where('invoice_id', $d->invoice_id)->get();
-                foreach($items as $item){
+                //$items = InvoiceItem::where('invoice_id', $d->invoice_id)->get();
+               // foreach($items as $item){
                     $customerGl = [
-                        'glcode' => $invoiceGL->glcode,
+                        'glcode' => $client->glcode,
                         'posted_by' => Auth::user()->id,
-                        'narration' => 'Payment received for '.$item->description,
+                        'narration' => 'Payment received for Invoice #: '.$d->invoice_id,
                         'dr_amount' => 0,
-                        'cr_amount' => ($item->quantity * $item->unit_cost) ?? 0,
+                        'cr_amount' => $d->payment ?? 0,
                         'ref_no' => $receipt->ref_no ?? '',
                         'bank' => 0,
                         'ob' => 0,
@@ -85,7 +87,7 @@ class PostingController extends Controller
                         'transaction_date' => $receipt->issue_date
                     ];
                     DB::table(Auth::user()->tenant_id . '_gl')->insert($customerGl);
-                }
+                //}
             }
             session()->flash("success", "<strong>Success!</strong> Receipt posted.");
             return redirect()->route('receipt-list');

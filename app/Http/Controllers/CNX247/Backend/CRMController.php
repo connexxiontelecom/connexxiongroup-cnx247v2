@@ -23,6 +23,7 @@ use App\Feedback;
 use App\ProductCategory;
 use App\DefaultAccount;
 use App\Policy;
+use App\Bank;
 use Auth;
 use Image;
 use DB;
@@ -370,7 +371,9 @@ class CRMController extends Controller
         $invoice = Invoice::where('tenant_id', Auth::user()->tenant_id)->where('slug', $slug)->first();
         if(!empty($invoice) ){
             $total = 0;
-            $charts = DB::table(Auth::user()->tenant_id.'_coa')->orderBy('glcode', 'ASC')->get();
+            $charts = DB::table(Auth::user()->tenant_id.'_coa as c')
+                        ->join('banks as b', 'b.bank_gl_code', '=', 'c.glcode')
+                        ->get();
             $pending_invoices = Invoice::where('tenant_id', Auth::user()->tenant_id)
                                         ->where('status', 0)->where('client_id', $invoice->client_id)->get();
             return view('backend.crm.clients.receive-payment', [
@@ -389,7 +392,8 @@ class CRMController extends Controller
          $this->validate($request,[
             'payment_date'=>'required|date',
             'payment_method'=>'required',
-            'reference_no'=>'required'
+            'reference_no'=>'required',
+            'bank'=>'required'
         ]);
         $totalAmount = 0;
         if(!empty($request->payment)){
@@ -415,6 +419,7 @@ class CRMController extends Controller
         $receipt->payment_type = $request->payment_method;
         $receipt->ref_no = $request->reference_no;
         $receipt->memo = $request->memo;
+        $receipt->bank = $request->bank;
         $receipt->slug = substr(sha1(time()), 28,40);
         $receipt->save();
         $receiptId = $receipt->id;
@@ -426,6 +431,13 @@ class CRMController extends Controller
             $detail->receipt_id = $receiptId;
             $detail->payment = $request->payment[$j];
             $detail->save();
+            #Update invoice
+            $invoice = Invoice::where('id', $request->invoices[$j])->where('tenant_id', Auth::user()->tenant_id)->first();
+            $invoice->paid_amount += $request->payment[$j];
+            if($invoice->paid_amount >= $invoice->total){
+                $invoice->status = 1; //payment complete
+            }
+            $invoice->save();
             session()->flash("success", "<strong>Success!</strong> Receipt saved!");
             return redirect()->route('receipt-list');
         }
@@ -541,12 +553,12 @@ class CRMController extends Controller
             $totalAmount += $request->payment[$i];
         }
         $client = Deal::where('tenant_id', Auth::user()->tenant_id)->where('client_id', $request->clientId)->first();
+        $clientObj = Client::where('id',$request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
         if(empty($client)){
             $deal = new Deal;
             $deal->client_id = $request->clientId;
             $deal->tenant_id = Auth::user()->tenant_id;
             $deal->converted_by = Auth::user()->id;
-            //$lead->slug = substr(sha1(time()), 23,40);
             $deal->save();
         }
         #Generate receipt
@@ -828,5 +840,10 @@ class CRMController extends Controller
         $feed->favourite = $request->value;
         $feed->save();
         return response()->json(['message'=>'Success! Feedback updated.']);
+    }
+
+    public function getClientGlcode(Request $request){
+        $client = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->id)->first();
+        return response()->json(['client'=>$client], 200);
     }
 }

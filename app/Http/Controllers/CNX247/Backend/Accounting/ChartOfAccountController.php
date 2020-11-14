@@ -290,4 +290,47 @@ class ChartOfAccountController extends Controller
         return back();
     }
 
+    public function bank()
+    {
+        $tenant_id = Auth::user()->tenant_id;
+        $bank_details = DB::table($tenant_id."_coa")->select()->where('bank', '=', 1)->get();
+        $data['banks'] = DB::table('banks')->select()->where('tenant_id', '=', $tenant_id)->get();
+        $data['bank_details'] = $bank_details;
+        return view('backend.accounting.bank.index', $data);
+    }
+
+    public function edit(Request $request)
+    {
+        if($request->edit_mode == 1){
+            $bank = Bank::find($request->bank_id);
+
+            //print_r($bank);
+
+            $bank->bank_gl_code = $request->bank_gl_code;
+            $bank->save();
+
+            //session()->flash("success", "<strong>Success! </strong> Changes saved.");
+            return Redirect::back()->withErrors(['success', '<strong>Success! </strong> Changes saved.']);
+          //return response()->json(['message'=>'Success! New budget profile registered.'],200);
+//            $this->bank_code = '';
+//            $this->bank_name = '';
+//            $this->getContent();
+//            $this->edit_mode = 0;
+        }else{
+
+            echo "i got here";
+//            $bank = new Bank;
+//            $bank->bank_gl_code = $this->bank_gl_code;
+//            $bank->bank_account_number = $this->bank_account_number;
+//            $bank->bank_name = $this->bank_name;
+//            $bank->bank_branch = $this->bank_branch;
+//            $bank->tenant_id = Auth::user()->tenant_id;
+//            $bank->save();
+//            session()->flash("success", "<strong>Success! </strong> New bank registered.");
+//            $this->bank_code = '';
+//            $this->bank_name = '';
+//            $this->getContent();
+        }
+    }
+
 }

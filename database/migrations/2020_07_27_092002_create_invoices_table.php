@@ -21,7 +21,7 @@ class CreateInvoicesTable extends Migration
             $table->integer('invoice_no');
             $table->tinyInteger('tax_inclusive')->nullable(); //1=yes; 0=no
             $table->dateTime('issue_date');
-            $table->dateTime('due_date');
+            $table->dateTime('due_date')->nullable();
             $table->double('total');
             $table->double('sub_total');
             $table->double('tax_rate')->nullable();

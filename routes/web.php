@@ -216,6 +216,7 @@ Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-b
         Route::get('/hr/idea-box', 'CNX247\Backend\HRController@ideaBox')->name('hr-ideabox');
 #Customer Relationship Management (CRM)
 Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name('crm-dashboard');
+Route::post('/crm/client/client-account', 'CNX247\Backend\CRMController@getClientGlcode');
 #Leads
     Route::get('/crm/leads', 'CNX247\Backend\CRMController@leads')->name('leads');
     Route::get('/crm/lead/view/{slug}', 'CNX247\Backend\CRMController@viewLead')->name('view-lead');
@@ -342,6 +343,12 @@ Route::post('/project/update', 'CNX247\Backend\ProjectController@updateProject')
 Route::post('/project/milestone', 'CNX247\Backend\ProjectController@createProjectMilestone');
 Route::get('/project/invoice/{slug}', 'CNX247\Backend\ProjectController@projectInvoice')->name('project-invoice');
 Route::post('/project/invoice', 'CNX247\Backend\ProjectController@storeProjectInvoice')->name('store-project-invoice');
+#Receipt
+Route::get('/project/receipt/{slug}', 'CNX247\Backend\ProjectController@projectReceipt')->name('project-receipt');
+Route::post('/project/receipt', 'CNX247\Backend\ProjectController@storeProjectReceipt')->name('store-project-receipt');
+#Bill
+Route::get('/project/bill/{slug}', 'CNX247\Backend\ProjectController@projectBill')->name('project-bill');
+Route::post('/project/bill', 'CNX247\Backend\ProjectController@storeProjectBill')->name('store-project-bill');
 
 Route::post('/add-project-responsible', 'CNX247\Backend\ProjectController@addResponsiblePerson')->name('add-project-responsible');
 Route::post('/add-project-observers', 'CNX247\Backend\ProjectController@addObserver')->name('add-project-observers');
@@ -495,6 +502,9 @@ Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompany
     Route::post('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@budgetProfile');
     Route::get('/budget-setup', 'CNX247\Backend\Accounting\BudgetController@budgetSetup')->name('budget-setup');
     Route::post('/budget-setup', 'CNX247\Backend\Accounting\BudgetController@storeBudgetSetup');
+    #Bank setup
+    #Bank routes
+    Route::get('/account/banks', 'CNX247\Backend\Accounting\ChartOfAccountController@bank')->name('bank-accounts');
 
 #QuickBooks routes
 //Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@analyzeBusiness');

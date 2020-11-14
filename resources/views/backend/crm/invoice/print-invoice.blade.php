@@ -82,7 +82,7 @@
                             </tr>
                             <tr>
                                 <th>Due Date :</th>
-                                <td>{{date('d F, Y', strtotime($invoice->due_date))}}</td>
+                                <td>{{!is_null($invoice->due_date) ? date('d F, Y', strtotime($invoice->due_date)) : '-'}}</td>
                             </tr>
                             <tr>
                                 <th>Status :</th>

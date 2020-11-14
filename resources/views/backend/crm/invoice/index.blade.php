@@ -153,8 +153,9 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <ul class="list list-unstyled text-left">
-                                            <li>Amount Due: {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}</li>
-                                            <li>Amount Paid: <span class="text-semibold">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->paid_amount,2)}}</span></li>
+                                            <li>Total: {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}</li>
+                                            <li>Paid: <span class="text-semibold">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->paid_amount,2)}}</span></li>
+                                            <li>Balance: <span class="text-semibold">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total - $invoice->paid_amount,2)}}</span></li>
                                         </ul>
                                     </div>
                                 </div>

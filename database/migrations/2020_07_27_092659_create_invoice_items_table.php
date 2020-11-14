@@ -19,10 +19,11 @@ class CreateInvoiceItemsTable extends Migration
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('product_id');
-            $table->string('description');
-            $table->integer('quantity');
-            $table->double('unit_cost');
+            $table->string('description')->nullable();
+            $table->integer('quantity')->nullable();
+            $table->double('unit_cost')->nullable();
             $table->double('total');
+            $table->unsignedBigInteger('glcode')->nullable();
             $table->timestamps();
         });
     }

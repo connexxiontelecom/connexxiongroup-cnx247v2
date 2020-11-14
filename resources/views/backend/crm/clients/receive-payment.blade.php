@@ -115,6 +115,24 @@ Receive Payment
                                 @enderror
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Bank.</label>
+                                <select name="bank" id="bank" class="form-control">
+                                    <option selected disabled>Select bank</option>
+                                    @foreach ($charts as $item)
+                                    <option value="{{$item->glcode}}">{{$item->bank_name ?? ''}}</option>
+
+                                    @endforeach
+                                </select>
+                                @error('bank')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,7 +147,7 @@ Receive Payment
                                     <th>Description</th>
                                     <th>Due Date</th>
                                     <th>Original Amount</th>
-                                    <th>Opening Balance</th>
+                                    <th>Balance</th>
                                     <th>Payment</th>
                                 </tr>
                             </thead>
@@ -139,7 +157,7 @@ Receive Payment
                                         <td>
                                             <div class="checkbox-fade fade-in-primary">
                                                 <label>
-                                                    <input type="checkbox" value="" data-amount="{{ number_format((float)$item->total ?? 0 - $item->cash, 2, '.', '')}}" class="select-invoice">
+                                                    <input type="checkbox" value="" data-amount="{{ number_format((float)$item->total - $item->paid_amount, 2, '.', '')}}" class="select-invoice">
                                                     <span class="cr">
                                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                     </span>
@@ -160,7 +178,7 @@ Receive Payment
                                             <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total,2)}}</p>
                                         </td>
                                         <td>
-                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total ?? 0 - $item->cash ?? 0,2)}}</p>
+                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total - $item->paid_amount,2)}}</p>
                                         </td>
                                         <td><input type="number" step="0.01" class="form-control payment" name="payment[]" style="width: 120px;"></td>
                                     </tr>

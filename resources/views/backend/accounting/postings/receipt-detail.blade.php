@@ -82,9 +82,6 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Ref. Number <span>#{{$receipt->ref_no}}</span></h6>
-                    <h6 class="text-uppercase text-primary">Balance Due :
-                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->total - $receipt->cash,2)}}</span>
-                    </h6>
                 </div>
             </div>
             <div class="row">

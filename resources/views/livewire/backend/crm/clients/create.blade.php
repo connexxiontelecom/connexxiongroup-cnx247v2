@@ -21,16 +21,19 @@
                     <span>All fields marked with <sup class="text-danger">*</sup> are compulsory.</span>
                     <form action="" wire:submit.prevent="addNewClient" class="mt-3">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-12 col-sm-12">
                                 <div class="form-group">
-                                    <label for="">Title <sup class="text-danger">*</sup> </label>
-                                    <input type="text" placeholder="Title" wire:model.debounce.900000ms="title" class="form-control">
-                                    @error('title')
+                                    <label for="">Company Name</label>
+                                    <input type="text" placeholder="Company Name" wire:model.debounce.900000ms="company_name" class="form-control">
+                                    @error('company_name')
                                         <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                        </div>
+                        <h4 class="sub-title mt-3">Contact Person</h4>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">First Name <sup class="text-danger">*</sup> </label>
                                     <input type="text" class="form-control" placeholder="First Name" wire:model="first_name">
@@ -39,7 +42,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Surname <sup class="text-danger">*</sup> </label>
                                     <input type="text" class="form-control" placeholder="Surname" wire:model="surname">
@@ -48,32 +51,35 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Suffix </label>
-                                    <input type="text" class="form-control" placeholder="Suffix" wire:model="suffix">
-                                    @error('suffix')
+                                    <label for="">Position </label>
+                                    <input type="text" class="form-control" placeholder="Position" wire:model="position">
+                                    @error('position')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                 @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="">Mobile No. <sup class="text-danger">*</sup> </label>
                                 <input type="text" class="form-control" placeholder="Mobile No." wire:model="mobile_no">
                                 @error('mobile_no')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                 @enderror
                             </div>
-                            <div class="col-md-4">
+                        </div>
+                        <div class="row mt-3">
+
+                            <div class="col-md-6">
                                 <label for="">Email Address  <sup class="text-danger">*</sup> </label>
                                 <input type="text" class="form-control" placeholder="Email Address " wire:model="email">
                                 @error('email')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                 @enderror
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="">Website</label>
                                 <input type="text" class="form-control" placeholder="Website" wire:model="website">
                                 @error('website')

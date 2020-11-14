@@ -4,8 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectDetail extends Model
+class ProjectInvoiceDetail extends Model
 {
+    //
     public function getCreatedBy(){
         return $this->belongsTo(User::class, 'created_by');
     }

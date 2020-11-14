@@ -364,6 +364,7 @@
 </script>
 @stack('chat-script')
 @stack('clocker-script')
+@stack('notification-script')
     @yield('extra-scripts')
 @livewireScripts
 

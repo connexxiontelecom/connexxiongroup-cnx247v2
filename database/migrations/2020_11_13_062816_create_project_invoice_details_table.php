@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProjectDetailsTable extends Migration
+class CreateProjectInvoiceDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateProjectDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_details', function (Blueprint $table) {
+        Schema::create('project_invoice_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('created_by');
@@ -24,7 +24,7 @@ class CreateProjectDetailsTable extends Migration
             $table->double('amount')->nullable();
             $table->unsignedBigInteger('glcode');
             $table->string('slug');
-            $table->integer('invoice_no')->nullable();
+            $table->unsignedBigInteger('invoice_id')->nullable();
             $table->tinyInteger('status')->default(0)->comment('0=not approved, 1=approved, 2=declined');
             $table->tinyInteger('posted')->default(0)->comment('0=not posted, 1=posted');
             $table->dateTime('date_posted')->nullable();
@@ -40,6 +40,6 @@ class CreateProjectDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_details');
+        Schema::dropIfExists('project_invoice_details');
     }
 }

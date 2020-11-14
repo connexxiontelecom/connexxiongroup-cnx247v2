@@ -9,11 +9,16 @@ use App\Participant;
 use App\Post;
 use App\PostLike;
 use App\PostComment;
+use App\Invoice;
+use App\InvoiceItem;
 use App\PostRevision;
 use App\PostAttachment;
 use App\Milestone;
+use App\Client;
 use App\User;
+use DB;
 use Auth;
+use Schema;
 
 class ViewProject extends Component
 {
@@ -25,6 +30,8 @@ class ViewProject extends Component
     public $attachments;
     public $milestones;
     public $users;
+    public $client;
+    //public $invoices = [];
 
 
     public function mount($url = ''){
@@ -34,10 +41,14 @@ class ViewProject extends Component
 
     public function render()
     {
-        return view('livewire.backend.project.view-project');
+        $pro = Post::where('post_type', 'project')->where('post_url', $this->link)
+                        ->where('tenant_id',Auth::user()->tenant_id)->first();
+        $invoices = Invoice::where('tenant_id', Auth::user()->tenant_id)
+                                        ->where('project_id', $pro->id)->get();
+        return view('livewire.backend.project.view-project', ['invoices'=>$invoices]);
     }
 
-        /*
+    /*
     * Comment on post
     */
     public function leaveCommentBtn($id){
@@ -182,5 +193,50 @@ class ViewProject extends Component
         $this->getContent();
         return back();
         //return redirect()->route('view-project', ["url" => $request->url]);
+    }
+
+    public function approveInvoice($id, $client_id){
+        $project = Invoice::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $details = InvoiceItem::where('invoice_id', $project->id)->where('tenant_id', Auth::user()->tenant_id)
+                                        ->get();
+        $client = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $client_id)->first();
+        $project->posted = 1;
+        $project->post_date = now();
+        $project->posted_by = Auth::user()->id;
+        $project->status = 1;
+        $project->save();
+        if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+            $clientGl = [
+                'glcode'=>$client->glcode,
+                'posted_by'=>Auth::user()->id,
+                'narration'=>'Invoice generation for '.$client->company_name,
+                'dr_amount'=>$project->total,
+                'cr_amount'=>0,
+                'ref_no'=>strtoupper(substr(sha1(time()), 35,40).$project->invoice_no),
+                'bank'=>0,
+                'transaction_date'=>now(),
+                'ob'=>0,
+                'created_at'=>$project->invoice_date
+            ];
+            #Register customer in GL table
+             DB::table(Auth::user()->tenant_id.'_gl')->insert($clientGl);
+             #Services
+             foreach($details as $d){
+                $serivceGl = [
+                    'glcode'=>$d->glcode,
+                    'posted_by'=>Auth::user()->id,
+                    'narration'=>'Invoice generation for '.$client->company_name.'. Service: '.$d->description,
+                    'dr_amount'=>0,
+                    'cr_amount'=>$d->total,
+                    'ref_no'=>strtoupper(substr(sha1(time()), 35,40).$project->invoice_no),
+                    'bank'=>0,
+                    'transaction_date'=>now(),
+                    'ob'=>0,
+                    'created_at'=>$project->issue_date
+                ];
+                #Register customer in GL table
+                 DB::table(Auth::user()->tenant_id.'_gl')->insert($serivceGl);
+             }
+        }
     }
 }

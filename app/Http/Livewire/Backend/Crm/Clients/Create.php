@@ -11,6 +11,7 @@ class Create extends Component
 {
     public $title, $first_name, $surname, $suffix, $mobile_no, $email, $website, $street_1, $street_2;
     public $country, $state, $city, $postal_code, $note;
+    public $company_name, $position;
 
     public function render()
     {
@@ -29,16 +30,17 @@ class Create extends Component
             'street_1'=>'required',
             'email'=>'required|email',
             'country'=>'required',
+            'company_name'=>'required',
             'city'=>'required'
          ], $messages);
         $client = new Client;
         $client->owner = Auth::user()->id;
         $client->assigned_to = Auth::user()->id;
-        $client->title = $this->title;
+        $client->company_name = $this->company_name;
         $client->first_name = $this->first_name;
         $client->surname = $this->surname;
         $client->mobile_no = $this->mobile_no;
-        $client->suffix = $this->suffix ?? '';
+        $client->position = $this->position ?? '';
         $client->website = $this->website ?? '';
         $client->street_1 = $this->street_1;
         $client->street_2 = $this->street_2 ?? '';

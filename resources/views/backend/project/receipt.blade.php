@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Project Invoice
+    Project Receipt
 @endsection
 
 @section('extra-styles')
@@ -39,7 +39,7 @@
             </div>
         </div>
    @endif
-   <form action="{{route('store-project-invoice')}}" method="post">
+   <form action="{{route('store-project-receipt')}}" method="post">
        @csrf
     <div class="card">
         <div class="row invoice-contact">
@@ -75,54 +75,57 @@
         <div class="card-block">
             <div class="row invoive-info">
                 <div class="col-md-4 col-xs-12 invoice-client-info">
-                    <h6>Client Information :</h6>
-                    <label for="">Client</label>
-                    <select name="client" id="client" class="form-control js-example-basic-single select-client">
-                        <option selected disabled>Select client</option>
-                        @foreach ($clients as $client)
-                            <option value="{{$client->id}}">{{$client->company_name ?? ''}}</option>
-                        @endforeach
-                    </select>
+                    <h6>Receive From:</h6>
+                    <p><strong class="m-0">{{$client->company_name}}</strong></p>
+                    <p class="m-0 m-t-10">{{$client->street_1 ?? ''}} {{$client->postal_code ?? ''}} {{$client->city ?? ''}}</p>
+
                     @error('client')
                         <i class="text-danger mt-3 d-flex">{{$message}}</i>
                     @enderror
                 </div>
                 <div class="col-md-4 col-sm-6">
-                    <h6 class="m-b-20">Invoice Number <span>#{{$invoice_no}}</span></h6>
-                    <div class="form-group">
-                        <label for="">Date</label>
-                        <input type="date" name="date" placeholder="Date" class="form-control">
-                        @error('date')
-                            <i class="text-danger mt-2">{{$message}}</i>
-                        @enderror
-                    </div>
+                    <h6 class="m-b-20">Receipt Number <span>#{{$receipt_no}}</span></h6>
+                    <h6 class="m-b-20">Amount Due: <span>#{{$invoices->sum('total')}}</span></h6>
                     <input type="hidden" value="{{$status}}" name="status">
                     <input type="hidden" name="ref_no" value="{{$project->id}}">
-                    <input type="hidden" name="invoice_no" value="{{$invoice_no}}">
+                    <input type="hidden" name="receipt_no" value="{{$receipt_no}}">
+                    <input type="hidden" name="client" value="{{$client->id}}">
                 </div>
-
-                <div class="col-md-4 col-sm-6 client-account-wrapper">
-                    <h6 class="m-b-20">Client Account</h6>
-                    <div class="form-group">
-                        <label for="">Client Account <sup class="text-danger">*</sup></label>
-                        <select name="client_account" id="client_account" class="form-control js-example-basic-single">
-                            <option selected disabled>Select account</option>
-                            @foreach ($accounts as $account)
-                                <option value="{{$account->glcode}}">{{$account->account_name ?? ''}} - ({{$account->glcode ?? ''}})</option>
-                            @endforeach
-                        </select>
-                        @error('client_account')
-                            <i class="text-danger mt-4 d-flex">{{$message}}</i>
-                        @enderror
-                        <input type="hidden" name="setAccount" id="setAccount" value="{{old('setAccount')}}">
-                        <input type="hidden" value="{{$status}}" name="status">
-                        @error('client_account')
-                            <i class="text-danger mt-3 d-flex">{{$message}}</i>
-                        @enderror
+                <div class="col-md-12 col-sm-12">
+                    <div class="row mt-3">
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Payment Date</label>
+                                <input type="date" name="payment_date" placeholder="Date" class="form-control">
+                                @error('payment_date')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Payment Method</label>
+                                <select name="payment_method" class="form-control">
+                                    <option value="1">Cash</option>
+                                    <option value="2">Bank Transfer</option>
+                                    <option value="3">Cheque</option>
+                                </select>
+                                @error('payment_method')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Reference No.</label>
+                                <input type="text" placeholder="Reference No." class="form-control" name="reference_no">
+                                @error('reference_no')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -131,53 +134,41 @@
                             <thead>
                                 <tr class="thead-default">
                                     <th>Description</th>
-                                    <th>Account</th>
                                     <th>Amount</th>
-                                    <th class="text-danger">Action</th>
+                                    <th>Payment</th>
                                 </tr>
                             </thead>
                             <tbody id="products">
+                                @foreach ($invoices as $invoice)
                                 <tr class="item">
                                     <td>
                                         <div class="form-group">
-                                            <textarea name="description[]" placeholder="Description" value="{{old('description[]')}}" style="resize: none;" class=" form-control"></textarea>
-                                            @error('description')
-                                                <i class="text-danger mt-2">{{$message}}</i>
-                                            @enderror
+                                            <p>
+                                                <a href="javascript:void(0);">Invoice # {{$invoice->invoice_no ?? ''}}</a>
+                                                <input type="hidden" name="invoices[]" value="{{$invoice->id}}">
+                                                <input type="hidden" name="accounts[]" value="{{$invoice->glcode}}">
+
+                                            </p>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="form-group">
-                                            <select name="accounts[]" class="form-control js-example-basic-single select-product" id="accounts">
-                                                <option disabled selected>Select account</option>
-                                                @foreach ($accounts as $item)
-                                                    <option value="{{$item->glcode}}">{{$item->account_name ?? ''}} - ({{$item->glcode}})</option>
-                                                @endforeach
-                                            </select>
-                                            @error('accounts')
-                                                <i class="text-danger mt-4 d-flex">{{$message}}</i>
-                                            @enderror
+                                            <input type="number" class="form-control"  name="amount[]" step="0.01" placeholder="Amount" readonly value="{{$invoice->total}}">
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Amount" step="0.01" name="amount[]" class="form-control aggregate">
-                                        @error('amount')
+                                        <input type="number" placeholder="Payment" step="0.01" name="payment[]" class="form-control aggregate">
+                                        @error('payment')
                                             <i class="text-danger mt-2">{{$message}}</i>
                                         @enderror
                                     </td>
-                                    <td>
-                                        <i class="ti-trash text-danger remove-line" style="cursor: pointer;"></i>
-                                    </td>
 
                                 </tr>
+
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-12 col-sm-12 col-lg-12">
-                    <button class="btn btn-mini btn-primary add-line" type="button"> <i class="ti-plus mr-2"></i> Add Line</button>
                 </div>
             </div>
             <div class="row">
@@ -200,7 +191,7 @@
             </div>
             <div class="row text-center">
                 <div class="col-sm-12 invoice-btn-group text-center">
-                    <button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Submit Invoice</button>
+                    <button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Submit Receipt</button>
                     <a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
                 </div>
             </div>
@@ -219,13 +210,6 @@
 <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
 <script>
     $(document).ready(function(){
-        if($('#setAccount') == 1){
-                $('.client-account-wrapper').show();
-                $('#setAccount').val(1);
-            }else{
-                $('.client-account-wrapper').hide();
-                $('#setAccount').val(0);
-            }
          $(".select-product").select2({
             placeholder: "Select account"
         });
@@ -255,19 +239,6 @@
             setTotal($(this).val());
         });
 
-        $(document).on('change', '.select-client', function(e){
-            e.preventDefault();
-           axios.post('/crm/client/client-account',{id:$(this).val()})
-           .then(response=>{
-               if(response.data.client.glcode == null){
-                $('.client-account-wrapper').show();
-                $('#setAccount').val(1);
-               }else{
-                $('.client-account-wrapper').hide();
-                $('#setAccount').val(0);
-               }
-           });
-        });
     function setTotal(val){
         var sum = 0;
         $(".payment").each(function(){

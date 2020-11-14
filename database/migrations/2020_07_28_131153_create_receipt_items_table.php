@@ -20,6 +20,7 @@ class CreateReceiptItemsTable extends Migration
             $table->unsignedBigInteger('tenant_id');
             $table->string('description');
             $table->double('payment');
+            $table->unsignedBigInteger('glcode')->nullable();
             $table->timestamps();
         });
     }

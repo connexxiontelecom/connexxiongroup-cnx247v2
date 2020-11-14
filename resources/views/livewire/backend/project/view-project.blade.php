@@ -410,6 +410,8 @@
                             <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
                             <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
                             <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
+                            <a href="{{ route('project-receipt', $project->post_url) }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-receipt "></i>  Receipt </a>
+                            <a href="{{ route('project-bill', $project->post_url) }}" class="btn btn-info btn-warning btn-round text-white"><i class="icofont icofont-money-bag "></i>  Bill </a>
                         </div>
                     </div>
                     <div class="nav-item nav-grid">
@@ -659,12 +661,11 @@
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Description</th>
-                                            <th>Account</th>
+                                            <th>Invoice No.</th>
+                                            <th>Client</th>
                                             <th>Amount</th>
-                                            <th>Status</th>
                                             <th>Created By</th>
-                                            <th>Posted By</th>
+                                            <th>Status</th>
                                             <th>Date</th>
                                         </tr>
                                         </thead>
@@ -672,17 +673,95 @@
                                             @php
                                                 $serial = 1;
                                             @endphp
+                                            @foreach ($invoices as $invoice)
+                                                    <tr>
+                                                        <td>{{$serial++}}</td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" data-target="#invoiceModal_{{$invoice->id}}" data-toggle="modal" class="project-invoice">Invoice No. {{$invoice->invoice_no ?? ''}}</a>
+                                                                <div class="modal fade" id="invoiceModal_{{$invoice->id}}" tabindex="-1" role="dialog">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header bg-primary">
+                                                                                <h6 class="modal-title text-uppercase">Invoice Detail</h6>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" class="text-white">&times;</span>
+                                                                            </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-6 col-sm-6">
+                                                                                        <div class="form-group">
+                                                                                            <p><strong>Client</strong></p>
+                                                                                            <p>{{$invoice->getClient->company_name ?? ''}}</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12 col-sm-12 col-lg">
+                                                                                        <table class="table table-bordered">
+                                                                                            <thead>
+                                                                                                <th>#</th>
+                                                                                                <th>Description</th>
+                                                                                                <th>Account</th>
+                                                                                                <th>Amount</th>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                @foreach ($invoice->invoiceItem as $item)
+                                                                                                    <tr>
+                                                                                                        <td>#</td>
+                                                                                                        <td>{{$item->description ?? ''}}</td>
+                                                                                                        <td>{{$item->glcode ?? ''}}</td>
+                                                                                                        <td>{{Auth::user()->tenant->currency->symbol ??'N'}}{{number_format($item->total)}}</td>
+                                                                                                    </tr>
+                                                                                                @endforeach
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer d-flex justify-content-center">
+                                                                                <div class="btn-group">
+                                                                                    <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>
+                                                                                    <button type="button" class="btn btn-info waves-effect btn-mini"><i class="mr-2 ti-printer"></i>Print</button>
+                                                                                    <button type="button" class="btn btn-secondary waves-effect btn-mini"><i class="mr-2 ti-email"></i>Email</button>
+                                                                                    @if ($invoice->status == 0)
+                                                                                        <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" wire:click="approveInvoice({{$invoice->id}},{{$invoice->client_id}})"><i class="mr-2 ti-check"></i>Approve</button>
+                                                                                    @endif
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                        </td>
+                                                        <td>{{$invoice->getClient->company_name ?? ''}}</td>
+                                                        <td>
+                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}
+                                                        </td>
+                                                        <td>
+                                                            {{$invoice->converter->first_name ?? ''}} {{$invoice->converter->surname ?? ''}}
+                                                        </td>
+                                                        <td>
+                                                            @if ($invoice->status == 0)
+                                                                <label class="label label-warning">Pending</label>
+                                                            @else
+                                                                <label for="" class="label label-success">Approved</label>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            {{date('d F, Y', strtotime($invoice->created_at))}}
+                                                        </td>
+                                                    </tr>
+                                            @endforeach
 
                                         </tbody>
                                         <tfoot>
                                         <tr>
                                             <th>#</th>
-                                            <th>Description</th>
-                                            <th>Account</th>
+                                            <th>Invoice No.</th>
+                                            <th>Client</th>
                                             <th>Amount</th>
-                                            <th>Status</th>
                                             <th>Created By</th>
-                                            <th>Posted By</th>
+                                            <th>Status</th>
                                             <th>Date</th>
                                         </tr>
                                         </tfoot>
@@ -711,6 +790,11 @@
         $('#add').on('click', function(){
             $("#AddRespPersonsContainer").css("display","none");
             $('_addResponsiblePerson').submit();
+        });
+
+        $(document).on('click', '.project-invoice', function(e){
+            e.preventDefault();
+
         });
 
 
