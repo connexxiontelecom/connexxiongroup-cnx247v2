@@ -73,45 +73,69 @@
             </div>
         </div>
         <div class="card-block">
-            <div class="row invoive-info">
-                <div class="col-md-4 col-xs-12 invoice-client-info">
-                    <h6>Client Information :</h6>
-                    <label for="">Client</label>
-                    <select name="client" id="client" class="form-control js-example-basic-single select-client">
-                        <option selected disabled>Select client</option>
-                        @foreach ($clients as $client)
-                            <option value="{{$client->id}}">{{$client->company_name ?? ''}}</option>
-                        @endforeach
-                    </select>
-                    @error('client')
-                        <i class="text-danger mt-3 d-flex">{{$message}}</i>
-                    @enderror
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 invoice-client-info">
+                            <h6>Client Information :</h6>
+                            <label for="">Client <sup class="text-danger">*</sup></label>
+                            <select name="client" id="client" class="form-control js-example-basic-single select-client">
+                                <option selected disabled>Select client</option>
+                                @foreach ($clients as $client)
+                                    <option value="{{$client->id}}">{{$client->company_name ?? ''}}</option>
+                                @endforeach
+                            </select>
+                            @error('client')
+                                <i class="text-danger mt-3 d-flex">{{$message}}</i>
+                            @enderror
+                        </div>
+                        @if (count($budgets) > 0)
+                        <input type="hidden" name="setBudet" value="1">
+                        <div class="col-md-12 col-xs-12 invoice-client-info mt-4">
+                            <label for="">Budget <sup class="text-danger">*</sup></label>
+                            <select name="budget" id="budget" class="form-control js-example-basic-single select-client">
+                                <option selected disabled>Select budget</option>
+                                @foreach ($budgets as $budget)
+                                    <option value="{{$budget->id}}">{{$budget->budget_title ?? ''}}</option>
+                                @endforeach
+                            </select>
+                            @error('budget')
+                                <i class="text-danger mt-3 d-flex">{{$message}}</i>
+                            @enderror
+                        </div>
+                        @else
+                        <input type="hidden" name="setBudget" value="0">
+                        @endif
+                    </div>
                 </div>
-                <div class="col-md-4 col-sm-6">
-                    <h6 class="m-b-20">Invoice Number <span>#{{$invoice_no}}</span></h6>
-                    <div class="form-group">
-                        <label for="">Issue Date</label>
-                        <input type="date" name="date" placeholder="Date" class="form-control">
-                        @error('date')
-                            <i class="text-danger mt-2">{{$message}}</i>
-                        @enderror
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <h6 class="m-b-20">Invoice Number <span>#{{$invoice_no}}</span></h6>
+                            <div class="form-group">
+                                <label for="">Issue Date</label>
+                                <input type="date" name="date" placeholder="Date" class="form-control">
+                                @error('date')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="">Due Date</label>
+                                <input type="date" name="due_date" class="form-control" placeholder="Due Date">
+                                @error('due_date')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                            <input type="hidden" value="{{$status}}" name="status">
+                            <input type="hidden" name="ref_no" value="{{$project->id}}">
+                            <input type="hidden" name="invoice_no" value="{{$invoice_no}}">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="">Due Date</label>
-                        <input type="date" name="due_date" class="form-control" placeholder="Due Date">
-                        @error('due_date')
-                            <i class="text-danger mt-2">{{$message}}</i>
-                        @enderror
-                    </div>
-                    <input type="hidden" value="{{$status}}" name="status">
-                    <input type="hidden" name="ref_no" value="{{$project->id}}">
-                    <input type="hidden" name="invoice_no" value="{{$invoice_no}}">
                 </div>
 
-                <div class="col-md-4 col-sm-6 client-account-wrapper">
-                    <h6 class="m-b-20">Client Account</h6>
+                <div class="col-md-4 col-sm-6 client-account-wrapper mb-3">
                     <div class="form-group">
-                        <label for="">Client Account <sup class="text-danger">*</sup></label>
+                        <label for="">Client GL Code <sup class="text-danger">*</sup></label>
                         <select name="client_account" id="client_account" class="form-control js-example-basic-single">
                             <option selected disabled>Select account</option>
                             @foreach ($accounts as $account)
@@ -217,7 +241,27 @@
 </div>
 @endsection
 @section('dialog-section')
-
+<div class="modal fade" id="budgetModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h6 class="modal-title">Project Budget</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h1>hello there</h1>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Close</button>
+                    <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitComplaintBtn"><i class="mr-2 ti-check"></i>Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('extra-scripts')
 <script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
@@ -260,6 +304,11 @@
         $('.aggregate').on('change', function(e){
             e.preventDefault();
             setTotal($(this).val());
+        });
+
+        $(document).on('change', '#budget', function(e){
+            e.preventDefault();
+            $('#budgetModal').modal('show');
         });
 
         $(document).on('change', '.select-client', function(e){

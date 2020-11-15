@@ -8,6 +8,7 @@ use App\Notifications\NewPostNotification;
 use App\Post;
 use App\ResponsiblePerson;
 use App\ProjectBudget;
+use App\BudgetFinance;
 use App\Invoice;
 use App\InvoiceItem;
 use App\Receipt;
@@ -244,7 +245,6 @@ class ProjectController extends Controller
     * update project
     */
     public function updateProject(Request $request){
-        //return dd($request->all());
         $this->validate($request,[
             'project_name'=>'required',
             'project_description'=>'required',
@@ -438,41 +438,44 @@ class ProjectController extends Controller
     public function projectInvoice($slug){
         $status = null;
         $project = Post::where('post_url', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
-        $clients = Client::where('tenant_id', Auth::user()->tenant_id)->get();
         $invoice_no = null;
-        $invoice = Invoice::where('tenant_id', Auth::user()->tenant_id)
-                                ->where('project_id', $project->id)
-                                ->orderBy('project_id', 'DESC')->first();
-        if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
-            $status = 1; //subscribed for accounting package
-            if(!empty($invoice)){
-                $invoice_no = $invoice->invoice_no + 1;
-            }else{
-                $invoice_no = 1000;
-            }
-            if(!empty($project)){
+        if(!empty($project)){
+            $clients = Client::where('tenant_id', Auth::user()->tenant_id)->get();
+            $budgets = ProjectBudget::where('project_id', $project->id)->where('tenant_id', Auth::user()->tenant_id)->get();
+            $invoice = Invoice::where('tenant_id', Auth::user()->tenant_id)
+            ->where('project_id', $project->id)
+            ->orderBy('project_id', 'DESC')->first();
+                if(!empty($invoice)){
+                    $invoice_no = $invoice->invoice_no + 1;
+                }else{
+                    $invoice_no = 1000;
+                }
+            if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
                 $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->select()->get();
+                $status = 1; //subscribed for accounting package
                 return view('backend.project.invoice', [
                     'project'=>$project,
                     'accounts'=>$accounts,
                     'status'=>$status,
                     'clients'=>$clients,
-                    'invoice_no'=>$invoice_no
+                    'invoice_no'=>$invoice_no,
+                    'budgets'=>$budgets
                     ]);
             }else{
-                session()->flash("error", "<strong>Ooops!</strong> No record found.");
-                return back();
+                $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->select()->get();
+                return view('backend.project.invoice', [
+                    'project'=>$project,
+                    'status'=>0,
+                    'clients'=>$clients,
+                    'invoice_no'=>$invoice_no,
+                    'budgets'=>$budgets
+                    ]);
             }
         }else{
-            $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->select()->get();
-            return view('backend.project.invoice', [
-                'project'=>$project,
-                'accounts'=>$accounts,
-                'status'=>0,
-                'clients'=>$clients,
-                'invoice_no'=>$invoice_no
-                ]);
+            session()->flash("error", "<strong>Ooops!</strong> No record found.");
+            return back();
         }
+
     }
 
     public function storeProjectInvoice(Request $request){
@@ -488,6 +491,24 @@ class ProjectController extends Controller
             $this->validate($request,[
                 'client'=>'required',
                 'date'=>'required|date',
+                'accounts'=>'required|array',
+                'amount'=>'required|array'
+            ]);
+        }
+        if($request->setBudget == 1){
+            $this->validate($request,[
+                'client'=>'required',
+                'date'=>'required|date',
+                'setAccount'=>'required',
+                'accounts'=>'required|array',
+                'amount'=>'required|array',
+                'budget'=>'required'
+            ]);
+        }else{
+            $this->validate($request,[
+                'client'=>'required',
+                'date'=>'required|date',
+                'setAccount'=>'required',
                 'accounts'=>'required|array',
                 'amount'=>'required|array'
             ]);
@@ -515,6 +536,20 @@ class ProjectController extends Controller
             $master->slug = substr(sha1(time()),32,40);
             $master->save();
             $invoiceId = $master->id;
+                #project budget table
+                $budget = ProjectBudget::where('project_id', $request->ref_no)
+                                        ->where('tenant_id', Auth::user()->tenant_id)
+                                        ->where('id', $request->budget)
+                                        ->first();
+                $budget->actual_amount += $totalAmount;
+                $budget->save();
+                #update budgetFinance
+                $budgetFinance = new BudgetFinance;
+                $budgetFinance->project_id = $request->ref_no;
+                $budgetFinance->invoice_id = $invoiceId;
+                $budgetFinance->budget_id = $request->budget;
+                $budgetFinance->tenant_id = Auth::user()->tenant_id;
+                $budgetFinance->save();
                 $project = Post::where('id',$request->ref_no)->where('tenant_id', Auth::user()->tenant_id)->first();
                 for($i = 0; $i<count($request->accounts); $i++){
                     $invoice = new InvoiceItem;
@@ -592,9 +627,12 @@ class ProjectController extends Controller
         $receipt = Receipt::where('tenant_id', Auth::user()->tenant_id)
                             ->orderBy('id', 'DESC')
                             ->first();
+        $banks = DB::table(Auth::user()->tenant_id.'_coa as c')
+                        ->join('banks as b', 'b.bank_gl_code', '=', 'c.glcode')
+                        ->get();
         $client = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $invoice->client_id)->first();
         $invoices = Invoice::where('tenant_id', Auth::user()->tenant_id)
-                            ->where('status', 1)
+                            //->where('status', 1)
                             ->where('project_id', $project->id)->get();
         if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
             $status = 1; //subscribed for accounting package
@@ -611,7 +649,8 @@ class ProjectController extends Controller
                     'status'=>$status,
                     'client'=>$client,
                     'receipt_no'=>$receipt_no,
-                    'invoices'=>$invoices
+                    'invoices'=>$invoices,
+                    'banks'=>$banks
                     ]);
             }else{
                 session()->flash("error", "<strong>Ooops!</strong> No record found.");
@@ -656,6 +695,8 @@ class ProjectController extends Controller
             $master->slug = substr(sha1(time()),32,40);
             $master->save();
             $receiptId = $master->id;
+
+
                 $project = Post::where('id',$request->ref_no)->where('tenant_id', Auth::user()->tenant_id)->first();
                 for($i = 0; $i<count($request->accounts); $i++){
                     $invoice = new ReceiptItem;
@@ -665,6 +706,20 @@ class ProjectController extends Controller
                     $invoice->glcode = $request->accounts[$i];
                     $invoice->payment = $request->payment[$i];
                     $invoice->save();
+                    #project budget table
+                    $budget = BudgetFinance::where('project_id', $request->ref_no)
+                    ->where('tenant_id', Auth::user()->tenant_id)
+                    ->where('budget_id', $request->budget)
+                    ->where('invoice_id',$request->invoices[$i])
+                    ->first();
+                    $budget->receipt_id = $receiptId;
+                    $budget->save();
+                    $payInvoice = Invoice::where('id', $request->invoices[$i])->where('tenant_id', Auth::user()->tenant_id)->first();
+                    $payInvoice->paid_amount += $request->payment[$j];
+                    if($payInvoice->paid_amount >= $invoice->total){
+                        $payInvoice->status = 1; //payment complete
+                    }
+                    $payInvoice->save();
                 }
 
             session()->flash("success", "<strong>Success! </strong> Invoice submitted.");

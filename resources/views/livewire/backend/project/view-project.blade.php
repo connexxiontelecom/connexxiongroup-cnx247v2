@@ -411,7 +411,6 @@
                             <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
                             <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
                             <a href="{{ route('project-receipt', $project->post_url) }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-receipt "></i>  Receipt </a>
-                            <a href="{{ route('project-bill', $project->post_url) }}" class="btn btn-info btn-warning btn-round text-white"><i class="icofont icofont-money-bag "></i>  Bill </a>
                         </div>
                     </div>
                     <div class="nav-item nav-grid">

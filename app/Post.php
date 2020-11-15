@@ -87,7 +87,7 @@ class Post extends Model
     }
 
     public function projectInvoices(){
-        return $this->hasMany(ProjectDetail::class, 'project_id');
+        return $this->hasMany(Invoice::class, 'project_id');
     }
 
 }

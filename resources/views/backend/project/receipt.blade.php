@@ -85,7 +85,7 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Receipt Number <span>#{{$receipt_no}}</span></h6>
-                    <h6 class="m-b-20">Amount Due: <span>#{{$invoices->sum('total')}}</span></h6>
+                    <h6 class="m-b-20">Amount Due: <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{ number_format($invoices->sum('total'),2) }}</span></h6>
                     <input type="hidden" value="{{$status}}" name="status">
                     <input type="hidden" name="ref_no" value="{{$project->id}}">
                     <input type="hidden" name="receipt_no" value="{{$receipt_no}}">
@@ -118,7 +118,21 @@
                         <div class="col-md-3 col-lg-3 col-sm-3">
                             <div class="form-group">
                                 <label for="">Reference No.</label>
-                                <input type="text" placeholder="Reference No." class="form-control" name="reference_no">
+                                <input type="text" placeholder="Reference No." readonly value="{{$project->id}}" class="form-control" name="reference_no">
+                                @error('reference_no')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Bank</label>
+                                <select name="bank" id="bank" class="form-control">
+                                    <option selected disabled>Select bank</option>
+                                    @foreach ($banks as $bank)
+                                        <option value="{{$bank->glcode}}">{{$bank->bank_name ?? ''}}</option>
+                                    @endforeach
+                                </select>
                                 @error('reference_no')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                 @enderror
