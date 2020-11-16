@@ -5,9 +5,11 @@ namespace App\Http\Livewire\Backend\Workflow;
 use Livewire\Component;
 use App\Post;
 use Auth;
+use Livewire\WithPagination;
 
 class MyRequest extends Component
 {
+    use WithPagination;
     public $my_requests;
     public function render()
     {

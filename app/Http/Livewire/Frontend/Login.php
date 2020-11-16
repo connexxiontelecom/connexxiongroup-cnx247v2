@@ -10,6 +10,7 @@ class Login extends Component
 {
     public $password, $email, $remember;
     public $error;
+
     public function render()
     {
         return view('livewire.frontend.login');

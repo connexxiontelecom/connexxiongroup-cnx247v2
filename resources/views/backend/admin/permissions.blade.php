@@ -71,7 +71,7 @@
                         @foreach ($permissions as $permission)
                             <tr>
                                 <td>{{$i++}}</td>
-                                <td>{{$permission->moduleManager->module_name}}</td>
+                                <td>{{$permission->moduleManager->module_name }}</td>
                                 <td>{{$permission->name}}</td>
                                 <td>
                                     <a href="{{route('edit-permission', $permission->id)}}" class=""> <i class="ti-pencil text-warning"></i> </a>

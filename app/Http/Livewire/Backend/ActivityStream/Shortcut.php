@@ -1,12 +1,18 @@
 <?php
 
 namespace App\Http\Livewire\Backend\ActivityStream;
+use App\Driver;
+use App\FileModel;
+use App\PostAttachment;
+use App\WorkgroupAttachment;
+use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 use Livewire\Component;
 //use App\Mail\RequisitionVerificationMail;
 //use App\RequisitionVerification;
 use App\Notifications\NewPostNotification;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use App\BusinessLog;
 use App\Post;
 use App\PostView;
@@ -15,8 +21,10 @@ use App\PostLike;
 use App\ResponsiblePerson;
 use App\RequestApprover;
 use App\User;
+use DatePeriod;
 use Auth;
 use Hash;
+
 
 class Shortcut extends Component
 {
@@ -40,8 +48,68 @@ class Shortcut extends Component
     public $transactionPassword;
     public $userAction; //approved/declined
     public $onlineCounter = 0;
+    public $storage;
     public function render()
     {
+
+			$plan_details = DB::table('plan_features')
+				->where('plan_id', '=', Auth::user()->tenant->plan_id)
+				->first();
+
+			$storage_size = $plan_details->storage_size;
+
+			$size = FileModel::where('tenant_id', Auth::user()->tenant_id)
+				->where('uploaded_by', Auth::user()->id)->sum('size');
+
+			$postAttachments = PostAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
+
+			$sum_post_attachment = 0;
+			foreach ($postAttachments as $postAttachment):
+				if(file_exists(public_path('assets\uploads\attachments\\'.$postAttachment->attachment))):
+					$fileSize = \File::size(public_path('assets\uploads\attachments\\'.$postAttachment->attachment));
+					//echo $fileSize;
+					$sum_post_attachment = $sum_post_attachment + $fileSize;
+				endif;
+			endforeach;
+
+			$workgroupAttachments = WorkgroupAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
+
+			$sum_workgroup_attachment = 0;
+			foreach ($workgroupAttachments as $workgroupAttachment):
+				if(file_exists(public_path('assets\uploads\attachments\\'.$workgroupAttachment->attachment))):
+					$fileSize = \File::size(public_path('assets\uploads\attachments\\'.$workgroupAttachment->attachment));
+
+					$sum_workgroup_attachment = $sum_workgroup_attachment + $fileSize;
+				endif;
+
+			endforeach;
+
+			$drivers = Driver::where('tenant_id', Auth::user()->tenant_id)->get();
+
+			$sum_driver_attachment = 0;
+
+			foreach($drivers as $driver):
+				if(file_exists(public_path('assets\uploads\logistics\\'.$driver->attachment))):
+					$fileSize = \File::size(public_path('assets\uploads\logistics\\'.$driver->attachment));
+					//echo $fileSize;
+					$sum_driver_attachment = $sum_driver_attachment + $fileSize;
+				endif;
+			endforeach;
+
+
+			$size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size)/1000000000;
+
+			if($size >= $storage_size):
+
+				$storage = 0;
+
+			else:
+
+				$storage = 1;
+
+			endif;
+
+
         $now = Carbon::now();
         $events = Post::where('tenant_id', Auth::user()->tenant_id)
                                 ->where('post_type', 'event')
@@ -59,9 +127,30 @@ class Shortcut extends Component
         $this->assisting = ResponsiblePerson::where('user_id',Auth::user()->id)
                                 ->where('tenant_id', Auth::user()->tenant_id)
                                 ->count();
+        $duration = Carbon::parse($now->today())->diffInDays($now->addMonths(3));
+        $current = strtotime($now->today());
+        $dates = [];
+        $stepVal = '+1 day';
+        while($current  <= strtotime($now->today()->addMonths(3)) ) {
+            $dates[] = date('m-d', $current);
+            $current = strtotime($stepVal, $current);
+         }
+
+        $users = User::where('tenant_id', Auth::user()->tenant_id)
+                        ->orderBy('id', 'ASC')
+                        ->get();
+        $userBirthDates = [];
+        $userIds = [];
+        foreach($users as $user){
+            $n = 0;
+            array_push($userBirthDates, Carbon::parse($user->birth_date)->format('m-d'));
+            if(in_array(Carbon::parse($user->birth_date)->format('m-d'), $dates) ){
+                array_push($userIds, $user->id);
+            }
+        }
         $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
-                                ->whereBetween('birth_date', [$now->startOfWeek()->format('Y-m-d H:i'), $now->addMonths(3)])
-                                ->take(10)->get();
+                                ->whereIn('id', $userIds)
+                                ->get();
         $this->online = User::where('tenant_id', Auth::user()->tenant_id)->where('is_online', 1)->count();
         $this->workforce = User::where('tenant_id', Auth::user()->tenant_id)->count();
         return view('livewire.backend.activity-stream.shortcut',
@@ -71,7 +160,9 @@ class Shortcut extends Component
                     'announcements'=>Post::where('post_type', 'announcement')
                                 ->where('tenant_id', Auth::user()->tenant_id)
                                 ->orderBy('id', 'DESC')->take(5)->get(),
-                                'events'=>$events
+                                'events'=>$events,
+																	'storage_capacity' => $storage,
+
         ]);
     }
 

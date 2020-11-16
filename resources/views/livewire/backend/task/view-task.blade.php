@@ -1118,7 +1118,7 @@
                                                             @break
                                                         @endswitch
                                                 @endforeach
-                                                @if($post->status == 'in-progress')
+                                                @if($task->post_status == 'in-progress' && $task->user_id == Auth::user()->id)
                                                     <hr>
                                                     <div class="btn-group d-flex justify-content-end mr-1">
                                                         <button class="btn btn-mini btn-success approve-submission" type="button" data-toggle="modal" data-target="#reviewTaskModal" data-responsible="{{$post->submittedBy->first_name ?? ''}} {{$post->submittedBy->surname ?? ''}}" data-user="{{$post->submitted_by}}" data-submission-id="{{$post->id}}"><i class="ti-check mr-2"></i> Approve</button>

@@ -152,9 +152,9 @@
                                         </ul>
                                     </div>
                                     <div class="col-sm-6">
-                                        <ul class="list list-unstyled text-right">
-                                            <li>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}</li>
-                                            <li>: <span class="text-semibold">cc</span></li>
+                                        <ul class="list list-unstyled text-left">
+                                            <li>Amount Due: {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}</li>
+                                            <li>Amount Paid: <span class="text-semibold">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->paid_amount,2)}}</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -169,8 +169,8 @@
                                         <button class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown14" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
                                         <div class="dropdown-menu" aria-labelledby="dropdown14" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                             <a class="dropdown-item waves-light waves-effect" href="{{route('print-invoice', $invoice->slug)}}"><i class="ti-printer"></i> Print Invoice</a>
-                                            @if($invoice->total > $invoice->cash)
-                                            <a class="dropdown-item waves-light waves-effect" href="{{route('receive-payment', $invoice->slug)}}"><i class="ti-receipt"></i> Receive Payment</a>
+                                            @if($invoice->paid_amount < ($invoice->total))
+                                                <a class="dropdown-item waves-light waves-effect" href="{{route('receive-payment', $invoice->slug)}}"><i class="ti-receipt"></i> Receive Payment</a>
                                             @endif
                                         </div>
                                     </div>

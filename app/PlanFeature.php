@@ -17,4 +17,8 @@ class PlanFeature extends Model
     public function currency(){
         return $this->belongsTo(Currency::class, 'currency_id');
     }
+
+    public function get_plan_features($plan_id){
+
+    }
 }

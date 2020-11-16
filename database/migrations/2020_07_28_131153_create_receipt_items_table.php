@@ -16,12 +16,10 @@ class CreateReceiptItemsTable extends Migration
         Schema::create('receipt_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('receipt_id');
-            $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('invoice_id');
             $table->unsignedBigInteger('tenant_id');
             $table->string('description');
-            $table->integer('quantity');
-            $table->double('unit_cost');
-            $table->double('total');
+            $table->double('payment');
             $table->timestamps();
         });
     }

@@ -73,7 +73,7 @@
                             <i class="text-danger mt-2">{{$message}}</i>
                         @enderror
                     </div>
-                    <div class="checkbox-fade fade-in-primary">
+{{--                     <div class="checkbox-fade fade-in-primary">
                         <label>
                             <input type="checkbox" id="appraisal">
                             <span class="cr">
@@ -81,7 +81,7 @@
                             </span>
                             <span>Use this rating for employee appraisal.</span>
                         </label>
-                    </div>
+                    </div> --}}
                     <hr>
                     <div class="form-group d-flex justify-content-center">
                         <div class="btn-group">

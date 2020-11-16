@@ -223,9 +223,27 @@
             axios.post('/send/invoice/email/',{id:$(this).val()})
             .then(response=>{
                 $('#sendEmailAddon').text('Done!');
+                Toastify({
+                text: "Invoice sent via mail.",
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: 'right', // `left`, `center` or `right`
+                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                }).showToast();
             })
             .catch(error=>{
                 $('#sendEmailAddon').text('Error!');
+                Toastify({
+                text: "Ooops! Something went wrong. Try again.",
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: 'right', // `left`, `center` or `right`
+                backgroundColor: "linear-gradient(to right, #FF0000, #DE0000)",
+                }).showToast();
             });
         });
     });

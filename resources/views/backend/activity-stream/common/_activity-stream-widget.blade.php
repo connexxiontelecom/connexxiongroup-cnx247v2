@@ -4,7 +4,7 @@
             <span class="float-right toggleTab" style="cursor: pointer;"><i class="zmdi zmdi-swap-vertical text-info"></i></span>
             <ul class="nav nav-tabs md-tabs" role="tablist">
                 <li class="nav-item expandContent" style="width:120px; padding:5px;">
-                    <a class="nav-link active" data-toggle="tab" href="#message" role="tab">Message</a>
+                    <a class="nav-link active" data-toggle="tab" href="#message" role="tab">Message </a>
                     <div class="slide" style="width:120px;"></div>
                 </li>
                 <li class="nav-item expandContent" style="width:100px; padding:5px;">
@@ -45,9 +45,21 @@
 
                                 </div>
                             </div>
-                            <div class="row form-group">
+													<div class="row form-group">
+													@if($storage_capacity == 1):
+
                                 <input type="file" name="message_attachments"  id="message_attachments" multiple="multiple">
-                            </div>
+
+												@endif
+
+
+														@if($storage_capacity == 0):
+
+                              {{'Drive Capacity Full, Please Upgrade'}}
+
+														@endif
+													</div>
+
                             <div class=" row mb-4">
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -175,12 +187,28 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="">Attachment</label>
-                                            <div class="col-sm-10 col-md-4">
-                                                <input type="file" id="task_attachments" >
-                                            </div>
-                                        </div>
+
+
+
+																					<div class="row form-group">
+																						@if($storage_capacity == 1):
+
+																						<label class="">Attachment</label>
+																						<div class="col-sm-10 col-md-4">
+																							<input type="file" id="task_attachments" >
+																						</div>
+																						@endif
+
+
+																						@if($storage_capacity == 0):
+
+																						{{'Drive Capacity Full, Please Upgrade'}}
+
+																						@endif
+																					</div>
+
+
+
                                     </div>
                                 </div>
                                 <div class="row">
@@ -343,10 +371,27 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Attachment</label>
-                                            <input type="file" name="announcement_attachment" id="announcement_attachment">
-                                        </div>
+
+																			<div class="row form-group">
+																				@if($storage_capacity == 1):
+
+																				<label>Attachment</label>
+																				<input type="file" name="announcement_attachment" id="announcement_attachment">
+
+																				@endif
+
+
+																				@if($storage_capacity == 0):
+
+																				{{'Drive Capacity Full, Please Upgrade'}}
+
+																				@endif
+																			</div>
+
+
+
+
+
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
@@ -403,12 +448,33 @@
                                             <input type="text" placeholder="File Name" required id="fileName"  class="form-control">
                                         </div>
                                     </div>
-                                    <div class="col-md-6 offset-md-3">
-                                        <div class="form-group">
-                                            <label>Attachment</label>
-                                            <input type="file" name="shareFile" required id="shareFile">
-                                        </div>
-                                    </div>
+
+																	<div class="col-md-6 offset-md-3">
+
+																		<div class="row form-group">
+																			@if($storage_capacity == 1):
+
+																			<div class="form-group">
+																				<label>Attachment</label>
+																				<input type="file" name="shareFile" required id="shareFile">
+																			</div>
+																			@endif
+
+
+																			@if($storage_capacity == 0):
+
+																			{{'Drive Capacity Full, Please Upgrade'}}
+
+																			@endif
+																		</div>
+
+
+
+
+
+																	</div>
+
+
                                     <div class="col-md-6 offset-md-3">
                                         <div class="mb-3">
                                             Share with:

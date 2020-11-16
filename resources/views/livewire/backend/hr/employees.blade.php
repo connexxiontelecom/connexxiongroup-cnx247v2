@@ -125,6 +125,7 @@
                 </div>
             </div>
             <div class="row users-card">
+
                 @if (count($employees) > 0)
                     @foreach ($employees as $emp)
                     <div class="col-lg-6 col-xl-3 col-md-6">
@@ -153,6 +154,7 @@
                         </div>
                         </div>
                     @endforeach
+
                 @else
                     <div class="col-lg-12 col-xl-12 col-md-12">
                         <h5 class="text-muted text-center">There's no result for your search or no employee.</h5>
@@ -161,7 +163,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-center" style="cursor: pointer;">
-                    {{-- $employees->links() --}}
+                    {{ $employees->links() }}
                 </div>
             </div>
         </div>

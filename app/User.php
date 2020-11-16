@@ -102,6 +102,16 @@ class User extends Authenticatable implements JWTSubject
     public function isOnline(){
         return Cache::has('user-is-online'.$this->id);
     }
+
+    public function getUsers()
+		{
+			return $this->hasMany(Tenant::class, 'tenant_id', 'tenant_id');
+		}
+
+    public function getPolicy(){
+        return $this->belongsTo(Policy::class, 'tenant_id');
+
+    }
  /*    public function leaveWallet(){
         return $this->belongsTo(LeaveWallet::class);
     } */

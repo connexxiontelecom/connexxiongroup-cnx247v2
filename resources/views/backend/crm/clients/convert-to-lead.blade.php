@@ -107,8 +107,24 @@ Convert to Lead
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Invoice Number <span>#INV{{$invoice_no}}</span></h6>
                     <h6 class="text-uppercase text-primary">Balance :
-                        <span class="balance">0.00</span>
+                        <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="balance"></span>
                     </h6>
+                    @if ($status == 1 && empty($client->glcode))
+                    <div class="form-group">
+                        <label for="">Client Account</label>
+                        <select name="client_account" id="client_account" class="form-control js-example-basic-single">
+                            <option selected disabled>Select account</option>
+                            @foreach ($accounts as $account)
+                                <option value="{{$account->glcode}}">{{$account->account_name ?? ''}} - ({{$account->glcode ?? ''}})</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" value="{{$status}}" name="status">
+                        @error('client_account')
+                            <i class="text-danger mt-3 d-flex">{{$message}}</i>
+                        @enderror
+                    </div>
+
+                    @endif
                 </div>
             </div>
             <div class="row">
@@ -151,7 +167,7 @@ Convert to Lead
                                             <i class="text-danger mt-2">{{$message}}</i>
                                         @enderror
                                     </td>
-                                    <td><input type="text" name="total[]" readonly style="width: 120px;"></td>
+                                    <td><input type="text" class="form-control aggregate" name="total[]" readonly style="width: 120px;"></td>
                                     <td>
                                         <i class="ti-trash text-danger remove-line" style="cursor: pointer;"></i>
                                     </td>
@@ -173,30 +189,30 @@ Convert to Lead
                         <tbody>
                             <tr>
                                 <th>Sub Total :</th>
-                                <td class="sub-total">0.00</td>
+                                <td>{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span  class="sub-total">0.00</span> </td>
                             </tr>
                             <tr>
                                 <th>Taxes (%) :</th>
                                 <td>
-                                    <input type="text" placeholder="Tax Rate" step="0.01" class="form-control" id="tax_rate">
+                                    <input type="text" placeholder="Tax Rate" step="0.01" class="form-control" id="tax_rate" name="tax_rate">
                                 </td>
                             </tr>
                             <tr>
                                 <th>Tax amount</th>
                                 <td>
-                                    <input type="text" readonly placeholder="Tax Amount" class="form-control" id="tax_amount">
+                                    <input type="text" readonly placeholder="Tax Amount" class="form-control" id="tax_amount" name="tax_amount">
                                 </td>
                             </tr>
                             <tr>
                                 <th>Discount (%) :</th>
                                 <td>
-                                    <input type="text" placeholder="Discount Rate" class="form-control" id="discount_rate">
+                                    <input type="text" placeholder="Discount Rate" class="form-control" id="discount_rate" name="discount_rate">
                                 </td>
                             </tr>
                             <tr>
                                 <th>Discounted amount :</th>
                                 <td>
-                                    <input type="text" readonly placeholder="Discount Amount" class="form-control" id="discounted_amount">
+                                    <input type="text" readonly placeholder="Discount Amount" class="form-control" id="discounted_amount" name="discounted_amount">
                                 </td>
                             </tr>
                             <tr>
@@ -212,7 +228,7 @@ Convert to Lead
                                 </td>
                                 <td>
                                     <hr>
-                                    <h5 class="text-primary total">0.00</h5>
+                                    <h5 class="text-primary"> <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="total">0.00</span></h5>
                                 </td>
                             </tr>
                         </tbody>
@@ -301,77 +317,56 @@ Convert to Lead
             const subTotals = $('.item').map((idx, val)=> calculateSubTotal(val)).get();
             const total = subTotals.reduce((a, v)=> a + Number(v), 0);
             grand_total = total;
-            $('.sub-total').text(formatAsCurrency(grand_total));
-            $('#subTotal').val(grand_total);
+            $('.sub-total').text(grand_total.toLocaleString());
+            $('#subTotal').val(total);
             $('#totalAmount').val(grand_total);
-            $('.total').text(formatAsCurrency(total));
-            $('.balance').text(formatAsCurrency(total));
+            $('.total').text(total.toLocaleString());
+            $('.balance').text(total);
         }
 
         //calculate subtotals
         function calculateSubTotal(row){
             const $row = $(row);
             const inputs = $row.find('input');
-            const subtotal = inputs[1].value * inputs[2].value;
-           // $row.find('td:nth-last-child(3)').text(formatAsCurrency(subtotal));
+            const subtotal = inputs[0].value * inputs[1].value;
             $row.find('td:nth-last-child(2) input[type=text]').val(subtotal);
             return subtotal;
         }
 
-        //calculate tax
-        $(document).on('blur', '#tax_rate', function(e){
+        $('.aggregate').on('change', function(e){
             e.preventDefault();
-            $('#hiddenTaxRate').val($(this).val());
-            var discount_rate = null;
-            if($('#discount_rate').val() == ''){
-                discount_rate = 0;
-            }else{
-                discount_rate = $('#discount_rate').val();
-            }
-            var rate = $(this).val();
-            //$('#tax_rate').val(rate);
-
-            var tax_value = ($('#totalAmount').val() * rate)/100;
-            var discount_value = ($('#subTotal').val() * discount_rate )/100;
-            $('#taxValue').val(tax_value);
-            $('#tax_amount').val(tax_value);
-            $('#discounted_amount').val(discount_value);
-            var total = +$('#totalAmount').val()  + +tax_value;
-            $('#totalAmount').val(total);
-            $('.total').text(formatAsCurrency(total));
-            $('.balance').text(formatAsCurrency(total));
+            setTotal();
         });
-        //calculate discount
-        $(document).on('blur', '#discount_rate', function(e){
+        $('#tax_rate, #discount_rate, #cash_amount').on('change', function(e){
             e.preventDefault();
-            $('#hiddenDiscountRate').val($(this).val());
-                var rate = null;
-            if($('#tax_rate').val() == ''){
-                rate = 0;
-            }else{
-                rate = $('#tax_rate').val();
-            }
+            var total = $('#totalAmount').val();
+            var tax = 0;
+            var discount = 0;
+            var cash = 0;
+            tax = (total*$('#tax_rate').val()/100);
+            discount = (total*$('#discount_rate').val()/100);
+            cash = $('#cash_amount').val();
+            $('#tax_amount').val(tax);
+            $('#discounted_amount').val(discount);
+            $('.sub-total').text($('#subTotal').val());
+            $('.total').text(((total-discount+tax)-cash));
+            $('#totalAmount').val(((total-discount+tax)-cash));
+            $('.balance').text(((total-discount+tax)-cash));
 
-            var discount_rate = $(this).val();
-            var discount_value = ($('#subTotal').val() * discount_rate)/100;
-            $('#discountValue').val(discount_value);
-            //discount
-            $('#discounted_amount').val(discount_value);
-            var total = ($('#subTotal').val() - discount_value ) - ($('#subTotal').val() * rate)/100;
-            $('#totalAmount').val(total);
-            $('.total').text(formatAsCurrency(total));
-            $('.balance').text(formatAsCurrency(total));
         });
+
         //format as currency
         function formatAsCurrency(amount){
             return "₦"+Number(amount).toFixed(2);
         }
-
-        $(document).on('blur', '#cash_amount', function(e){
-            var cash = $(this).val();
-            var total = $('#totalAmount').val() - cash;
-            $('.balance').text(formatAsCurrency(total));
-        });
     });
+
+    function setTotal(){
+        var sum = 0;
+        $(".payment").each(function(){
+            sum += +$(this).val();
+        });
+            $(".total").text(sum);
+    }
 </script>
 @endsection

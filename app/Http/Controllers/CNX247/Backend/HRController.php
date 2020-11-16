@@ -65,7 +65,9 @@ class HRController extends Controller
     * Get list of all employees
     */
     public function index(){
-        return view('backend.hr.employees');
+        $data['employeees'] = User::where('tenant_id', Auth::user()->tenant_id)->get();
+       //print_r($data);
+        return view('backend.hr.employees', $data);
     }
 
     /*
@@ -363,7 +365,7 @@ class HRController extends Controller
 
     public function employeePerformance(){
         $employees = User::where('tenant_id', Auth::user()->tenant_id)->get();
-        $supervisors = User::where('tenant_id', Auth::user()->tenant_id)->get();//Supervisor::where('tenant_id', Auth::user()->tenant_id)->get();
+        $supervisors = Supervisor::where('tenant_id', Auth::user()->tenant_id)->get();
         $appraisals = EmployeeAppraisal::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
         return view('backend.hr.employee-appraisal',
         ['employees'=>$employees,

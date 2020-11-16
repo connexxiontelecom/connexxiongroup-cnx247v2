@@ -5,10 +5,7 @@ Receive Payment
 @endsection
 
 @section('extra-styles')
-<link rel="stylesheet" type="text/css" href="/assets/css/component.css">
-<link rel="stylesheet" type="text/css" href="/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
-    <link rel="stylesheet" type="text/css" href="/assets/bower_components/multiselect/css/multi-select.css">
-    <link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
+
 <style>
 /* The heart of the matter */
 
@@ -37,7 +34,7 @@ Receive Payment
             </div>
         </div>
    </div>
-   <form action="{{route('post-payment')}}" method="post">
+   <form action="{{route('receive-invoice-payment')}}" method="post">
        @csrf
     <div class="card">
         <div class="row invoice-contact">
@@ -100,9 +97,9 @@ Receive Payment
                             <div class="form-group">
                                 <label for="">Payment Method</label>
                                 <select name="payment_method" class="form-control">
-                                    <option value="cash">Cash</option>
-                                    <option value="check">Check</option>
-                                    <option value="check">Check</option>
+                                    <option value="1">Cash</option>
+                                    <option value="2">Bank Transfer</option>
+                                    <option value="3">Cheque</option>
                                 </select>
                                 @error('payment_method')
                                     <i class="text-danger mt-2">{{$message}}</i>
@@ -114,19 +111,6 @@ Receive Payment
                                 <label for="">Reference No.</label>
                                 <input type="text" placeholder="Reference No." class="form-control" name="reference_no">
                                 @error('reference_no')
-                                    <i class="text-danger mt-2">{{$message}}</i>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-lg-3 col-sm-3">
-                            <div class="form-group">
-                                <label for="">Deposit to</label>
-                                <select name="deposit_to" class="form-control js-example-basic-single">
-                                    @foreach ($charts as $chart)
-                                        <option value="{{$chart->glcode}}">{{$chart->account_name ?? ''}} - ({{$chart->glcode}})</option>
-                                    @endforeach
-                                </select>
-                                @error('deposit_to')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                 @enderror
                             </div>
@@ -155,7 +139,7 @@ Receive Payment
                                         <td>
                                             <div class="checkbox-fade fade-in-primary">
                                                 <label>
-                                                    <input type="checkbox" value="" data-amount="{{number_format($item->total ?? 0 - $item->cash ?? 0, 0, ',', '')}}" class="select-invoice">
+                                                    <input type="checkbox" value="" data-amount="{{ number_format((float)$item->total ?? 0 - $item->cash, 2, '.', '')}}" class="select-invoice">
                                                     <span class="cr">
                                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                     </span>
@@ -178,7 +162,7 @@ Receive Payment
                                         <td>
                                             <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total ?? 0 - $item->cash ?? 0,2)}}</p>
                                         </td>
-                                        <td><input type="number" step="0.01" class="form-control receive-amount" name="payment[]" style="width: 120px;"></td>
+                                        <td><input type="number" step="0.01" class="form-control payment" name="payment[]" style="width: 120px;"></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -192,7 +176,7 @@ Receive Payment
                         <tbody>
                             <tr>
                                 <th>Amount Received :</th>
-                                <td class="amount-receive">{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span class="amount-received"></span> </td>
+                                <td class="amount-receive">{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span class="amount-received">0.00</span> </td>
                             </tr>
                         </tbody>
                     </table>
@@ -222,63 +206,37 @@ Receive Payment
 
 @endsection
 @section('extra-scripts')
-<script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
-<script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
-<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+
 <script>
     $(document).ready(function(){
-        //$('#issueReceiptBtn').attr('disabled', 'disabled');
         var grand_total = 0;
         var invoice_total = 0;
-        $('.invoice-detail-table').on('mouseup keyup', 'input[type=number]', ()=> calculateTotals());
         $(".select-invoice").on('change', function() {
             var amount = $(this).data('amount');
-            if ($(".select-invoice").is(':checked')){
-                $(this).closest('tr').find('.receive-amount').val(amount);
-                invoice_total += amount;
-                $('.amount-received').text(parseFloat(invoice_total).toLocaleString());
-            }else{
-                var sub_amount = $(this).closest('tr').find('.receive-amount').val();
-                console.log("Checkbox is unchecked."+sub_amount);
-                cur = invoice_total - sub_amount;
-                invoice_total = cur;
-                $('.amount-received').text(parseFloat(invoice_total).toLocaleString());
-                var sub_amount = $(this).closest('tr').find('.receive-amount').val('');
-            }
+                if ($(this).is(':checked')){
+                    $(this).closest('tr').find('.payment').val(amount);
+                    $('.amount-received').text(parseFloat(invoice_total).toLocaleString());
+                    setTotal();
+                }else{
+                    var sub_amount = $(this).closest('tr').find('.payment').val();
+                    cur = invoice_total - sub_amount;
+                    invoice_total = cur;
+                    $('.amount-received').text(parseFloat(invoice_total).toLocaleString());
+                    var sub_amount = $(this).closest('tr').find('.payment').val('');
+                    setTotal();
+                }
         });
-
-        //calculate totals
-        function calculateTotals(){
-            const subTotals = $('.item').map((idx, val)=> calculateSubTotal(val)).get();
-            const total = subTotals.reduce((a, v)=> a + Number(v), 0);
-            grand_total = total;
-            $('.sub-total').text(formatAsCurrency(grand_total));
-            $('#subTotal').val(grand_total);
-            $('#totalAmount').val(grand_total);
-            $('.total').text(formatAsCurrency(total));
-            $('.balance').text(formatAsCurrency(total));
-        }
-
-        //calculate subtotals
-        function calculateSubTotal(row){
-            const $row = $(row);
-            const inputs = $row.find('input');
-            const subtotal = inputs[0].value * inputs[1].value;
-           // $row.find('td:nth-last-child(3)').text(formatAsCurrency(subtotal));
-            $row.find('td:nth-last-child(2) input[type=text]').val(subtotal);
-            return subtotal;
-        }
-        //format as currency
-        function formatAsCurrency(amount){
-            return "₦"+Number(amount).toFixed(2);
-        }
-
-        $(document).on('blur', '#cash_amount', function(e){
-            var cash = $(this).val();
-            var total = $('#totalAmount').val() - cash;
-            $('.balance').text(formatAsCurrency(total));
+        $(document).on("change", ".payment", function() {
+            setTotal();
         });
     });
+
+    function setTotal(){
+        var sum = 0;
+        $(".payment").each(function(){
+            sum += +$(this).val();
+        });
+            $(".amount-received").text(sum.toLocaleString());
+    }
 </script>
 @endsection

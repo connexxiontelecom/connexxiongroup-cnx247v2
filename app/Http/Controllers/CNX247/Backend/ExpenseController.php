@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\CNX247\Backend;
 
+use App\Driver;
+use App\FileModel;
 use App\Http\Controllers\Controller;
+use App\WorkgroupAttachment;
 use Illuminate\Http\Request;
 use App\Notifications\NewPostNotification;
 use App\BusinessLog;
@@ -12,6 +15,8 @@ use App\ResponsiblePerson;
 use App\Post;
 use App\User;
 use Auth;
+use Illuminate\Support\Facades\DB;
+
 class ExpenseController extends Controller
 {
     public function __construct()
@@ -22,7 +27,63 @@ class ExpenseController extends Controller
     * Load Expense request index page
     */
     public function index(){
-        return view('backend.workflow.expense.index');
+			$plan_details = DB::table('plan_features')
+				->where('plan_id', '=', Auth::user()->tenant->plan_id)
+				->first();
+
+			$storage_size = $plan_details->storage_size;
+
+			$size = FileModel::where('tenant_id', Auth::user()->tenant_id)
+				->where('uploaded_by', Auth::user()->id)->sum('size');
+
+			$postAttachments = PostAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
+
+			$sum_post_attachment = 0;
+			foreach ($postAttachments as $postAttachment):
+				if(file_exists(public_path('assets\uploads\attachments\\'.$postAttachment->attachment))):
+					$fileSize = \File::size(public_path('assets\uploads\attachments\\'.$postAttachment->attachment));
+					//echo $fileSize;
+					$sum_post_attachment = $sum_post_attachment + $fileSize;
+				endif;
+			endforeach;
+
+			$workgroupAttachments = WorkgroupAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
+
+			$sum_workgroup_attachment = 0;
+			foreach ($workgroupAttachments as $workgroupAttachment):
+				if(file_exists(public_path('assets\uploads\attachments\\'.$workgroupAttachment->attachment))):
+					$fileSize = \File::size(public_path('assets\uploads\attachments\\'.$workgroupAttachment->attachment));
+
+					$sum_workgroup_attachment = $sum_workgroup_attachment + $fileSize;
+				endif;
+
+			endforeach;
+
+			$drivers = Driver::where('tenant_id', Auth::user()->tenant_id)->get();
+
+			$sum_driver_attachment = 0;
+
+			foreach($drivers as $driver):
+				if(file_exists(public_path('assets\uploads\logistics\\'.$driver->attachment))):
+					$fileSize = \File::size(public_path('assets\uploads\logistics\\'.$driver->attachment));
+					//echo $fileSize;
+					$sum_driver_attachment = $sum_driver_attachment + $fileSize;
+				endif;
+			endforeach;
+
+
+			$size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size)/1000000000;
+
+			if($size >= $storage_size):
+
+				$storage = 0;
+
+			else:
+
+				$storage = 1;
+
+			endif;
+        return view('backend.workflow.expense.index', ['storage_capacity' => $storage]);
     }
     public function store(Request $request){
         $this->validate($request,[

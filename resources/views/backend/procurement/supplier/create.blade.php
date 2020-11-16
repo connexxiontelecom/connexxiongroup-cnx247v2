@@ -5,7 +5,9 @@
 @endsection
 
 @section('extra-styles')
-
+<link rel="stylesheet" type="text/css" href="/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
+    <link rel="stylesheet" type="text/css" href="/assets/bower_components/multiselect/css/multi-select.css">
+    <link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
 @endsection
 
 @section('content')
@@ -145,6 +147,19 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Vendor Account</label>
+                                                <select name="vendor_account" class="js-example-basic-single col-sm-12 form-control" >
+                                                    <option selected disabled>Select vendor account</option>
+                                                    @foreach($accounts as $account)
+                                                        <option value="{{$account->glcode}}">{{$account->account_name ?? ''}} - {{$account->glcode ?? ''}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="sub-title">Additional Information</h6>
@@ -182,5 +197,8 @@
 @endsection
 
 @section('extra-scripts')
-
+<script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
+<script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
 @endsection

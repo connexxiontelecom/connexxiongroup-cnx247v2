@@ -15,7 +15,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-hard-disk bg-c-blue card1-icon"></i>
                     <span class="text-c-blue f-w-600">Space</span>
-                    <h4><sup class="text-danger">{{number_format(ceil($size/1000))}}MB</sup>/50GB</h4>
+                    <h4><sup class="text-danger">{{number_format(ceil($size/1024))}}MB</sup>/{{ $storage_size }} GB</h4>
                     <div>
                         <span class="f-left m-t-10 text-muted">
                             <i class="text-c-blue f-16 feather icon-alert-triangle m-r-10"></i>Used storage
@@ -69,14 +69,71 @@
     </div>
 
     <div class="row">
+
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
-                    <div class="btn-group float-right">
-                        {{-- <button type="button" class=" btn btn-warning btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new-folder"><i class="ti-plus mr-2"></i>New Folder</button> --}}
-                        <button type="button" class="btn btn-primary btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new-file"><i class="ti-plus mr-2"></i>New File</button>
-                    </div>
-                </div>
+							<div class="row">
+							<div class="col-md-6">
+								<div class="card-header">
+									<div class="btn-group float-left">
+										<button type="button" class=" btn btn-warning btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new_folder"><i class="ti-plus mr-2"></i>New Folder</button>
+										<button type="button" class="btn btn-primary btn-mini waves-effect waves-light" data-toggle="modal" data-target="#new-file"><i class="ti-plus mr-2"></i>Upload File</button>
+									</div>
+								</div>
+
+
+
+							</div>
+							<div class="col-md-6">
+
+								<div class="card-header">
+									<form action="{{route('search')}}" method="post">
+
+
+										@csrf
+										<div class="form-group row">
+											<div class="col-sm-3">
+											</div>
+											<div class="col-sm-6">
+												<input type="text" name="name" class="form-control form-control-round" required placeholder="Search..">
+											</div>
+
+											<div class="col-sm-3">
+											</div>
+
+
+										</div>
+
+										<div class="form-group row">
+											<div class="col-sm-4">
+											</div>
+											<div class="col-sm-4">
+												<button type="submit"  class="btn btn-primary btn-block btn-round waves-effect waves-light btn-mini"> Search</button>
+
+											</div>
+											<div class="col-sm-4">
+											</div>
+
+
+
+										</div>
+
+									</form>
+
+								</div>
+
+
+
+							</div>
+							</div>
+
+
+
+
+
+
+
+
                 <div class="card-block">
                     <h5 class="sub-title">My Files</h5>
                     @if (session()->has('success'))
@@ -438,9 +495,41 @@
                         </div>
                     </div>
                 </div>
+							<div class="card-block">
+								<h5 class="sub-title">My Folders</h5>
+								@if (session()->has('success'))
+									<div class="alert alert-success background-success">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<i class="icofont icofont-close-line-circled text-white"></i>
+										</button>
+										{!! session()->get('success') !!}
+									</div>
+								@endif
+								<div class="card-block " id="fileDirectory">
+									<div class="row">
+										@foreach ($myFolders as $folder)
+											<div class="col-md-1">
+												<a href="{{route('folder', $folder->id)}}" title="{{$folder->name ?? 'No name'}}" data-original-title="{{$folder->name ?? 'No name'}}" style="cursor: pointer;">
+													<img src="/assets/formats/folder.png" height="64" width="64" alt="{{$folder->name ?? 'No name'}}"><br>
+													{{strlen($folder->name ?? 'No name') > 10 ? substr($folder->name ?? 'No name',0,7).'...' : $folder->name ?? 'No name'}}
+												</a>
+												<div class="dropdown-secondary dropdown float-right">
+													<button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+													<div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+
+														<a class="dropdown-item waves-light waves-effect shareFolder" data-toggle="modal" data-target="#shareFolderModal" data-directory="{{$folder->name}}" data-file="{{$folder->name ?? 'Folder name'}}" data-unique="{{$folder->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+														<div class="dropdown-divider"></div>
+														<a class="dropdown-item waves-light waves-effect deleteFolder" data-toggle="modal" data-target="#deleteFolderModal" data-directory="{{$folder->name}}" data-file="{{$folder->name ?? 'File name'}}" data-unique="{{$folder->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+													</div>
+												</div>
+											</div>
+										@endforeach
+									</div>
+								</div>
+							</div>
                 <div class="card-block">
-                    <h5 class="sub-title">Shared Files</h5>
-                    <p class="text-muted">These are files shared with you by someone else.</p>
+                    <h5 class="sub-title">Shared Items/Public Items</h5>
+
                     @if (session()->has('success'))
                         <div class="alert alert-success background-success">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -482,9 +571,7 @@
                                                 <button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                     <a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$file->filename}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
-                                                    <a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$file->filename}}" data-file="{{$file->name ?? 'File name'}}" data-unique="{{$file->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -799,11 +886,41 @@
                                     @endswitch
                                 @endforeach
                             @endforeach
+
+
+															@foreach ($sharedFolders as $folder)
+
+
+																<div class="col-md-1">
+																	<a href="{{route('shared-folder', $folder->folder_id)}}" title="{{$folder->name ?? 'No name'}}" data-original-title="{{$folder->name ?? 'No name'}}" style="cursor: pointer;" data-toggle="tooltip" title="{{ $folder->first_name }} {{ $folder->surname }}">
+																		<img src="/assets/formats/folder.png" height="64" width="64" alt="{{$folder->name ?? 'No name'}}"><br>
+																		{{strlen($folder->name ?? 'No name') > 10 ? substr($folder->name ?? 'No name',0,7).'...' : $folder->name ?? 'No name'}}
+
+																	</a>
+
+																</div>
+															@endforeach
+
+
+															@foreach ($publicFolders as $folder)
+																<div class="col-md-1">
+																	<a href="{{route('shared-folder', $folder->id)}}" title="{{$folder->name ?? 'No name'}}" data-original-title="{{$folder->name ?? 'No name'}}" style="cursor: pointer;">
+																		<img src="/assets/formats/public-folder.png" height="64" width="64" alt="{{$folder->name ?? 'No name'}}"><br>
+																		{{strlen($folder->name ?? 'No name') > 10 ? substr($folder->name ?? 'No name',0,7).'...' : $folder->name ?? 'No name'}}
+																	</a>
+
+																</div>
+															@endforeach
                         </div>
                     </div>
                 </div>
+
+
                 </div>
             </div>
+
+
+
         </div>
     </div>
 @endsection
@@ -837,6 +954,72 @@
             margin: 2px 0px;
         }
     </style>
+
+
+    <div class="modal fade" id="new_folder" tabindex="-1" role="dialog">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> New Folder</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="text-white">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <form>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Name of Folder</label>
+                                        <div class="col-sm-10">
+                                            <input name="name_of_folder" id="name_of_folder" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Parent Folder</label>
+                                        <div class="col-sm-10">
+                                            <select name="parent_folder" id="parent_folder" class="form-control">
+                                                <option value="0">None</option>
+                                                @foreach ($myFolders as $folder)
+                                                <option value="{{ $folder->id }}"> {{ $folder->name  }}</option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Visibility</label>
+                                        <div class="col-sm-10">
+                                            <select name="visibility" id="visibility" class="form-control">
+                                                <option value="0">Private</option>
+                                                <option value="1">Public</option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+                                </form>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+                        <button type="button" id="new_folder_btn" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Create Folder</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div class="modal fade" id="shareFileModal" tabindex="-1" role="dialog">
     <div class="modal-dialog " role="document">
@@ -891,6 +1074,62 @@
         </div>
     </div>
 </div>
+
+		<div class="modal fade" id="shareFolderModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog " role="document">
+				<div class="modal-content">
+					<div class="modal-header bg-primary">
+						<h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> Share Folder</h6>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="text-white">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-12">
+									<p>Share <strong id="fileToShare"></strong> with...</p>
+									<hr>
+									<div class="form-group">
+										<div class="checkbox-fade fade-in-primary">
+											<label>
+												<input type="checkbox" value="32" name="all_employees" id="all_employees">
+												<span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span>
+												<span>All employees</span>
+											</label>
+										</div>
+									</div>
+									<hr>
+									<div class="form-group">
+										@foreach ($employees as $employee)
+											<div class="checkbox-fade fade-in-primary">
+												<label>
+													<input type="checkbox" value="{{$employee->id}}" name="employees" id="employees[]">
+													<span class="cr">
+                                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                            </span>
+													<span>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</span>
+												</label>
+											</div>
+										@endforeach
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer d-flex justify-content-center">
+						<div class="btn-group">
+							<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+							<button type="button" id="shareFolderBtn" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Share Folder</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 <div class="modal fade" id="deleteFileModal" tabindex="-1" role="dialog">
     <div class="modal-dialog " role="document">
         <div class="modal-content">
@@ -1067,6 +1306,73 @@
                 });
             });
         });
+
+			$(document).on('change','#all_employees', function(e){
+				e.preventDefault();
+				if ($("#all_employees").is(':checked'))
+					all_employee = 32; //all employees
+				else {
+					all_employee = null;
+				}
+			});
+
+
+
+			$(document).on('click', '.shareFolder', function(e){
+
+
+				var name = $(this).data('file');
+				var id = $(this).data('unique');
+
+
+				// $('#folderToShare').text(name);
+				$(document).on('click', '#shareFolderBtn', function(event){
+					var employees = []
+
+
+					$("input:checkbox[name=employees]:checked").each(
+
+
+						function(){employees.push($(this).val());
+						});
+
+
+					axios.post('/cnx247-drive/share-folder',{
+						employees:employees,
+						id:id,
+						all:all_employee
+					})
+						.then(response=>{
+							$.notify(response.data.message, 'success');
+							$('#shareFolderModal').modal('hide');
+						})
+						.catch(error=>{
+							$.notify(error.response.data.error, 'error');
+						});
+				});
+			});
+
+
+
+            $(document).on('click', '#new_folder_btn', function(event){
+                    var name_of_folder = $('#name_of_folder').val();
+                    var parent_folder = $('#parent_folder').val();
+                    var visibility = $('#visibility').val();
+                axios.post('/cnx247-drive/new_folder',{
+                    name_of_folder: name_of_folder,
+                    parent_folder: parent_folder,
+                    visibility: visibility
+                })
+                    .then(response=>{
+                        $.notify(response.data.message, 'success');
+                        $('#new_folder').modal('hide');
+                    })
+                    .catch(error=>{
+                        $.notify(error.response.data.error, 'error');
+                    });
+            });
+
+
         $(document).on('click', '.deleteFile', function(e){
             var name = $(this).data('file');
             var directory = $(this).data('directory');

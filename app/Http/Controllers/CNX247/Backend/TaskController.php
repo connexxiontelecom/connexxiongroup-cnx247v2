@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CNX247\Backend;
 use App\Http\Controllers\Controller;
 use App\Link;
 use App\Notifications\NewPostNotification;
+use App\Notifications\SubmitTask;
 use App\Observer;
 use App\Participant;
 use App\Post;
@@ -361,6 +362,9 @@ class TaskController extends Controller
             $attach->tenant_id = Auth::user()->tenant_id;
             $attach->save();
         }
+        $user = User::where('id', $request->owner)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $content = Post::where('id', $request->post)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $user->notify(new SubmitTask($submit, $content));
         session()->flash("success", "<strong>Success!</strong> Submission done.");
         return back();
     }

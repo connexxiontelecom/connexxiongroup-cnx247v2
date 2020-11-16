@@ -52,7 +52,7 @@ Route::get('/permission/edit/{id}', 'CNX247\Backend\AdminController@editPermissi
 Route::post('/permission/edit', 'CNX247\Backend\AdminController@savePermissionChanges')->name('save-permission-changes');
 Route::post('/permission/new', 'CNX247\Backend\AdminController@newPermission')->name('new-permission');
 Route::get('/assign/role-to-permission/{id}', 'CNX247\Backend\AdminController@assignRoleToPermission')
-        ->name('assign-role-to-permission');
+    ->name('assign-role-to-permission');
 Route::post('/store/permission', 'CNX247\Backend\AdminController@storeRolePermission')->name('store-permission');
 
 Route::get('/module-manager', 'CNX247\Backend\AdminController@moduleManager')->name('module-manager');
@@ -135,6 +135,7 @@ Route::get('/signin', 'Auth\LoginController@signin')->name('signin');
 Route::get('/reset-password', 'Auth\LoginController@showResetPasswordForm')->name('reset-password');
 Route::get('/reset-password/{token}', 'Auth\LoginController@setPassword')->name('set-password');
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('/login', 'Auth\LoginController@login')->name('login');
 
 #Payment Gateway
 Route::get('/create-site/{timestamp}/{plan}', 'CNX247\Frontend\PaymentGatewayController@createSite')->name('create-site');
@@ -169,105 +170,105 @@ Route::get('/hr-dashboard', 'CNX247\Backend\HRController@hrDashboard')->name('hr
 Route::get('/employees', 'CNX247\Backend\HRController@index')->name('employees');
 Route::get('/appreciation', 'CNX247\Backend\HRController@appreciation')->name('appreciation');
 Route::get('/on-boarding', 'CNX247\Backend\HRController@onBoarding')->name('on-boarding');
-    #Resignation
-        Route::get('/resignation', 'CNX247\Backend\HRController@resignation')->name('resignation');
-        Route::post('/resignation', 'CNX247\Backend\HRController@submitResignation');
-        Route::get('/view-resignation/{url}', 'CNX247\Backend\HRController@viewResignation')->name('view-resignation');
-    #Complaint
-        Route::get('/complaints', 'CNX247\Backend\HRController@complaints')->name('complaints');
-    #Timesheet
-        Route::get('/attendance', 'CNX247\Backend\HRController@attendance')->name('attendance');
-        Route::get('/leave-management', 'CNX247\Backend\HRController@leaveManagement')->name('leave-management');
-        Route::get('/leave-wallet', 'CNX247\Backend\HRController@leaveWallet')->name('leave-wallet');
-        Route::get('/leave-type', 'CNX247\Backend\HRController@leaveType')->name('leave-type');
-        Route::get('/timesheet', 'CNX247\Backend\HRController@timesheet')->name('timesheet');
-    #Performance
-        Route::get('/performance-indicator', 'CNX247\Backend\HRController@performanceIndicator')->name('performance-indicator');
-        Route::get('/job-role/{id}/questions', 'CNX247\Backend\HRController@jobRoleQuestions')->name('job-role-questions');
-        Route::post('/performance-indicator/self', 'CNX247\Backend\HRController@selfAssessmentQuestion');
-        Route::post('/performance-indicator/self/edit', 'CNX247\Backend\HRController@editSelfAssessmentQuestion');
-        Route::post('/performance-indicator/quantitative', 'CNX247\Backend\HRController@quantitativeAssessmentQuestion');
-        Route::post('/performance-indicator/quantitative/edit', 'CNX247\Backend\HRController@editQuantitativeAssessmentQuestion');
-        Route::post('/performance-indicator/qualitative', 'CNX247\Backend\HRController@qualitativeAssessmentQuestion');
-        Route::post('/performance-indicator/qualitative/edit', 'CNX247\Backend\HRController@editQualitativeAssessmentQuestion');
-        Route::get('/employees-appraisal', 'CNX247\Backend\HRController@employeePerformance')->name('employees-appraisal');
-        Route::post('/employee-appraisal', 'CNX247\Backend\HRController@storeAppraisal');
-        Route::post('/bulk/employee-appraisal', 'CNX247\Backend\HRController@storeBulkAppraisal');
-        Route::get('/employee-self-appraisal/{appraisal_id}', 'CNX247\Backend\HRController@selfAppraisal')->name('employee-self-appraisal');
-        Route::post('/employee-self-appraisal', 'CNX247\Backend\HRController@storeSelfAppraisal')->name('store-self-appraisal');
-        Route::get('/employee-supervisor-appraisal/{appraisal_id}', 'CNX247\Backend\HRController@supervisorAppraisal')->name('employee-supervisor-appraisal');
-        Route::post('/employee-supervisor-appraisal', 'CNX247\Backend\HRController@storeSupervisorAppraisal')->name('store-supervisor-appraisal');
-        Route::get('/appraisal-result/{appraisal_id}', 'CNX247\Backend\HRController@appraisalResult')->name('appraisal-result');
-        Route::post('/terminate/employment', 'CNX247\Backend\HRController@terminateEmployment');
-        Route::get('/terminated-employment', 'CNX247\Backend\HRController@terminatedEmployment')->name('terminated-employment');
-    #HR Constants
-        Route::get('/hr/configurations', 'CNX247\Backend\HRController@hrConfigurations')->name('hr-configurations');
-    #Assign permission(s) to employee
-        Route::get('/assign/permission-to-employee/{url}', 'CNX247\Backend\HRController@assignPermissionToEmployee')
-        ->name('assign-permission-to-employee');
-        Route::post('/store/user/permission', 'CNX247\Backend\HRController@storeUserPermission')
-               ->name('store-user-permission');
-    #Query employee
-        Route::get('/employee/queries', 'CNX247\Backend\HRController@queries')->name('queries');
-        Route::get('/query/employee/{url}', 'CNX247\Backend\HRController@queryEmployee')->name('query-employee');
-        Route::post('/store/query/employee', 'CNX247\Backend\HRController@storeQueryEmployee')->name('store-query-employee');
-        Route::get('/employee/query/view/{slug}', 'CNX247\Backend\HRController@viewQuery')->name('view-query');
-    #IdeaBox
-        Route::get('/hr/idea-box', 'CNX247\Backend\HRController@ideaBox')->name('hr-ideabox');
+#Resignation
+Route::get('/resignation', 'CNX247\Backend\HRController@resignation')->name('resignation');
+Route::post('/resignation', 'CNX247\Backend\HRController@submitResignation');
+Route::get('/view-resignation/{url}', 'CNX247\Backend\HRController@viewResignation')->name('view-resignation');
+#Complaint
+Route::get('/complaints', 'CNX247\Backend\HRController@complaints')->name('complaints');
+#Timesheet
+Route::get('/attendance', 'CNX247\Backend\HRController@attendance')->name('attendance');
+Route::get('/leave-management', 'CNX247\Backend\HRController@leaveManagement')->name('leave-management');
+Route::get('/leave-wallet', 'CNX247\Backend\HRController@leaveWallet')->name('leave-wallet');
+Route::get('/leave-type', 'CNX247\Backend\HRController@leaveType')->name('leave-type');
+Route::get('/timesheet', 'CNX247\Backend\HRController@timesheet')->name('timesheet');
+#Performance
+Route::get('/performance-indicator', 'CNX247\Backend\HRController@performanceIndicator')->name('performance-indicator');
+Route::get('/job-role/{id}/questions', 'CNX247\Backend\HRController@jobRoleQuestions')->name('job-role-questions');
+Route::post('/performance-indicator/self', 'CNX247\Backend\HRController@selfAssessmentQuestion');
+Route::post('/performance-indicator/self/edit', 'CNX247\Backend\HRController@editSelfAssessmentQuestion');
+Route::post('/performance-indicator/quantitative', 'CNX247\Backend\HRController@quantitativeAssessmentQuestion');
+Route::post('/performance-indicator/quantitative/edit', 'CNX247\Backend\HRController@editQuantitativeAssessmentQuestion');
+Route::post('/performance-indicator/qualitative', 'CNX247\Backend\HRController@qualitativeAssessmentQuestion');
+Route::post('/performance-indicator/qualitative/edit', 'CNX247\Backend\HRController@editQualitativeAssessmentQuestion');
+Route::get('/employees-appraisal', 'CNX247\Backend\HRController@employeePerformance')->name('employees-appraisal');
+Route::post('/employee-appraisal', 'CNX247\Backend\HRController@storeAppraisal');
+Route::post('/bulk/employee-appraisal', 'CNX247\Backend\HRController@storeBulkAppraisal');
+Route::get('/employee-self-appraisal/{appraisal_id}', 'CNX247\Backend\HRController@selfAppraisal')->name('employee-self-appraisal');
+Route::post('/employee-self-appraisal', 'CNX247\Backend\HRController@storeSelfAppraisal')->name('store-self-appraisal');
+Route::get('/employee-supervisor-appraisal/{appraisal_id}', 'CNX247\Backend\HRController@supervisorAppraisal')->name('employee-supervisor-appraisal');
+Route::post('/employee-supervisor-appraisal', 'CNX247\Backend\HRController@storeSupervisorAppraisal')->name('store-supervisor-appraisal');
+Route::get('/appraisal-result/{appraisal_id}', 'CNX247\Backend\HRController@appraisalResult')->name('appraisal-result');
+Route::post('/terminate/employment', 'CNX247\Backend\HRController@terminateEmployment');
+Route::get('/terminated-employment', 'CNX247\Backend\HRController@terminatedEmployment')->name('terminated-employment');
+#HR Constants
+Route::get('/hr/configurations', 'CNX247\Backend\HRController@hrConfigurations')->name('hr-configurations');
+#Assign permission(s) to employee
+Route::get('/assign/permission-to-employee/{url}', 'CNX247\Backend\HRController@assignPermissionToEmployee')
+    ->name('assign-permission-to-employee');
+Route::post('/store/user/permission', 'CNX247\Backend\HRController@storeUserPermission')
+    ->name('store-user-permission');
+#Query employee
+Route::get('/employee/queries', 'CNX247\Backend\HRController@queries')->name('queries');
+Route::get('/query/employee/{url}', 'CNX247\Backend\HRController@queryEmployee')->name('query-employee');
+Route::post('/store/query/employee', 'CNX247\Backend\HRController@storeQueryEmployee')->name('store-query-employee');
+Route::get('/employee/query/view/{slug}', 'CNX247\Backend\HRController@viewQuery')->name('view-query');
+#IdeaBox
+Route::get('/hr/idea-box', 'CNX247\Backend\HRController@ideaBox')->name('hr-ideabox');
 #Customer Relationship Management (CRM)
 Route::get('/crm-dashboard', 'CNX247\Backend\CRMController@crmDashboard')->name('crm-dashboard');
 #Leads
-    Route::get('/crm/leads', 'CNX247\Backend\CRMController@leads')->name('leads');
-    Route::get('/crm/lead/view/{slug}', 'CNX247\Backend\CRMController@viewLead')->name('view-lead');
-    Route::get('/crm/lead/convert-to-deal/{slug}', 'CNX247\Backend\CRMController@convertLeadToDeal')->name('convert-to-deal');
-    Route::post('/crm/lead/raise-receipt', 'CNX247\Backend\CRMController@raiseReceipt')->name('raise-receipt');
+Route::get('/crm/leads', 'CNX247\Backend\CRMController@leads')->name('leads');
+Route::get('/crm/lead/view/{slug}', 'CNX247\Backend\CRMController@viewLead')->name('view-lead');
+Route::get('/crm/lead/convert-to-deal/{slug}', 'CNX247\Backend\CRMController@convertLeadToDeal')->name('convert-to-deal');
+Route::post('/crm/lead/raise-receipt', 'CNX247\Backend\CRMController@raiseReceipt')->name('raise-receipt');
 #Deal
-    Route::get('/crm/deals', 'CNX247\Backend\CRMController@deals')->name('deals');
-    Route::get('/crm/deal/view/{slug}', 'CNX247\Backend\CRMController@viewDeal')->name('view-deal');
+Route::get('/crm/deals', 'CNX247\Backend\CRMController@deals')->name('deals');
+Route::get('/crm/deal/view/{slug}', 'CNX247\Backend\CRMController@viewDeal')->name('view-deal');
 #Invoice list
-    Route::get('/invoice-list', 'CNX247\Backend\CRMController@invoiceList')->name('invoice-list');
-    Route::get('/print/invoice/{slug}', 'CNX247\Backend\CRMController@printInvoice')->name('print-invoice');
-    Route::post('/send/invoice/email', 'CNX247\Backend\CRMController@sendInvoiceViaEmail');
+Route::get('/invoice-list', 'CNX247\Backend\CRMController@invoiceList')->name('invoice-list');
+Route::get('/print/invoice/{slug}', 'CNX247\Backend\CRMController@printInvoice')->name('print-invoice');
+Route::post('/send/invoice/email', 'CNX247\Backend\CRMController@sendInvoiceViaEmail');
 #Receipt list
-    Route::get('/receipt-list', 'CNX247\Backend\CRMController@receiptList')->name('receipt-list');
-    Route::get('/print/receipt/{slug}', 'CNX247\Backend\CRMController@printReceipt')->name('print-receipt');
-    Route::post('/send/receipt/email', 'CNX247\Backend\CRMController@sendReceiptViaEmail');
+Route::get('/receipt-list', 'CNX247\Backend\CRMController@receiptList')->name('receipt-list');
+Route::get('/print/receipt/{slug}', 'CNX247\Backend\CRMController@printReceipt')->name('print-receipt');
+Route::post('/send/receipt/email', 'CNX247\Backend\CRMController@sendReceiptViaEmail');
 #Contacts/clients
-    Route::get('/crm/clients', 'CNX247\Backend\CRMController@clients')->name('clients');
-    Route::get('/crm/client/new', 'CNX247\Backend\CRMController@createClient')->name('new-client');
-    Route::get('/crm/client/view/{slug}', 'CNX247\Backend\CRMController@viewClient')->name('view-client');
-    Route::get('/crm/client/edit/{slug}', 'CNX247\Backend\CRMController@editClient')->name('edit-client');
-    Route::post('/upload/client/avatar', 'CNX247\Backend\CRMController@uploadClientAvatar');
-    Route::post('/messaging/client/email', 'CNX247\Backend\CRMController@sendEmailToClient');
-    Route::post('/messaging/client/sms', 'CNX247\Backend\CRMController@sendSmsToClient');
+Route::get('/crm/clients', 'CNX247\Backend\CRMController@clients')->name('clients');
+Route::get('/crm/client/new', 'CNX247\Backend\CRMController@createClient')->name('new-client');
+Route::get('/crm/client/view/{slug}', 'CNX247\Backend\CRMController@viewClient')->name('view-client');
+Route::get('/crm/client/edit/{slug}', 'CNX247\Backend\CRMController@editClient')->name('edit-client');
+Route::post('/upload/client/avatar', 'CNX247\Backend\CRMController@uploadClientAvatar');
+Route::post('/messaging/client/email', 'CNX247\Backend\CRMController@sendEmailToClient');
+Route::post('/messaging/client/sms', 'CNX247\Backend\CRMController@sendSmsToClient');
 #Products
-    Route::get('/crm/products', 'CNX247\Backend\CRMController@products')->name('products');
-    Route::get('/crm/product/new', 'CNX247\Backend\CRMController@addNewProduct')->name('add-new-product');
-    Route::post('/crm/product/new', 'CNX247\Backend\CRMController@saveProduct');
-    Route::get('/crm/product/{slug}', 'CNX247\Backend\CRMController@viewProduct')->name('product-details');
-    Route::get('/crm/product/edit/{slug}', 'CNX247\Backend\CRMController@editProduct')->name('edit-product');
-    Route::post('/crm/product/edit', 'CNX247\Backend\CRMController@saveProductChanges');
-    Route::get('/crm/product/delete/{slug}', 'CNX247\Backend\CRMController@deleteProduct')->name('delete-product');
+Route::get('/crm/products', 'CNX247\Backend\CRMController@products')->name('products');
+Route::get('/crm/product/new', 'CNX247\Backend\CRMController@addNewProduct')->name('add-new-product');
+Route::post('/crm/product/new', 'CNX247\Backend\CRMController@saveProduct');
+Route::get('/crm/product/{slug}', 'CNX247\Backend\CRMController@viewProduct')->name('product-details');
+Route::get('/crm/product/edit/{slug}', 'CNX247\Backend\CRMController@editProduct')->name('edit-product');
+Route::post('/crm/product/edit', 'CNX247\Backend\CRMController@saveProductChanges');
+Route::get('/crm/product/delete/{slug}', 'CNX247\Backend\CRMController@deleteProduct')->name('delete-product');
 #Bulk SMS
-    Route::get('/crm/bulk-sms', 'CNX247\Backend\BulkSmsController@index')->name('bulk-sms');
-    Route::get('/crm/bulk-sms/compose', 'CNX247\Backend\BulkSmsController@create')->name('compose-sms');
-    Route::post('/crm/bulk-sms/send', 'CNX247\Backend\BulkSmsController@sendBulkSms')->name('send-bulk-sms');
-    Route::get('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@phoneGroups')->name('phone-groups');
-    Route::get('/crm/bulk-sms/phone-group/{slug}', 'CNX247\Backend\BulkSmsController@showPhoneGroup')->name('show-phone-group');
-    Route::get('/crm/bulk-sms/delete/phone-group/{slug}', 'CNX247\Backend\BulkSmsController@deletePhoneGroup')->name('delete-phone-group');
-    Route::post('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@storePhoneGroup');
-    Route::post('/crm/bulk-sms/update-phone-group', 'CNX247\Backend\BulkSmsController@updatePhoneGroup')->name('update-phone-group');
-    Route::get('/crm/bulk-sms/new-phone-group', 'CNX247\Backend\BulkSmsController@newPhoneGroup')->name('new-phone-group');
+Route::get('/crm/bulk-sms', 'CNX247\Backend\BulkSmsController@index')->name('bulk-sms');
+Route::get('/crm/bulk-sms/compose', 'CNX247\Backend\BulkSmsController@create')->name('compose-sms');
+Route::post('/crm/bulk-sms/send', 'CNX247\Backend\BulkSmsController@sendBulkSms')->name('send-bulk-sms');
+Route::get('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@phoneGroups')->name('phone-groups');
+Route::get('/crm/bulk-sms/phone-group/{slug}', 'CNX247\Backend\BulkSmsController@showPhoneGroup')->name('show-phone-group');
+Route::get('/crm/bulk-sms/delete/phone-group/{slug}', 'CNX247\Backend\BulkSmsController@deletePhoneGroup')->name('delete-phone-group');
+Route::post('/crm/bulk-sms/phone-groups', 'CNX247\Backend\BulkSmsController@storePhoneGroup');
+Route::post('/crm/bulk-sms/update-phone-group', 'CNX247\Backend\BulkSmsController@updatePhoneGroup')->name('update-phone-group');
+Route::get('/crm/bulk-sms/new-phone-group', 'CNX247\Backend\BulkSmsController@newPhoneGroup')->name('new-phone-group');
 #Email Campaign
-    Route::get('/crm/email-campaigns', 'CNX247\Backend\EmailCampaignController@index')->name('email-campaigns');
-    Route::get('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@create')->name('new-email-campaign');
-    Route::post('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@store');
-    Route::get('/crm/email-campaig/view/{id}', 'CNX247\Backend\EmailCampaignController@show')->name('email-campaign-view');
+Route::get('/crm/email-campaigns', 'CNX247\Backend\EmailCampaignController@index')->name('email-campaigns');
+Route::get('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@create')->name('new-email-campaign');
+Route::post('/crm/email-campaig/new', 'CNX247\Backend\EmailCampaignController@store');
+Route::get('/crm/email-campaig/view/{id}', 'CNX247\Backend\EmailCampaignController@show')->name('email-campaign-view');
 #Convert client to lead
 Route::get('/crm/client/convert-to-lead/{slug}', 'CNX247\Backend\CRMController@convertClientToLead')->name('convert-to-lead');
 Route::post('/crm/client/raise-an-invoice', 'CNX247\Backend\CRMController@raiseAnInvoice')->name('raise-an-invoice');
 Route::get('/crm/invoice/receive-payment/{slug}', 'CNX247\Backend\CRMController@receivePayment')->name('receive-payment');
-Route::post('/crm/invoice/receive-payment', 'CNX247\Backend\CRMController@postPayment')->name('post-payment');
+Route::post('/crm/invoice/receive-payment', 'CNX247\Backend\CRMController@receiveInvoicePayment')->name('receive-invoice-payment');
 #Social media
 Route::get('/facebook/connect-to-facebook', 'CNX247\Backend\FacebookController@connect')->name('connect-to-facebook');
 Route::get('/facebook/facebook-timeline', 'CNX247\Backend\FacebookController@facebookTimeline')->name('facebook-timeline');
@@ -298,7 +299,7 @@ Route::post('/activity-stream/clockout', 'CNX247\Backend\ActivityStreamControlle
 
 #View an employee's profile
 Route::get('/activity-stream/profile/{url}', 'CNX247\Backend\ActivityStreamController@viewProfile')
-        ->name('view-profile');
+    ->name('view-profile');
 
 #Task routes
 Route::get('/task/task-board', 'CNX247\Backend\TaskController@taskBoard')->name('task-board');
@@ -329,6 +330,8 @@ Route::get('/project/project-board', 'CNX247\Backend\ProjectController@projectBo
 Route::get('/project/new', 'CNX247\Backend\ProjectController@newProject')->name('new-project');
 Route::post('/project/new', 'CNX247\Backend\ProjectController@storeProject');
 Route::get('/project/view/{url}', 'CNX247\Backend\ProjectController@viewProject')->name('view-project');
+Route::get('/project/budget/{url}', 'CNX247\Backend\ProjectController@projectBudget')->name('project-budget');
+Route::post('/project/budget', 'CNX247\Backend\ProjectController@storeProjectBudget')->name('store-project-budget');
 Route::get('/project/calendar', 'CNX247\Backend\ProjectController@projectCalendar')->name('project-calendar'); //[view]
 Route::get('/project-calendar', 'CNX247\Backend\ProjectController@getProjectCalendarData'); //[Data source]
 Route::get('/project/gantt-chart', 'CNX247\Backend\ProjectController@projectGanttChart')->name('project-gantt-chart');
@@ -338,7 +341,8 @@ Route::post('/delete/project', 'CNX247\Backend\ProjectController@deleteProject')
 Route::get('/project/edit/{url}', 'CNX247\Backend\ProjectController@editProject')->name('edit-project');
 Route::post('/project/update', 'CNX247\Backend\ProjectController@updateProject')->name('update-project');
 Route::post('/project/milestone', 'CNX247\Backend\ProjectController@createProjectMilestone');
-
+Route::get('/project/invoice/{slug}', 'CNX247\Backend\ProjectController@projectInvoice')->name('project-invoice');
+Route::post('/project/invoice', 'CNX247\Backend\ProjectController@storeProjectInvoice')->name('store-project-invoice');
 
 Route::post('/add-project-responsible', 'CNX247\Backend\ProjectController@addResponsiblePerson')->name('add-project-responsible');
 Route::post('/add-project-observers', 'CNX247\Backend\ProjectController@addObserver')->name('add-project-observers');
@@ -373,6 +377,13 @@ Route::post('/upload-attachment', 'CNX247\Backend\CNX247DriveController@uploadAt
 Route::post('/cnx247-drive/download', 'CNX247\Backend\CNX247DriveController@downloadAttachment');
 Route::post('/cnx247-drive/share', 'CNX247\Backend\CNX247DriveController@shareAttachment');
 Route::post('/cnx247-drive/delete', 'CNX247\Backend\CNX247DriveController@deleteAttachment');
+Route::post('/cnx247-drive/new_folder', 'CNX247\Backend\CNX247DriveController@newFolder');
+Route::get('/folder/{slug}', 'CNX247\Backend\CNX247DriveController@folder')->name('folder');
+Route::get('/shared-folder/{slug}', 'CNX247\Backend\CNX247DriveController@sharedFolder')->name('shared-folder');
+Route::post('/cnx247-drive/share-folder', 'CNX247\Backend\CNX247DriveController@shareFolder');
+Route::post('/cnx247-drive/search', 'CNX247\Backend\CNX247DriveController@search')->name('search');
+
+
 
 #Event routes
 Route::get('/my-events', 'CNX247\Backend\EventController@myEvents')->name('my-events');
@@ -385,75 +396,113 @@ Route::get('/company-calendar', 'CNX247\Backend\EventController@companyCalendar'
 Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompanyEventData');
 
 #Procurement routes
-    #Supplier routes
-    Route::get('/suppliers', 'CNX247\Backend\SupplierController@index')->name('suppliers');
-    Route::get('/supplier/new', 'CNX247\Backend\SupplierController@create')->name('new-supplier');
-    Route::post('/supplier/new', 'CNX247\Backend\SupplierController@store');
-    Route::get('/supplier/view/{slug}', 'CNX247\Backend\SupplierController@view')->name('view-supplier');
-    Route::get('/purchase-order/new/{slug}', 'CNX247\Backend\SupplierController@purchaseOrder')->name('new-purchase-order');
-    Route::post('/purchase-order/new', 'CNX247\Backend\SupplierController@storePurchaseOrder')->name('store-purchase-order');
-    Route::get('/purchase-order/view/{slug}', 'CNX247\Backend\SupplierController@viewPurchaseOrder')->name('view-purchase-order');
-    Route::get('/procurement/purchase-orders', 'CNX247\Backend\SupplierController@purchaseOrders')->name('purchase-orders');
-    Route::post('/procurement/review/purchase-order', 'CNX247\Backend\SupplierController@reviewPurchaseOrder');
-    #Procurement supplier account
-    Route::get('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@login')->name('supplier.login');
-    Route::post('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@loginNow');
-    Route::get('/procurement/supplier-account', 'CNX247\Frontend\ProcurementController@myAccount')->name('supplier-account');
-    Route::get('/procurement/supplier/my-purchase-orders', 'CNX247\Frontend\ProcurementController@myPurchaseOrders')->name('supplier-purchase-orders');
-    Route::get('/procurement/supplier/my-purchase-orders/learn/{slug}', 'CNX247\Frontend\ProcurementController@viewMyPurchaseOrders')->name('my-purchase-orders');
-    Route::post('/procurement/supplier/take-action', 'CNX247\Frontend\ProcurementController@takeAction');
-    Route::get('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@settings')->name('supplier-settings');
-    Route::post('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@storeChanges');
-    Route::post('/procurement/supplier/contact-person', 'CNX247\Frontend\ProcurementController@updateContactPerson')->name('supplier-update-contact-person');
-    Route::post('/procurement/supplier/change-password', 'CNX247\Frontend\ProcurementController@changePassword')->name('supplier-change-password');
+#Supplier routes
+Route::get('/suppliers', 'CNX247\Backend\SupplierController@index')->name('suppliers');
+Route::get('/supplier/new', 'CNX247\Backend\SupplierController@create')->name('new-supplier');
+Route::post('/supplier/new', 'CNX247\Backend\SupplierController@store');
+Route::get('/supplier/view/{slug}', 'CNX247\Backend\SupplierController@view')->name('view-supplier');
+Route::get('/purchase-order/new/{slug}', 'CNX247\Backend\SupplierController@purchaseOrder')->name('new-purchase-order');
+Route::post('/purchase-order/new', 'CNX247\Backend\SupplierController@storePurchaseOrder')->name('store-purchase-order');
+Route::get('/purchase-order/view/{slug}', 'CNX247\Backend\SupplierController@viewPurchaseOrder')->name('view-purchase-order');
+Route::get('/procurement/purchase-orders', 'CNX247\Backend\SupplierController@purchaseOrders')->name('purchase-orders');
+Route::post('/procurement/review/purchase-order', 'CNX247\Backend\SupplierController@reviewPurchaseOrder');
+#Vendor bill
+Route::get('/vendor-bills', 'CNX247\Backend\SupplierController@vendorBills')->name('vendor-bills');
+Route::get('/new-vendor-bill', 'CNX247\Backend\SupplierController@newVendorBill')->name('new-vendor-bill');
+Route::post('/new-vendor-bill', 'CNX247\Backend\SupplierController@storeVendorBill');
+Route::get('/vendor-services', 'CNX247\Backend\SupplierController@vendorServices')->name('vendor-services');
+Route::get('/vendor-services', 'CNX247\Backend\SupplierController@vendorServices')->name('vendor-services');
+Route::post('/store-vendor-service', 'CNX247\Backend\SupplierController@storeVendorService')->name('store-vendor-service');
+Route::post('/vendor-bill/details', 'CNX247\Backend\SupplierController@vendorDetails');
+Route::get('/vendor-bill/view/{id}', 'CNX247\Backend\SupplierController@viewBill')->name('view-bill');
+Route::get('/vendor/payment', 'CNX247\Backend\SupplierController@vendorPayment')->name('vendor-payment');
+#Payment
+Route::get('/vendor/payments', 'CNX247\Backend\SupplierController@payments')->name('payments');
+Route::get('/vendor/payment/new', 'CNX247\Backend\SupplierController@newPayment')->name('new-payment');
+Route::post('/vendor/payment/new', 'CNX247\Backend\SupplierController@storePayment');
+Route::get('/vendor/payment/detail/{slug}', 'CNX247\Backend\SupplierController@paymentDetail')->name('payment-detail');
+Route::get('/vendor/payment/trash/{slug}', 'CNX247\Backend\SupplierController@trashPayment')->name('trash-payment');
+Route::get('/vendor/payment/post/{slug}', 'CNX247\Backend\SupplierController@postPayment')->name('post-payment');
+#Procurement supplier account
+Route::get('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@login')->name('supplier.login');
+Route::post('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@loginNow');
+Route::get('/procurement/supplier-account', 'CNX247\Frontend\ProcurementController@myAccount')->name('supplier-account');
+Route::get('/procurement/supplier/my-purchase-orders', 'CNX247\Frontend\ProcurementController@myPurchaseOrders')->name('supplier-purchase-orders');
+Route::get('/procurement/supplier/my-purchase-orders/learn/{slug}', 'CNX247\Frontend\ProcurementController@viewMyPurchaseOrders')->name('my-purchase-orders');
+Route::post('/procurement/supplier/take-action', 'CNX247\Frontend\ProcurementController@takeAction');
+Route::get('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@settings')->name('supplier-settings');
+Route::post('/procurement/supplier/settings', 'CNX247\Frontend\ProcurementController@storeChanges');
+Route::post('/procurement/supplier/contact-person', 'CNX247\Frontend\ProcurementController@updateContactPerson')->name('supplier-update-contact-person');
+Route::post('/procurement/supplier/change-password', 'CNX247\Frontend\ProcurementController@changePassword')->name('supplier-change-password');
 #Logistics routes
-    Route::get('/logistics/login', 'CNX247\Frontend\LogisticsAuthController@login')->name('logistics.login');
-    Route::post('/logistics/login', 'CNX247\Frontend\LogisticsAuthController@loginNow');
-    Route::get('/logistics/logistics-account', 'CNX247\Frontend\LogisticsController@myAccount')->name('logistics-account');
-    Route::get('/logistics/log', 'CNX247\Frontend\LogisticsController@log')->name('logistics-log');
-    Route::get('/logistics/check-in', 'CNX247\Frontend\LogisticsController@checkIn')->name('logistics-check-in');
-    Route::get('/logistics/check-out/{id}', 'CNX247\Frontend\LogisticsController@checkOut')->name('logistics-check-out');
-    Route::post('/logistics/check-in', 'CNX247\Frontend\LogisticsController@storeCheckIn');
-    Route::get('/logistics/drivers', 'CNX247\Backend\LogisticsController@drivers')->name('logistics-drivers');
-    Route::get('/logistics/new-driver', 'CNX247\Backend\LogisticsController@addNewDriver')->name('new-driver');
-    Route::get('/logistics/all-logs', 'CNX247\Backend\LogisticsController@allLogs')->name('all-logs');
-    Route::post('/logistics/new-driver', 'CNX247\Backend\LogisticsController@storeDriver');
-    Route::get('/logistics/driver-profile/{url}', 'CNX247\Backend\LogisticsController@driverProfile')->name('driver-profile');
-    Route::get('/logistics/pick-up-points', 'CNX247\Backend\LogisticsController@pickupPoints')->name('logistics-pick-up-points');
-    Route::post('/logistics/pick-up-point/store', 'CNX247\Backend\LogisticsController@storePickupPoint');
-    Route::post('/logistics/pick-up-point/edit', 'CNX247\Backend\LogisticsController@editPickupPoint');
-        #Driver emergency contact routes
-        Route::post('/logistics/driver/emergency-contact', 'CNX247\Backend\LogisticsController@driverEmergencyContact');
-        Route::post('/logistics/driver/kin-contact', 'CNX247\Backend\LogisticsController@driverKinContact');
-        Route::post('/logistics/driver/guarantor', 'CNX247\Backend\LogisticsController@driverGuarantorContact');
-        Route::post('/logistics/user/avatar', 'CNX247\Backend\LogisticsController@changeUserAvatar');
-        #Shipping routes
-        Route::get('/logistics/shipping', 'CNX247\Backend\LogisticsController@shipping')->name('logistics-shipping');
-        Route::get('/logistics/new-shipping', 'CNX247\Backend\LogisticsController@newShipping')->name('new-shipping');
-        #Customer routes
-        Route::get('/logistics/customers', 'CNX247\Backend\LogisticsController@customers')->name('logistics-customers');
-        Route::get('/logistics/new-customer', 'CNX247\Backend\LogisticsController@newCustomer')->name('logistics-new-customer');
-        Route::post('/store-logistic-customer', 'CNX247\Backend\LogisticsController@storeCustomer')->name('store-logistic-customer');
-        #Vehicle routes
-        Route::get('/logistics/vehicles', 'CNX247\Backend\LogisticsController@vehicles')->name('logistics-vehicles');
-        Route::get('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@newVehicle')->name('logistics-new-vehicle');
-        Route::post('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@storeVehicle');
-        Route::get('/logistics/view-vehicle/{slug}', 'CNX247\Backend\LogisticsController@viewVehicle')->name('logistics-view-vehicle');
-        Route::post('/logistics/vehicle/assign', 'CNX247\Backend\LogisticsController@assignVehicleToDriver');
+Route::get('/logistics/login', 'CNX247\Frontend\LogisticsAuthController@login')->name('logistics.login');
+Route::post('/logistics/login', 'CNX247\Frontend\LogisticsAuthController@loginNow');
+Route::get('/logistics/logistics-account', 'CNX247\Frontend\LogisticsController@myAccount')->name('logistics-account');
+Route::get('/logistics/log', 'CNX247\Frontend\LogisticsController@log')->name('logistics-log');
+Route::get('/logistics/check-in', 'CNX247\Frontend\LogisticsController@checkIn')->name('logistics-check-in');
+Route::get('/logistics/check-out/{id}', 'CNX247\Frontend\LogisticsController@checkOut')->name('logistics-check-out');
+Route::post('/logistics/check-in', 'CNX247\Frontend\LogisticsController@storeCheckIn');
+Route::get('/logistics/drivers', 'CNX247\Backend\LogisticsController@drivers')->name('logistics-drivers');
+Route::get('/logistics/new-driver', 'CNX247\Backend\LogisticsController@addNewDriver')->name('new-driver');
+Route::get('/logistics/all-logs', 'CNX247\Backend\LogisticsController@allLogs')->name('all-logs');
+Route::post('/logistics/new-driver', 'CNX247\Backend\LogisticsController@storeDriver');
+Route::get('/logistics/driver-profile/{url}', 'CNX247\Backend\LogisticsController@driverProfile')->name('driver-profile');
+Route::get('/logistics/pick-up-points', 'CNX247\Backend\LogisticsController@pickupPoints')->name('logistics-pick-up-points');
+Route::post('/logistics/pick-up-point/store', 'CNX247\Backend\LogisticsController@storePickupPoint');
+Route::post('/logistics/pick-up-point/edit', 'CNX247\Backend\LogisticsController@editPickupPoint');
+#Driver emergency contact routes
+Route::post('/logistics/driver/emergency-contact', 'CNX247\Backend\LogisticsController@driverEmergencyContact');
+Route::post('/logistics/driver/kin-contact', 'CNX247\Backend\LogisticsController@driverKinContact');
+Route::post('/logistics/driver/guarantor', 'CNX247\Backend\LogisticsController@driverGuarantorContact');
+Route::post('/logistics/user/avatar', 'CNX247\Backend\LogisticsController@changeUserAvatar');
+#Shipping routes
+Route::get('/logistics/shipping', 'CNX247\Backend\LogisticsController@shipping')->name('logistics-shipping');
+Route::get('/logistics/new-shipping', 'CNX247\Backend\LogisticsController@newShipping')->name('new-shipping');
+#Customer routes
+Route::get('/logistics/customers', 'CNX247\Backend\LogisticsController@customers')->name('logistics-customers');
+Route::get('/logistics/new-customer', 'CNX247\Backend\LogisticsController@newCustomer')->name('logistics-new-customer');
+Route::post('/store-logistic-customer', 'CNX247\Backend\LogisticsController@storeCustomer')->name('store-logistic-customer');
+#Vehicle routes
+Route::get('/logistics/vehicles', 'CNX247\Backend\LogisticsController@vehicles')->name('logistics-vehicles');
+Route::get('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@newVehicle')->name('logistics-new-vehicle');
+Route::post('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@storeVehicle');
+Route::get('/logistics/view-vehicle/{slug}', 'CNX247\Backend\LogisticsController@viewVehicle')->name('logistics-view-vehicle');
+Route::post('/logistics/vehicle/assign', 'CNX247\Backend\LogisticsController@assignVehicleToDriver');
 #Accounting routes
-    Route::get('/chart-of-accounts', 'CNX247\Backend\Accounting\ChartOfAccountController@index')->name('chart-of-accounts');
-    Route::post('/new/chart-of-account', 'CNX247\Backend\Accounting\ChartOfAccountController@createCOA')->name('create-new-coa');
-    Route::post('/get-parent-account', 'CNX247\Backend\Accounting\ChartOfAccountController@getParentAccount');
-    Route::post('/save-account', 'CNX247\Backend\Accounting\ChartOfAccountController@saveAccount');
-    Route::get('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@vat')->name('accounting-vat');
-    Route::post('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@postVat');
-    Route::get('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@openingBalance')->name('opening-balance');
-    Route::post('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@postOpeningBalance');
-    #Budget route
-    Route::get('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@index')->name('budget-profile');
-    Route::post('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@budgetProfile');
-    Route::get('/budget-setup', 'CNX247\Backend\Accounting\BudgetController@budgetSetup')->name('budget-setup');
-    Route::post('/budget-setup', 'CNX247\Backend\Accounting\BudgetController@storeBudgetSetup');
+Route::get('/chart-of-accounts', 'CNX247\Backend\Accounting\ChartOfAccountController@index')->name('chart-of-accounts');
+Route::post('/new/chart-of-account', 'CNX247\Backend\Accounting\ChartOfAccountController@createCOA')->name('create-new-coa');
+Route::post('/get-parent-account', 'CNX247\Backend\Accounting\ChartOfAccountController@getParentAccount');
+Route::post('/save-account', 'CNX247\Backend\Accounting\ChartOfAccountController@saveAccount');
+Route::get('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@vat')->name('accounting-vat');
+Route::post('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@postVat');
+Route::get('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@openingBalance')->name('opening-balance');
+Route::post('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@postOpeningBalance');
+Route::get('/accounting/setup/ledger-default-variables', 'CNX247\Backend\Accounting\ChartOfAccountController@ledgerDefaultsVariables')->name('ledger-default-variables');
+Route::post('/accounting/setup/ledger-default-variables', 'CNX247\Backend\Accounting\ChartOfAccountController@updateDefaultsVariables');
+#Report
+Route::get('/accounting/report/trial-balance', 'CNX247\Backend\Accounting\ReportController@trialBalanceView')->name('trial-balance');
+Route::post('/accounting/report/trial-balance', 'CNX247\Backend\Accounting\ReportController@trialBalance');
+Route::get('/balance-sheet', 'CNX247\Backend\Accounting\ReportController@balanceSheetView')->name('balance-sheet');
+Route::post('/balance-sheet', 'CNX247\Backend\Accounting\ReportController@balanceSheet');
+Route::get('/profit-o-loss', 'CNX247\Backend\Accounting\ReportController@profitOrLossView')->name('profit-o-loss');
+Route::post('/profit-o-loss', 'CNX247\Backend\Accounting\ReportController@profitOrLoss');
+#Posting
+Route::get('/accounting/posting/receipt', 'CNX247\Backend\Accounting\PostingController@receipt')->name('receipt-posting');
+Route::get('/accounting/posting/detail/{slug}', 'CNX247\Backend\Accounting\PostingController@receiptDetail')->name('receipt-posting-detail');
+Route::get('/accounting/posting/receipt/{slug}/post', 'CNX247\Backend\Accounting\PostingController@postReceipt')->name('receipt-posting-post');
+Route::get('/accounting/posting/trash-receipt/{slug}', 'CNX247\Backend\Accounting\PostingController@trashReceipt')->name('trash-receipt-posting');
+#Journal Entry
+Route::get('/journal-entries', 'CNX247\Backend\Accounting\JournalEntryController@journalEntries')->name('journal-entries');
+Route::get('/new-journal-entry', 'CNX247\Backend\Accounting\JournalEntryController@create')->name('new-journal-entry');
+Route::post('/new-journal-entry', 'CNX247\Backend\Accounting\JournalEntryController@store');
+Route::get('/view-journal-entry/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@view')->name('view-journal-entry');
+Route::get('/journal-entry/trash/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@trashJV')->name('trash-jv');
+Route::get('/journal-entry/post/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@postJV')->name('post-jv');
+#Budget route
+Route::get('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@index')->name('budget-profile');
+Route::post('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@budgetProfile');
+Route::get('/budget-setup', 'CNX247\Backend\Accounting\BudgetController@budgetSetup')->name('budget-setup');
+Route::post('/budget-setup', 'CNX247\Backend\Accounting\BudgetController@storeBudgetSetup');
 
 #QuickBooks routes
 //Route::get('/connect-to-quickbooks', 'CNX247\Backend\QuickBooksController@analyzeBusiness');

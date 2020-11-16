@@ -12,7 +12,7 @@ use Auth;
 class Employees extends Component
 {
     use WithPagination;
-    public $employees;
+   //public $employees;
     public $confirm_from, $confirm_to;
     public $hire_from, $hire_to;
     public $department;
@@ -26,7 +26,8 @@ class Employees extends Component
     {
         return view('livewire.backend.hr.employees',
         [
-            'departments'=>Department::where('tenant_id', Auth::user()->tenant_id)->orderBy('department_name', 'ASC')->get()
+            'departments'=>Department::where('tenant_id', Auth::user()->tenant_id)->orderBy('department_name', 'ASC')->get(),
+            'employees' => User::where('tenant_id',Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->paginate(8)
             ]);
     }
 
@@ -34,7 +35,7 @@ class Employees extends Component
     * Get list of all employees
     */
     public function getEmployees(){
-        $this->employees = User::where('tenant_id',Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->get();
+        //$this->employees = User::where('tenant_id',Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->paginate(8);
         $this->terminated = User::where('tenant_id',Auth::user()->tenant_id)->where('account_status', 2)->get();
         $this->resigned = Resignation::where('tenant_id',Auth::user()->tenant_id)->where('status', 'approved')->get();
 

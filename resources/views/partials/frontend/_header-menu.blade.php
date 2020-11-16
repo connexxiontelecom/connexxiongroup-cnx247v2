@@ -30,7 +30,16 @@
 
             <div id="navigation">
                 <ul class="navigation-menu nav-right nav-light">
-                    <li><a href="javascript:void(0)">Product</a></li>
+                    <li class="has-submenu">
+											<a href="javascript:void(0)">Product</a><span class="menu-arrow"></span>
+											<ul class="submenu">
+												<li><a href="javascript:void(0)">Human Resource</a></li>
+												<li><a href="javascript:void(0)">CRM</a></li>
+												<li><a href="javascript:void(0)">Accounting</a></li>
+												<li><a href="javascript:void(0)">Procurement <span class="badge badge-success rounded">New</span></a></li>
+												<li><a href="javascript:void(0)">Logistics</a></li>
+											</ul>
+										</li>
                     <li><a href="{{route('pricing')}}">Pricing</a></li>
                     <li><a href="{{route('support')}}">Support</a></li>
                     <li><a href="{{route('faqs')}}">FAQs</a></li>

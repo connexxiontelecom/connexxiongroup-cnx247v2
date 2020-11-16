@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "20c6ca2b2ca31217ddbd70ba5ce58afd",
+=======
+    "content-hash": "d4493e7cbc0a5fb6625af63cf2dbd2d4",
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
     "packages": [
         {
             "name": "arielmejiadev/larapex-charts",
@@ -957,6 +961,7 @@
         },
         {
             "name": "guzzlehttp/guzzle",
+<<<<<<< HEAD
             "version": "6.5.5",
             "source": {
                 "type": "git",
@@ -967,27 +972,52 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/guzzle/guzzle/zipball/9d4290de1cfd701f38099ef7e183b64b4b7b0c5e",
                 "reference": "9d4290de1cfd701f38099ef7e183b64b4b7b0c5e",
+=======
+            "version": "7.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "0aa74dfb41ae110835923ef10a9d803a22d50e79"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/0aa74dfb41ae110835923ef10a9d803a22d50e79",
+                "reference": "0aa74dfb41ae110835923ef10a9d803a22d50e79",
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+<<<<<<< HEAD
                 "guzzlehttp/promises": "^1.0",
                 "guzzlehttp/psr7": "^1.6.1",
                 "php": ">=5.5",
                 "symfony/polyfill-intl-idn": "^1.17.0"
+=======
+                "guzzlehttp/promises": "^1.4",
+                "guzzlehttp/psr7": "^1.7",
+                "php": "^7.2.5 || ^8.0",
+                "psr/http-client": "^1.0"
+            },
+            "provide": {
+                "psr/http-client-implementation": "1.0"
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
+                "php-http/client-integration-tests": "^3.0",
+                "phpunit/phpunit": "^8.5.5 || ^9.3.5",
                 "psr/log": "^1.1"
             },
             "suggest": {
+                "ext-curl": "Required for CURL handler support",
+                "ext-intl": "Required for Internationalized Domain Name (IDN) support",
                 "psr/log": "Required for using the Log middleware"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.5-dev"
+                    "dev-master": "7.1-dev"
                 }
             },
             "autoload": {
@@ -1007,6 +1037,11 @@
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://sagikazarmark.hu"
                 }
             ],
             "description": "Guzzle is a PHP HTTP client library",
@@ -1017,10 +1052,34 @@
                 "framework",
                 "http",
                 "http client",
+                "psr-18",
+                "psr-7",
                 "rest",
                 "web service"
             ],
+<<<<<<< HEAD
             "time": "2020-06-16T21:01:06+00:00"
+=======
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/alexeyshockov",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/gmponos",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-10-10T11:47:56+00:00"
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
         },
         {
             "name": "guzzlehttp/promises",
@@ -1540,6 +1599,7 @@
                 "ui"
             ],
             "time": "2020-11-03T19:45:19+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "lcobucci/jwt",
@@ -1605,6 +1665,8 @@
                 }
             ],
             "time": "2020-08-20T13:22:28+00:00"
+=======
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
         },
         {
             "name": "league/commonmark",
@@ -2055,6 +2117,7 @@
                 }
             ],
             "time": "2020-07-23T08:41:23+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "namshi/jose",
@@ -2118,6 +2181,8 @@
                 "token"
             ],
             "time": "2016-12-05T07:27:31+00:00"
+=======
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
         },
         {
             "name": "nesbot/carbon",
@@ -4675,6 +4740,8 @@
                 "psr-4": {
                     "Symfony\\Contracts\\HttpClient\\": ""
                 }
+<<<<<<< HEAD
+=======
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -4734,6 +4801,116 @@
                 "php": ">=7.2.5",
                 "symfony/deprecation-contracts": "^2.1",
                 "symfony/polyfill-mbstring": "~1.1",
+                "symfony/polyfill-php80": "^1.15"
+            },
+            "require-dev": {
+                "predis/predis": "~1.0",
+                "symfony/cache": "^4.4|^5.0",
+                "symfony/expression-language": "^4.4|^5.0",
+                "symfony/mime": "^4.4|^5.0"
+            },
+            "suggest": {
+                "symfony/mime": "To use the file extension guesser"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\HttpFoundation\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Generic abstractions related to HTTP clients",
+            "homepage": "https://symfony.com",
+<<<<<<< HEAD
+            "keywords": [
+                "abstractions",
+                "contracts",
+                "decoupling",
+                "interfaces",
+                "interoperability",
+                "standards"
+            ],
+=======
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+<<<<<<< HEAD
+            "time": "2020-10-14T17:08:19+00:00"
+        },
+        {
+            "name": "symfony/http-foundation",
+            "version": "v5.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-foundation.git",
+                "reference": "a2860ec970404b0233ab1e59e0568d3277d32b6f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/a2860ec970404b0233ab1e59e0568d3277d32b6f",
+                "reference": "a2860ec970404b0233ab1e59e0568d3277d32b6f",
+=======
+            "time": "2020-10-24T12:01:57+00:00"
+        },
+        {
+            "name": "symfony/http-kernel",
+            "version": "v5.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-kernel.git",
+                "reference": "a13b3c4d994a4fd051f4c6800c5e33c9508091dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/a13b3c4d994a4fd051f4c6800c5e33c9508091dd",
+                "reference": "a13b3c4d994a4fd051f4c6800c5e33c9508091dd",
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+<<<<<<< HEAD
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-mbstring": "~1.1",
+=======
+                "psr/log": "~1.0",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/error-handler": "^4.4|^5.0",
+                "symfony/event-dispatcher": "^5.0",
+                "symfony/http-client-contracts": "^1.1|^2",
+                "symfony/http-foundation": "^4.4|^5.0",
+                "symfony/polyfill-ctype": "^1.8",
+                "symfony/polyfill-php73": "^1.9",
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
                 "symfony/polyfill-php80": "^1.15"
             },
             "require-dev": {
@@ -5439,6 +5616,7 @@
                 }
             ],
             "time": "2020-10-23T14:02:19+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "symfony/polyfill-php56",
@@ -5504,6 +5682,8 @@
                 }
             ],
             "time": "2020-10-23T14:02:19+00:00"
+=======
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
         },
         {
             "name": "symfony/polyfill-php72",
@@ -5989,6 +6169,7 @@
                     "url": "https://github.com/symfony/contracts"
                 }
             },
+<<<<<<< HEAD
             "autoload": {
                 "psr-4": {
                     "Symfony\\Contracts\\Service\\": ""
@@ -6018,6 +6199,104 @@
                 "interoperability",
                 "standards"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-09-07T11:33:47+00:00"
+        },
+        {
+            "name": "symfony/string",
+            "version": "v5.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/string.git",
+                "reference": "a97573e960303db71be0dd8fda9be3bca5e0feea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/string/zipball/a97573e960303db71be0dd8fda9be3bca5e0feea",
+                "reference": "a97573e960303db71be0dd8fda9be3bca5e0feea",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-intl-grapheme": "~1.0",
+                "symfony/polyfill-intl-normalizer": "~1.0",
+                "symfony/polyfill-mbstring": "~1.0",
+                "symfony/polyfill-php80": "~1.15"
+            },
+            "require-dev": {
+                "symfony/error-handler": "^4.4|^5.0",
+                "symfony/http-client": "^4.4|^5.0",
+                "symfony/translation-contracts": "^1.1|^2",
+                "symfony/var-exporter": "^4.4|^5.0"
+            },
+            "type": "library",
+=======
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\String\\": ""
+                },
+                "files": [
+                    "Resources/functions.php"
+                ],
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony String component",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "grapheme",
+                "i18n",
+                "string",
+                "unicode",
+                "utf-8",
+                "utf8"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+<<<<<<< HEAD
+=======
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -6112,6 +6391,7 @@
                     "type": "tidelift"
                 }
             ],
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
             "time": "2020-10-24T12:01:57+00:00"
         },
         {
@@ -6459,6 +6739,7 @@
                 "twilio"
             ],
             "time": "2020-10-14T19:06:26+00:00"
+<<<<<<< HEAD
         },
         {
             "name": "tymon/jwt-auth",
@@ -6539,6 +6820,8 @@
                 }
             ],
             "time": "2020-09-08T12:29:20+00:00"
+=======
+>>>>>>> 8a385aa6bd079c3a975ec1aa5c393dcaf869e2bc
         },
         {
             "name": "unicodeveloper/laravel-paystack",

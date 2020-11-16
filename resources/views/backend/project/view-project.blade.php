@@ -5,13 +5,10 @@
 @endsection
 
 @section('extra-styles')
-{{-- <link rel="stylesheet" type="text/css" href="/assets/css/jquery.mCustomScrollbar.css"> --}}
-
 <link rel="stylesheet" type="text/css" href="/assets/css/component.css">
 <link rel="stylesheet" type="text/css" href="/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
     <link rel="stylesheet" type="text/css" href="/assets/bower_components/multiselect/css/multi-select.css">
     <link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
-    <!-- Animate.css -->
     <link rel="stylesheet" type="text/css" href="/assets/bower_components/animate.css/css/animate.css">
 @endsection
 

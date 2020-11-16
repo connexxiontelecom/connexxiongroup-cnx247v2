@@ -2,7 +2,7 @@
     <div class="col-md-4">
         <div class="card">
             <div class="card-header">
-                <h5 class="sub-title">Add New Supervisor</h5>
+                <h5 class="sub-title">{{$supervisorId == 0 ? 'Add New Supervisor' : 'Edit Supervisor'}}</h5>
             </div>
             <div class="card-block">
                 <form wire:submit.prevent="submitSupervisor">
@@ -46,15 +46,27 @@
                             <i class="text-danger mt-2">{{$message}}</i>
                         @enderror
                     </div>
-                    <div class="form-group d-flex justify-content-center">
-                        <button class="btn btn-mini btn-primary" type="submit"> <i class="ti-check"></i> Submit</button>
-                        <div class="preloader3 loader-block" wire:loading wire.target="submitSupervisor">
-                            <div class="circ1 loader-primary"></div>
-                            <div class="circ2 loader-primary"></div>
-                            <div class="circ3 loader-primary"></div>
-                            <div class="circ4 loader-primary"></div>
+                    @if($supervisorId == 0)
+                        <div class="form-group d-flex justify-content-center">
+                            <button class="btn btn-mini btn-primary" type="submit"> <i class="ti-check"></i> Submit </button>
+                            <div class="preloader3 loader-block" wire:loading wire.target="submitSupervisor">
+                                <div class="circ1 loader-primary"></div>
+                                <div class="circ2 loader-primary"></div>
+                                <div class="circ3 loader-primary"></div>
+                                <div class="circ4 loader-primary"></div>
+                            </div>
                         </div>
-                    </div>
+                    @elseif($supervisorId != 0)
+                        <div class="form-group d-flex justify-content-center">
+                            <button class="btn btn-mini btn-primary" type="submit"> <i class="ti-check"></i> Save Changes</button>
+                            <div class="preloader3 loader-block" wire:loading wire.target="submitSupervisor">
+                                <div class="circ1 loader-primary"></div>
+                                <div class="circ2 loader-primary"></div>
+                                <div class="circ3 loader-primary"></div>
+                                <div class="circ4 loader-primary"></div>
+                            </div>
+                        </div>
+                    @endif
                 </form>
 
             </div>
@@ -86,7 +98,7 @@
                                     <td>{{$super->department->department_name ?? ''}}</td>
                                     <td>{{date('d F, Y', strtotime($super->created_at)) ?? ''}} @ <small>{{date('h:ia', strtotime($super->created_at))}}</small></td>
                                     <td>
-                                        <a href=""> <i class="ti-pencil text-warning"></i> </a>
+                                        <a href="javascript:void(0);" wire:click="editSupervisor({{$super->user_id}})"> <i class="ti-pencil text-warning"></i> </a>
                                     </td>
                                 </tr>
                             @endforeach

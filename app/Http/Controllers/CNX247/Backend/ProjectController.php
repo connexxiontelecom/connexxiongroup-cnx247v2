@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Notifications\NewPostNotification;
 use App\Post;
 use App\ResponsiblePerson;
+use App\ProjectBudget;
+use App\ProjectDetail;
 use App\Participant;
 use App\Observer;
 use App\Priority;
@@ -16,6 +18,7 @@ use App\Link;
 use App\User;
 use App\Budget;
 use Auth;
+use DB;
 class ProjectController extends Controller
 {
     public function __construct()
@@ -126,7 +129,38 @@ class ProjectController extends Controller
     * New task
     */
     public function viewProject(){
+
         return view('backend.project.view-project');
+    }
+    public function projectBudget($url){
+
+        $project = Post::where('post_url', $url)
+                        ->where('tenant_id',Auth::user()->tenant_id)->first();
+        if(!empty($project)){
+            $budgets = ProjectBudget::where('project_id', $project->id)->get();
+            return view('backend.project.budget',['project'=>$project, 'budgets'=>$budgets]);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Record not found.");
+            return back();
+        }
+    }
+
+    public function storeProjectBudget(Request $request){
+        $this->validate($request,[
+            'budget_head'=>'required',
+            'amount'=>'required'
+        ]);
+        $budget = new ProjectBudget;
+        $budget->budget_title = $request->budget_head;
+        $budget->budget_amount = $request->amount;
+        $budget->comment = $request->comment;
+        $budget->created_by = Auth::user()->id;
+        $budget->tenant_id = Auth::user()->tenant_id;
+        $budget->project_id = $request->projectId;
+        $budget->save();
+        session()->flash("success", "<strong>Success!</strong> Budget saved.");
+        return back();
+
     }
     /*
     * Project calendar
@@ -390,6 +424,38 @@ class ProjectController extends Controller
             }
         }
         return redirect()->route('view-project', ["url" => $request->url]);
+    }
+
+    public function projectInvoice($slug){
+        $project = Post::where('post_url', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($project)){
+            $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->select()->get();
+            return view('backend.project.invoice', ['project'=>$project, 'accounts'=>$accounts]);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> No record found.");
+            return back();
+        }
+    }
+
+    public function storeProjectInvoice(Request $request){
+        if(count($request->accounts) > 0){
+            for($i = 0; $i<count($request->accounts); $i++){
+                $invoice = new ProjectDetail;
+                $invoice->project_id = $request->ref_no;
+                $invoice->ref_no = $request->ref_no;
+                $invoice->tenant_id = Auth::user()->tenant_id;
+                $invoice->created_by = Auth::user()->id;
+                $invoice->description = $request->description[$i];
+                $invoice->glcode = $request->accounts[$i];
+                $invoice->amount = $request->amount[$i];
+                $invoice->slug = substr(sha1(time()), 32,40);
+                $invoice->save();
+            }
+            session()->flash("success", "<strong>Success! </strong> Invoice submitted.");
+            return redirect()->route('project-board');
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Something went wrong. Try again.");
+        }
     }
 
 }

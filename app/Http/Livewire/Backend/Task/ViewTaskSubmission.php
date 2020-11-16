@@ -9,6 +9,8 @@ class ViewTaskSubmission extends Component
 {
     public function render()
     {
-        return view('livewire.backend.task.view-task-submission',['submissions' => PostSubmission::orderBy('id', 'DESC')->get()]);
+        return view('livewire.backend.task.view-task-submission',
+        ['submissions' => PostSubmission::orderBy('id', 'DESC')->get()
+        ]);
     }
 }
