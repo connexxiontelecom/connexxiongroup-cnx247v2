@@ -366,7 +366,7 @@ class CNX247DriveController extends Controller
 			endforeach;
 
 
-			$size = $sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size;
+			$size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size)/1000000000;
 
 
         if($size >= $storage_size){
