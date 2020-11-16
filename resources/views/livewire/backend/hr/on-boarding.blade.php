@@ -21,6 +21,15 @@
                             {!! session()->get('success') !!}
                         </div>
                     @endif
+
+                    @if (session()->has('error'))
+                        <div class="alert alert-danger background-danger mt-3">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <i class="icofont icofont-close-line-circled text-white"></i>
+                            </button>
+                            {!! session()->get('error') !!}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

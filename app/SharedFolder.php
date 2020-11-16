@@ -4,8 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Folder extends Model
+class SharedFolder extends Model
 {
     //
-
 }
