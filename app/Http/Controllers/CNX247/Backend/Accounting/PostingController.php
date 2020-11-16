@@ -51,9 +51,7 @@ class PostingController extends Controller
             $receipt->posted = 1;
             $receipt->date_posted = now();
             $receipt->save();
-            //$invoiceGL = DefaultAccount::where('handle', 'invoice')->where('tenant_id', Auth::user()->tenant_id)->first();
             $client = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $receipt->client_id)->first();
-            //$receiptGL = DefaultAccount::where('handle', 'receipt')->where('tenant_id', Auth::user()->tenant_id)->first();
             $detail = ReceiptItem::where('receipt_id', $receipt->id)->where('tenant_id', Auth::user()->tenant_id)->get();
             # Post to GL
             $bankGl = [

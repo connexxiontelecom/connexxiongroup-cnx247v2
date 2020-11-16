@@ -89,5 +89,8 @@ class Post extends Model
     public function projectInvoices(){
         return $this->hasMany(Invoice::class, 'project_id');
     }
+    public function getProjectBudgetFinancials(){
+        return $this->hasMany(BudgetFinancial::class, 'project_id');
+    }
 
 }

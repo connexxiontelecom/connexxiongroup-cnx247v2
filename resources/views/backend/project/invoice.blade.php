@@ -39,13 +39,32 @@
             </div>
         </div>
    @endif
+   <div class="row">
+       <div class="col-md-12 col-sm-12 col-lg-12">
+            <nav class="navbar navbar-light bg-faded m-b-30 p-10 filter-bar">
+                <div class="row">
+                    <div class="d-inline-block">
+                        <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
+                        <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
+                        <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
+                        <a href="{{ route('project-receipt', $project->post_url) }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-receipt "></i>  Receipt </a>
+                    </div>
+                </div>
+                <div class="nav-item nav-grid">
+                    <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Gantt</a>
+                    <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
+                    <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
+                </div>
+            </nav>
+       </div>
+   </div>
    <form action="{{route('store-project-invoice')}}" method="post">
        @csrf
     <div class="card">
         <div class="row invoice-contact">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="invoice-box row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <table class="table table-responsive invoice-table table-borderless">
                             <tbody>
                                 <tr>
@@ -63,6 +82,27 @@
                                 </tr>
                                 <tr>
                                     <td>{{Auth::user()->tenant->phone ?? 'Phone Number here'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-6">
+                        <table class="table table-responsive invoice-table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h5 class="sub-title"><strong>Project Name:</strong> {{$project->post_title ?? ''}}</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong  style="text-transform: uppercase;">Start Date:</strong> <label for="" class="label label-primary">{{!is_null($project->start_date) ? date('d F, Y', strtotime($project->start_date)) : '-' }}</label> </td>
+                                </tr>
+                                <tr>
+                                    <td><strong style="text-transform: uppercase;">Due Date:</strong> <label for="" class="label label-danger">{{!is_null($project->end_date) ? date('d F, Y', strtotime($project->end_date)) : '-' }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><strong  style="text-transform: uppercase;">Created By:</strong> {{$project->user->first_name ?? ''}} {{$project->surname ?? ''}}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -91,9 +131,9 @@
                         </div>
                         @if (count($budgets) > 0)
                         <input type="hidden" name="setBudet" value="1">
-                        <div class="col-md-12 col-xs-12 invoice-client-info mt-4">
+                        <div class="col-md-12 col-xs-12 mt-4">
                             <label for="">Budget <sup class="text-danger">*</sup></label>
-                            <select name="budget" id="budget" class="form-control js-example-basic-single select-client">
+                            <select name="budget" id="budget" class="form-control js-example-basic-single">
                                 <option selected disabled>Select budget</option>
                                 @foreach ($budgets as $budget)
                                     <option value="{{$budget->id}}">{{$budget->budget_title ?? ''}}</option>
@@ -242,21 +282,23 @@
 @endsection
 @section('dialog-section')
 <div class="modal fade" id="budgetModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-warning">
-                <h6 class="modal-title">Project Budget</h6>
+                <h6 class="modal-title" style="text-transform: uppercase">Project Budget</h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <h1>hello there</h1>
+                <h5 class="sub-title">{{$project->post_title ?? ''}}</h5>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12  inject-table"></div>
+                </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <div class="btn-group">
                     <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Close</button>
-                    <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitComplaintBtn"><i class="mr-2 ti-check"></i>Submit</button>
                 </div>
             </div>
         </div>
@@ -308,7 +350,15 @@
 
         $(document).on('change', '#budget', function(e){
             e.preventDefault();
-            $('#budgetModal').modal('show');
+            axios.post('/project/get-budget',{budget:$(this).val()})
+            .then(response=>{
+                $('.inject-table').html(response.data);
+                $('#budgetModal').modal('show');
+            })
+            .catch(error=>{
+
+            });
+
         });
 
         $(document).on('change', '.select-client', function(e){

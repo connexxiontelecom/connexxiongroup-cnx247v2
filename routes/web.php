@@ -341,8 +341,10 @@ Route::post('/delete/project', 'CNX247\Backend\ProjectController@deleteProject')
 Route::get('/project/edit/{url}', 'CNX247\Backend\ProjectController@editProject')->name('edit-project');
 Route::post('/project/update', 'CNX247\Backend\ProjectController@updateProject')->name('update-project');
 Route::post('/project/milestone', 'CNX247\Backend\ProjectController@createProjectMilestone');
+#Invoice
 Route::get('/project/invoice/{slug}', 'CNX247\Backend\ProjectController@projectInvoice')->name('project-invoice');
 Route::post('/project/invoice', 'CNX247\Backend\ProjectController@storeProjectInvoice')->name('store-project-invoice');
+Route::post('/project/get-budget', 'CNX247\Backend\ProjectController@getProjectBudget');
 #Receipt
 Route::get('/project/receipt/{slug}', 'CNX247\Backend\ProjectController@projectReceipt')->name('project-receipt');
 Route::post('/project/receipt', 'CNX247\Backend\ProjectController@storeProjectReceipt')->name('store-project-receipt');
@@ -350,6 +352,7 @@ Route::post('/project/receipt', 'CNX247\Backend\ProjectController@storeProjectRe
 Route::get('/project/bill/{slug}', 'CNX247\Backend\ProjectController@projectBill')->name('project-bill');
 Route::post('/project/bill', 'CNX247\Backend\ProjectController@storeProjectBill')->name('store-project-bill');
 
+Route::get('/project/project-financials/{slug}', 'CNX247\Backend\ProjectController@projectFinancials')->name('project-financials');
 Route::post('/add-project-responsible', 'CNX247\Backend\ProjectController@addResponsiblePerson')->name('add-project-responsible');
 Route::post('/add-project-observers', 'CNX247\Backend\ProjectController@addObserver')->name('add-project-observers');
 Route::post('/add-project-participants', 'CNX247\Backend\ProjectController@addParticipant')->name('add-project-participants');

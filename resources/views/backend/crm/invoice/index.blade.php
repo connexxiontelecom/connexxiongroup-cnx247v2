@@ -23,6 +23,19 @@
 @endsection
 
 @section('content')
+<div class="card">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <h5 class="sub-title text-center">
+                    Invoices
+                </h5>
+            </div>
+        </div>
+
+    </div>
+</div>
+
     <div class="row">
         <div class="col-md-12 col-xl-12">
             <div class="card">

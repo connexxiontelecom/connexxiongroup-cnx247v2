@@ -573,7 +573,7 @@ class ProjectController extends Controller
                     'narration' => 'Invoice generation for ' . $updateClient->company_name ?? '',
                     'dr_amount' => $totalAmount + ($totalAmount*$policy->vat)/100,
                     'cr_amount' => 0,
-                    'ref_no' => $master->invoice_no ?? '',
+                    'ref_no' => $request->ref_no,
                     'bank' => 0,
                     'ob' => 0,
                     'transaction_date' => $master->created_at,
@@ -586,7 +586,7 @@ class ProjectController extends Controller
                     'narration' => 'VAT on invoice no. '.$master->invoice_no.' for '.$updateClient->company_name,
                     'dr_amount' => 0,
                     'cr_amount' => ($totalAmount*$policy->vat)/100 ?? 0,
-                    'ref_no' => $master->invoice_no ?? '',
+                    'ref_no' => $request->ref_no,
                     'bank' => 0,
                     'ob' => 0,
                     'transaction_date' => $master->created_at,
@@ -600,7 +600,7 @@ class ProjectController extends Controller
                         'narration' => 'Invoice generation for ' . $d->description,
                         'dr_amount' => 0,
                         'cr_amount' => $d->total ?? 0,
-                        'ref_no' => $invoice->invoice_no ?? '',
+                        'ref_no' => $request->ref_no,
                         'bank' => 0,
                         'ob' => 0,
                         'transaction_date' => $invoice->created_at,
@@ -632,7 +632,7 @@ class ProjectController extends Controller
                         ->get();
         $client = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $invoice->client_id)->first();
         $invoices = Invoice::where('tenant_id', Auth::user()->tenant_id)
-                            //->where('status', 1)
+                            ->where('status','!=', 1)
                             ->where('project_id', $project->id)->get();
         if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
             $status = 1; //subscribed for accounting package
@@ -670,56 +670,64 @@ class ProjectController extends Controller
     }
 
     public function storeProjectReceipt(Request $request){
-        //return dd($request->all());
         $this->validate($request,[
             'payment_date'=>'required|date',
             'payment_method'=>'required',
             'reference_no'=>'required'
         ]);
-        if(count($request->amount) > 0){
+        if(count(array_filter($request->payment)) > 0){
             $totalAmount = 0;
+            $arrayCount = 0;
             for($i = 0;  $i<count($request->amount); $i++){
                 $totalAmount += $request->amount[$i];
+                if($request->payment[$i] != null){
+                    $arrayCount++;
+                }
             }
             $client = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->client)->first();
             $master = new Receipt;
-            //$master->invoice_no = $request->invoice_no;
             $master->client_id = $request->client;
             $master->project_id = $request->ref_no;
             $master->issue_date = $request->payment_date;
             $master->payment_type = $request->payment_method;
             $master->ref_no = $request->ref_no;
             $master->amount = $totalAmount;
+            $master->bank = $request->bank;
             $master->issued_by = Auth::user()->id;
             $master->tenant_id = Auth::user()->tenant_id;
             $master->slug = substr(sha1(time()),32,40);
             $master->save();
             $receiptId = $master->id;
-
-
                 $project = Post::where('id',$request->ref_no)->where('tenant_id', Auth::user()->tenant_id)->first();
-                for($i = 0; $i<count($request->accounts); $i++){
+                $payment = array_filter($request->payment);
+                $reIndexed = array_values($payment);
+                for($j = 0; $j<$arrayCount; $j++){
                     $invoice = new ReceiptItem;
                     $invoice->tenant_id = Auth::user()->tenant_id;
                     $invoice->receipt_id = $receiptId;
-                    $invoice->invoice_id = $request->invoices[$i];
-                    $invoice->glcode = $request->accounts[$i];
-                    $invoice->payment = $request->payment[$i];
+                    $invoice->invoice_id = $request->invoices[$j];
+                    $invoice->glcode = $request->accounts[$j];
+                    $invoice->payment = $reIndexed[$j];
                     $invoice->save();
                     #project budget table
+
                     $budget = BudgetFinance::where('project_id', $request->ref_no)
                     ->where('tenant_id', Auth::user()->tenant_id)
-                    ->where('budget_id', $request->budget)
-                    ->where('invoice_id',$request->invoices[$i])
+                    //->where('budget_id', $request->budget)
+                    ->where('invoice_id',$request->invoices[$j])
                     ->first();
-                    $budget->receipt_id = $receiptId;
-                    $budget->save();
-                    $payInvoice = Invoice::where('id', $request->invoices[$i])->where('tenant_id', Auth::user()->tenant_id)->first();
-                    $payInvoice->paid_amount += $request->payment[$j];
-                    if($payInvoice->paid_amount >= $invoice->total){
-                        $payInvoice->status = 1; //payment complete
+                    if(!empty($budget)){
+                        $budget->receipt_id = $receiptId;
+                        $budget->save();
                     }
-                    $payInvoice->save();
+                        $payInvoice = Invoice::where('id', $request->invoices[$j])
+                                            ->where('tenant_id', Auth::user()->tenant_id)
+                                            ->first();
+                        $payInvoice->paid_amount += $request->payment[$j];
+                        if($payInvoice->paid_amount >= $payInvoice->total){
+                            $payInvoice->status = 1; //payment complete
+                        }
+                        $payInvoice->save();
                 }
 
             session()->flash("success", "<strong>Success! </strong> Invoice submitted.");
@@ -791,6 +799,7 @@ class ProjectController extends Controller
         $bill->tenant_id = Auth::user()->tenant_id;
         $bill->vendor_id = $request->vendor;
         $bill->bill_no = $request->bill_no;
+        $bill->project_id = $request->projectId;
         $bill->bill_date = $request->issue_date;
         $bill->bill_amount = $totalAmount;
         $bill->vat_amount = ($totalAmount * $policy->vat)/100;
@@ -862,6 +871,23 @@ class ProjectController extends Controller
         }
         session()->flash("success", "<strong>Success!</strong> New Bill registered.");
         return redirect()->route('vendor-bills');
+    }
+
+    public function getProjectBudget(Request $request){
+        $this->validate($request,[
+            'budget'=>'required'
+        ]);
+        $budget = ProjectBudget::where('id', $request->budget)->first();
+        if(!empty($budget)){
+            return view('backend.project.common._budget-table', ['budget'=>$budget]);
+        }
+    }
+
+    public function projectFinancials($slug){
+        $project = Post::where('tenant_id', Auth::user()->tenant_id)->where('post_url', $slug)->first();
+        if(!empty($project)){
+            return view('backend.project.project-financials', ['project'=>$project]);
+        }
     }
 
 }

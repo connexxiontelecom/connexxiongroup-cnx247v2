@@ -17,6 +17,7 @@ class CreateBillMastersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('vendor_id');
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->string('bill_no');
             $table->string('status')->default('unpaid');
             $table->dateTime('bill_date');

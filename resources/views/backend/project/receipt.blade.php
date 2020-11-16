@@ -39,13 +39,32 @@
             </div>
         </div>
    @endif
+   <div class="row">
+    <div class="col-md-12 col-sm-12 col-lg-12">
+         <nav class="navbar navbar-light bg-faded m-b-30 p-10 filter-bar">
+             <div class="row">
+                 <div class="d-inline-block">
+                     <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
+                     <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
+                     <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
+                     <a href="{{ route('project-receipt', $project->post_url) }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-receipt "></i>  Receipt </a>
+                 </div>
+             </div>
+             <div class="nav-item nav-grid">
+                 <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Gantt</a>
+                 <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
+                 <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
+             </div>
+         </nav>
+    </div>
+</div>
    <form action="{{route('store-project-receipt')}}" method="post">
        @csrf
     <div class="card">
         <div class="row invoice-contact">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="invoice-box row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <table class="table table-responsive invoice-table table-borderless">
                             <tbody>
                                 <tr>
@@ -63,6 +82,27 @@
                                 </tr>
                                 <tr>
                                     <td>{{Auth::user()->tenant->phone ?? 'Phone Number here'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-6">
+                        <table class="table table-responsive invoice-table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h5 class="sub-title"><strong>Project Name:</strong> {{$project->post_title ?? ''}}</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong  style="text-transform: uppercase;">Start Date:</strong> <label for="" class="label label-primary">{{!is_null($project->start_date) ? date('d F, Y', strtotime($project->start_date)) : '-' }}</label> </td>
+                                </tr>
+                                <tr>
+                                    <td><strong style="text-transform: uppercase;">Due Date:</strong> <label for="" class="label label-danger">{{!is_null($project->end_date) ? date('d F, Y', strtotime($project->end_date)) : '-' }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><strong  style="text-transform: uppercase;">Created By:</strong> {{$project->user->first_name ?? ''}} {{$project->surname ?? ''}}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -167,11 +207,11 @@
                                     </td>
                                     <td>
                                         <div class="form-group">
-                                            <input type="number" class="form-control"  name="amount[]" step="0.01" placeholder="Amount" readonly value="{{$invoice->total}}">
+                                            <input type="number" class="form-control"  name="amount[]" step="0.01" placeholder="Amount" readonly value="{{$invoice->total - $invoice->paid_amount}}">
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Payment" step="0.01" name="payment[]" class="form-control aggregate">
+                                        <input type="number" placeholder="Payment" step="0.01" name="payment[]" class="form-control payment">
                                         @error('payment')
                                             <i class="text-danger mt-2">{{$message}}</i>
                                         @enderror
@@ -228,8 +268,6 @@
             placeholder: "Select account"
         });
         var grand_total = 0;
-        $('.invoice-detail-table').on('mouseup keyup', 'input[type=number]', ()=> calculateTotals());
-
         $(document).on('click', '.add-line', function(e){
             e.preventDefault();
             var new_selection = $('.item').first().clone();
@@ -248,17 +286,17 @@
             calculateTotals();
         });
 
-        $('.aggregate').on('change', function(e){
+        $('.payment').on('change', function(e){
             e.preventDefault();
-            setTotal($(this).val());
+            setTotal();
         });
 
-    function setTotal(val){
+    function setTotal(){
         var sum = 0;
         $(".payment").each(function(){
-            sum += +val;
+            sum += +$(this).val();
         });
-            $(".total").text(sum);
+            $(".total").text(sum.toLocaleString());
     }
 });
 </script>
