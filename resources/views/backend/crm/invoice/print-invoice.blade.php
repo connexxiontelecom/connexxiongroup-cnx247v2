@@ -67,10 +67,10 @@
             <div class="row invoive-info">
                 <div class="col-md-4 col-xs-12 invoice-client-info">
                     <h6>Client Information :</h6>
-                    <h6 class="m-0">{{$invoice->client->first_name ?? ''}} {{$invoice->client->surname ?? ''}}</h6>
-                    <p class="m-0 m-t-10">{{$invoice->client->street_1 ?? ''}}, {{$invoice->client->postal_code ?? ''}} {{$invoice->client->city ?? ''}}</p>
-                    <p class="m-0">{{$invoice->client->mobile_no ?? ''}}</p>
-                    <p><a href="mailto:{{$invoice->client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[{{$invoice->client->email ?? ''}}]</a></p>
+                    <h6 class="m-0">{{$invoice->client->company_name ?? ''}}</h6>
+                    <p class="m-0 m-t-10">{{$invoice->client->street_1 ?? ''}}, {{$invoice->client->postal_code ?? ''}} {{$invoice->client->city ?? 'City here'}}</p>
+                    <p class="m-0">{{$invoice->client->mobile_no ?? 'Client mobile no. here'}}</p>
+                    <p><a href="mailto:{{$invoice->client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[{{$invoice->client->email ?? 'Email here'}}]</a></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6>Order Information :</h6>
@@ -96,7 +96,7 @@
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Invoice Number <span>#{{$invoice->invoice_no}}</span></h6>
                     <h6 class="text-uppercase text-primary">Balance Due :
-                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total - $invoice->cash,2)}}</span>
+                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total - $invoice->paid_amount,2)}}</span>
                     </h6>
                 </div>
             </div>

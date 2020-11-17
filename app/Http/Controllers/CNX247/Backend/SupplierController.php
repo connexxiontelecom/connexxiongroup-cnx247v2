@@ -385,18 +385,25 @@ class SupplierController extends Controller
     }
 
     public function storePayment(Request $request){
-        $request->validate([
+		//	return dd($request->all());
+         $request->validate([
             'bank'=>'required',
             'payment_amount'=>'required',
             'reference_no'=>'required',
             'bills.*'=>'required',
             'payment.*'=>'required',
-            'issue_date'=>'required'
+            'issue_date'=>'required|date'
         ]);
-        $payment_total = 0;
+				$payment_total = 0;
+				$arrayCount = 0;
+				//return dd($request->payment);
         for($p = 0; $p<count($request->payment); $p++){
-            $payment_total += $request->payment[$p];
-        }
+						$payment_total += str_replace(',','',$request->payment[$p]);
+						if(str_replace(',','',$request->payment[$p]) != null){
+							$arrayCount++;
+					}
+				}
+			//	return dd($payment_total);
         if($payment_total > $request->payment_amount){
             session()->flash("error", "<strong>Ooops!</strong> Your total payment cannot be more than due amount.");
             return back();
@@ -412,26 +419,36 @@ class SupplierController extends Controller
             $pay->date_now = now();
             $pay->slug = substr(sha1(time()),32,40);
             $pay->save();
-            $paymentId = $pay->id;
+						$paymentId = $pay->id;
+						#Payment
+						$payment = array_filter($request->payment);
+						$reIndexedPayment = array_values($payment);
+
+						#Description
+						$description = array_filter($request->description);
+						$reIndexedDescription = array_values($description);
+						#Bill
+						$bills = array_filter($request->bills);
+						$reIndexedBills = array_values($bills);
 
             #payment details
-            for($n = 0; $n<count($request->payment); $n++){
+            for($n = 0; $n < $arrayCount; $n++){
                 $detail = new PayDetail();
-                $detail->bill_id = $request->bills[$n];
-                $detail->pay_amount = $request->payment[$n];
+                $detail->bill_id = $reIndexedBills[$n];
+                $detail->pay_amount = str_replace(',','',$reIndexedPayment[$n]);
                 $detail->pay_id = $paymentId;
                 $detail->tenant_id = Auth::user()->tenant_id;
-                $detail->description = $request->description[$n];
+                $detail->description = $reIndexedDescription[$n];
                 $detail->save();
                 #bill master
-                $bill = BillMaster::find($request->bills[$n]);
-                $bill->paid_amount += $request->payment[$n];
+                $bill = BillMaster::find($reIndexedBills[$n]);
+                $bill->paid_amount += str_replace(',','',$reIndexedPayment[$n]);
                 if($bill->paid_amount + $bill->vat_amount >= $bill->bill_amount){
                     $bill->status = 'paid';
                     $bill->paid = 1;
                     $bill->save();
                 }
-                if($request->payment[$n] < $bill->bill_amount){
+                if(str_replace(',','',$reIndexedPayment[$n]) < $bill->bill_amount){
                     $bill->status = 'partial';
                     $bill->save();
                 }
@@ -443,13 +460,7 @@ class SupplierController extends Controller
     }
 
     public function paymentDetail($slug){
-        $payment = /* DB::table('pay_masters as p')
-                    ->join('banks as b', 'p.bank_id', '=', 'b.bank_gl_code')
-                    ->select()
-                    ->where('p.slug', $slug)
-                    ->where('p.tenant_id', Auth::user()->tenant_id)
-                    ->first(); */
-        PayMaster::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
+        $payment = PayMaster::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
         $items = PayDetail::where('pay_id', $payment->id)->where('tenant_id', Auth::user()->tenant_id)->get();
         if(!empty($payment) && count($items) > 0){
             return view('backend.procurement.payment.view',['payment'=>$payment, 'items'=>$items]);

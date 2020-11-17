@@ -337,6 +337,10 @@ Route::get('/project/calendar', 'CNX247\Backend\ProjectController@projectCalenda
 Route::get('/project-calendar', 'CNX247\Backend\ProjectController@getProjectCalendarData'); //[Data source]
 Route::get('/project/gantt-chart', 'CNX247\Backend\ProjectController@projectGanttChart')->name('project-gantt-chart');
 Route::get('/project-gantt-chart', 'CNX247\Backend\ProjectController@getProjectGanttChartData');
+#Individual project gantt chart
+Route::get('/load-project/gantt-chart/{slug}', 'CNX247\Backend\ProjectController@loadprojectGanttChart')->name('load-project-gantt-chart');
+Route::get('/project-gantt-chart/{slug}', 'CNX247\Backend\ProjectController@viewProjectGanttChartData');
+
 Route::get('/project/project-analytics', 'CNX247\Backend\ProjectController@projectAnalytics')->name('project-analytics');
 Route::post('/delete/project', 'CNX247\Backend\ProjectController@deleteProject');
 Route::get('/project/edit/{url}', 'CNX247\Backend\ProjectController@editProject')->name('edit-project');

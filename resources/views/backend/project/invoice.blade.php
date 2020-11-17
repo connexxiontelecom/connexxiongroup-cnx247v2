@@ -41,24 +41,10 @@
    @endif
    <div class="row">
        <div class="col-md-12 col-sm-12 col-lg-12">
-            <nav class="navbar navbar-light bg-faded m-b-30 p-10 filter-bar">
-                <div class="row">
-                    <div class="d-inline-block">
-                        <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
-                        <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
-                        <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
-                        <a href="{{ route('project-receipt', $project->post_url) }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-receipt "></i>  Receipt </a>
-                    </div>
-                </div>
-                <div class="nav-item nav-grid">
-                    <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Gantt</a>
-                    <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
-                    <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
-                </div>
-            </nav>
+						@include('backend.project.common._project-detail-slab')
        </div>
    </div>
-   <form action="{{route('store-project-invoice')}}" method="post">
+   <form action="{{route('store-project-invoice')}}" method="post" autocomplete="off">
        @csrf
     <div class="card">
         <div class="row invoice-contact">
@@ -130,13 +116,13 @@
                             @enderror
                         </div>
                         @if (count($budgets) > 0)
-                        <input type="hidden" name="setBudet" value="1">
+                        <input type="hidden" name="setBudget" value="1">
                         <div class="col-md-12 col-xs-12 mt-4">
                             <label for="">Budget <sup class="text-danger">*</sup></label>
                             <select name="budget" id="budget" class="form-control js-example-basic-single">
                                 <option selected disabled>Select budget</option>
                                 @foreach ($budgets as $budget)
-                                    <option value="{{$budget->id}}">{{$budget->budget_title ?? ''}}</option>
+																<option value="{{$budget->id}}">{{$budget->budget_title ?? ''}} -  Budget: {{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($budget->budget_amount,2) ?? 0}}, Actual: {{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($budget->actual_amount,2) ?? 0}}</option>
                                 @endforeach
                             </select>
                             @error('budget')
@@ -186,7 +172,8 @@
                             <i class="text-danger mt-4 d-flex">{{$message}}</i>
                         @enderror
                         <input type="hidden" name="setAccount" id="setAccount" value="{{old('setAccount')}}">
-                        <input type="hidden" value="{{$status}}" name="status">
+												<input type="hidden" value="{{$status}}" name="status">
+												<input type="hidden" name="vat" id="vat" value="{{$policy->vat}}">
                         @error('client_account')
                             <i class="text-danger mt-3 d-flex">{{$message}}</i>
                         @enderror
@@ -203,7 +190,7 @@
                                 <tr class="thead-default">
                                     <th>Description</th>
                                     <th>Account</th>
-                                    <th>Amount</th>
+                                    <th>Amount ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                     <th class="text-danger">Action</th>
                                 </tr>
                             </thead>
@@ -231,7 +218,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Amount" step="0.01" name="amount[]" class="form-control aggregate">
+                                        <input type="text" placeholder="Amount" step="0.01" name="amount[]" class="form-control payment autonumber">
                                         @error('amount')
                                             <i class="text-danger mt-2">{{$message}}</i>
                                         @enderror
@@ -255,6 +242,16 @@
                 <div class="col-sm-12">
                     <table class="table table-responsive invoice-table invoice-total">
                         <tbody>
+													<tr class="text-info">
+														<td>
+																<hr>
+																<h6 class="text-primary">VAT ({{$policy->vat}}%) :</h6>
+														</td>
+														<td>
+																<hr>
+																<h6 class="text-primary"> <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="vat"> 0.00</span></h6>
+														</td>
+												</tr>
                             <tr class="text-info">
                                 <td>
                                     <hr>
@@ -281,7 +278,7 @@
 </div>
 @endsection
 @section('dialog-section')
-<div class="modal fade" id="budgetModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="budgetModa" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-warning">
@@ -310,6 +307,10 @@
 <script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
 <script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+<script src="\assets\pages\form-masking\inputmask.js"></script>
+<script src="\assets\pages\form-masking\jquery.inputmask.js"></script>
+<script src="/assets/pages/form-masking/autoNumeric.js"></script>
+<script src="/assets/pages/form-masking/form-mask.js"></script>
 <script>
     $(document).ready(function(){
         if($('#setAccount') == 1){
@@ -323,7 +324,6 @@
             placeholder: "Select account"
         });
         var grand_total = 0;
-        $('.invoice-detail-table').on('mouseup keyup', 'input[type=number]', ()=> calculateTotals());
 
         $(document).on('click', '.add-line', function(e){
             e.preventDefault();
@@ -343,9 +343,10 @@
             calculateTotals();
         });
 
-        $('.aggregate').on('change', function(e){
+        $('.payment').on('change', function(e){
             e.preventDefault();
-            setTotal($(this).val());
+						setTotal();
+						$(this).val().toLocaleString();
         });
 
         $(document).on('change', '#budget', function(e){
@@ -374,13 +375,15 @@
                }
            });
         });
-    function setTotal(val){
+				function setTotal(){
         var sum = 0;
         $(".payment").each(function(){
-            sum += +val;
-        });
-            $(".total").text(sum);
-    }
+            sum += +$(this).val().replace(/,/g, '');
+				});
+				var vat = ($('#vat').val() * sum)/100;
+									$(".vat").text(vat.toLocaleString());
+            $(".total").text(sum.toLocaleString());
+		}
 });
 </script>
 @endsection

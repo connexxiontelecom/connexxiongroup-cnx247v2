@@ -38,7 +38,7 @@
                         </div>
                     @endif
                     <a href="{{route('vendor-bills')}}" class="btn mb-4 btn-primary btn-mini"><i class="ti-layout mr-2"></i>New Payment</a>
-                    <form action="{{route('new-payment')}}" method="post">
+                    <form action="{{route('new-payment')}}" method="post" autocomplete="off">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -57,11 +57,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Payment Amount</label>
-                                    <input type="number" step="0.01" name="payment_amount" id="payment_amount" placeholder="Payment Amount" value="{{ $pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') }}" readonly class="form-control">
+                                    <input type="text" name="payment_amount_placeholder" id="payment_amount" placeholder="Payment Amount" value="{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{ number_format($pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') - $pending_bills->sum('paid_amount'),2) }}" readonly class="form-control">
                                     @error('payment_amount')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
-
+<input type="hidden" name="payment_amount" value="{{$pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') - $pending_bills->sum('paid_amount')}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -134,7 +134,7 @@
                                                 <td>
                                                     <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount  - $item->paid_amount + $item->vat_amount,2)}}</p>
                                                 </td>
-                                                <td><input type="number" step="0.01" class="form-control payment" name="payment[]" style="width: 120px;"></td>
+                                                <td><input type="text" class="form-control payment autonumber" name="payment[]" style="width: 120px;"></td>
                                             </tr>
                                         @endforeach
                                         </tbody>
@@ -161,7 +161,7 @@
                                         </td>
                                         <td>
                                             <hr>
-                                            <h5 class="text-primary total"><span class="totalSpan">0.00</span></h5>
+                                            <h5 class="text-primary total">{{Auth::user()->tenant->currency->symbol ?? 'N'}}<span class="totalSpan">0.00</span></h5>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -190,7 +190,11 @@
     <script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
     <script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
     <script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
-    <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+		<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+		<script src="\assets\pages\form-masking\inputmask.js"></script>
+		<script src="\assets\pages\form-masking\jquery.inputmask.js"></script>
+		<script src="/assets/pages/form-masking/autoNumeric.js"></script>
+		<script src="/assets/pages/form-masking/form-mask.js"></script>
     <script>
         $(document).ready(function(){
             //$('#issueReceiptBtn').attr('disabled', 'disabled');
@@ -220,13 +224,14 @@
             }
         });
 
-        function setTotal(){
-            var sum = 0;
-            $(".payment").each(function(){
-                sum += +$(this).val();
-            });
-            $(".totalSpan").text(sum.toLocaleString());
-        }
-
+				function setTotal(){
+							var sum = 0;
+							$(".payment").each(function(){
+									sum += +$(this).val().replace(/,/g, '');
+							});
+							//var vat = ($('#vat').val() * sum)/100;
+									//$(".vat").text(vat.toLocaleString());
+									$(".totalSpan").text((sum).toLocaleString());
+					}
     </script>
 @endsection

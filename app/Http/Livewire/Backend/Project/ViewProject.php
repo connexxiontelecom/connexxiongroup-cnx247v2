@@ -14,6 +14,7 @@ use App\InvoiceItem;
 use App\PostRevision;
 use App\PostAttachment;
 use App\Milestone;
+use App\BillMaster;
 use App\Client;
 use App\User;
 use DB;
@@ -45,7 +46,9 @@ class ViewProject extends Component
                         ->where('tenant_id',Auth::user()->tenant_id)->first();
         $invoices = Invoice::where('tenant_id', Auth::user()->tenant_id)
                                         ->where('project_id', $pro->id)->get();
-        return view('livewire.backend.project.view-project', ['invoices'=>$invoices]);
+        $bills = BillMaster::where('tenant_id', Auth::user()->tenant_id)
+                                        ->where('project_id', $pro->id)->get();
+        return view('livewire.backend.project.view-project', ['invoices'=>$invoices,'bills'=>$bills]);
     }
 
     /*

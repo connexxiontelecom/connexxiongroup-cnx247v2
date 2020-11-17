@@ -5,11 +5,10 @@
 @endsection
 
 @section('extra-styles')
-<link rel="stylesheet" type="text/css" href="/assets/css/component.css">
-<link rel="stylesheet" type="text/css" href="/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
-    <link rel="stylesheet" type="text/css" href="/assets/bower_components/multiselect/css/multi-select.css">
-    <link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/bower_components/animate.css/css/animate.css">
+<link rel="stylesheet" type="text/css" href="\assets\bower_components\datatables.net-bs4\css\dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="\assets\pages\data-table\css\buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="\assets\bower_components\datatables.net-responsive-bs4\css\responsive.bootstrap4.min.css">
+
 @endsection
 
 @section('content')

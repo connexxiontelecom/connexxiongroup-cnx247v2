@@ -180,7 +180,7 @@ Receive Payment
                                         <td>
                                             <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total - $item->paid_amount,2)}}</p>
                                         </td>
-                                        <td><input type="number" step="0.01" class="form-control payment" name="payment[]" style="width: 120px;"></td>
+                                        <td><input type="text" class="form-control payment autonumber" name="payment[]" style="width: 120px;"></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -224,7 +224,10 @@ Receive Payment
 
 @endsection
 @section('extra-scripts')
-
+<script src="\assets\pages\form-masking\inputmask.js"></script>
+<script src="\assets\pages\form-masking\jquery.inputmask.js"></script>
+<script src="/assets/pages/form-masking/autoNumeric.js"></script>
+<script src="/assets/pages/form-masking/form-mask.js"></script>
 <script>
     $(document).ready(function(){
         var grand_total = 0;
@@ -246,15 +249,22 @@ Receive Payment
         });
         $(document).on("change", ".payment", function() {
             setTotal();
+				});
+
+				$('.payment').on('change', function(e){
+            e.preventDefault();
+						setTotal();
+						$(this).val().toLocaleString();
         });
     });
+
 
     function setTotal(){
         var sum = 0;
         $(".payment").each(function(){
-            sum += +$(this).val();
-        });
+						sum += +$(this).val().replace(/,/g, '');
             $(".amount-received").text(sum.toLocaleString());
-    }
+        });
+		}
 </script>
 @endsection

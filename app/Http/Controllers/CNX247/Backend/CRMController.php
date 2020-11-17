@@ -394,13 +394,17 @@ class CRMController extends Controller
             'payment_method'=>'required',
             'reference_no'=>'required',
             'bank'=>'required'
-        ]);
-        $totalAmount = 0;
-        if(!empty($request->payment)){
-            for($i = 0; $i<count($request->payment); $i++){
-                $totalAmount += $request->payment[$i];
-            }
-        }
+				]);
+
+
+				$totalAmount = 0;
+				$arrayCount = 0;
+				for($i = 0;  $i<count($request->payment); $i++){
+					$totalAmount += str_replace(',','',$request->payment[$i]);
+					if(str_replace(',','',$request->payment[$i]) != null){
+							$arrayCount++;
+					}
+			}
         //Check if deal already exist
         $dealExist = Deal::where('client_id', $request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
         if(empty($dealExist)){
@@ -422,18 +426,20 @@ class CRMController extends Controller
         $receipt->bank = $request->bank;
         $receipt->slug = substr(sha1(time()), 28,40);
         $receipt->save();
-        $receiptId = $receipt->id;
+				$receiptId = $receipt->id;
+				$payment = array_filter($request->payment);
+				$reIndexed = array_values($payment);
         #Details
-        for($j = 0; $j<count($request->invoices); $j++){
+        for($j = 0; $j<$arrayCount; $j++){
             $detail = new ReceiptItem;
             $detail->tenant_id = Auth::user()->tenant_id;
             $detail->invoice_id = $request->invoices[$j];
             $detail->receipt_id = $receiptId;
-            $detail->payment = $request->payment[$j];
+            $detail->payment = str_replace(',','',$reIndexed[$j]);
             $detail->save();
             #Update invoice
             $invoice = Invoice::where('id', $request->invoices[$j])->where('tenant_id', Auth::user()->tenant_id)->first();
-            $invoice->paid_amount += $request->payment[$j];
+            $invoice->paid_amount += str_replace(',','',$reIndexed[$j]);
             if($invoice->paid_amount >= $invoice->total){
                 $invoice->status = 1; //payment complete
             }

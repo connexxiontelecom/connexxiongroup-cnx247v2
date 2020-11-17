@@ -136,6 +136,12 @@
                                     </tr>
                                 @endforeach
                             <tr>
+                                <td colspan="4" class="text-right"><strong>VAT: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($bill->vat_amount,2)}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="text-right"><strong>Sub-total: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($bill->bill_amount,2)}}</td>
+                            </tr>
+                            <tr>
                                 <td colspan="4" class="text-right"><strong>Total: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($bill->bill_amount + $bill->vat_amount,2)}}</td>
                             </tr>
                             </tbody>

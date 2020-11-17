@@ -40,21 +40,7 @@
    @endif
    <div class="row">
        <div class="col-md-12 col-sm-12 col-lg-12">
-            <nav class="navbar navbar-light bg-faded m-b-30 p-10 filter-bar">
-                <div class="row">
-                    <div class="d-inline-block">
-                        <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
-                        <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
-                        <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
-                        <a href="{{ route('project-receipt', $project->post_url) }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-receipt "></i>  Receipt </a>
-                    </div>
-                </div>
-                <div class="nav-item nav-grid">
-                    <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Gantt</a>
-                    <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
-                    <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
-                </div>
-            </nav>
+					@include('backend.project.common._project-detail-slab')
        </div>
    </div>
    <form action="{{route('store-project-invoice')}}" method="post">
@@ -67,7 +53,10 @@
                     <div class="card text-center text-white bg-c-green">
                         <div class="card-block">
                             <h6 class="m-b-0">Cash Inflow</h6>
-                            <h4 class="m-t-10 m-b-10">12</h4>
+                            <h4 class="m-t-10 m-b-10">
+																<i class="feather icon-arrow-down m-r-15"></i>
+															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($project->projectInvoices->sum('paid_amount'),2)}}
+														</h4>
                         </div>
                     </div>
                 </div>
@@ -75,7 +64,10 @@
                     <div class="card text-center text-white bg-c-pink">
                         <div class="card-block">
                             <h6 class="m-b-0">Cash Outflow</h6>
-                            <h4 class="m-t-10 m-b-10">6325</h4>
+                            <h4 class="m-t-10 m-b-10">
+																<i class="feather icon-arrow-up m-r-15"></i>
+															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($project->projectBills->sum('paid_amount'),2)}}
+														</h4>
                         </div>
                     </div>
                 </div>
@@ -87,6 +79,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-block">
+															<h5 class="sub-title text-success">Cash Inflow</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-lg-12 col-sm-12">
                                         <div class="dt-responsive table-responsive">
@@ -94,10 +87,10 @@
                                                 <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Budget Title</th>
                                                     <th>Invoice No.</th>
-                                                    <th>Receipt No.</th>
-                                                    <th>Amount</th>
+                                                    <th>Total ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                                    <th>Paid({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                                    <th>Balance({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                                     <th>Date</th>
                                                 </tr>
                                                 </thead>
@@ -105,16 +98,88 @@
                                                     @php
                                                         $serial = 1;
                                                     @endphp
-
+																									@foreach ($project->projectInvoices->where('status',1) as $invoice)
+																											<tr>
+																												<td>{{$serial++}}</td>
+																												<td>
+																													<a href="{{route('print-invoice', $invoice->slug)}}" target="_blank">Invoice # {{$invoice->invoice_no ?? ''}}</a>
+																												</td>
+																												<td>{{number_format($invoice->total,2) ?? ''}}</td>
+																												<td>{{number_format($invoice->paid_amount,2) ?? ''}}</td>
+																												<td>{{number_format($invoice->total - $invoice->paid_amount,2) ?? ''}}</td>
+																												<td>{{!is_null($invoice->issue_date) ? date('d, F, Y', strtotime($invoice->issue_date)) : '' }}</td>
+																											</tr>
+																									@endforeach
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Budget Title</th>
                                                     <th>Invoice No.</th>
-                                                    <th>Receipt No.</th>
-                                                    <th>Amount</th>
+                                                    <th>Total ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                                    <th>Paid ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                                    <th>Balance ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                                     <th>Date</th>
+                                                </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row invoice-contact">
+            <div class="col-xl-12 col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-block">
+															<h5 class="sub-title text-danger">Cash Outflow</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-lg-12 col-sm-12">
+                                        <div class="dt-responsive table-responsive">
+                                            <table  class="table table-striped table-bordered nowrap portableTables">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Bill No.</th>
+                                                    <th>Total ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                                    <th>Paid({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                                    <th>Balance({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                                    <th>VAT({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+                                                        $serial = 1;
+                                                    @endphp
+																									@foreach ($project->projectBills->where('status',1) as $invoice)
+																											<tr>
+																												<td>{{$serial++}}</td>
+																												<td>
+																													<a href="{{route('print-invoice', $invoice->slug)}}" target="_blank">Invoice # {{$invoice->invoice_no ?? ''}}</a>
+																												</td>
+																												<td>{{number_format($invoice->total,2) ?? ''}}</td>
+																												<td>{{number_format($invoice->paid_amount,2) ?? ''}}</td>
+																												<td>{{number_format($invoice->paid_amount,2) ?? ''}}</td>
+																												<td>{{!is_null($invoice->issue_date) ? date('d, F, Y', strtotime($invoice->issue_date)) : '' }}</td>
+																											</tr>
+																									@endforeach
+                                                </tbody>
+                                                <tfoot>
+                                                <tr>
+																									<th>#</th>
+																									<th>Bill No.</th>
+																									<th>Total ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Paid({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Balance({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>VAT({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Date</th>
                                                 </tr>
                                                 </tfoot>
                                             </table>

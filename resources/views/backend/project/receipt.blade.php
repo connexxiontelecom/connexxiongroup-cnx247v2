@@ -41,24 +41,10 @@
    @endif
    <div class="row">
     <div class="col-md-12 col-sm-12 col-lg-12">
-         <nav class="navbar navbar-light bg-faded m-b-30 p-10 filter-bar">
-             <div class="row">
-                 <div class="d-inline-block">
-                     <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
-                     <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
-                     <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
-                     <a href="{{ route('project-receipt', $project->post_url) }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-receipt "></i>  Receipt </a>
-                 </div>
-             </div>
-             <div class="nav-item nav-grid">
-                 <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Gantt</a>
-                 <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
-                 <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
-             </div>
-         </nav>
+			@include('backend.project.common._project-detail-slab')
     </div>
 </div>
-   <form action="{{route('store-project-receipt')}}" method="post">
+   <form action="{{route('store-project-receipt')}}" method="post" autocomplete="off">
        @csrf
     <div class="card">
         <div class="row invoice-contact">
@@ -125,7 +111,7 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Receipt Number <span>#{{$receipt_no}}</span></h6>
-                    <h6 class="m-b-20">Amount Due: <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{ number_format($invoices->sum('total'),2) }}</span></h6>
+                    <h6 class="m-b-20">Amount Due: <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{ number_format(($invoices->sum('total') - $invoices->sum('paid_amout')),2) }}</span></h6>
                     <input type="hidden" value="{{$status}}" name="status">
                     <input type="hidden" name="ref_no" value="{{$project->id}}">
                     <input type="hidden" name="receipt_no" value="{{$receipt_no}}">
@@ -188,8 +174,8 @@
                             <thead>
                                 <tr class="thead-default">
                                     <th>Description</th>
-                                    <th>Amount</th>
-                                    <th>Payment</th>
+                                    <th>Amount  ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                    <th>Payment  ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                 </tr>
                             </thead>
                             <tbody id="products">
@@ -207,11 +193,11 @@
                                     </td>
                                     <td>
                                         <div class="form-group">
-                                            <input type="number" class="form-control"  name="amount[]" step="0.01" placeholder="Amount" readonly value="{{$invoice->total - $invoice->paid_amount}}">
+                                            <input type="text" class="form-control"  name="amount[]" step="0.01" placeholder="Amount" readonly value="{{number_format($invoice->total - $invoice->paid_amount,2)}}">
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Payment" step="0.01" name="payment[]" class="form-control payment">
+                                        <input type="text" placeholder="Payment"  name="payment[]" class="form-control payment autonumber">
                                         @error('payment')
                                             <i class="text-danger mt-2">{{$message}}</i>
                                         @enderror
@@ -262,6 +248,10 @@
 <script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
 <script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+<script src="\assets\pages\form-masking\inputmask.js"></script>
+<script src="\assets\pages\form-masking\jquery.inputmask.js"></script>
+<script src="/assets/pages/form-masking/autoNumeric.js"></script>
+<script src="/assets/pages/form-masking/form-mask.js"></script>
 <script>
     $(document).ready(function(){
          $(".select-product").select2({
@@ -288,16 +278,18 @@
 
         $('.payment').on('change', function(e){
             e.preventDefault();
-            setTotal();
+						setTotal();
+						$(this).val().toLocaleString();
         });
 
     function setTotal(){
         var sum = 0;
         $(".payment").each(function(){
-            sum += +$(this).val();
+            sum += +$(this).val().replace(/,/g, '');
         });
             $(".total").text(sum.toLocaleString());
-    }
+		}
+
 });
 </script>
 @endsection
