@@ -90,6 +90,10 @@ class BaseController extends Controller
     public function contact_us(){
     	return view('frontend.contact-us');
 		}
+
+		public function human_resource(){
+    	return view('frontend.product.human-resource');
+		}
     /*
     * faqs
     */

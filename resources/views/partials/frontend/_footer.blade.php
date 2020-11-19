@@ -17,7 +17,7 @@
             <div class="col-lg-2 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
                 <h4 class="text-dark footer-head">Product</h4>
                 <ul class="list-unstyled footer-list mt-3">
-                    <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Human Resource</a></li>
+                    <li><a href="{{route('human_resource')}}" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Human Resource</a></li>
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> CRM</a></li>
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Accounting</a></li>
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Procurement</a></li>
@@ -28,7 +28,7 @@
             <div class="col-lg-3 col-md-4 col-12 mt-4 mt-sm-0 pt-2 pt-sm-0">
                 <h4 class="text-dark footer-head">Useful Links</h4>
                 <ul class="list-unstyled footer-list mt-3">
-                    <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Pricing</a></li>
+                    <li><a href="{{route('pricing')}}" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Pricing</a></li>
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Terms of Services</a></li>
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Privacy Policy</a></li>
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Documentation</a></li>

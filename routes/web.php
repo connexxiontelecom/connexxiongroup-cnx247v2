@@ -147,6 +147,8 @@ Route::get('/pricing', 'CNX247\Frontend\BaseController@pricing')->name('pricing'
 Route::get('/support', 'CNX247\Frontend\BaseController@support')->name('support');
 Route::get('/contact_us', 'CNX247\Frontend\BaseController@contact_us')->name('contact_us');
 Route::get('/faqs', 'CNX247\Frontend\BaseController@faqs')->name('faqs');
+Route::get('/human_resource', 'CNX247\Frontend\BaseController@human_resource')->name('human_resource');
+
 #User routes
 Route::get('/my-profile', 'CNX247\Backend\UserController@myProfile')->name('my-profile');
 Route::get('/notifications', 'CNX247\Backend\UserController@notifications')->name('notifications');
