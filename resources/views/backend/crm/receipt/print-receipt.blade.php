@@ -137,18 +137,7 @@
                 <div class="col-sm-12">
                     <table class="table table-responsive invoice-table invoice-total">
                         <tbody>
-                            <tr>
-                                <th>Sub Total :</th>
-                                <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->sub_total,2)}}</td>
-                            </tr>
-                            <tr>
-                                <th>Taxes ({{$receipt->tax_rate}}%) :</th>
-                                <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->tax_value,2) ?? 0}}</td>
-                            </tr>
-                            <tr>
-                                <th>Discount ({{$receipt->discount_rate}}%) :</th>
-                                <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->discount_value,2) ?? 0}}</td>
-                            </tr>
+
                             <tr class="text-info">
                                 <td>
                                     <hr>
@@ -156,7 +145,7 @@
                                 </td>
                                 <td>
                                     <hr>
-                                    <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->total,2)}}</h5>
+                                    <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->amount,2)}}</h5>
                                 </td>
                             </tr>
                         </tbody>

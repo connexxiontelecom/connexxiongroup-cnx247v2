@@ -23,6 +23,7 @@ class CreateBillDetailsTable extends Migration
             $table->double('amount');
             $table->double('vat_amount')->nullable();
             $table->unsignedBigInteger('glcode')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

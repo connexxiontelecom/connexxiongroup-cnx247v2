@@ -17,6 +17,7 @@ class CreatePayMastersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('bank_id');
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->dateTime('date_inputed')->nullable();
             $table->double('amount');
             $table->string('ref_no')->nullable();

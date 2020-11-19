@@ -67,10 +67,10 @@
             <div class="row invoive-info">
                 <div class="col-md-4 col-xs-12 invoice-client-info">
                     <h6>Client Information :</h6>
-                    <h6 class="m-0">{{$invoice->client->first_name ?? ''}} {{$invoice->client->surname ?? ''}}</h6>
-                    <p class="m-0 m-t-10">{{$invoice->client->street_1 ?? ''}}, {{$invoice->client->postal_code ?? ''}} {{$invoice->client->city ?? ''}}</p>
-                    <p class="m-0">{{$invoice->client->mobile_no ?? ''}}</p>
-                    <p><a href="mailto:{{$invoice->client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[{{$invoice->client->email ?? ''}}]</a></p>
+                    <h6 class="m-0">{{$invoice->client->company_name ?? ''}}</h6>
+                    <p class="m-0 m-t-10">{{$invoice->client->street_1 ?? ''}}, {{$invoice->client->postal_code ?? ''}} {{$invoice->client->city ?? 'City here'}}</p>
+                    <p class="m-0">{{$invoice->client->mobile_no ?? 'Client mobile no. here'}}</p>
+                    <p><a href="mailto:{{$invoice->client->email ?? ''}}" class="__cf_email__">[{{$invoice->client->email ?? 'Email here'}}]</a></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6>Order Information :</h6>
@@ -82,21 +82,32 @@
                             </tr>
                             <tr>
                                 <th>Due Date :</th>
-                                <td>{{date('d F, Y', strtotime($invoice->due_date))}}</td>
+                                <td>{{!is_null($invoice->due_date) ? date('d F, Y', strtotime($invoice->due_date)) : '-'}}</td>
                             </tr>
                             <tr>
                                 <th>Status :</th>
                                 <td>
-                                    <span class="label label-warning">Pending</span>
+																	@if ($invoice->status == 0)
+																		<span class="label label-warning">Pending</span>
+																	@else
+																		<span class="label label-success">Completed</span>
+
+																	@endif
                                 </td>
-                            </tr>
+														</tr>
+														<tr>
+															<th>Ref. No.</th>
+															<td>
+																{{$invoice->ref_no ?? ''}}
+															</td>
+														</tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Invoice Number <span>#{{$invoice->invoice_no}}</span></h6>
                     <h6 class="text-uppercase text-primary">Balance Due :
-                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total - $invoice->cash,2)}}</span>
+                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total - $invoice->paid_amount,2)}}</span>
                     </h6>
                 </div>
             </div>
@@ -192,7 +203,10 @@
                     <div class="btn-group">
                         <button type="button" class="btn btn-success btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$invoice->id}}" id="sendInvoiceViaEmail"> <i class="icofont icofont-email mr-2"></i> <span id="sendEmailAddon">Send as Email</span> </button>
                         <button type="button" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" type="button" id="printInvoice"><i class="icofont icofont-printer mr-2"></i> Print</button>
-                        <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
+												<a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
+												@if ($invoice->trash == 0)
+                       	 <a href="{{route('decline-invoice', $invoice->slug)}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-trash mr-2"></i> Decline Invoice</a>
+												@endif
                     </div>
                 </div>
             </div>

@@ -21,7 +21,7 @@
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> CRM</a></li>
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Accounting</a></li>
                     <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Procurement</a></li>
-                    <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Logistics</a></li>
+{{--                    <li><a href="javascript:void(0)" class="text-foot"><i class="mdi mdi-chevron-right mr-1"></i> Logistics</a></li>--}}
                 </ul>
             </div>
 
@@ -42,6 +42,7 @@
                 <form>
                     <div class="row">
                         <div class="col-lg-12">
+{{--                            <a href="javascript:void(0)" class="btn btn-outline-primary btn-block">Start Free</a>--}}
                             <a href="{{route('pricing')}}" class="btn btn-primary btn-block">Sign Up</a>
                         </div>
                     </div>

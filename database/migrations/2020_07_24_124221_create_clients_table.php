@@ -20,7 +20,8 @@ class CreateClientsTable extends Migration
             $table->unsignedBigInteger('state_id')->nullable();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('assigned_to')->nullable(); //nullable
-            $table->string('first_name');
+            $table->string('company_name')->nullable();
+            $table->string('position')->nullable();
             $table->string('title')->nullable();
             $table->string('suffix')->nullable();
             $table->string('surname')->nullable();

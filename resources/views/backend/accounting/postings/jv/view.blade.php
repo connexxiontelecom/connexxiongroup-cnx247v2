@@ -101,7 +101,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="btn-group d-flex justify-content-center">
-                                    <a href="{{route('trash-jv', $entry->slug)}}" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Trash Journal Voucher</a>
+                                    <a href="{{route('decline-jv', $entry->slug)}}" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Decline Journal Voucher</a>
                                     <a href="{{route('post-jv', $entry->slug)}}" class="btn btn-primary btn-mini"><i class="ti-check mr-2"> Post Journal Voucher</i></a>
                                 </div>
                             </div>

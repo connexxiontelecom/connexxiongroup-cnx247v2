@@ -7,7 +7,14 @@
         <ul class="show-notification notification-view dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
             <li>
                 <h6>Notifications</h6>
-                <label class="label label-info text-white nav-link"> <a href="{{ route('notifications') }}">View All Notifications</a> </label>
+                <label class="label label-info text-white nav-link">
+                    <a href="{{ route('notifications') }}" class="markAllAsRead">View All Notifications</a>
+                 </label> <br>
+                 @if (count($unread) > 0)
+                    <label class="label label-info text-white nav-link mt-3">
+                        <a href="javascript:void(0);" wire:click="markAllAsRead">Mark All As Read</a>
+                    </label>
+                 @endif
             </li>
             @if(Auth::check())
 
@@ -78,3 +85,13 @@
         </ul>
     </div>
 </li>
+@push('notification-script')
+    <script>
+        $(document).ready(function(){
+            $(document).on('click', '.markAllAsRead', function(e){
+                e.preventDefault();
+                location.reload();
+            });
+        });
+    </script>
+@endpush

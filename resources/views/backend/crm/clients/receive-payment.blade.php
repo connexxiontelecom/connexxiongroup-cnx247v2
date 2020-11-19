@@ -34,13 +34,18 @@ Receive Payment
             </div>
         </div>
    </div>
-   <form action="{{route('receive-invoice-payment')}}" method="post">
+   <form action="{{route('receive-invoice-payment')}}" method="post" autocomplete="off">
        @csrf
     <div class="card">
         <div class="row invoice-contact">
-            <div class="col-md-8">
+            <div class="col-md-12 col-sm-12">
                 <div class="invoice-box row">
                     <div class="col-sm-12">
+											@if (count($status) > 0)
+													<div class="alert alert-warning background-warning" role="alert">
+														<strong>Ooops!</strong> This action cannot be completed because there is a receipt that needs to be taken care of.
+													</div>
+											@endif
                         <table class="table table-responsive invoice-table table-borderless">
                             <tbody>
                                 <tr>
@@ -77,9 +82,9 @@ Receive Payment
                     <p><a href="mailto:{{$invoice->client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[ {{$invoice->client->email ?? ''}} ]</a></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
-                    <h6 class="m-b-20">Balance: <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($pending_invoices->sum('total') - $pending_invoices->sum('cash'),2)}}</span></h6>
+                    <h6 class="m-b-20">Balance: <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($pending_invoices->sum('total') + $pending_invoices->sum('tax_value') - $pending_invoices->sum('paid_amount'),2)}}</span></h6>
                     <h6 class="text-uppercase text-primary">Amount Received :
-                        <span class="balance">{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span class="amount-received"></span> </span>
+                        <span class="balance">{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($pending_invoices->sum('paid_amount'),2)}}<span class="amount-received"></span> </span>
                     </h6>
                 </div>
                 <div class="col-md-12 col-sm-12">
@@ -115,6 +120,24 @@ Receive Payment
                                 @enderror
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="">Bank.</label>
+                                <select name="bank" id="bank" class="form-control">
+                                    <option selected disabled>Select bank</option>
+                                    @foreach ($charts as $item)
+                                    <option value="{{$item->glcode}}">{{$item->bank_name ?? ''}}</option>
+
+                                    @endforeach
+                                </select>
+                                @error('bank')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,7 +152,7 @@ Receive Payment
                                     <th>Description</th>
                                     <th>Due Date</th>
                                     <th>Original Amount</th>
-                                    <th>Opening Balance</th>
+                                    <th>Balance</th>
                                     <th>Payment</th>
                                 </tr>
                             </thead>
@@ -139,7 +162,7 @@ Receive Payment
                                         <td>
                                             <div class="checkbox-fade fade-in-primary">
                                                 <label>
-                                                    <input type="checkbox" value="" data-amount="{{ number_format((float)$item->total ?? 0 - $item->cash, 2, '.', '')}}" class="select-invoice">
+                                                    <input type="checkbox" value="" data-amount="{{ number_format((float)$item->total + $item->tax_value - $item->paid_amount, 2, '.', '')}}" class="select-invoice">
                                                     <span class="cr">
                                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                     </span>
@@ -157,12 +180,12 @@ Receive Payment
                                             <p>{{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->due_date))}}</p>
                                         </td>
                                         <td>
-                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total,2)}}</p>
+                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total + $item->tax_value,2)}}</p>
                                         </td>
                                         <td>
-                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total ?? 0 - $item->cash ?? 0,2)}}</p>
+                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total + $item->tax_value - $item->paid_amount,2)}}</p>
                                         </td>
-                                        <td><input type="number" step="0.01" class="form-control payment" name="payment[]" style="width: 120px;"></td>
+                                        <td><input type="text" class="form-control payment autonumber" name="payment[]" style="width: 120px;"></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -176,7 +199,7 @@ Receive Payment
                         <tbody>
                             <tr>
                                 <th>Amount Received :</th>
-                                <td class="amount-receive">{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span class="amount-received">0.00</span> </td>
+                                <td class="amount-receive">{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span class="total">0.00</span> </td>
                             </tr>
                         </tbody>
                     </table>
@@ -187,15 +210,24 @@ Receive Payment
                     <h6>Terms And Condition :</h6>
                 <p>{!! Auth::user()->tenant->invoice_terms !!}</p>
                 </div>
-            </div>
-            <div class="row text-center">
-                <div class="col-sm-12 invoice-btn-group text-center">
-                    <input type="hidden" name="clientId" value="{{$invoice->client->id}}">
-                    <input type="hidden" name="totalAmount" value="{{$pending_invoices->sum('total') - $pending_invoices->sum('cash')}}" id="totalAmount"/>
-                    <button type="submit" id="issueReceiptBtn" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-check"></i> Submit</button>
-                    <a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
-                </div>
-            </div>
+						</div>
+						@if (count($status) <= 0)
+							<div class="row text-center">
+									<div class="col-sm-12 invoice-btn-group text-center">
+											<input type="hidden" name="clientId" value="{{$invoice->client->id}}">
+											<input type="hidden" name="totalAmount" value="{{$pending_invoices->sum('total') - $pending_invoices->sum('cash')}}" id="totalAmount"/>
+											<button type="submit" id="issueReceiptBtn" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-check"></i> Submit</button>
+											<a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
+									</div>
+							</div>
+						@else
+						<strong class="text-danger text-center d-flex justify-content-center">This action cannot be completed. A pending receipt needs to be posted or declined.</strong>
+						<hr>
+						<div class="btn-group  d-flex justify-content-center">
+							<a href="{{route('invoice-list')}}" class="btn btn-secondary btn-mini text-center">Back</a>
+							<a href="{{route('receipt-posting')}}" class="btn btn-primary btn-mini text-center">Receipts</a>
+						</div>
+						@endif
         </div>
     </div>
 </form>
@@ -206,7 +238,10 @@ Receive Payment
 
 @endsection
 @section('extra-scripts')
-
+<script src="\assets\pages\form-masking\inputmask.js"></script>
+<script src="\assets\pages\form-masking\jquery.inputmask.js"></script>
+<script src="/assets/pages/form-masking/autoNumeric.js"></script>
+<script src="/assets/pages/form-masking/form-mask.js"></script>
 <script>
     $(document).ready(function(){
         var grand_total = 0;
@@ -215,28 +250,35 @@ Receive Payment
             var amount = $(this).data('amount');
                 if ($(this).is(':checked')){
                     $(this).closest('tr').find('.payment').val(amount);
-                    $('.amount-received').text(parseFloat(invoice_total).toLocaleString());
+                    //$('.amount-received').text(parseFloat(invoice_total).toLocaleString());
                     setTotal();
                 }else{
                     var sub_amount = $(this).closest('tr').find('.payment').val();
                     cur = invoice_total - sub_amount;
                     invoice_total = cur;
-                    $('.amount-received').text(parseFloat(invoice_total).toLocaleString());
+                    //$('.amount-received').text(parseFloat(invoice_total).toLocaleString());
                     var sub_amount = $(this).closest('tr').find('.payment').val('');
                     setTotal();
                 }
         });
         $(document).on("change", ".payment", function() {
             setTotal();
+				});
+
+				$('.payment').on('change', function(e){
+            e.preventDefault();
+						setTotal();
+						$(this).val().toLocaleString();
         });
     });
+
 
     function setTotal(){
         var sum = 0;
         $(".payment").each(function(){
-            sum += +$(this).val();
-        });
+						sum += +$(this).val().replace(/,/g, '');
             $(".amount-received").text(sum.toLocaleString());
-    }
+        });
+		}
 </script>
 @endsection
