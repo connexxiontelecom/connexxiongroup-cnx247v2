@@ -427,8 +427,8 @@ class CRMController extends Controller
 				$totalAmount = 0;
 				$arrayCount = 0;
 				for($i = 0;  $i<count($request->payment); $i++){
-					$totalAmount += str_replace(',','',$request->payment[$i]);
-					if(str_replace(',','',$request->payment[$i]) != null){
+					if(str_replace(',','',$request->payment[$i]) != null || str_replace(',','',$request->payment[$i]) != ''){
+						$totalAmount += str_replace(',','',$request->payment[$i]);
 							$arrayCount++;
 					}
 			}

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\PurchaseOrder;
 use App\PurchaseOrderDetail;
+use App\BillMaster;
+use App\BillDetail;
 use App\Supplier;
 use Hash;
 use Auth;

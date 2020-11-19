@@ -127,7 +127,7 @@
                                         <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -137,7 +137,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
 
@@ -148,7 +148,7 @@
                                         <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$task->name ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -158,7 +158,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -169,7 +169,7 @@
                                         <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$file->name ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -179,7 +179,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -189,7 +189,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -199,7 +199,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -209,7 +209,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -219,7 +219,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -229,7 +229,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -239,7 +239,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -249,7 +249,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -259,7 +259,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -269,7 +269,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -279,7 +279,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -289,7 +289,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -299,7 +299,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -309,7 +309,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -319,7 +319,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -329,7 +329,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -339,7 +339,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -349,7 +349,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -359,7 +359,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -369,7 +369,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -379,7 +379,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -389,7 +389,7 @@
                                         <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                     </div>
                                     <div class="media-body">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                         <div class="text-muted">
                                             <span>
                                                 Uploaded by
@@ -399,7 +399,7 @@
                                         </div>
                                     </div>
                                     <div class="f-right v-middle text-muted">
-                                        <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                        <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                     </div>
                                 </li>
                                 @break
@@ -840,7 +840,7 @@
                                                                     <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -850,7 +850,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
 
@@ -861,7 +861,7 @@
                                                                     <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$task->name ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -871,7 +871,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -882,7 +882,7 @@
                                                                     <img src="/assets/formats/pdf.png" height="32" width="32" alt="{{$file->name ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -892,7 +892,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -902,7 +902,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -912,7 +912,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -922,7 +922,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -932,7 +932,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -942,7 +942,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -952,7 +952,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -962,7 +962,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -972,7 +972,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -982,7 +982,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -992,7 +992,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -1002,7 +1002,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -1012,7 +1012,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -1022,7 +1022,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -1032,7 +1032,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -1042,7 +1042,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -1052,7 +1052,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -1062,7 +1062,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -1072,7 +1072,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -1082,7 +1082,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -1092,7 +1092,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break
@@ -1102,7 +1102,7 @@
                                                                     <img src="/assets/formats/xls.png" height="32" width="32" alt="{{$task->post_title ?? 'No name'}}">
                                                                 </div>
                                                                 <div class="media-body">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}" class="m-b-5 d-block">{{strlen($task->post_title) > 25 ? substr($task->post_title, 0,25).'...' : $task->post_title }}</a>
                                                                     <div class="text-muted">
                                                                         <span>
                                                                             Uploaded by
@@ -1112,7 +1112,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="f-right v-middle text-muted">
-                                                                    <a href="/assets/uploads/requisition/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
+                                                                    <a href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="icofont icofont-download-alt f-18"></i></a>
                                                                 </div>
                                                             </li>
                                                             @break

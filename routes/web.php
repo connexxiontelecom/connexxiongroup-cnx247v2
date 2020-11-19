@@ -419,6 +419,7 @@ Route::get('/supplier/new', 'CNX247\Backend\SupplierController@create')->name('n
 Route::post('/supplier/new', 'CNX247\Backend\SupplierController@store');
 Route::get('/supplier/view/{slug}', 'CNX247\Backend\SupplierController@view')->name('view-supplier');
 Route::get('/purchase-order/new/{slug}', 'CNX247\Backend\SupplierController@purchaseOrder')->name('new-purchase-order');
+Route::get('/purchase-order/create', 'CNX247\Backend\SupplierController@createPurchaseOrder')->name('create-purchase-order');
 Route::post('/purchase-order/new', 'CNX247\Backend\SupplierController@storePurchaseOrder')->name('store-purchase-order');
 Route::get('/purchase-order/view/{slug}', 'CNX247\Backend\SupplierController@viewPurchaseOrder')->name('view-purchase-order');
 Route::get('/procurement/purchase-orders', 'CNX247\Backend\SupplierController@purchaseOrders')->name('purchase-orders');

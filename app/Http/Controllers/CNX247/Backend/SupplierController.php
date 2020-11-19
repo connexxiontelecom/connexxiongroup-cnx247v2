@@ -127,7 +127,19 @@ class SupplierController extends Controller
         }else{
             return redirect()->route('404');
         }
-    }
+		}
+
+		public function createPurchaseOrder(){
+			$suppliers = Supplier::where('tenant_id', Auth::user()->tenant_id)->get();
+			$po = PurchaseOrder::where('tenant_id', Auth::user()->tenant_id)->first();
+			$poNumber = null;
+			if(!empty($po) ){
+					$poNumber = $po->purchase_order_no + 1;
+			}else{
+					$poNumber = 100000;
+			}
+			return view('backend.procurement.supplier.create-purchase-order', ['suppliers'=>$suppliers, 'poNumber'=>$poNumber]);
+		}
 
     public function storePurchaseOrder(Request $request){
         $this->validate($request,[
@@ -158,7 +170,7 @@ class SupplierController extends Controller
             $item->save();
         }
         session()->flash("success", "<strong>Success!</strong> New purchase order submitted.");
-        return back();
+        return redirect()->route('purchase-orders');
 
     }
 
@@ -168,10 +180,25 @@ class SupplierController extends Controller
         if(!empty($purchase) ){
             $items = PurchaseOrderDetail::where('po_id', $purchase->id)
                                         ->where('tenant_id', Auth::user()->tenant_id)
-                                        ->get();
-            return view('backend.procurement.supplier.view-purchase-order', ['purchase'=>$purchase, 'items'=>$items]);
+																				->get();
+					if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
+						$accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->select()->get();
+						$status = 1; //subscribed for accounting package
+            return view('backend.procurement.supplier.view-purchase-order', [
+							'purchase'=>$purchase,
+							'items'=>$items,
+							'accounts'=>$accounts,
+							'status'=>$status
+							]);
+					}else{
+						return view('backend.procurement.supplier.view-purchase-order', [
+							'purchase'=>$purchase,
+							'items'=>$items,
+							'status'=>0
+							]);
+					}
         }else{
-            return redirect()->route('404');
+            return back();
         }
     }
 
@@ -188,10 +215,95 @@ class SupplierController extends Controller
         $review->supplier_id = $request->supplier;
         $review->po_id = $request->po;
         $review->tenant_id = Auth::user()->tenant_id;
-        $review->rating = $request->rating;
-        $review->review = $request->review;
+        $review->rating = $request->rating ?? 5;
+        $review->review = $request->review ?? 'No review';
         $review->user_id = Auth::user()->id;
-        $review->save();
+				$review->save();
+				$po = PurchaseOrder::where('id', $request->po)->where('tenant_id', Auth::user()->tenant_id)->first();
+				#Convert purchase order to bill
+				$ref_no = strtoupper(substr(sha1(time()), 32,40));
+				$policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
+        $bill = new BillMaster;
+        $bill->tenant_id = Auth::user()->tenant_id;
+        $bill->vendor_id = $request->supplier;
+        $bill->bill_no = $po->purchase_order_no;
+        $bill->ref_no = $ref_no;
+        $bill->bill_date = now();
+        $bill->bill_amount = $po->total;
+        $bill->vat_amount = ($po->total * $policy->vat)/100;
+        $bill->vat_charge = $policy->vat;
+        $bill->billed_to = $po->supplier_id;
+        $bill->instruction = $po->instruction;
+        $bill->user_id = Auth::user()->id;
+        $bill->slug = substr(sha1(time()), 32,40);
+        $bill->save();
+				$billId = $bill->id;
+				$poDetailIds = [];
+				$purchaseOrderDetails = PurchaseOrderDetail::where('po_id', $request->po)->get();
+
+        foreach($purchaseOrderDetails as $detail){
+            $details = new BillDetail;
+            $details->tenant_id = Auth::user()->tenant_id;
+            $details->bill_id = $billId;
+            $details->service_id = $detail->product;
+            $details->quantity = $detail->quantity;
+            $details->rate = $detail->unit_price;
+            $details->glcode = $request->service_account;
+            $details->amount = $detail->quantity * $detail->unit_price;
+            $details->vat_amount = (($detail->quantity * $detail->unit_price) * $policy->vat)/100;
+						$details->save();
+
+        }
+        #Vendor
+        $vendor = Supplier::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->supplier)->first();
+        $vendorGl = [
+            'glcode'=>$vendor->glcode,
+            'posted_by'=>Auth::user()->id,
+            'narration'=>'Bill raised for '.$vendor->company_name,
+            'dr_amount'=>0,
+            'cr_amount'=>$po->total,
+            'ref_no'=>$ref_no,
+            'bank'=>0,
+            'ob'=>0,
+            'transaction_date'=>now(),
+            'created_at'=>now() //$request->issue_date,
+        ];
+        #Register customer in GL table
+        DB::table(Auth::user()->tenant_id.'_gl')->insert($vendorGl);
+        #Vat
+        $vatGl = [
+            'glcode'=>$policy->glcode,
+            'posted_by'=>Auth::user()->id,
+            'narration'=>'VAT charged on bill no: '.$po->purchase_order_no.' for vendor '.$vendor->company_name,
+            'dr_amount'=>0,
+            'cr_amount'=>($po->total * $policy->vat)/100,
+            'ref_no'=>$ref_no,
+            'bank'=>0,
+            'ob'=>0,
+            'transaction_date'=>now(),
+            'created_at'=>now(),
+        ];
+        #Register VAT in GL table
+        DB::table(Auth::user()->tenant_id.'_gl')->insert($vatGl);
+        #Service
+				$billDetails = BillDetail::where('tenant_id', Auth::user()->tenant_id)->where('bill_id', $billId)->get();
+        foreach($billDetails as $d){
+            $serviceGl = [
+                'glcode'=>$d->glcode,
+                'posted_by'=>Auth::user()->id,
+                'narration'=>"Bill raised for ".$vendor->company_name." Service ID: ".$d->id." - ".$d->description,
+                'dr_amount'=>($d->rate * $d->quantity) + (($d->rate * $d->quantity) * $policy->vat)/100,
+                'cr_amount'=>0,
+                'ref_no'=>$ref_no,
+                'bank'=>0,
+                'ob'=>0,
+                'transaction_date'=>now(),
+                'created_at'=>now(),
+            ];
+            #Register service in GL table
+						DB::table(Auth::user()->tenant_id.'_gl')->insert($serviceGl);
+
+        }
         return response()->json(['message'=>'Success! Review submitted'], 200);
 
     }
@@ -462,7 +574,7 @@ class SupplierController extends Controller
                 $detail->description = $reIndexedDescription[$n];
                 $detail->save();
                 #bill master
-                $bill = BillMaster::find($reIndexedBills[$n]);
+               /*  $bill = BillMaster::find($reIndexedBills[$n]);
                 $bill->paid_amount += str_replace(',','',$reIndexedPayment[$n]);
                 if($bill->paid_amount + $bill->vat_amount >= $bill->bill_amount){
                     $bill->status = 'paid';
@@ -473,7 +585,7 @@ class SupplierController extends Controller
                     $bill->status = 'partial';
                     $bill->save();
                 }
-								$bill->save();
+								$bill->save(); */
 								#register this in pivot table
 								$paymentBill =  new PaymentBill;
 								$paymentBill->bill_id = $reIndexedBills[$n];
@@ -552,6 +664,7 @@ class SupplierController extends Controller
                     'created_at' => $payment->date_inputed,
                 ];
 								DB::table(Auth::user()->tenant_id . '_gl')->insert($vendorGl);
+
 								$temp = PaymentBill::where('tenant_id',Auth::user()->tenant_id)
 																		->where('bill_id', $per->bill_id)
 																		->where('payment_id', $payment->id)
@@ -559,34 +672,44 @@ class SupplierController extends Controller
 										if(!empty($temp)){
 											$temp->posted = 1;
 											$temp->save();
+											$billMaster = BillMaster::find($per->bill_id);
+											$billMaster->paid_amount += str_replace(',','',$reIndexedPayment[$n]);
+												if($billMaster->paid_amount + $bill->vat_amount >= $billMaster->bill_amount){
+														$billMaster->status = 'paid';
+														$billMaster->paid = 1;
+													}
+													$billMaster->save();
+												/* if(str_replace(',','',$reIndexedPayment[$n]) < $bill->bill_amount){
+														$billMaster->status = 'partial';
+														$billMaster->save();
+												} */
+												//$bill->save();
+
 										}
 										//$bill = BillMaster::where('id', $per->bill_id)->where('tenant_id', Auth::user()->tenant_id)->first();
 										$bill->paid_amount += $d->payment;
 										if($bill->paid_amount >= $bill->bill_amount){
-												$bill->status = 1; //payment completed
-												//$bill->posted = 1; //posted
-												//$bill->posted_by = Auth::user()->id;
-												//$bill->post_date = now();
+												$bill->status = 1;
 										}
 										$bill->save();
-										/* $budgetFinance = BudgetFinance::where('invoice_id', $d->invoice_id)
-																											->where('tenant_id', Auth::user()->tenant_id)
-																											->where('project_id', $invoice->project_id)
-																											->first();
+										$budgetFinance = BudgetFinance::where('bill_id', $bill->id)
+																					->where('tenant_id', Auth::user()->tenant_id)
+																					->where('project_id', $bill->project_id)
+																					->first();
 										if(!empty($budgetFinance)){
 										#project budget table
-										$budget = ProjectBudget::where('project_id', $invoice->project_id)
+										$budget = ProjectBudget::where('project_id', $bill->project_id)
 																	->where('tenant_id', Auth::user()->tenant_id)
 																	->where('id', $budgetFinance->budget_id)
 																	->first();
 										if(!empty($budget)){
-										$budget->actual_amount += $d->payment;
-										$budget->save();
-										$budgetFinance->receipt_id = $receipt->id;
-										$budgetFinance->save();
+											$budget->actual_amount += $d->payment;
+											$budget->save();
+											$budgetFinance->payment_id = $payment->id;
+											$budgetFinance->save();
 										}
 
-										} */
+										}
             }
         }
         session()->flash("success", "<strong>Success!</strong> Payment posted.");

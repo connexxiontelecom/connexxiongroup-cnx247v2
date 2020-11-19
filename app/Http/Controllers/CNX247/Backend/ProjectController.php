@@ -890,7 +890,7 @@ class ProjectController extends Controller
         $bill->slug = substr(sha1(time()), 32,40);
         $bill->save();
 				$billId = $bill->id;
-				#project budget table
+				/* #project budget table
 				$budget = ProjectBudget::where('project_id', $request->projectId)
 									->where('tenant_id', Auth::user()->tenant_id)
 									->where('id', $request->budget)
@@ -898,7 +898,7 @@ class ProjectController extends Controller
 						if(!empty($budget)){
 							$budget->actual_amount += $totalAmount;
 							$budget->save();
-						}
+						} */
 
         for($n = 0; $n < $arrayCount; $n++){
             $details = new BillDetail;
@@ -910,6 +910,13 @@ class ProjectController extends Controller
             $details->amount = str_replace(',','',$request->total[$n]);
             $details->save();
 				}
+				#update budgetFinance
+				$budgetFinance = new BudgetFinance;
+				$budgetFinance->project_id = $request->projectId;
+				$budgetFinance->bill_id = $billId;
+				$budgetFinance->budget_id = $request->budget;
+				$budgetFinance->tenant_id = Auth::user()->tenant_id;
+				$budgetFinance->save();
 				if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
         #Vendor
         $vendor = Supplier::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->vendor)->first();

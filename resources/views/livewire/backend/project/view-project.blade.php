@@ -843,7 +843,7 @@
                                                                                                     <tbody>
                                                                                                         <tr>
                                                                                                             <th>Sub Total :</th>
-                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total - $invoice->paid_amount,2)}}</td>
+                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total,2)}}</td>
                                                                                                         </tr>
                                                                                                         <tr>
                                                                                                             <th>Taxes ({{$invoice->tax_rate}}%) :</th>
@@ -895,7 +895,7 @@
                                                         </td>
                                                         <td>{{$invoice->client->company_name ?? ''}}</td>
                                                         <td>
-                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}
+                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total + $invoice->tax_value,2)}}
                                                         </td>
                                                         <td>
                                                             {{$invoice->converter->first_name ?? ''}} {{$invoice->converter->surname ?? ''}}
@@ -1039,7 +1039,7 @@
                                                                                                                     </td>
                                                                                                                     <td>{{number_format($item->quantity)}}</td>
                                                                                                                     <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->rate, 2)}}</td>
-                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->amount, 2)}}</td>
+                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->amount + $item->vat_amount, 2)}}</td>
                                                                                                                 </tr>
 
                                                                                                             @endforeach

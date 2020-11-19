@@ -15,7 +15,7 @@ class CreateBudgetFinancesTable extends Migration
     {
         Schema::create('budget_finances', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('invoice_id');
+            $table->unsignedBigInteger('invoice_id')->nullable();
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('budget_id');
