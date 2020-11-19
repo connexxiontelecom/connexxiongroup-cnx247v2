@@ -388,10 +388,10 @@
 																	<div class="dropdown-secondary dropdown float-right">
 																		<button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
 																		<div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
-																			<a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$folder->name}}" data-unique="{{$folder->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>
+{{--																			<a class="dropdown-item waves-light waves-effect downloadFile" data-directory="{{$folder->name}}" data-unique="{{$folder->id}}" href="javascript:void(0);"><i class="ti-download text-success mr-2"></i> Download</a>--}}
 																			<a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal" data-directory="{{$folder->name}}" data-file="{{$folder->name ?? 'Folder name'}}" data-unique="{{$folder->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
 																			<div class="dropdown-divider"></div>
-																			<a class="dropdown-item waves-light waves-effect deleteFile" data-toggle="modal" data-target="#deleteFileModal" data-directory="{{$folder->name}}" data-file="{{$folder->name ?? 'File name'}}" data-unique="{{$folder->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
+																			<a class="dropdown-item waves-light waves-effect deleteFolder" data-toggle="modal" data-target="#deleteFolderModal" data-directory="{{$folder->name}}" data-file="{{$folder->name ?? 'File name'}}" data-unique="{{$folder->id}}" href="javascript:void(0);"><i class="ti-trash mr-2 text-danger"></i> Delete</a>
 																		</div>
 																	</div>
 																</div>
@@ -645,6 +645,34 @@
     </div>
 </div>
 
+		<div class="modal fade" id="deleteFolderModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog " role="document">
+				<div class="modal-content">
+					<div class="modal-header bg-danger">
+						<h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="text-white">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-12">
+									<p>This action cannot be undone, Files in this folder would be deleted too Are you sure you want to delete? <strong id="folderToDelete"></strong> ?</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer d-flex justify-content-center">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+							<button type="button" id="deleteFolderBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete Folder</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 
 @endsection
 @section('extra-scripts')
@@ -829,6 +857,31 @@
                 });
             });
         });
+
+
+			$(document).on('click', '.deleteFolder', function(e){
+				var name = $(this).data('file');
+				var directory = $(this).data('directory');
+				var id = $(this).data('unique');
+				$('#folderToDelete').text(name);
+				$(document).on('click', '#deleteFolderBtn', function(event){
+					axios.post('/cnx247-drive/delete-folder',{
+						id:id,
+						directory:directory
+					})
+
+						.then(response=>{
+							$.notify(response.data.message, 'success');
+							$('#deleteFolderModal').modal('hide');
+							location.reload();
+						})
+						.catch(error=>{
+							//$.notify(error.response.data.error, 'error');
+							console.log(error.response.data.error);
+						});
+					//alert(directory);
+				});
+			});
     });
 </script>
 @endsection
