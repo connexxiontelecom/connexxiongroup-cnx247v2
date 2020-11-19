@@ -1158,8 +1158,37 @@
     </div>
 </div>
 
+		<div class="modal fade" id="deleteFolderModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog " role="document">
+				<div class="modal-content">
+					<div class="modal-header bg-danger">
+						<h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="text-white">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="container">
+							<div class="row">
+								<div class="col-md-12">
+									<p>This action cannot be undone, Files in this folder would be deleted too Are you sure you want to delete? <strong id="folderToDelete"></strong> ?</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer d-flex justify-content-center">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+							<button type="button" id="deleteFolderBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete Folder</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-<div class="modal fade" id="new-file" tabindex="-1" role="dialog">
+
+
+		<div class="modal fade" id="new-file" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
                 <div class="modal-header bg-primary">
@@ -1345,7 +1374,7 @@
 						.then(response=>{
 							$.notify(response.data.message, 'success');
 							$('#shareFolderModal').modal('hide');
-						})
+							})
 						.catch(error=>{
 							$.notify(error.response.data.error, 'error');
 						});
@@ -1366,6 +1395,7 @@
                     .then(response=>{
                         $.notify(response.data.message, 'success');
                         $('#new_folder').modal('hide');
+											location.reload();
                     })
                     .catch(error=>{
                         $.notify(error.response.data.error, 'error');
@@ -1393,6 +1423,30 @@
                 });
             });
         });
+
+			$(document).on('click', '.deleteFolder', function(e){
+				var name = $(this).data('file');
+				var directory = $(this).data('directory');
+				var id = $(this).data('unique');
+				$('#folderToDelete').text(name);
+				$(document).on('click', '#deleteFolderBtn', function(event){
+					axios.post('/cnx247-drive/delete-folder',{
+						id:id,
+						directory:directory
+					})
+
+						.then(response=>{
+							$.notify(response.data.message, 'success');
+							$('#deleteFolderModal').modal('hide');
+							location.reload();
+						})
+						.catch(error=>{
+							//$.notify(error.response.data.error, 'error');
+							console.log(error.response.data.error);
+						});
+					//alert(directory);
+				});
+			});
     });
 </script>
 @endsection
