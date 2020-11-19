@@ -27,6 +27,7 @@
         "quickbooks/v3-php-sdk": "^5.3",
         "spatie/laravel-permission": "^3.13",
         "twilio/sdk": "^6.7",
+        "tymon/jwt-auth": "^1.0",
         "unicodeveloper/laravel-paystack": "^1.0"
     },
     "require-dev": {

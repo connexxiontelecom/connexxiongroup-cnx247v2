@@ -20,3 +20,39 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/access_token', 'CNX247\API\TwilioAccessTokenController@generateToken');
 Route::get('/task-calendar', 'CNX247\API\TaskControllerAPI@getTaskCalendarData');
 Route::post('/conversation/call', 'CNX247\Backend\TokenController@newCall');
+
+/* Route::post('register', 'CNX247\API\AuthController@register');
+Route::post('login', 'CNX247\API\AuthController@login'); */
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+    Route::post('login', 'CNX247\API\AuthController@login');
+    Route::post('register', 'CNX247\API\AuthController@register');
+    Route::post('logout', 'CNX247\API\AuthController@logout');
+    Route::post('refresh', 'CNX247\API\AuthController@refresh');
+    Route::get('user-profile', 'CNX247\API\AuthController@userProfile');
+    Route::get('IstokenValid', 'CNX247\API\AuthController@isValidToken');
+});
+
+
+
+Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
+    Route::get('user', 'CNX247\API\AuthController@getAuthenticatedUser');
+		Route::post('stream', 'CNX247\API\StreamController@index');
+		Route::post('singlePost', 'CNX247\API\StreamController@StreamPost');
+		Route::post('like', 'CNX247\API\StreamController@like');
+		Route::post('comment', 'CNX247\API\StreamController@comment');
+		Route::post('users', 'CNX247\API\usersController@users');
+		Route::post('newtask', 'CNX247\API\StreamController@storeTask');
+		Route::post('newproject', 'CNX247\API\StreamController@storeProject');
+		Route::get('priorities', 'CNX247\API\StreamController@priorities');
+});
+
+//Route::get('users', 'CNX247\API\usersController@users');
+Route::post('upload', 'CNX247\API\StreamController@upload');
+Route::post('projectupload', 'CNX247\API\StreamController@projectUpload');
+
+
