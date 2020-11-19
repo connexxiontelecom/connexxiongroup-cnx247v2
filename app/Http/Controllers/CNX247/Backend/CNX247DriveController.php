@@ -13,9 +13,9 @@ use App\SharedFile;
 use App\User;
 use App\SharedFolder;
 use Auth;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use Storage;
+//use Storage;
 //use File;
 use Response;
 
@@ -50,6 +50,8 @@ class CNX247DriveController extends Controller
 				->first();
 
 			$storage_size = $plan_details->storage_size;
+
+
 
         //$directory = Storage::allDirectories(public_path());
         $files = Storage::allFiles($this->root);

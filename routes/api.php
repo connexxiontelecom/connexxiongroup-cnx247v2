@@ -41,9 +41,18 @@ Route::group([
 
 Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
     Route::get('user', 'CNX247\API\AuthController@getAuthenticatedUser');
-    Route::post('stream', 'CNX247\API\StreamController@index');
+		Route::post('stream', 'CNX247\API\StreamController@index');
+		Route::post('singlePost', 'CNX247\API\StreamController@StreamPost');
+		Route::post('like', 'CNX247\API\StreamController@like');
+		Route::post('comment', 'CNX247\API\StreamController@comment');
+		Route::post('users', 'CNX247\API\usersController@users');
+		Route::post('newtask', 'CNX247\API\StreamController@storeTask');
+		Route::post('newproject', 'CNX247\API\StreamController@storeProject');
+		Route::get('priorities', 'CNX247\API\StreamController@priorities');
 });
 
-
+//Route::get('users', 'CNX247\API\usersController@users');
+Route::post('upload', 'CNX247\API\StreamController@upload');
+Route::post('projectupload', 'CNX247\API\StreamController@projectUpload');
 
 

@@ -33,7 +33,7 @@ class AuthController extends Controller {
         $credentials = $request->only('email', 'password');
 
         try {
-            $myTTL = 1; //minutes
+            $myTTL = 10080; //minutes
             JWTAuth::factory()->setTTL($myTTL);
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'invalid_credentials'], 400);
