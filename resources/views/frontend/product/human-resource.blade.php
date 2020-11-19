@@ -1,7 +1,7 @@
 @extends('layouts.frontend-layout')
 
 @section('title')
-  Pricing
+  Human Resource
 @endsection
 
 @section('extra-styles')
@@ -80,7 +80,7 @@
             <li class="nav-item mt-2">
               <a class="nav-link rounded" id="database" data-toggle="pill" href="#data-analise" role="tab" aria-controls="data-analise" aria-selected="false">
                 <div class="text-center pt-1 pb-1">
-                  <h6 class="title font-weight-normal mb-0">Wotktime Management</h6>
+                  <h6 class="title font-weight-normal mb-0">Worktime Management</h6>
                 </div>
               </a><!--end nav link-->
             </li><!--end nav item-->

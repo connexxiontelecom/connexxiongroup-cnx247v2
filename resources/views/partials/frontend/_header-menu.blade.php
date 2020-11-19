@@ -33,10 +33,10 @@
 					<a href="javascript:void(0)">Product</a><span class="menu-arrow"></span>
 					<ul class="submenu">
 						<li><a href="{{route('human_resource')}}">Human Resource</a></li>
-						<li><a href="javascript:void(0)">CRM</a></li>
+						<li><a href="{{route('crm')}}">CRM</a></li>
 						<li><a href="javascript:void(0)">Accounting</a></li>
 						<li><a href="javascript:void(0)">Procurement</a></li>
-						<li><a href="javascript:void(0)">Logistics</a></li>
+{{--						<li><a href="javascript:void(0)">Logistics</a></li>--}}
 {{--						<span class="badge badge-success rounded">New</span>--}}
 					</ul>
 				</li>
