@@ -32,16 +32,24 @@
 				<li class="has-submenu">
 					<a href="javascript:void(0)">Product</a><span class="menu-arrow"></span>
 					<ul class="submenu">
-						<li><a href="javascript:void(0)">Human Resource</a></li>
+						<li><a href="{{route('human_resource')}}">Human Resource</a></li>
 						<li><a href="javascript:void(0)">CRM</a></li>
 						<li><a href="javascript:void(0)">Accounting</a></li>
-						<li><a href="javascript:void(0)">Procurement <span class="badge badge-success rounded">New</span></a></li>
+						<li><a href="javascript:void(0)">Procurement</a></li>
 						<li><a href="javascript:void(0)">Logistics</a></li>
+{{--						<span class="badge badge-success rounded">New</span>--}}
 					</ul>
 				</li>
 				<li><a href="{{route('pricing')}}">Pricing</a></li>
 				<li><a href="{{route('contact_us')}}">Contact Us</a></li>
-				<li><a href="{{route('faqs')}}">FAQs</a></li>
+				<li class="has-submenu">
+					<a href="javascript:void(0)">Resources</a><span class="menu-arrow"></span>
+					<ul class="submenu">
+						<li><a href="javascript:void(0)">Help Center</a></li>
+						<li><a href="javascript:void(0)">Terms Of Service</a></li>
+						<li><a href="javascript:void(0)">Privacy Policy</a></li>
+					</ul>
+				</li>
 			</ul>
 			@if (!Auth::check())
 				<div class="buy-menu-btn d-none">
