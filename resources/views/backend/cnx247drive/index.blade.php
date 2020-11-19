@@ -1374,7 +1374,7 @@
 						.then(response=>{
 							$.notify(response.data.message, 'success');
 							$('#shareFolderModal').modal('hide');
-						})
+							})
 						.catch(error=>{
 							$.notify(error.response.data.error, 'error');
 						});
