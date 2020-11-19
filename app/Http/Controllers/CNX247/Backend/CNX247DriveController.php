@@ -556,6 +556,60 @@ class CNX247DriveController extends Controller
 
     }
 
+
+	public function deleteFolder(Request $request){
+		$this->validate($request,[
+			'directory'=>'required',
+			'id'=>'required'
+		]);
+
+		$folder = Folder::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->id)->first();
+
+		$folder->delete();
+
+		$parent_folders = Folder::where('tenant_id', Auth::user()->tenant_id)->where('parent_id', $request->id)->get();
+		if(!empty($parent_folders)):
+		foreach($parent_folders as $parent_folder):
+
+			$parent_folder->delete();
+			endforeach;
+			endif;
+
+		$shared_folders = SharedFolder::where('tenant_id', Auth::user()->tenant_id)->where('folder_id', $request->id)->get();
+		if(!empty($shared_folders)):
+		foreach($shared_folders as $shared_folder):
+
+			$shared_folder->delete();
+		endforeach;
+		endif;
+
+		$files = FileModel::where('tenant_id', Auth::user()->tenant_id)->where('folder_id', $request->id)->get();
+	if(!empty($files)):
+		foreach ($files as $file):
+
+		if(!empty($file) ) {
+
+			unlink(public_path("assets/uploads/cnxdrive/" . $file->filename));
+			$file->delete();
+			$shared = SharedFile::where('tenant_id', Auth::user()->tenant_id)
+				->where('file_id', $request->id)
+				->get();
+			if (!empty($shared)) {
+				foreach ($shared as $sh) {
+					$sh->delete();
+				}
+			}
+		}
+		endforeach;
+		endif;
+
+	return response()->json(['message'=>'Success! Folder deleted.'], 200);
+		//return response()->json(['error'=>'Ooops File shareing failed.'],400);
+
+
+
+	}
+
     public function folder($folder_id){
 
 			$myFiles = FileModel::where('tenant_id', Auth::user()->tenant_id)

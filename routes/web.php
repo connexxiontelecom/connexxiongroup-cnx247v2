@@ -378,6 +378,7 @@ Route::post('/upload-attachment', 'CNX247\Backend\CNX247DriveController@uploadAt
 Route::post('/cnx247-drive/download', 'CNX247\Backend\CNX247DriveController@downloadAttachment');
 Route::post('/cnx247-drive/share', 'CNX247\Backend\CNX247DriveController@shareAttachment');
 Route::post('/cnx247-drive/delete', 'CNX247\Backend\CNX247DriveController@deleteAttachment');
+Route::post('/cnx247-drive/delete-folder', 'CNX247\Backend\CNX247DriveController@deleteFolder');
 Route::post('/cnx247-drive/new_folder', 'CNX247\Backend\CNX247DriveController@newFolder');
 Route::get('/folder/{slug}', 'CNX247\Backend\CNX247DriveController@folder')->name('folder');
 Route::get('/shared-folder/{slug}', 'CNX247\Backend\CNX247DriveController@sharedFolder')->name('shared-folder');
