@@ -71,7 +71,7 @@
               <li class="nav-item">
                 <a class="nav-link rounded active" id="webdeveloping" data-toggle="pill" href="#onboarding" role="tab" aria-controls="developing" aria-selected="false">
                   <div class="text-center pt-1 pb-1">
-                    <h6 class="title font-weight-normal mb-0">Clients</h6>
+                    <h6 class="title font-weight-normal mb-0">Clients, Leads, and Deals</h6>
                   </div>
                 </a><!--end nav link-->
               </li><!--end nav item-->
@@ -79,7 +79,7 @@
               <li class="nav-item mt-2">
                 <a class="nav-link rounded" id="database" data-toggle="pill" href="#data-analise" role="tab" aria-controls="data-analise" aria-selected="false">
                   <div class="text-center pt-1 pb-1">
-                    <h6 class="title font-weight-normal mb-0">Worktime Management</h6>
+                    <h6 class="title font-weight-normal mb-0">Bulk SMS and Email Campaigns</h6>
                   </div>
                 </a><!--end nav link-->
               </li><!--end nav item-->
@@ -87,50 +87,50 @@
               <li class="nav-item mt-2">
                 <a class="nav-link rounded" id="server" data-toggle="pill" href="#security" role="tab" aria-controls="security" aria-selected="false">
                   <div class="text-center pt-1 pb-1">
-                    <h6 class="title font-weight-normal mb-0">Attendance Management</h6>
+                    <h6 class="title font-weight-normal mb-0">Invoice and Receipts</h6>
                   </div>
                 </a><!--end nav link-->
               </li><!--end nav item-->
 
-              <li class="nav-item mt-2">
-                <a class="nav-link rounded" id="webdesigning" data-toggle="pill" href="#designing" role="tab" aria-controls="designing" aria-selected="false">
-                  <div class="text-center pt-1 pb-1">
-                    <h6 class="title font-weight-normal mb-0">Employee Directory</h6>
-                  </div>
-                </a><!--end nav link-->
-              </li><!--end nav item-->
+{{--              <li class="nav-item mt-2">--}}
+{{--                <a class="nav-link rounded" id="webdesigning" data-toggle="pill" href="#designing" role="tab" aria-controls="designing" aria-selected="false">--}}
+{{--                  <div class="text-center pt-1 pb-1">--}}
+{{--                    <h6 class="title font-weight-normal mb-0">Employee Directory</h6>--}}
+{{--                  </div>--}}
+{{--                </a><!--end nav link-->--}}
+{{--              </li><!--end nav item-->--}}
             </ul><!--end nav pills-->
           </div><!--end col-->
 
           <div class="col-md-8 col-12 mt-0 pt-0">
             <div class="tab-content" id="pills-tabContent">
               <div class="tab-pane fade bg-white show active p-4 rounded shadow" id="onboarding" role="tabpanel" aria-labelledby="webdeveloping">
-                <img src="{{asset('/frontend/images/onboarding.png')}}" class="img-fluid" alt="">
+                <img src="{{asset('/frontend/images/clients.png')}}" class="img-fluid" alt="">
                 <div class="mt-0">
-                  <p class="text-muted">Effortlessly capture new employee data on the system and get them up to speed.</p>
+                  <p class="text-muted">Manage your customers' details from the initial stage of your business relationship to the conclusion of your deal.</p>
                 </div>
               </div><!--end teb pane-->
 
               <div class="tab-pane fade bg-white p-4 rounded shadow" id="data-analise" role="tabpanel" aria-labelledby="database">
-                <img src="{{asset('/frontend/images/attendance.png')}}" class="img-fluid" alt="">
+                <img src="{{asset('/frontend/images/bulk_sms.png')}}" class="img-fluid" alt="">
                 <div class="mt-0">
-                  <p class="text-muted">Set your organization's hours, track your employee attendance, and streamline your payday process.</p>
+                  <p class="text-muted">Connect with your clients wherever they are through both sms and email channels.</p>
                 </div>
               </div><!--end teb pane-->
 
               <div class="tab-pane fade bg-white p-4 rounded shadow" id="security" role="tabpanel" aria-labelledby="server">
-                <img src="{{asset('/frontend/images/leave-management.png')}}" class="img-fluid" alt="">
+                <img src="{{asset('/frontend/images/invoices.png')}}" class="img-fluid" alt="">
                 <div class="mt-0">
-                  <p class="text-muted">Consolidate all your employees' leaves while monitoring employee absences, leave policies, and compliance.</p>
+                  <p class="text-muted">Centralized management of paid and unpaid invoices and receipts for tracking client payments.</p>
                 </div>
               </div><!--end teb pane-->
 
-              <div class="tab-pane fade bg-white p-4 rounded shadow" id="designing" role="tabpanel" aria-labelledby="webdesigning">
-                <img src="{{asset('/frontend/images/employee-directory.png')}}" class="img-fluid" alt="">
-                <div class="mt-0">
-                  <p class="text-muted">Easily searchable directory of current and former employees and an overview of employee details.</p>
-                </div>
-              </div><!--end teb pane-->
+{{--              <div class="tab-pane fade bg-white p-4 rounded shadow" id="designing" role="tabpanel" aria-labelledby="webdesigning">--}}
+{{--                <img src="{{asset('/frontend/images/employee-directory.png')}}" class="img-fluid" alt="">--}}
+{{--                <div class="mt-0">--}}
+{{--                  <p class="text-muted">Easily searchable directory of current and former employees and an overview of employee details.</p>--}}
+{{--                </div>--}}
+{{--              </div><!--end teb pane-->--}}
             </div><!--end tab content-->
           </div><!--end col-->
         </div><!--end row-->
