@@ -145,6 +145,7 @@ Route::get('/payment/gateway', 'CNX247\Frontend\PaymentGatewayController@handleG
 #Frontend routes
 Route::get('/pricing', 'CNX247\Frontend\BaseController@pricing')->name('pricing');
 Route::get('/support', 'CNX247\Frontend\BaseController@support')->name('support');
+Route::get('/contact_us', 'CNX247\Frontend\BaseController@contact_us')->name('contact_us');
 Route::get('/faqs', 'CNX247\Frontend\BaseController@faqs')->name('faqs');
 #User routes
 Route::get('/my-profile', 'CNX247\Backend\UserController@myProfile')->name('my-profile');
