@@ -134,7 +134,7 @@
             <div class="row text-center">
                 <div class="col-sm-12 invoice-btn-group text-center">
                     <div class="btn-group">
-                        <a href="{{route('trash-receipt-posting', $receipt->slug)}}" class="btn btn-danger btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"  > <i class="ti-close mr-2"></i> Trash Receipt </a>
+                        <a href="{{route('decline-receipt-posting', $receipt->slug)}}" class="btn btn-danger btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"  > <i class="ti-close mr-2"></i> Decline Receipt </a>
                         <a href="{{route('receipt-posting-post', $receipt->slug)}}" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" ><i class="icofont icofont-paper-plane mr-2"></i> Post Receipt</a>
                         <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
                     </div>

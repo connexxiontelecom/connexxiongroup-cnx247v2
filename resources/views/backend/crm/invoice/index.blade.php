@@ -119,7 +119,38 @@
                         </div>
                     </div>
                 </div>
-            </div>
+						</div>
+						<div class="col-md-12">
+							<div class="card">
+									<div class="card-block">
+											<div class="row">
+
+													<div class="col-sm-4">
+															<h4 class="d-inline-block text-c-green m-r-10">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoices->sum('paid_amount'),2)}}</h4>
+															<div class="d-inline-block">
+																	<p class="m-b-0"><i class="feather icon-chevrons-down m-r-10 text-c-green"></i></p>
+																	<p class="text-muted m-b-0">Paid Invoices</p>
+															</div>
+													</div>
+													<div class="col-sm-4">
+															<h4 class="d-inline-block text-c-yellow m-r-10">{{Auth::user()->tenant->currency->symbol ?? 'N'}}
+																{{number_format($invoices->sum('total') + $invoices->sum('tax_value') - $invoices->sum('paid_amount'),2)}}</h4>
+															<div class="d-inline-block">
+																	<p class="m-b-0"><i class="icofont icofont-sand-clock m-r-10 text-c-yellow"></i></p>
+																	<p class="text-muted m-b-0">Unpaid Invoices</p>
+															</div>
+													</div>
+													<div class="col-sm-4">
+															<h4 class="d-inline-block text-c-pink m-r-10">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoices->where('trash', '=',1)->sum('total') + $invoices->where('trash', '=',1)->sum('tax_value'),2)}}</h4>
+															<div class="d-inline-block">
+																	<p class="m-b-0"><i class="icofont icofont-ui-close m-r-10 text-c-pink"></i></p>
+																	<p class="text-muted m-b-0">Declined</p>
+															</div>
+													</div>
+											</div>
+									</div>
+							</div>
+					</div>
             <div class="row">
 							<div class="col-sm-12">
 								<div class="card card-border-primary">
@@ -143,15 +174,15 @@
 															@php
 																	$serial = 1;
 															@endphp
-															@foreach ($invoices as $invoice)
+															@foreach ($invoices->where('trash', '!=',1) as $invoice)
 																<tr>
 																	<td>{{$serial++}}</td>
 																	<td>{{$invoice->client->company_name ?? ''}}</td>
 																	<td>{{$invoice->converter->first_name ?? ''}}  {{$invoice->converter->surname ?? ''}}</td>
 																	<td>{{$invoice->invoice_no}}</td>
-																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total,2)}}</td>
+																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total + $invoice->tax_value,2)}}</td>
 																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->paid_amount,2)}}</td>
-																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total - $invoice->paid_amount,2)}}</td>
+																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total + $invoice->tax_value - $invoice->paid_amount,2)}}</td>
 																	<td>{{date('d F, Y', strtotime($invoice->due_date))}}</td>
 																	<td>
 

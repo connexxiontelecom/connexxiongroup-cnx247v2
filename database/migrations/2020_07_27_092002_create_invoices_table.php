@@ -19,6 +19,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('issued_by')->nullable();
             $table->integer('invoice_no');
+            $table->string('ref_no')->nullable();
             $table->tinyInteger('tax_inclusive')->nullable(); //1=yes; 0=no
             $table->dateTime('issue_date');
             $table->dateTime('due_date')->nullable();

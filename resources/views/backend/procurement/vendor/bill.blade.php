@@ -21,7 +21,12 @@
             <div class="card">
                 <div class="card-block">
                     <h5 class="sub-title mb-3">Vendor Bills</h5>
-                    <a href="{{route('new-vendor-bill')}}" class="btn mb-4 btn-primary btn-mini"><i class="ti-plus mr-2"></i>New Vendor Bill</a>
+										<a href="{{route('new-vendor-bill')}}" class="btn mb-4 btn-primary btn-mini"><i class="ti-plus mr-2"></i>New Vendor Bill</a>
+										@if (session()->has('success'))
+												<div class="alert alert-success background-success" role="alert">
+														{!! session()->get('success') !!}
+												</div>
+										@endif
                     <div class="dt-responsive table-responsive">
                         <table id="simpletable" class="table table-striped table-bordered nowrap">
                             <thead>

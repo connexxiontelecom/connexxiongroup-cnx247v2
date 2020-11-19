@@ -86,39 +86,42 @@
                                             <table id="simpletable" class="table table-striped table-bordered nowrap">
                                                 <thead>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Invoice No.</th>
-                                                    <th>Total ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
-                                                    <th>Paid({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
-                                                    <th>Balance({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
-                                                    <th>Date</th>
+																									<th>#</th>
+																									<th>Invoice No.</th>
+																									<th>Total ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Paid({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Balance({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>VAT({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Date</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                     @php
                                                         $serial = 1;
                                                     @endphp
-																									@foreach ($project->projectInvoices->where('status',1) as $invoice)
-																											<tr>
-																												<td>{{$serial++}}</td>
-																												<td>
-																													<a href="{{route('print-invoice', $invoice->slug)}}" target="_blank">Invoice # {{$invoice->invoice_no ?? ''}}</a>
-																												</td>
-																												<td>{{number_format($invoice->total,2) ?? ''}}</td>
-																												<td>{{number_format($invoice->paid_amount,2) ?? ''}}</td>
-																												<td>{{number_format($invoice->total - $invoice->paid_amount,2) ?? ''}}</td>
-																												<td>{{!is_null($invoice->issue_date) ? date('d, F, Y', strtotime($invoice->issue_date)) : '' }}</td>
-																											</tr>
+																									@foreach ($project->projectInvoices->where('paid_amount','>', 0) as $invoice)
+																									<tr>
+																										<td>{{$serial++}}</td>
+																										<td>
+																											<a href="{{route('print-invoice', $invoice->slug)}}" target="_blank">Invoice # {{$invoice->invoice_no ?? ''}}</a>
+																										</td>
+																										<td>{{number_format($invoice->total + $invoice->tax_value,2) ?? ''}}</td>
+																										<td>{{number_format($invoice->paid_amount,2) ?? ''}}</td>
+																										<td>{{number_format(($invoice->total + $invoice->tax_value) - $invoice->paid_amount,2) ?? ''}}</td>
+																										<td>{{number_format($invoice->tax_value,2) ?? ''}}</td>
+																										<td>{{!is_null($invoice->issue_date) ? date('d, F, Y', strtotime($invoice->issue_date)) : '' }}</td>
+																									</tr>
 																									@endforeach
                                                 </tbody>
                                                 <tfoot>
                                                 <tr>
-                                                    <th>#</th>
-                                                    <th>Invoice No.</th>
-                                                    <th>Total ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
-                                                    <th>Paid ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
-                                                    <th>Balance ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
-                                                    <th>Date</th>
+																									<th>#</th>
+																									<th>Invoice No.</th>
+																									<th>Total ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Paid({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Balance({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>VAT({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+																									<th>Date</th>
                                                 </tr>
                                                 </tfoot>
                                             </table>
@@ -158,16 +161,17 @@
                                                     @php
                                                         $serial = 1;
                                                     @endphp
-																									@foreach ($project->projectBills->where('status',1) as $invoice)
+																									@foreach ($project->projectBills->where('paid_amount','>',0) as $bill)
 																											<tr>
 																												<td>{{$serial++}}</td>
 																												<td>
-																													<a href="{{route('print-invoice', $invoice->slug)}}" target="_blank">Invoice # {{$invoice->invoice_no ?? ''}}</a>
+																													<a href="#" target="_blank">Bill # {{$bill->bill_no ?? ''}}</a>
 																												</td>
-																												<td>{{number_format($invoice->total,2) ?? ''}}</td>
-																												<td>{{number_format($invoice->paid_amount,2) ?? ''}}</td>
-																												<td>{{number_format($invoice->paid_amount,2) ?? ''}}</td>
-																												<td>{{!is_null($invoice->issue_date) ? date('d, F, Y', strtotime($invoice->issue_date)) : '' }}</td>
+																												<td>{{number_format($bill->bill_amount + $bill->vat_amount,2) ?? ''}}</td>
+																												<td>{{number_format($bill->paid_amount,2) ?? ''}}</td>
+																												<td>{{number_format(($bill->bill_amount + $bill->vat_amount) - $bill->paid_amount,2) ?? ''}}</td>
+																												<td>{{number_format($bill->vat_amount,2) ?? ''}}</td>
+																												<td>{{!is_null($bill->bill_date) ? date('d, F, Y', strtotime($bill->bill_date)) : '' }}</td>
 																											</tr>
 																									@endforeach
                                                 </tbody>

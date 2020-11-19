@@ -36,7 +36,12 @@
                             </button>
                             {!! session('error') !!}
                         </div>
-                    @endif
+										@endif
+										@if (count($status) > 0)
+													<div class="alert alert-warning background-warning" role="alert">
+														<strong>Ooops!</strong> This action cannot be completed because there is a receipt that needs to be taken care of.
+													</div>
+											@endif
                     <a href="{{route('vendor-bills')}}" class="btn mb-4 btn-primary btn-mini"><i class="ti-layout mr-2"></i>New Payment</a>
                     <form action="{{route('new-payment')}}" method="post" autocomplete="off">
                         @csrf
@@ -61,7 +66,7 @@
                                     @error('payment_amount')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
-<input type="hidden" name="payment_amount" value="{{$pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') - $pending_bills->sum('paid_amount')}}">
+																	<input type="hidden" name="payment_amount" value="{{$pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') - $pending_bills->sum('paid_amount')}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -166,14 +171,23 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                            <input type="hidden" id="grandTotal" name="grandTotal">
-                            <div class="col-sm-12">
-                                <div class="btn-group d-flex justify-content-center">
-                                    <a href="" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Cancel</a>
-                                    <button type="submit" class="btn btn-primary btn-mini"><i class="ti-check mr-2"> Submit</i></button>
-                                </div>
-                            </div>
+														</div>
+														@if (count($status) <= 0)
+															<input type="hidden" id="grandTotal" name="grandTotal">
+															<div class="col-sm-12">
+																	<div class="btn-group d-flex justify-content-center">
+																			<a href="" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Cancel</a>
+																			<button type="submit" class="btn btn-primary btn-mini"><i class="ti-check mr-2"> Submit</i></button>
+																	</div>
+															</div>
+														@else
+															<strong class="text-danger text-center d-flex justify-content-center">This action cannot be completed. A pending receipt needs to be posted or declined.</strong>
+															<hr>
+															<div class="btn-group  d-flex justify-content-center">
+																<a href="{{route('invoice-list')}}" class="btn btn-secondary btn-mini text-center">Back</a>
+																<a href="{{route('payments')}}" class="btn btn-primary btn-mini text-center">Payments</a>
+															</div>
+														@endif
                         </div>
                     </form>
                 </div>

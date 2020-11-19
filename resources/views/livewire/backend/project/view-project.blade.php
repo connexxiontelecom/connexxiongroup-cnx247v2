@@ -66,6 +66,12 @@
                             </td>
                             <td class="text-right"> <label for="" class="badge badge-danger">{{number_format(count($project->projectInvoices))}}</label> </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <i class="icofont icofont-ticket"></i> <a href="#invoices"> Bills:</a>
+                            </td>
+                            <td class="text-right"> <label for="" class="badge badge-danger">{{number_format(count($project->projectBills))}}</label> </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -733,7 +739,7 @@
                                                                                                                 <td>{{Auth::user()->tenant->street_1 ?? 'Street here'}} {{ Auth::user()->tenant->city ?? ''}} {{Auth::user()->tenant->postal_code ?? 'Postal code here'}}</td>
                                                                                                             </tr>
                                                                                                             <tr>
-                                                                                                                <td><a href="mailto:{{Auth::user()->tenant->email ?? ''}}" target="_top"><span class="__cf_email__" data-cfemail="">[ {{Auth::user()->tenant->email ?? 'Email here'}} ]</span></a>
+                                                                                                                <td><a href="mailto:{{Auth::user()->tenant->email ?? ''}}" target="_top"><span class="__cf_email__" data-cfemail="">{{Auth::user()->tenant->email ?? 'Email here'}}</span></a>
                                                                                                                 </td>
                                                                                                             </tr>
                                                                                                             <tr>
@@ -781,7 +787,7 @@
                                                                                             <div class="col-md-4 col-sm-6">
                                                                                                 <h6 class="m-b-20">Invoice Number <span>#{{$invoice->invoice_no}}</span></h6>
                                                                                                 <h6 class="text-uppercase text-primary">Balance Due :
-                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total - $invoice->paid_amount,2)}}</span>
+                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total + $invoice->tax_value - $invoice->paid_amount,2)}}</span>
                                                                                                 </h6>
                                                                                                 <h6 class="text-uppercase text-primary">Amount Paid :
                                                                                                     <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->paid_amount,2)}}</span>
@@ -854,7 +860,7 @@
                                                                                                             </td>
                                                                                                             <td>
                                                                                                                 <hr>
-                                                                                                                <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total,2)}}</h5>
+                                                                                                                <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total + $invoice->tax_value,2)}}</h5>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                     </tbody>
@@ -971,44 +977,14 @@
                                                                             <div class="modal-body">
 
                                                                                 <div class="card" id="invoiceContainer">
-                                                                                    <div class="row invoice-contact">
-                                                                                        <div class="col-md-8">
-                                                                                            <div class="invoice-box row">
-                                                                                                <div class="col-sm-12">
-                                                                                                    <table class="table table-responsive invoice-table table-borderless">
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td><img src="{{asset('/assets/images/company-assets/logos/'.Auth::user()->tenant->logo ?? 'logo.png')}}" class="m-b-10" alt="{{Auth::user()->tenant->company_name ?? 'CNX247 ERP Solution'}}" height="52" width="82"></td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>{{ Auth::user()->tenant->company_name ?? 'Company Name here'}}</td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>{{Auth::user()->tenant->street_1 ?? 'Street here'}} {{ Auth::user()->tenant->city ?? ''}} {{Auth::user()->tenant->postal_code ?? 'Postal code here'}}</td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td><a href="mailto:{{Auth::user()->tenant->email ?? ''}}" target="_top"><span class="__cf_email__" data-cfemail="">[ {{Auth::user()->tenant->email ?? 'Email here'}} ]</span></a>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>{{Auth::user()->tenant->phone ?? 'Phone Number here'}}</td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="col-md-4">
-                                                                                        </div>
-                                                                                    </div>
                                                                                     <div class="card-block">
                                                                                         <div class="row invoive-info">
                                                                                             <div class="col-md-4 col-xs-12 invoice-client-info">
-                                                                                                <h6>Vendor Information :</h6>
+                                                                                                <h6>Bill To :</h6>
                                                                                                 <h6 class="m-0">{{$bill->getVendor->company_name ?? ''}}</h6>
                                                                                                 <p class="m-0 m-t-10">{{$bill->getVendor->company_address ?? ''}}</p>
                                                                                                 <p class="m-0">{{$bill->getVendor->company_phone ?? ''}}</p>
-                                                                                                <p><a href="mailto:{{$bill->getVendor->email_address ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[{{$bill->getVendor->email_address ?? ''}}]</a></p>
+                                                                                                <p><a href="mailto:{{$bill->getVendor->email_address ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">{{$bill->getVendor->email_address ?? 'Email here'}}</a></p>
                                                                                             </div>
                                                                                             <div class="col-md-4 col-sm-6">
                                                                                                 <h6>Order Information :</h6>
@@ -1036,10 +1012,10 @@
                                                                                             <div class="col-md-4 col-sm-6">
                                                                                                 <h6 class="m-b-20">Bill Number <span>#{{$bill->bill_no ?? ''}}</span></h6>
                                                                                                 <h6 class="text-uppercase text-primary">Balance Due :
-                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->bill_amount - $invoice->paid_amount,2)}}</span>
+                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->bill_amount + $bill->vat_amount - $bill->paid_amount,2)}}</span>
                                                                                                 </h6>
                                                                                                 <h6 class="text-uppercase text-primary">Paid Amount :
-                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->paid_amount,2)}}</span>
+                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->paid_amount,2)}}</span>
                                                                                                 </h6>
                                                                                             </div>
                                                                                         </div>
@@ -1125,7 +1101,7 @@
                                                                                         <div class="row text-center">
                                                                                             <div class="col-sm-12 invoice-btn-group text-center">
                                                                                                 <div class="btn-group">
-                                                                                                    <button type="button" class="btn btn-success btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$invoice->id}}" id="sendInvoiceViaEmail"> <i class="icofont icofont-email mr-2"></i> <span id="sendEmailAddon">Send as Email</span> </button>
+                                                                                                    <button type="button" class="btn btn-success btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$bill->id}}" id="sendInvoiceViaEmail"> <i class="icofont icofont-email mr-2"></i> <span id="sendEmailAddon">Send as Email</span> </button>
                                                                                                     <button type="button" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" type="button" id="printInvoice"><i class="icofont icofont-printer mr-2"></i> Print</button>
                                                                                                     <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
                                                                                                 </div>

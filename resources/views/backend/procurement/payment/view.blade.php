@@ -42,7 +42,7 @@
                                 <h5 class="sub-title">Payment Details</h5>
                                 <div class="form-group">
                                     <strong for="">Bank</strong>
-                                    <p>{{$payment->getBank->bank_name ?? ''}}</p>
+                                    <p>Bank Name</p>
                                 </div>
                                 <div class="form-group">
                                     <strong for="">Payment Amount</strong>
@@ -129,7 +129,7 @@
                             <input type="hidden" id="grandTotal" name="grandTotal">
                             <div class="col-sm-12">
                                 <div class="btn-group d-flex justify-content-center">
-                                    <a href="{{route('trash-payment', $payment->slug)}}" class="btn btn-mini btn-danger"><i class="ti-trash mr-2"></i>Trash</a>
+                                    <a href="{{route('decline-payment', $payment->slug)}}" class="btn btn-mini btn-danger"><i class="ti-trash mr-2"></i>Decline</a>
                                     <a href="{{route('post-payment', $payment->slug)}}" class="btn btn-primary btn-mini"><i class="ti-check mr-2"> Post Payment</i></a>
                                 </div>
                             </div>

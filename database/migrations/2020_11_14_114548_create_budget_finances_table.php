@@ -20,6 +20,8 @@ class CreateBudgetFinancesTable extends Migration
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('budget_id');
             $table->unsignedBigInteger('receipt_id')->nullable();
+            $table->unsignedBigInteger('payment_id')->nullable();
+            $table->unsignedBigInteger('bill_id')->nullable();
             $table->timestamps();
         });
     }

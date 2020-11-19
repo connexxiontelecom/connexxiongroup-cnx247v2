@@ -515,7 +515,6 @@ class ProjectController extends Controller
     }
 
     public function storeProjectInvoice(Request $request){
-			//return dd($request->all());
         if($request->setAccount == 1){
             $this->validate($request,[
                 'client'=>'required',
@@ -565,9 +564,11 @@ class ProjectController extends Controller
 									$arrayCount++;
 							}
 					}
+					$ref_no = strtoupper(substr(sha1(time()), 32,40));
 					$policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
             $master = new Invoice;
             $master->invoice_no = $request->invoice_no;
+            $master->ref_no = $ref_no;
             $master->client_id = $request->client;
             $master->project_id = $request->ref_no;
             $master->issue_date = $request->date;
@@ -586,14 +587,14 @@ class ProjectController extends Controller
 						$accountArray = array_filter($request->accounts);
 						$reIndexedAccounts = array_values($accountArray);
                 #project budget table
-                $budget = ProjectBudget::where('project_id', $request->ref_no)
+                /* $budget = ProjectBudget::where('project_id', $request->ref_no)
                                         ->where('tenant_id', Auth::user()->tenant_id)
                                         ->where('id', $request->budget)
 																				->first();
 								if(!empty($budget)){
 									$budget->actual_amount += $totalAmount;
 									$budget->save();
-								}
+								}*/
                 #update budgetFinance
                 $budgetFinance = new BudgetFinance;
                 $budgetFinance->project_id = $request->ref_no;
@@ -624,7 +625,7 @@ class ProjectController extends Controller
                     'narration' => 'Invoice generation for ' . $updateClient->company_name ?? '',
                     'dr_amount' => $totalAmount + ($totalAmount*$policy->vat)/100,
                     'cr_amount' => 0,
-                    'ref_no' => $request->ref_no,
+                    'ref_no' => $ref_no,
                     'bank' => 0,
                     'ob' => 0,
                     'transaction_date' => $master->created_at,
@@ -637,7 +638,7 @@ class ProjectController extends Controller
                     'narration' => 'VAT on invoice no. '.$master->invoice_no.' for '.$updateClient->company_name,
                     'dr_amount' => 0,
                     'cr_amount' => ($totalAmount*$policy->vat)/100 ?? 0,
-                    'ref_no' => $request->ref_no,
+                    'ref_no' => $ref_no,
                     'bank' => 0,
                     'ob' => 0,
                     'transaction_date' => $master->created_at,
@@ -651,7 +652,7 @@ class ProjectController extends Controller
                         'narration' => 'Invoice generation for ' . $d->description,
                         'dr_amount' => 0,
                         'cr_amount' => $d->total ?? 0,
-                        'ref_no' => $request->ref_no,
+                        'ref_no' => $ref_no,
                         'bank' => 0,
                         'ob' => 0,
                         'transaction_date' => $invoice->created_at,

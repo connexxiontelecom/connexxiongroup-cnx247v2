@@ -230,6 +230,7 @@ Route::get('/crm/deal/view/{slug}', 'CNX247\Backend\CRMController@viewDeal')->na
 Route::get('/invoice-list', 'CNX247\Backend\CRMController@invoiceList')->name('invoice-list');
 Route::get('/print/invoice/{slug}', 'CNX247\Backend\CRMController@printInvoice')->name('print-invoice');
 Route::post('/send/invoice/email', 'CNX247\Backend\CRMController@sendInvoiceViaEmail');
+Route::get('/invoice/decline-invoice/{slug}', 'CNX247\Backend\CRMController@declineInvoice')->name('decline-invoice');
 #Receipt list
 Route::get('/receipt-list', 'CNX247\Backend\CRMController@receiptList')->name('receipt-list');
 Route::get('/print/receipt/{slug}', 'CNX247\Backend\CRMController@printReceipt')->name('print-receipt');
@@ -357,6 +358,8 @@ Route::post('/project/receipt', 'CNX247\Backend\ProjectController@storeProjectRe
 Route::get('/project/bill/{slug}', 'CNX247\Backend\ProjectController@projectBill')->name('project-bill');
 Route::post('/project/bill', 'CNX247\Backend\ProjectController@storeProjectBill')->name('store-project-bill');
 
+Route::get('/bill/decline-bill/{slug}', 'CNX247\Backend\Accounting\PostingController@declineBill')->name('decline-bill');
+
 Route::get('/project/project-financials/{slug}', 'CNX247\Backend\ProjectController@projectFinancials')->name('project-financials');
 Route::post('/add-project-responsible', 'CNX247\Backend\ProjectController@addResponsiblePerson')->name('add-project-responsible');
 Route::post('/add-project-observers', 'CNX247\Backend\ProjectController@addObserver')->name('add-project-observers');
@@ -435,7 +438,7 @@ Route::get('/vendor/payments', 'CNX247\Backend\SupplierController@payments')->na
 Route::get('/vendor/payment/new', 'CNX247\Backend\SupplierController@newPayment')->name('new-payment');
 Route::post('/vendor/payment/new', 'CNX247\Backend\SupplierController@storePayment');
 Route::get('/vendor/payment/detail/{slug}', 'CNX247\Backend\SupplierController@paymentDetail')->name('payment-detail');
-Route::get('/vendor/payment/trash/{slug}', 'CNX247\Backend\SupplierController@trashPayment')->name('trash-payment');
+Route::get('/vendor/payment/decline/{slug}', 'CNX247\Backend\SupplierController@declinePayment')->name('decline-payment');
 Route::get('/vendor/payment/post/{slug}', 'CNX247\Backend\SupplierController@postPayment')->name('post-payment');
 #Procurement supplier account
 Route::get('/supplier/login', 'CNX247\Frontend\ProcurementAuthController@login')->name('supplier.login');
@@ -504,13 +507,13 @@ Route::post('/logistics/vehicle/assign', 'CNX247\Backend\LogisticsController@ass
     Route::get('/accounting/posting/receipt', 'CNX247\Backend\Accounting\PostingController@receipt')->name('receipt-posting');
     Route::get('/accounting/posting/detail/{slug}', 'CNX247\Backend\Accounting\PostingController@receiptDetail')->name('receipt-posting-detail');
     Route::get('/accounting/posting/receipt/{slug}/post', 'CNX247\Backend\Accounting\PostingController@postReceipt')->name('receipt-posting-post');
-    Route::get('/accounting/posting/trash-receipt/{slug}', 'CNX247\Backend\Accounting\PostingController@trashReceipt')->name('trash-receipt-posting');
+    Route::get('/accounting/posting/decline-receipt/{slug}', 'CNX247\Backend\Accounting\PostingController@declineReceipt')->name('decline-receipt-posting');
     #Journal Entry
     Route::get('/journal-entries', 'CNX247\Backend\Accounting\JournalEntryController@journalEntries')->name('journal-entries');
     Route::get('/new-journal-entry', 'CNX247\Backend\Accounting\JournalEntryController@create')->name('new-journal-entry');
     Route::post('/new-journal-entry', 'CNX247\Backend\Accounting\JournalEntryController@store');
     Route::get('/view-journal-entry/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@view')->name('view-journal-entry');
-    Route::get('/journal-entry/trash/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@trashJV')->name('trash-jv');
+    Route::get('/journal-entry/decline/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@declineJV')->name('decline-jv');
     Route::get('/journal-entry/post/{slug}', 'CNX247\Backend\Accounting\JournalEntryController@postJV')->name('post-jv');
     #Budget route
     Route::get('/budget-profile', 'CNX247\Backend\Accounting\BudgetController@index')->name('budget-profile');

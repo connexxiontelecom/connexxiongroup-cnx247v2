@@ -19,6 +19,7 @@ class CreateBillMastersTable extends Migration
             $table->unsignedBigInteger('vendor_id');
             $table->unsignedBigInteger('project_id')->nullable();
             $table->string('bill_no');
+            $table->string('ref_no')->nullable();
             $table->string('status')->default('unpaid');
             $table->dateTime('bill_date');
             $table->double('bill_amount');
@@ -26,7 +27,10 @@ class CreateBillMastersTable extends Migration
             $table->double('vat_charge');
             $table->unsignedBigInteger('billed_to');
             $table->double('paid_amount')->default(0);
-            $table->tinyInteger('paid')->default(0)->comment('0=unpaid, 1=paid');
+						$table->tinyInteger('paid')->default(0)->comment('0=unpaid, 1=paid');
+						$table->tinyInteger('trash')->nullable();
+						$table->unsignedBigInteger('trashed_by')->nullable();
+						$table->dateTime('trash_date')->nullable();
             $table->string('instruction')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->string('slug')->nullable();
