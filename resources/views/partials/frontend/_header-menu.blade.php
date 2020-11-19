@@ -34,7 +34,7 @@
 					<ul class="submenu">
 						<li><a href="{{route('human_resource')}}">Human Resource</a></li>
 						<li><a href="{{route('crm')}}">CRM</a></li>
-						<li><a href="javascript:void(0)">Accounting</a></li>
+						<li><a href="{{route('accounting')}}">Accounting</a></li>
 						<li><a href="javascript:void(0)">Procurement</a></li>
 {{--						<li><a href="javascript:void(0)">Logistics</a></li>--}}
 {{--						<span class="badge badge-success rounded">New</span>--}}
