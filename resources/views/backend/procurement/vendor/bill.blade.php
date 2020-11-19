@@ -21,7 +21,12 @@
             <div class="card">
                 <div class="card-block">
                     <h5 class="sub-title mb-3">Vendor Bills</h5>
-                    <a href="{{route('new-vendor-bill')}}" class="btn mb-4 btn-primary btn-mini"><i class="ti-plus mr-2"></i>New Vendor Bill</a>
+										<a href="{{route('new-vendor-bill')}}" class="btn mb-4 btn-primary btn-mini"><i class="ti-plus mr-2"></i>New Vendor Bill</a>
+										@if (session()->has('success'))
+												<div class="alert alert-success background-success" role="alert">
+														{!! session()->get('success') !!}
+												</div>
+										@endif
                     <div class="dt-responsive table-responsive">
                         <table id="simpletable" class="table table-striped table-bordered nowrap">
                             <thead>
@@ -32,7 +37,8 @@
                                 <th>Amount ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                 <th>VAT Amount ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                 <th>VAT Charge</th>
-                                <th>Amount Paid ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                <th>Paid ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                <th>Balance ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                 <th>Date</th>
                                 <th>Action</th>
                             </tr>
@@ -46,10 +52,11 @@
                                     <td>{{$i++}}</td>
                                     <td>{{$bill->getVendor->company_name ?? ''}}</td>
                                     <td>{{date('d F, Y', strtotime($bill->bill_date))}}</td>
-                                    <td>{{number_format($bill->bill_amount,2)}}</td>
+                                    <td>{{number_format($bill->bill_amount + $bill->vat_amount,2)}}</td>
                                     <td>{{number_format($bill->vat_amount,2)}}</td>
                                     <td>{{$bill->vat_charge}}%</td>
                                     <td>{{number_format($bill->paid_amount,2)}}</td>
+                                    <td>{{number_format($bill->bill_amount + $bill->vat_amount - $bill->paid_amount,2)}}</td>
                                     <td>{{date('d F, Y', strtotime($bill->created_at))}}</td>
                                     <td>
                                         <a href="{{route('view-bill', $bill->slug)}}" class="btn btn-mini btn-info"><i class="ti-eye mr-2"></i>View</a>

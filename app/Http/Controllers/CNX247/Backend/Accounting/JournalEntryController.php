@@ -94,7 +94,7 @@ class JournalEntryController extends Controller
             return back();
         }
     }
-    public function trashJV($slug){
+    public function declineJV($slug){
         $jv = JournalVoucher::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
         if(!empty($jv)){
             $jv->trash = 1;

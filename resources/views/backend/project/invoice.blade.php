@@ -13,22 +13,44 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-12 col-xl-12">
-            <div class="card">
-                <div class="card-block">
-                    @include('livewire.backend.crm.common._slab-menu')
+    @if (session()->has('success'))
+        <div class="row">
+            <div class="col-md-12 col-xl-12">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="alert alert-success" role="alert">
+                            {!! session()->get('success') !!}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+   @endif
+    @if (session()->has('error'))
+        <div class="row">
+            <div class="col-md-12 col-xl-12">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="alert alert-warning" role="alert">
+                            {!! session()->get('error') !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   @endif
+   <div class="row">
+       <div class="col-md-12 col-sm-12 col-lg-12">
+						@include('backend.project.common._project-detail-slab')
+       </div>
    </div>
-   <form action="{{route('store-project-invoice')}}" method="post">
+   <form action="{{route('store-project-invoice')}}" method="post" autocomplete="off">
        @csrf
     <div class="card">
         <div class="row invoice-contact">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="invoice-box row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <table class="table table-responsive invoice-table table-borderless">
                             <tbody>
                                 <tr>
@@ -50,17 +72,115 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="col-sm-6">
+                        <table class="table table-responsive invoice-table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h5 class="sub-title"><strong>Project Name:</strong> {{$project->post_title ?? ''}}</h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong  style="text-transform: uppercase;">Start Date:</strong> <label for="" class="label label-primary">{{!is_null($project->start_date) ? date('d F, Y', strtotime($project->start_date)) : '-' }}</label> </td>
+                                </tr>
+                                <tr>
+                                    <td><strong style="text-transform: uppercase;">Due Date:</strong> <label for="" class="label label-danger">{{!is_null($project->end_date) ? date('d F, Y', strtotime($project->end_date)) : '-' }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><strong  style="text-transform: uppercase;">Created By:</strong> {{$project->user->first_name ?? ''}} {{$project->surname ?? ''}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
             </div>
         </div>
         <div class="card-block">
-            <div class="row invoive-info">
-                <div class="col-md-4 col-sm-6">
-                    <h6 class="m-b-20">Ref. No. <span>{{$project->id}}</span></h6>
-                    <input type="hidden" name="ref_no" value="{{$project->id}}">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 invoice-client-info">
+                            <h6>Client Information :</h6>
+                            <label for="">Client <sup class="text-danger">*</sup></label>
+                            <select name="client" id="client" class="form-control js-example-basic-single select-client">
+                                <option selected disabled>Select client</option>
+                                @foreach ($clients as $client)
+                                    <option value="{{$client->id}}">{{$client->company_name ?? ''}}</option>
+                                @endforeach
+                            </select>
+                            @error('client')
+                                <i class="text-danger mt-3 d-flex">{{$message}}</i>
+                            @enderror
+                        </div>
+                        @if (count($budgets) > 0)
+                        <input type="hidden" name="setBudget" value="1">
+                        <div class="col-md-12 col-xs-12 mt-4">
+                            <label for="">Budget <sup class="text-danger">*</sup></label>
+                            <select name="budget" id="budget" class="form-control js-example-basic-single">
+                                <option selected disabled>Select budget</option>
+                                @foreach ($budgets as $budget)
+																<option value="{{$budget->id}}">{{$budget->budget_title ?? ''}} -  Budget: {{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($budget->budget_amount,2) ?? 0}}, Actual: {{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($budget->actual_amount,2) ?? 0}}</option>
+                                @endforeach
+                            </select>
+                            @error('budget')
+                                <i class="text-danger mt-3 d-flex">{{$message}}</i>
+                            @enderror
+                        </div>
+                        @else
+                        <input type="hidden" name="setBudget" value="0">
+                        @endif
+                    </div>
                 </div>
+                <div class="col-md-6 col-sm-6 col-lg-6">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <h6 class="m-b-20">Invoice Number <span>#{{$invoice_no}}</span></h6>
+                            <div class="form-group">
+                                <label for="">Issue Date</label>
+                                <input type="date" name="date" placeholder="Date" class="form-control">
+                                @error('date')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="">Due Date</label>
+                                <input type="date" name="due_date" class="form-control" placeholder="Due Date">
+                                @error('due_date')
+                                    <i class="text-danger mt-2">{{$message}}</i>
+                                @enderror
+                            </div>
+                            <input type="hidden" value="{{$status}}" name="status">
+                            <input type="hidden" name="ref_no" value="{{$project->id}}">
+                            <input type="hidden" name="invoice_no" value="{{$invoice_no}}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 client-account-wrapper mb-3">
+                    <div class="form-group">
+                        <label for="">Client GL Code <sup class="text-danger">*</sup></label>
+                        <select name="client_account" id="client_account" class="form-control js-example-basic-single">
+                            <option selected disabled>Select account</option>
+                            @foreach ($accounts as $account)
+                                <option value="{{$account->glcode}}">{{$account->account_name ?? ''}} - ({{$account->glcode ?? ''}})</option>
+                            @endforeach
+                        </select>
+                        @error('client_account')
+                            <i class="text-danger mt-4 d-flex">{{$message}}</i>
+                        @enderror
+                        <input type="hidden" name="setAccount" id="setAccount" value="{{old('setAccount')}}">
+												<input type="hidden" value="{{$status}}" name="status">
+												<input type="hidden" name="vat" id="vat" value="{{$policy->vat}}">
+                        @error('client_account')
+                            <i class="text-danger mt-3 d-flex">{{$message}}</i>
+                        @enderror
+                    </div>
+
+                </div>
+
             </div>
             <div class="row">
                 <div class="col-sm-12">
@@ -70,7 +190,7 @@
                                 <tr class="thead-default">
                                     <th>Description</th>
                                     <th>Account</th>
-                                    <th>Amount</th>
+                                    <th>Amount ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                     <th class="text-danger">Action</th>
                                 </tr>
                             </thead>
@@ -78,7 +198,7 @@
                                 <tr class="item">
                                     <td>
                                         <div class="form-group">
-                                            <textarea name="description[]" placeholder="Description" value="{{old('description[]')}}" style="resize: none;" class="select-product form-control"></textarea>
+                                            <textarea name="description[]" placeholder="Description" value="{{old('description[]')}}" style="resize: none;" class=" form-control"></textarea>
                                             @error('description')
                                                 <i class="text-danger mt-2">{{$message}}</i>
                                             @enderror
@@ -86,16 +206,19 @@
                                     </td>
                                     <td>
                                         <div class="form-group">
-                                            <select name="accounts[]" class="form-control js-example-basic-single" id="accounts">
+                                            <select name="accounts[]" class="form-control js-example-basic-single select-product" id="accounts">
                                                 <option disabled selected>Select account</option>
                                                 @foreach ($accounts as $item)
                                                     <option value="{{$item->glcode}}">{{$item->account_name ?? ''}} - ({{$item->glcode}})</option>
                                                 @endforeach
                                             </select>
+                                            @error('accounts')
+                                                <i class="text-danger mt-4 d-flex">{{$message}}</i>
+                                            @enderror
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="number" placeholder="Amount" step="0.01" name="amount[]" class="form-control">
+                                        <input type="text" placeholder="Amount" step="0.01" name="amount[]" class="form-control payment autonumber">
                                         @error('amount')
                                             <i class="text-danger mt-2">{{$message}}</i>
                                         @enderror
@@ -119,6 +242,16 @@
                 <div class="col-sm-12">
                     <table class="table table-responsive invoice-table invoice-total">
                         <tbody>
+													<tr class="text-info">
+														<td>
+																<hr>
+																<h6 class="text-primary">VAT ({{$policy->vat}}%) :</h6>
+														</td>
+														<td>
+																<hr>
+																<h6 class="text-primary"> <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="vat"> 0.00</span></h6>
+														</td>
+												</tr>
                             <tr class="text-info">
                                 <td>
                                     <hr>
@@ -145,26 +278,62 @@
 </div>
 @endsection
 @section('dialog-section')
-
+<div class="modal fade" id="budgetModa" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h6 class="modal-title" style="text-transform: uppercase">Project Budget</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="sub-title">{{$project->post_title ?? ''}}</h5>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12  inject-table"></div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('extra-scripts')
+<script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
+<script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
+<script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+<script src="\assets\pages\form-masking\inputmask.js"></script>
+<script src="\assets\pages\form-masking\jquery.inputmask.js"></script>
+<script src="/assets/pages/form-masking/autoNumeric.js"></script>
+<script src="/assets/pages/form-masking/form-mask.js"></script>
 <script>
     $(document).ready(function(){
-       /*  $(".select-product").select2({
-            placeholder: "Add"
-        }); */
+        if($('#setAccount') == 1){
+                $('.client-account-wrapper').show();
+                $('#setAccount').val(1);
+            }else{
+                $('.client-account-wrapper').hide();
+                $('#setAccount').val(0);
+            }
+         $(".select-product").select2({
+            placeholder: "Select account"
+        });
         var grand_total = 0;
-        $('.invoice-detail-table').on('mouseup keyup', 'input[type=number]', ()=> calculateTotals());
 
         $(document).on('click', '.add-line', function(e){
             e.preventDefault();
             var new_selection = $('.item').first().clone();
             $('#products').append(new_selection);
 
-/*             $(".select-product").select2({
-                placeholder: "Select product or service"
+            $(".select-product").select2({
+                placeholder: "Select account"
             });
-            $(".select-product").last().next().next().remove(); */
+            $(".select-product").last().next().next().remove();
         });
 
         //Remove line
@@ -174,18 +343,47 @@
             calculateTotals();
         });
 
-        $('.aggregate').on('change', function(e){
+        $('.payment').on('change', function(e){
             e.preventDefault();
-            setTotal();
+						setTotal();
+						$(this).val().toLocaleString();
         });
 
-    function setTotal(){
+        $(document).on('change', '#budget', function(e){
+            e.preventDefault();
+            axios.post('/project/get-budget',{budget:$(this).val()})
+            .then(response=>{
+                $('.inject-table').html(response.data);
+                $('#budgetModal').modal('show');
+            })
+            .catch(error=>{
+
+            });
+
+        });
+
+        $(document).on('change', '.select-client', function(e){
+            e.preventDefault();
+           axios.post('/crm/client/client-account',{id:$(this).val()})
+           .then(response=>{
+               if(response.data.client.glcode == null){
+                $('.client-account-wrapper').show();
+                $('#setAccount').val(1);
+               }else{
+                $('.client-account-wrapper').hide();
+                $('#setAccount').val(0);
+               }
+           });
+        });
+				function setTotal(){
         var sum = 0;
         $(".payment").each(function(){
-            sum += +$(this).val();
-        });
-            $(".total").text(sum);
-    }
+            sum += +$(this).val().replace(/,/g, '');
+				});
+				var vat = ($('#vat').val() * sum)/100;
+									$(".vat").text(vat.toLocaleString());
+            $(".total").text(sum.toLocaleString());
+		}
 });
 </script>
 @endsection

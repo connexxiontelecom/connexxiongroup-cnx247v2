@@ -2,7 +2,7 @@
     <div class="col-xl-4 col-lg-12 push-xl-8 task-detail-right">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-header-text">
+                <h5 class="card-header-text text-uppercase">
                     <i class="icofont icofont-clock-time m-r-10"></i>Project Duration
                 </h5>
                 <div class="btn-group mt-2 d-flex justify-content-center" role="group">
@@ -17,7 +17,7 @@
         </div>
         <div class="card card-border-primary" style="margin-top:-30px;">
             <div class="card-header">
-                <h5 class="card-header-text">
+                <h5 class="card-header-text text-uppercase">
                     <i class="icofont icofont-ui-note m-r-10"></i> Project Details
                 </h5>
             </div>
@@ -66,6 +66,12 @@
                             </td>
                             <td class="text-right"> <label for="" class="badge badge-danger">{{number_format(count($project->projectInvoices))}}</label> </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <i class="icofont icofont-ticket"></i> <a href="#invoices"> Bills:</a>
+                            </td>
+                            <td class="text-right"> <label for="" class="badge badge-danger">{{number_format(count($project->projectBills))}}</label> </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -105,7 +111,52 @@
         </div>
         <div class="card card-border-danger" style="margin-top:-30px;">
             <div class="card-header">
-                <h5 class="card-header-text">
+                <h5 class="card-header-text text-uppercase">
+                    <i class="icofont icofont-wallet m-r-10"></i> Project Account
+                </h5>
+            </div>
+            <div class="card-block task-details">
+                <table class="table table-border table-xs">
+                    <tbody>
+                        <tr>
+                            <td>
+                                Inflow
+                            </td>
+                            <td class="text-right">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($project->projectInvoices->sum('paid_amount'), 2)}}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Outflow
+                            </td>
+                            <td class="text-right">
+															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($project->projectBills->sum('paid_amount'), 2)}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Unpaid Invoices
+                            </td>
+                            <td class="text-right">
+															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($project->projectInvoices->sum('total') + $project->projectInvoices->sum('tax_value')) - $project->projectInvoices->sum('paid_amount'), 2)}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Unpaid Bills</td>
+                            <td class="text-right">
+															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($project->projectBills->sum('bill_amount') + $project->projectBills->sum('vat_amount')) - $project->projectBills->sum('paid_amount'), 2)}}
+														</td>
+                        </tr>
+                    </tbody>
+                </table>
+						</div>
+
+            <div class="card-footer d-flex justify-content-center">
+                <a href="{{route('project-financials', $project->post_url)}}" class="btn btn-sm btn-light">View Details</a>
+            </div>
+        </div>
+        <div class="card card-border-danger" style="margin-top:-30px;">
+            <div class="card-header">
+                <h5 class="card-header-text text-uppercase">
                     <i class="icofont icofont-attachment"></i> Shared Files
                 </h5>
                 <button class="btn btn-success btn-mini float-right" title="Upload attachment">
@@ -145,7 +196,7 @@
         <div class="card card-border-info" style="margin-top:-30px;">
 
             <div class="card-header">
-                <h5 class="card-header-text">
+                <h5 class="card-header-text text-uppercase">
                     <i class="icofont icofont-users-alt-4"></i> Responsible Person(s)
                 </h5>
             <button id="AddRespPersons" class="btn btn-sm btn-primary f-right btn-mini"
@@ -211,7 +262,7 @@
         </div>
         <div class="card card-border-warning" style="margin-top:-30px;">
             <div class="card-header">
-                <h5 class="card-header-text">
+                <h5 class="card-header-text text-uppercase">
                     <i class="icofont icofont-users-alt-4"></i> Participant(s)
 
                 </h5>
@@ -289,7 +340,7 @@
         </div>
         <div class="card card-border-primary" style="margin-top:-30px;">
             <div class="card-header">
-                <h5 class="card-header-text">
+                <h5 class="card-header-text text-uppercase">
                     <i class="icofont icofont-users-alt-4"></i> Observers(s)
                 </h5>
 
@@ -404,24 +455,7 @@
             </div>
             <div class="card-block">
                 <hr>
-                <nav class="navbar navbar-light bg-faded m-b-30 p-2">
-                    <div class="row">
-                        <div class="d-inline-block">
-                            <a class="btn btn-warning ml-3 btn-mini btn-round text-white" href="{{route('project-board')}}"><i class="icofont icofont-tasks"></i>  Project Detail</a>
-                            <a href="{{ route('project-budget', $project->post_url) }}" class=" btn btn-primary btn-mini btn-round text-white"><i class="icofont icofont-spreadsheet"></i> Budget</a>
-                            <a href="{{ route('project-invoice', $project->post_url) }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-money-bag "></i>  Invoice </a>
-                        </div>
-                    </div>
-                    <div class="nav-item nav-grid">
-                        <a href="{{ route('project-calendar') }}" class="btn btn-info btn-mini btn-round text-white"><i class="ti-calendar"></i>  Calendar</a>
-                        <a href="{{ route('project-analytics') }}" class="btn btn-danger btn-mini btn-round text-white"><i class="icofont icofont-pie-chart "></i>  Analytics </a>
-                    </div>
-                </nav>
-
-
-
-
-
+								@include('backend.project.common._project-detail-slab')
 
                 <button
                 class="btn btn-sm btn-primary f-right dropdown-toggle waves-light"
@@ -647,24 +681,23 @@
         </div>
         <div class="card comment-block" id="invoices">
             <div class="card-block">
-                <h5 class="sub-title">
-                    <i class="icofont icofont-money-bag m-r-5"></i> Project Invoices
+                <h5 class="sub-title  text-success">
+                    <i class="feather icon-arrow-down m-r-5"></i> Project Invoices
                 </h5>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-block accordion-block">
                                 <div class="dt-responsive table-responsive">
-                                    <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                    <table class="table table-striped table-bordered nowrap portableTables">
                                         <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Description</th>
-                                            <th>Account</th>
+                                            <th>Invoice No.</th>
+                                            <th>Client</th>
                                             <th>Amount</th>
-                                            <th>Status</th>
                                             <th>Created By</th>
-                                            <th>Posted By</th>
+                                            <th>Status</th>
                                             <th>Date</th>
                                         </tr>
                                         </thead>
@@ -672,18 +705,445 @@
                                             @php
                                                 $serial = 1;
                                             @endphp
+                                            @foreach ($invoices as $invoice)
+                                                    <tr>
+                                                        <td>{{$serial++}}</td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" data-target="#invoiceModal_{{$invoice->id}}" data-toggle="modal" class="project-invoice">Invoice No. {{$invoice->invoice_no ?? ''}}</a>
+
+                                                                <div class="modal fade" id="invoiceModal_{{$invoice->id}}" tabindex="-1" role="dialog">
+                                                                    <div class="modal-dialog modal-lg" role="document">
+                                                                        <div class="modal-content ">
+                                                                            <div class="modal-header bg-primary">
+                                                                                <h6 class="modal-title text-uppercase">Invoice Detail</h6>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" class="text-white">&times;</span>
+                                                                            </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+
+                                                                                <div class="card" id="invoiceContainer">
+                                                                                    <div class="row invoice-contact">
+                                                                                        <div class="col-md-8">
+                                                                                            <div class="invoice-box row">
+                                                                                                <div class="col-sm-12">
+                                                                                                    <table class="table table-responsive invoice-table table-borderless">
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td><img src="{{asset('/assets/images/company-assets/logos/'.Auth::user()->tenant->logo ?? 'logo.png')}}" class="m-b-10" alt="{{Auth::user()->tenant->company_name ?? 'CNX247 ERP Solution'}}" height="52" width="82"></td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>{{ Auth::user()->tenant->company_name ?? 'Company Name here'}}</td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>{{Auth::user()->tenant->street_1 ?? 'Street here'}} {{ Auth::user()->tenant->city ?? ''}} {{Auth::user()->tenant->postal_code ?? 'Postal code here'}}</td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td><a href="mailto:{{Auth::user()->tenant->email ?? ''}}" target="_top"><span class="__cf_email__" data-cfemail="">{{Auth::user()->tenant->email ?? 'Email here'}}</span></a>
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>{{Auth::user()->tenant->phone ?? 'Phone Number here'}}</td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-4">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="card-block">
+                                                                                        <div class="row invoive-info">
+                                                                                            <div class="col-md-4 col-xs-12 invoice-client-info">
+                                                                                                <h6>Client Information :</h6>
+                                                                                                <h6 class="m-0">{{$invoice->client->company_name ?? ''}}</h6>
+                                                                                                <p class="m-0 m-t-10">{{$invoice->client->street_1 ?? ''}},  <br>
+                                                                                                    {{$invoice->client->postal_code ?? ''}} <br> {{$invoice->client->city ?? ''}}</p>
+                                                                                                <p class="m-0">{{$invoice->client->mobile_no ?? ''}}</p>
+                                                                                                <p><a href="mailto:{{$invoice->client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[{{$invoice->client->email ?? ''}}]</a></p>
+                                                                                            </div>
+                                                                                            <div class="col-md-4 col-sm-6">
+                                                                                                <h6>Order Information :</h6>
+                                                                                                <table class="table table-responsive invoice-table invoice-order table-borderless">
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <th>Issue Date :</th>
+                                                                                                            <td>{{date('d F, Y', strtotime($invoice->issue_date))}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th>Due Date :</th>
+                                                                                                            <td>{{!is_null($invoice->due_date) ? date('d F, Y', strtotime($invoice->due_date)) : '-'}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th>Status :</th>
+                                                                                                            <td>
+                                                                                                                <span class="label label-warning">Pending</span>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                            <div class="col-md-4 col-sm-6">
+                                                                                                <h6 class="m-b-20">Invoice Number <span>#{{$invoice->invoice_no}}</span></h6>
+                                                                                                <h6 class="text-uppercase text-primary">Balance Due :
+                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total + $invoice->tax_value - $invoice->paid_amount,2)}}</span>
+                                                                                                </h6>
+                                                                                                <h6 class="text-uppercase text-primary">Amount Paid :
+                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->paid_amount,2)}}</span>
+                                                                                                </h6>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-sm-12">
+                                                                                                <div class="table-responsive">
+                                                                                                    <table class="table  invoice-detail-table">
+                                                                                                        <thead>
+                                                                                                            <tr class="thead-default">
+                                                                                                                <th>Description</th>
+                                                                                                                <th>Quantity</th>
+                                                                                                                <th>Amount</th>
+                                                                                                                <th>Total</th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            @foreach ($invoice->invoiceItem as $item)
+                                                                                                                <tr>
+                                                                                                                    <td>
+                                                                                                                        <p>{{$item->description ?? ''}}</p>
+                                                                                                                    </td>
+                                                                                                                    <td>{{number_format($item->quantity)}}</td>
+                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->unit_cost, 2)}}</td>
+                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->total, 2)}}</td>
+                                                                                                                </tr>
+
+                                                                                                            @endforeach
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-sm-12">
+                                                                                                <table class="table table-responsive invoice-table invoice-total">
+                                                                                                    <tbody class="float-left pl-3">
+                                                                                                        <tr>
+                                                                                                            <th class="text-left"> <strong>Account Name:</strong> </th>
+                                                                                                            <td>{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th class="text-left"><strong>Account Number:</strong> </th>
+                                                                                                            <td>{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th class="text-left"><strong>Bank:</strong> </th>
+                                                                                                            <td>{{Auth::user()->tenant->tenantBankDetails->bank_name ?? ''}}</td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <th>Sub Total :</th>
+                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total,2)}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th>Taxes ({{$invoice->tax_rate}}%) :</th>
+                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->tax_value,2) ?? 0}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th>Discount ({{$invoice->discount_rate}}%) :</th>
+                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->discount_value,2) ?? 0}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr class="text-info">
+                                                                                                            <td>
+                                                                                                                <hr>
+                                                                                                                <h5 class="text-primary">Total :</h5>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <hr>
+                                                                                                                <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total + $invoice->tax_value,2)}}</h5>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-sm-12">
+                                                                                                <h6>Terms And Condition :</h6>
+                                                                                                <p>{!! Auth::user()->tenant->invoice_terms !!}</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="card" style="margin-top:-25px;">
+                                                                                    <div class="card-block">
+                                                                                        <div class="row text-center">
+                                                                                            <div class="col-sm-12 invoice-btn-group text-center">
+                                                                                                <div class="btn-group">
+                                                                                                    <button type="button" class="btn btn-success btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$invoice->id}}" id="sendInvoiceViaEmail"> <i class="icofont icofont-email mr-2"></i> <span id="sendEmailAddon">Send as Email</span> </button>
+                                                                                                    <button type="button" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" type="button" id="printInvoice"><i class="icofont icofont-printer mr-2"></i> Print</button>
+                                                                                                    <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                        </td>
+                                                        <td>{{$invoice->client->company_name ?? ''}}</td>
+                                                        <td>
+                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total + $invoice->tax_value,2)}}
+                                                        </td>
+                                                        <td>
+                                                            {{$invoice->converter->first_name ?? ''}} {{$invoice->converter->surname ?? ''}}
+                                                        </td>
+                                                        <td>
+                                                            @if ($invoice->status == 0)
+                                                                <label class="label label-warning">Pending</label>
+                                                            @else
+                                                                <label for="" class="label label-success">Approved</label>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            {{date('d F, Y', strtotime($invoice->created_at))}}
+                                                        </td>
+                                                    </tr>
+                                            @endforeach
 
                                         </tbody>
                                         <tfoot>
                                         <tr>
                                             <th>#</th>
-                                            <th>Description</th>
-                                            <th>Account</th>
+                                            <th>Invoice No.</th>
+                                            <th>Client</th>
                                             <th>Amount</th>
-                                            <th>Status</th>
                                             <th>Created By</th>
-                                            <th>Posted By</th>
+                                            <th>Status</th>
                                             <th>Date</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card comment-block" id="invoices2">
+            <div class="card-block">
+                <h5 class="sub-title text-danger">
+                    <i class="feather icon-arrow-up m-r-5"></i> Project Bills
+                </h5>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-block accordion-block">
+                                <div class="dt-responsive table-responsive">
+                                    <table class="table table-striped table-bordered nowrap portableTables">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Bill No.</th>
+                                            <th>Vendor</th>
+                                            <th>Total</th>
+                                            <th>Paid</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $serial = 1;
+                                            @endphp
+                                            @foreach ($bills as $bill)
+                                                    <tr>
+                                                        <td>{{$serial++}}</td>
+                                                        <td>
+                                                            <a href="javascript:void(0);" data-target="#billModal_{{$bill->id}}" data-toggle="modal" class="project-invoice">Bill No. {{$bill->bill_no ?? ''}}</a>
+
+                                                                <div class="modal fade" id="billModal_{{$bill->id}}" tabindex="-1" role="dialog">
+                                                                    <div class="modal-dialog modal-lg" role="document">
+                                                                        <div class="modal-content ">
+                                                                            <div class="modal-header bg-primary">
+                                                                                <h6 class="modal-title text-uppercase">Bill Detail</h6>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true" class="text-white">&times;</span>
+                                                                            </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+
+                                                                                <div class="card" id="invoiceContainer">
+                                                                                    <div class="card-block">
+                                                                                        <div class="row invoive-info">
+                                                                                            <div class="col-md-4 col-xs-12 invoice-client-info">
+                                                                                                <h6>Bill To :</h6>
+                                                                                                <h6 class="m-0">{{$bill->getVendor->company_name ?? ''}}</h6>
+                                                                                                <p class="m-0 m-t-10">{{$bill->getVendor->company_address ?? ''}}</p>
+                                                                                                <p class="m-0">{{$bill->getVendor->company_phone ?? ''}}</p>
+                                                                                                <p><a href="mailto:{{$bill->getVendor->email_address ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">{{$bill->getVendor->email_address ?? 'Email here'}}</a></p>
+                                                                                            </div>
+                                                                                            <div class="col-md-4 col-sm-6">
+                                                                                                <h6>Order Information :</h6>
+                                                                                                <table class="table table-responsive invoice-table invoice-order table-borderless">
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <th>Bill Date :</th>
+                                                                                                            <td>{{date('d F, Y', strtotime($bill->bill_date))}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th>Status :</th>
+                                                                                                            <td>
+																																																							@if ($bill->paid == 0)
+																																																								<span class="label label-warning">Unpaid</span>
+
+																																																							@else
+																																																								<span class="label label-success">Paid</span>
+
+																																																							@endif
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                            <div class="col-md-4 col-sm-6">
+                                                                                                <h6 class="m-b-20">Bill Number <span>#{{$bill->bill_no ?? ''}}</span></h6>
+                                                                                                <h6 class="text-uppercase text-primary">Balance Due :
+                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->bill_amount + $bill->vat_amount - $bill->paid_amount,2)}}</span>
+                                                                                                </h6>
+                                                                                                <h6 class="text-uppercase text-primary">Paid Amount :
+                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->paid_amount,2)}}</span>
+                                                                                                </h6>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-sm-12">
+                                                                                                <div class="table-responsive">
+                                                                                                    <table class="table  invoice-detail-table">
+                                                                                                        <thead>
+                                                                                                            <tr class="thead-default">
+                                                                                                                <th>Description</th>
+                                                                                                                <th>Quantity</th>
+                                                                                                                <th>Amount</th>
+                                                                                                                <th>Total</th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            @foreach ($bill->billItems as $item)
+                                                                                                                <tr>
+                                                                                                                    <td>
+                                                                                                                        <p>{{$item->description ?? ''}}</p>
+                                                                                                                    </td>
+                                                                                                                    <td>{{number_format($item->quantity)}}</td>
+                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->rate, 2)}}</td>
+                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->amount + $item->vat_amount, 2)}}</td>
+                                                                                                                </tr>
+
+                                                                                                            @endforeach
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-sm-12">
+                                                                                                <table class="table table-responsive invoice-table invoice-total">
+                                                                                                    <tbody class="float-left pl-3">
+                                                                                                        <tr>
+                                                                                                            <th class="text-left"> <strong>Account Name:</strong> </th>
+                                                                                                            <td>{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th class="text-left"><strong>Account Number:</strong> </th>
+                                                                                                            <td>{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th class="text-left"><strong>Bank:</strong> </th>
+                                                                                                            <td>{{Auth::user()->tenant->tenantBankDetails->bank_name ?? ''}}</td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <th>Sub Total :</th>
+                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->bill_amount - $bill->paid_amount,2)}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th>Taxes ({{$bill->vat_charge}}%) :</th>
+                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->vat_amount,2) ?? 0}}</td>
+                                                                                                        </tr>
+                                                                                                        <tr class="text-info">
+                                                                                                            <td>
+                                                                                                                <hr>
+                                                                                                                <h5 class="text-primary">Total :</h5>
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                <hr>
+                                                                                                                <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->bill_amount + $bill->vat_amount,2)}}</h5>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row">
+                                                                                            <div class="col-sm-12">
+                                                                                                <h6>Terms And Condition :</h6>
+                                                                                                <p>{!! Auth::user()->tenant->invoice_terms !!}</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="card" style="margin-top:-25px;">
+                                                                                    <div class="card-block">
+                                                                                        <div class="row text-center">
+                                                                                            <div class="col-sm-12 invoice-btn-group text-center">
+                                                                                                <div class="btn-group">
+                                                                                                    <button type="button" class="btn btn-success btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$bill->id}}" id="sendInvoiceViaEmail"> <i class="icofont icofont-email mr-2"></i> <span id="sendEmailAddon">Send as Email</span> </button>
+                                                                                                    <button type="button" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" type="button" id="printInvoice"><i class="icofont icofont-printer mr-2"></i> Print</button>
+                                                                                                    <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                        </td>
+                                                        <td>{{$bill->getVendor->company_name ?? ''}}</td>
+                                                        <td>
+                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($bill->total,2)}}
+                                                        </td>
+                                                        <td>
+                                                            {{$bill->converter->first_name ?? ''}} {{$bill->converter->surname ?? ''}}
+                                                        </td>
+                                                        <td>
+                                                            @if ($bill->status == 0)
+                                                                <label class="label label-warning">Pending</label>
+                                                            @else
+                                                                <label for="" class="label label-success">Approved</label>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            {{date('d F, Y', strtotime($bill->created_at))}}
+                                                        </td>
+                                                    </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+																					<th>#</th>
+																					<th>Bill No.</th>
+																					<th>Vendor</th>
+																					<th>Total</th>
+																					<th>Paid</th>
+																					<th>Status</th>
+																					<th>Date</th>
                                         </tr>
                                         </tfoot>
                                     </table>
@@ -697,13 +1157,14 @@
     </div>
 </div>
 @push('project-script')
-<script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
-<script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
-<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+<script src="\assets\bower_components\datatables.net\js\jquery.dataTables.min.js"></script>
+<script src="\assets\bower_components\datatables.net-bs4\js\dataTables.bootstrap4.min.js"></script>
+<script src="\assets\bower_components\datatables.net-responsive\js\dataTables.responsive.min.js"></script>
+<script src="\assets\bower_components\datatables.net-responsive-bs4\js\responsive.bootstrap4.min.js"></script>
+<script src="\assets\pages\data-table\js\data-table-custom.js"></script>
 <script>
     $(document).ready(function(){
-
+			$('.portableTables').DataTable();
       $('#AddRespPersons').on('click', function(){
             $("#AddRespPersonsContainer").toggle();//.css("display","block");
         });
@@ -711,6 +1172,11 @@
         $('#add').on('click', function(){
             $("#AddRespPersonsContainer").css("display","none");
             $('_addResponsiblePerson').submit();
+        });
+
+        $(document).on('click', '.project-invoice', function(e){
+            e.preventDefault();
+
         });
 
 

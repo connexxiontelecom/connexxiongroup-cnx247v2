@@ -58,7 +58,7 @@
             <div class="row invoive-info">
                 <div class="col-md-4 col-xs-12 invoice-client-info">
                     <h6>Client Information :</h6>
-                    <h6 class="m-0">{{$receipt->client->first_name ?? ''}} {{$receipt->client->surname ?? ''}}</h6>
+                    <h6 class="m-0">{{$receipt->client->company_name ?? ''}}</h6>
                     <p class="m-0 m-t-10">{{$receipt->client->street_1 ?? ''}}, {{$receipt->client->postal_code ?? ''}} {{$receipt->client->city ?? ''}}</p>
                     <p class="m-0">{{$receipt->client->mobile_no ?? ''}}</p>
                     <p><a href="mailto:{{$receipt->client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[{{$receipt->client->email ?? ''}}]</a></p>
@@ -82,9 +82,6 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Ref. Number <span>#{{$receipt->ref_no}}</span></h6>
-                    <h6 class="text-uppercase text-primary">Balance Due :
-                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->total - $receipt->cash,2)}}</span>
-                    </h6>
                 </div>
             </div>
             <div class="row">
@@ -137,7 +134,7 @@
             <div class="row text-center">
                 <div class="col-sm-12 invoice-btn-group text-center">
                     <div class="btn-group">
-                        <a href="{{route('trash-receipt-posting', $receipt->slug)}}" class="btn btn-danger btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"  > <i class="ti-close mr-2"></i> Trash Receipt </a>
+                        <a href="{{route('decline-receipt-posting', $receipt->slug)}}" class="btn btn-danger btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"  > <i class="ti-close mr-2"></i> Decline Receipt </a>
                         <a href="{{route('receipt-posting-post', $receipt->slug)}}" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" ><i class="icofont icofont-paper-plane mr-2"></i> Post Receipt</a>
                         <a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
                     </div>

@@ -192,41 +192,65 @@
 @endsection
 
 @section('dialog-section')
-<div class="modal fade" id="poReviewModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h6 class="modal-title">Review Purchase Order Delivery</h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" class="text-white">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="">
-                    <p>How would you rate <strong>{{$purchase->getSupplier->company_name ?? ''}}?</strong></p>
-                    <div class="form-group">
-                        <label>Rate</label>
-                        <select id="rate" class="form-control col-md-4">
-                            @for($i = 1; $i<6; $i++)
-                            <option value="{{$i}}">{{$i}} star rating</option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="">Content</label>
-                        <textarea name="" id="poReviewContent" style="resize:none;" cols="5" rows="5" class="form-control content" placeholder="Review {{$purchase->getSupplier->company_name ?? ''}}'s delivery."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Close</button>
-                    <button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitSupplierReviewBtn"><i class="mr-2 ti-check"></i>Submit</button>
-                </div>  
-            </div>
-        </div>
-    </div>
-</div>
+		@if ($status == 1)
+			<div class="modal fade" id="poReviewModal" tabindex="-1" role="dialog">
+					<div class="modal-dialog" role="document">
+							<div class="modal-content">
+									<div class="modal-header bg-primary">
+											<h6 class="modal-title">Service GL</h6>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true" class="text-white">&times;</span>
+											</button>
+									</div>
+									<div class="modal-body">
+											<form action="">
+													<div class="form-group">
+															<label>GL Account</label>
+															<select name="service_account" id="service_account" class="form-control">
+																<option disabled selected>Select service</option>
+																@foreach ($accounts as $account)
+																		<option value="{{$account->glcode}}">{{$account->account_name ?? ''}} - {{$account->glcode ?? ''}}</option>
+																@endforeach
+															</select>
+													</div>
+											</form>
+									</div>
+									<div class="modal-footer d-flex justify-content-center">
+											<div class="btn-group">
+													<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Close</button>
+													<button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitSupplierReviewBtn"><i class="mr-2 ti-check"></i>Submit</button>
+											</div>
+									</div>
+							</div>
+					</div>
+			</div>
+		@else
+		<div class="modal fade" id="poReviewModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+					<div class="modal-content">
+							<div class="modal-header bg-danger">
+									<h6 class="modal-title">Are you sure?</h6>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true" class="text-white">&times;</span>
+									</button>
+							</div>
+							<div class="modal-body">
+									<form action="">
+											<div class="form-group">
+													<label>This action cannot be undone. Are you sure you want to confirm this purchase order?</label>
+											</div>
+									</form>
+							</div>
+							<div class="modal-footer d-flex justify-content-center">
+									<div class="btn-group">
+											<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"> <i class="ti-close mr-2"></i> Cancel</button>
+											<button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="submitSupplierReviewBtn"><i class="mr-2 ti-check"></i>Yes</button>
+									</div>
+							</div>
+					</div>
+			</div>
+	</div>
+		@endif
 @endsection
 @section('extra-scripts')
 <script src="{{asset('/assets/js/cus/printThis.js')}}"></script>
@@ -265,8 +289,9 @@
             axios.post('/procurement/review/purchase-order', {
                 po:po,
                 supplier:$('#supplier').val(),
-                rating:$('#rate').val(),
-                review:$('#poReviewContent').val()
+                //rating:$('#rate').val(),
+								//review:$('#poReviewContent').val(),
+								service_account:$('#service_account').val()
             })
             .then(response=>{
                 $.notify(response.data.message, 'success');

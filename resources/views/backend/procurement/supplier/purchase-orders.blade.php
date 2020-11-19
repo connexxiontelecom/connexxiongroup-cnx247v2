@@ -13,7 +13,13 @@
 @section('content')
 <div class="row">
     <div class="col-md-12 filter-bar">
-        @include('backend.procurement.supplier.common._procurement-slab')
+			<nav class="navbar navbar-light bg-faded m-b-30 p-10 d-flex justify-content-end">
+
+				<div class="nav-item nav-grid">
+						<a href="{{route('create-purchase-order')}}" class="btn btn-primary btn-mini waves-effect waves-light"><i class="ti-plus mr-2"></i>Add New Purchase Order</a>
+				</div>
+		</nav>
+
     </div>
 </div>
 <div class="row">

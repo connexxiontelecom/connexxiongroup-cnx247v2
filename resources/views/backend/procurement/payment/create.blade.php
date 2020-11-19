@@ -36,9 +36,14 @@
                             </button>
                             {!! session('error') !!}
                         </div>
-                    @endif
+										@endif
+										@if (count($status) > 0)
+													<div class="alert alert-warning background-warning" role="alert">
+														<strong>Ooops!</strong> This action cannot be completed because there is a receipt that needs to be taken care of.
+													</div>
+											@endif
                     <a href="{{route('vendor-bills')}}" class="btn mb-4 btn-primary btn-mini"><i class="ti-layout mr-2"></i>New Payment</a>
-                    <form action="{{route('new-payment')}}" method="post">
+                    <form action="{{route('new-payment')}}" method="post" autocomplete="off">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -48,9 +53,7 @@
                                     <select name="bank" id="bank" class="text-white  js-example-basic-single form-control">
                                         <option disabled selected>Select bank</option>
                                         @foreach($banks as $bank)
-                                            @if($bank->bank == 1)
-                                                <option value="{{$bank->glcode}}">{{$bank->account_name ?? ''}} - {{$bank->glcode ?? ''}}</option>
-                                            @endif
+                                                <option value="{{$bank->bank_gl_code}}">{{$bank->bank_name ?? ''}}</option>
                                         @endforeach
                                     </select>
                                     @error('bank')
@@ -59,11 +62,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Payment Amount</label>
-                                    <input type="number" step="0.01" name="payment_amount" id="payment_amount" placeholder="Payment Amount" value="{{ $pending_bills->sum('bill_amount') }}" readonly class="form-control">
+                                    <input type="text" name="payment_amount_placeholder" id="payment_amount" placeholder="Payment Amount" value="{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{ number_format($pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') - $pending_bills->sum('paid_amount'),2) }}" readonly class="form-control">
                                     @error('payment_amount')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
-
+																	<input type="hidden" name="payment_amount" value="{{$pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') - $pending_bills->sum('paid_amount')}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -112,7 +115,7 @@
                                                 <td>
                                                     <div class="checkbox-fade fade-in-primary">
                                                         <label>
-                                                            <input type="checkbox" value="" data-amount="{{number_format($item->bill_amount ?? 0 - $item->paid_amount ?? 0, 0, ',', '')}}" class="select-invoice">
+                                                            <input type="checkbox" value="" data-amount="{{number_format($item->bill_amount - $item->paid_amount + $item->vat_amount, 0, ',', '')}}" class="select-invoice">
                                                             <span class="cr">
                                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                     </span>
@@ -131,12 +134,12 @@
                                                     <p>{{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->bill_date))}}</p>
                                                 </td>
                                                 <td>
-                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount,2)}}</p>
+                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount +  $item->vat_amount,2)}}</p>
                                                 </td>
                                                 <td>
-                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount ?? 0 - $item->paid_amount ?? 0,2)}}</p>
+                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount  - $item->paid_amount + $item->vat_amount,2)}}</p>
                                                 </td>
-                                                <td><input type="number" step="0.01" class="form-control payment" name="payment[]" style="width: 120px;"></td>
+                                                <td><input type="text" class="form-control payment autonumber" name="payment[]" style="width: 120px;"></td>
                                             </tr>
                                         @endforeach
                                         </tbody>
@@ -163,19 +166,28 @@
                                         </td>
                                         <td>
                                             <hr>
-                                            <h5 class="text-primary total"><span class="totalSpan">0.00</span></h5>
+                                            <h5 class="text-primary total">{{Auth::user()->tenant->currency->symbol ?? 'N'}}<span class="totalSpan">0.00</span></h5>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                            <input type="hidden" id="grandTotal" name="grandTotal">
-                            <div class="col-sm-12">
-                                <div class="btn-group d-flex justify-content-center">
-                                    <a href="" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Cancel</a>
-                                    <button type="submit" class="btn btn-primary btn-mini"><i class="ti-check mr-2"> Submit</i></button>
-                                </div>
-                            </div>
+														</div>
+														@if (count($status) <= 0)
+															<input type="hidden" id="grandTotal" name="grandTotal">
+															<div class="col-sm-12">
+																	<div class="btn-group d-flex justify-content-center">
+																			<a href="" class="btn btn-mini btn-danger"><i class="ti-close mr-2"></i>Cancel</a>
+																			<button type="submit" class="btn btn-primary btn-mini"><i class="ti-check mr-2"> Submit</i></button>
+																	</div>
+															</div>
+														@else
+															<strong class="text-danger text-center d-flex justify-content-center">This action cannot be completed. A pending receipt needs to be posted or declined.</strong>
+															<hr>
+															<div class="btn-group  d-flex justify-content-center">
+																<a href="{{route('invoice-list')}}" class="btn btn-secondary btn-mini text-center">Back</a>
+																<a href="{{route('payments')}}" class="btn btn-primary btn-mini text-center">Payments</a>
+															</div>
+														@endif
                         </div>
                     </form>
                 </div>
@@ -192,7 +204,11 @@
     <script type="text/javascript" src="/assets/bower_components/select2/js/select2.full.min.js"></script>
     <script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
     <script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
-    <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+		<script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+		<script src="\assets\pages\form-masking\inputmask.js"></script>
+		<script src="\assets\pages\form-masking\jquery.inputmask.js"></script>
+		<script src="/assets/pages/form-masking/autoNumeric.js"></script>
+		<script src="/assets/pages/form-masking/form-mask.js"></script>
     <script>
         $(document).ready(function(){
             //$('#issueReceiptBtn').attr('disabled', 'disabled');
@@ -222,13 +238,14 @@
             }
         });
 
-        function setTotal(){
-            var sum = 0;
-            $(".payment").each(function(){
-                sum += +$(this).val();
-            });
-            $(".totalSpan").text(sum.toLocaleString());
-        }
-
+				function setTotal(){
+							var sum = 0;
+							$(".payment").each(function(){
+									sum += +$(this).val().replace(/,/g, '');
+							});
+							//var vat = ($('#vat').val() * sum)/100;
+									//$(".vat").text(vat.toLocaleString());
+									$(".totalSpan").text((sum).toLocaleString());
+					}
     </script>
 @endsection

@@ -22,17 +22,17 @@ class Finance extends Component
 
     //submit finance
     public function submitFinanceSettings(){
-        $this->validate([
+ /*        $this->validate([
             'currency_position'=>'required',
             'preferred_currency'=>'required',
             'invoice_terms'=>'required',
             'receipt_terms'=>'required'
-        ]);
+        ]); */
         $tenant = Tenant::where('tenant_id', Auth::user()->tenant->tenant_id)->first();
-        $tenant->currency_position_id = $this->currency_position;
-        $tenant->currency_id = $this->preferred_currency;
-        $tenant->invoice_terms = $this->invoice_terms;
-        $tenant->receipt_terms = $this->receipt_terms;
+        $tenant->currency_position_id = $this->currency_position ?? '';
+        $tenant->currency_id = $this->preferred_currency ?? 1;
+        $tenant->invoice_terms = $this->invoice_terms ?? '';
+        $tenant->receipt_terms = $this->receipt_terms ?? '';
         $tenant->save();
         session()->flash("success", "<strong>Success!</strong> Changes saved.");
         return back();

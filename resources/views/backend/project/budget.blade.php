@@ -79,7 +79,7 @@
         </div>
     </div>
     <div class="col-xl-8 col-lg-12 pull-xl-4 filter-bar">
-        @include('livewire.backend.project.common._project-slab')
+			@include('backend.project.common._project-detail-slab')
         <div class="card">
             <div class="card-block">
                 <h5 style="text-transform:uppercase;">
@@ -92,7 +92,7 @@
                 @endif
                 <hr>
                 <div class="">
-                    <form action="{{route('store-project-budget')}}" method="post">
+                    <form action="{{route('store-project-budget')}}" method="post" autocomplete="off">
                         @csrf
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-lg-6">
