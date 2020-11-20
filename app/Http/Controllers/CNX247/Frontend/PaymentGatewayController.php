@@ -46,7 +46,90 @@ class PaymentGatewayController extends Controller
         'industries'=>$industries
         ]);
     }
+    public function startTrial(){
+        $industries = Industry::orderBy('industry', 'ASC')->get();
+        return view('auth.start-trial',
+        ['industries'=>$industries]);
+    }
 
+		public function registerTrial(Request $request){
+				$this->validate($request,[
+					'site_address'=>'required',
+					'company_name'=>'required',
+					'email'=>'required|unique:users,email',
+					'password'=>'required',
+					'industry'=>'required',
+					'use_case'=>'required',
+					'first_name'=>'required',
+					'phone'=>'required',
+					'team_size'=>'required',
+					'terms'=>'required',
+					'role'=>'required'
+			]);
+						$tenant_id = null;
+
+						//register new tenant
+						$latest_tenant = Tenant::orderBy('id', 'DESC')->first();
+						if(!empty($latest_tenant)){
+								$tenant_id = $latest_tenant->tenant_id + rand(100,999);
+
+						}else{
+								$tenant_id = rand(100, 999);
+						}
+						$current = Carbon::now();
+						$start = now();
+						$end =  $current->addDays(14);//14 days trial
+						$key = "key_".substr(sha1(time()),21,40 );
+						$plan = 6; //trial ID
+						$tenant = new Tenant;
+						$tenant->company_name = $request->company_name;
+						$tenant->site_address = $request->site_address;
+						#$tenant->password = $password;
+						$tenant->use_case = $request->use_case;
+						$tenant->role = $request->role;
+						$tenant->team_size = $request->team_size;
+						$tenant->industry_id = $request->industry;
+						$tenant->phone = $request->phone;
+						$tenant->email = $request->email;
+						$tenant->plan_id = $plan;
+						$tenant->date_format_id = 1;
+						$tenant->lang_id = 1;
+						$tenant->currency_id = 1;
+						$tenant->logo = 'logo.png';
+						$tenant->favicon = 'favicon.png';
+						$tenant->currency_position_id = 1;
+						$tenant->start = $start;
+						$tenant->end = $end;
+						$tenant->tenant_id = $tenant_id;
+						$tenant->active_sub_key = $key;
+						$tenant->slug = substr(sha1(time()),29,40 );
+						$tenant->save();
+
+						#membership
+						$member = new Membership;
+						$member->tenant_id = $tenant_id;
+						$member->plan_id = $plan;
+						$member->sub_key = $key;
+						$member->status = 1; //active;
+						$member->start_date = now();
+						$member->end_date = $end;
+						$member->save();
+						#proceed to register new user account
+						$user = new User;
+						$user->first_name = $first_name ?? 'No First Name';
+						$user->password = bcrypt($request->password);
+						$user->email = $request->email;
+						$user->tenant_id = $tenant_id; //new tenantID
+						$user->verified = 0; //account verified
+						$user->url = substr(sha1(time()),29,40 );
+						$user->verification_link = substr(sha1(time()), 25,40);
+						$user->save();
+						$user->assignRole('Human Resource');
+						//\Mail::to($user)->send(new onBoardEmployee($user, $password));
+						session()->flash("success", "<strong>Success!</strong> Trial registration done.");
+						return redirect()->route('signin');
+
+		}
     /*
     *Proceed to make payment
     */
