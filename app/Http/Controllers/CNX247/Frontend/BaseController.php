@@ -31,10 +31,12 @@ class BaseController extends Controller
         foreach($moduleObj as $mod){
             array_push($moduleIds, $mod->module);
         }
+
+			$plans = PlanFeature::orderBy('price', 'ASC')->get();
         #Get list of modules for this tenant
         $modules = ModuleManager::whereIn('id', $moduleIds)->orderBy('module_name', 'ASC')->get();
         //$plans = Role::where('type', 0)->get();
-        return view('frontend.index');
+        return view('frontend.index', ['plans'=>$plans]);
     }
 
 
