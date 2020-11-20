@@ -141,6 +141,9 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::get('/create-site/{timestamp}/{plan}', 'CNX247\Frontend\PaymentGatewayController@createSite')->name('create-site');
 Route::post('/register-site', 'CNX247\Frontend\PaymentGatewayController@proceedToPay')->name('register-site');
 Route::get('/payment/gateway', 'CNX247\Frontend\PaymentGatewayController@handleGatewayCallback')->name('payment-callback');
+#Start trial
+Route::get('/start-trial', 'CNX247\Frontend\PaymentGatewayController@startTrial')->name('start-trial');
+Route::post('/start-trial', 'CNX247\Frontend\PaymentGatewayController@registerTrial');
 
 #Frontend routes
 Route::get('/pricing', 'CNX247\Frontend\BaseController@pricing')->name('pricing');
@@ -150,6 +153,7 @@ Route::get('/faqs', 'CNX247\Frontend\BaseController@faqs')->name('faqs');
 Route::get('/human_resource', 'CNX247\Frontend\BaseController@human_resource')->name('human_resource');
 Route::get('/accounting', 'CNX247\Frontend\BaseController@accounting')->name('accounting');
 Route::get('/crm', 'CNX247\Frontend\BaseController@crm')->name('crm');
+
 
 #User routes
 Route::get('/my-profile', 'CNX247\Backend\UserController@myProfile')->name('my-profile');
