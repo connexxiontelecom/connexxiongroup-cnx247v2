@@ -48,11 +48,16 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('users', 'CNX247\API\usersController@users');
 		Route::post('newtask', 'CNX247\API\StreamController@storeTask');
 		Route::post('newproject', 'CNX247\API\StreamController@storeProject');
+		Route::post('newannouncement', 'CNX247\API\StreamController@storeAnnouncement');
+		Route::post('newevent', 'CNX247\API\StreamController@storeEvent');
+		Route::post('newreport', 'CNX247\API\StreamController@storeReport');
+		Route::post('sharefile', 'CNX247\API\StreamController@shareFile');
 		Route::get('priorities', 'CNX247\API\StreamController@priorities');
 });
 
 //Route::get('users', 'CNX247\API\usersController@users');
 Route::post('upload', 'CNX247\API\StreamController@upload');
 Route::post('projectupload', 'CNX247\API\StreamController@projectUpload');
+Route::post('uploadreport', 'CNX247\API\StreamController@uploadReport');
 
 
