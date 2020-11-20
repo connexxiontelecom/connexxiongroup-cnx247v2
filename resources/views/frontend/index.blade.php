@@ -447,7 +447,7 @@
 				</div><!--end col-->
 				<div class="col-md-4 mt-4 mt-sm-0">
 					<div class="text-md-right text-center">
-						<a href="javascript:void(0)" class="btn btn-light">Start Free</a>
+						<a href="{{route('start-trial')}}" class="btn btn-light">Start Free</a>
 					</div>
 				</div><!--end col-->
 			</div><!--end row-->
