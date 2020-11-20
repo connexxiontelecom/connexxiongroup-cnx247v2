@@ -94,6 +94,15 @@ class BaseController extends Controller
 		public function human_resource(){
     	return view('frontend.product.human-resource');
 		}
+
+	public function accounting(){
+		return view('frontend.product.accounting');
+	}
+
+		public function crm(){
+    	return view('frontend.product.crm');
+		}
+
     /*
     * faqs
     */

@@ -660,7 +660,7 @@
 
             <div class="mt-4">
               <a href="{{route('pricing')}}" class="btn btn-primary mt-2 mr-2">Get Started Now</a>
-              <a href="{{route('faqs')}}" class="btn btn-outline-primary mt-2">Learn more</a>
+{{--              <a href="{{route('faqs')}}" class="btn btn-outline-primary mt-2">Learn More</a>--}}
             </div>
           </div>
         </div>

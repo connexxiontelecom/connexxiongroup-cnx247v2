@@ -453,8 +453,8 @@
                         </div>
                         <div class="media-body">
                             <h6><a href="{{ route('view-profile', $person->user->url) }}">{{$person->user->first_name }}  {{ $person->user->surname ?? '' }}</a>
-                                <button  class="btn btn-sm btn-danger f-right  btn-mini" data-toggle="tooltip" data-placement="top"
-                                data-original-title="Remove Person" style="margin-left: 10px" wire:click="removeResponsiblePerson({{$person->user->id}})"  title="Remove person" >
+                                <button  class="btn btn-sm btn-danger f-right  btn-mini" {{-- data-toggle="tooltip" data-placement="top"
+                                data-original-title="Remove Person" --}} style="margin-left: 10px" wire:click="removeResponsiblePerson({{$person->user->id}})"  title="Remove person" >
                                 <i class="fa fa-trash-o"></i>
                                 </button>
                             </h6>
@@ -548,7 +548,7 @@
                             <div class="media-body">
                                 <h6><a href="{{ route('view-profile', $part->user->url) }}">{{$part->user->first_name }}  {{ $part->user->surname ?? '' }}</a>
                                     <button class="btn btn-sm f-right btn-danger  btn-mini"
-                                     data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove Participant" style="margin-left: 10px" wire:click="removeParticipant({{$part->user->id}})" title="Remove participant" >
+                                     {{-- data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove Participant"  --}}style="margin-left: 10px" wire:click="removeParticipant({{$part->user->id}})" title="Remove participant" >
                                     <i class="fa fa-trash-o"></i></button></h6>
                                 <p>{{$part->user->position ?? '-' }}</p>
                             </div>
@@ -620,8 +620,8 @@
                             </div>
                             <div class="media-body">
                                 <h6><a href="{{ route('view-profile', $part->user->url) }}">{{$part->user->first_name }}  {{ $part->user->surname ?? '' }}</a>
-                                     <button class="btn f-right btn-sm btn-danger btn-mini"  data-toggle="tooltip"
-                                     data-placement="top" title="" data-original-title="Remove observer" style="margin-left: 10px" wire:click="removeObserver({{$part->user->id}})" title="Remove observer" >
+                                     <button class="btn f-right btn-sm btn-danger btn-mini" {{--  data-toggle="tooltip"
+                                     data-placement="top" title="" data-original-title="Remove observer"  --}}style="margin-left: 10px" wire:click="removeObserver({{$part->user->id}})" title="Remove observer" >
                                     <i class="fa fa-trash-o"></i></button></h6>
                                 <p>{{$part->user->position ?? '-' }}</p>
 
