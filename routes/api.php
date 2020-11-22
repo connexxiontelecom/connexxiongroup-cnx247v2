@@ -46,11 +46,34 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('like', 'CNX247\API\StreamController@like');
 		Route::post('comment', 'CNX247\API\StreamController@comment');
 		Route::post('users', 'CNX247\API\usersController@users');
+
 		Route::post('newtask', 'CNX247\API\StreamController@storeTask');
 		Route::post('newproject', 'CNX247\API\StreamController@storeProject');
 		Route::post('newannouncement', 'CNX247\API\StreamController@storeAnnouncement');
 		Route::post('newevent', 'CNX247\API\StreamController@storeEvent');
 		Route::post('newreport', 'CNX247\API\StreamController@storeReport');
+
+
+		Route::post('addpersons', 'CNX247\API\StreamController@addResponsiblePerson');
+		Route::post('addparticipants', 'CNX247\API\StreamController@addParticipant');
+		Route::post('addobservers', 'CNX247\API\StreamController@addObserver');
+
+		Route::post('removeperson', 'CNX247\API\StreamController@removeResponsiblePerson');
+		Route::post('removeparticipant', 'CNX247\API\StreamController@removeParticipant');
+		Route::post('removeobserver', 'CNX247\API\StreamController@removeObserver');
+
+		Route::post('markcomplete', 'CNX247\API\StreamController@markAsComplete');
+		Route::post('markatrisk', 'CNX247\API\StreamController@markAsRisk');
+		Route::post('markresolved', 'CNX247\API\StreamController@markAsResolved');
+		Route::post('markclosed', 'CNX247\API\StreamController@markAsClosed');
+		Route::post('markonhold', 'CNX247\API\StreamController@markAsHold');
+
+
+		Route::post('submit', 'CNX247\API\StreamController@submitPost');
+		Route::post('update', 'CNX247\API\StreamController@updatePost');
+		Route::post('delete', 'CNX247\API\StreamController@deletePost');
+
+
 		Route::post('sharefile', 'CNX247\API\StreamController@shareFile');
 		Route::get('priorities', 'CNX247\API\StreamController@priorities');
 });

@@ -14,7 +14,10 @@ use App\PostLike;
 use App\Priority;
 use App\RequestApprover;
 use App\ResponsiblePerson;
+use App\PostSubmission;
+use App\PostSubmissionAttachment;
 use App\User;
+use App\Notifications\SubmitTask;
 use Illuminate\Http\Request;
 
 class StreamController extends Controller
@@ -49,8 +52,23 @@ class StreamController extends Controller
             $postLikes = PostLike::where("post_id", $post->id)->join('users', 'post_likes.user_id', '=', 'users.id')->get();
             $post['likes'] = count($postLikes);
             $post['post_likes'] = $postLikes;
-						$post['posted'] = date('M j , Y', strtotime($post->created_at));
+            $post['posted'] = date('M j , Y', strtotime($post->created_at));
+
             $responsible = ResponsiblePerson::where('post_id', $post->id)->join('users', 'responsible_people.user_id', '=', 'users.id')->get();
+            foreach ($responsible as $resp) {
+                $resp["avatar"] = url("/assets/images/avatars/thumbnails/" . $resp["avatar"]);
+						}
+
+						$observers = Observer::where('post_id', $post->id)->join('users', 'observers.user_id', '=', 'users.id')->get();
+            foreach ($observers as $resp) {
+                $resp["avatar"] = url("/assets/images/avatars/thumbnails/" . $resp["avatar"]);
+						}
+
+						$participants = Participant::where('post_id', $post->id)->join('users', 'participants.user_id', '=', 'users.id')->get();
+            foreach ($participants as $resp) {
+                $resp["avatar"] = url("/assets/images/avatars/thumbnails/" . $resp["avatar"]);
+            }
+
             $attachments = PostAttachment::where('post_id', $post->id)->get();
 
             /* Parse Attachments */
@@ -60,7 +78,9 @@ class StreamController extends Controller
 
             $postArray["user"] = $user;
             $postArray['post'] = $post;
-            $postArray['responsible'] = $responsible;
+						$postArray['responsible'] = $responsible;
+						$postArray['participants'] = $participants;
+						$postArray['observers'] = $observers;
             $postArray['attachments'] = $attachments;
             $allposts[] = $postArray;
             //return response()->json(['posts' =>$post], 500);
@@ -101,8 +121,22 @@ class StreamController extends Controller
             $postLikes = PostLike::where("post_id", $post->id)->join('users', 'post_likes.user_id', '=', 'users.id')->get();
             $post['likes'] = count($postLikes);
             $post['post_likes'] = $postLikes;
-            $post['posted'] = date('M j , Y', strtotime($post->created_at));
-            $responsible = ResponsiblePerson::where('post_id', $post->id)->join('users', 'responsible_people.user_id', '=', 'users.id')->get();
+						$post['posted'] = date('M j , Y', strtotime($post->created_at));
+
+						$responsible = ResponsiblePerson::where('post_id', $post->id)->join('users', 'responsible_people.user_id', '=', 'users.id')->get();
+            foreach ($responsible as $resp) {
+                $resp["avatar"] = url("/assets/images/avatars/thumbnails/" . $resp["avatar"]);
+						}
+
+						$observers = Observer::where('post_id', $post->id)->join('users', 'observers.user_id', '=', 'users.id')->get();
+            foreach ($observers as $resp) {
+                $resp["avatar"] = url("/assets/images/avatars/thumbnails/" . $resp["avatar"]);
+						}
+
+						$participants = Participant::where('post_id', $post->id)->join('users', 'participants.user_id', '=', 'users.id')->get();
+            foreach ($participants as $resp) {
+                $resp["avatar"] = url("/assets/images/avatars/thumbnails/" . $resp["avatar"]);
+            }
             $attachments = PostAttachment::where('post_id', $post->id)->get();
 
             /* Parse Attachments */
@@ -112,7 +146,9 @@ class StreamController extends Controller
 
             $postArray["user"] = $user;
             $postArray['post'] = $post;
-            $postArray['responsible'] = $responsible;
+						$postArray['responsible'] = $responsible;
+						$postArray['participants'] = $participants;
+						$postArray['observers'] = $observers;
             $postArray['attachments'] = $attachments;
             $allposts[] = $postArray;
             //return response()->json(['posts' =>$post], 500);
@@ -426,7 +462,6 @@ class StreamController extends Controller
             return response()->json(['message' => 'Success! Event registered.'], 200);
         } else {
             return response()->json(['error' => 'Success! Ooops! Something went wrong. Try again.'], 400);
-
         }
     }
 
@@ -435,7 +470,7 @@ class StreamController extends Controller
 
         $department_id = $request->department_id;
         $tenant_id = $request->tenant_id;
-				$reporttype =  $request->type;
+        $reporttype = $request->type;
         $processor = RequestApprover::select('user_id')
             ->where('request_type', 'expense-report')
             ->where('depart_id', $department_id)
@@ -450,7 +485,7 @@ class StreamController extends Controller
             $expense->post_title = $request->subject;
             $expense->budget = $request->amount;
             $expense->currency = $request->currency;
-            $expense->post_type = $reporttype;//'expense-report';
+            $expense->post_type = $reporttype; //'expense-report';
             $expense->post_content = $request->description;
             $expense->post_status = 'in-progress';
             $expense->user_id = $request->user_id;
@@ -497,11 +532,94 @@ class StreamController extends Controller
             $supervise->tenant_id = $request->tenant_id;
             $supervise->save();
 
-
             return response()->json(['message' => 'Success! Expense report submitted.']);
 
         }
     }
+
+
+		public function deletePost(Request $request)
+    {
+
+        $post = Post::where('tenant_id', $request->tenant_id)->where('id', $request->post_id)->first();
+        if (!empty($post)) {
+            $post->delete();
+            $responsible = ResponsiblePerson::where('post_id', $request->post_id)->where('tenant_id',$request->tenant_id)->get();
+            if (!empty($responsible)) {
+                foreach ($responsible as $person) {
+                    $person->delete();
+                }
+						}
+
+            #Observers
+            $observers = Observer::where('post_id', $request->post_id)->where('tenant_id', $request->tenant_id)
+                ->get();
+            if (!empty($observers)) {
+                foreach ($observers as $observer) {
+                    $observer->delete();
+                }
+						}
+
+            #Participants
+            $participants = Participant::where('post_id', $request->post_id)->where('tenant_id', $request->tenant_id)
+                ->get();
+            if (!empty($participants)) {
+                foreach ($participants as $participant) {
+                    $participant->delete();
+                }
+						}
+
+						return response()->json(['Response' => 'Success!'], 200);
+        }
+
+    }
+
+
+		public function updatePost(Request $request)
+    {
+        $task = Post::where('post_url', $request->post_url)->where('tenant_id', $request->tenant_id)->first();
+        $task->post_title = $request->post_title;
+        $task->user_id = $request->user_id;
+        $task->post_content = $request->post_description;
+        $task->post_type = $request->post_type;
+        $task->post_url = $request->post_url;
+        $task->start_date = $request->start_date ?? '';
+        $task->end_date = $request->due_date;
+        $task->tenant_id = $request->tenant_id;
+				$task->save();
+				return response()->json(['Response' => 'Success!'], 200);
+		}
+
+
+		public function submitPost(Request $request)
+    {
+
+        $submit = new PostSubmission;
+        $submit->post_id = $request->post_id;
+        $submit->submitted_by = $request->user_id;
+        $submit->owner = $request->owner;
+        $submit->post_type = $request->post_type;
+        $submit->post_id = $request->post_id;
+        $submit->tenant_id = $request->tenant_id;
+        $submit->date_submitted = now();
+        $submit->note = $request->leave_note;
+        $submit->save();
+
+        if (!empty($request->attachment)){
+            $attach = new PostSubmissionAttachment;
+            $attach->post_id = $request->post_id;
+            $attach->attachment = $request->attachment;
+            $attach->tenant_id = $request->tenant_id;
+            $attach->save();
+				}
+
+        $user = User::where('id', $request->owner)->where('tenant_id', $request->tenant_id)->first();
+        $content = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
+				$user->notify(new SubmitTask($submit, $content));
+				return response()->json(['Response' => 'Success!'], 200);
+
+    }
+
 
     /*
      * Share file within the activity stream
@@ -566,6 +684,148 @@ class StreamController extends Controller
     {
         $priorites = Priority::all();
         return response()->json(['priorities' => $priorites], 500);
+    }
+
+
+		public function addResponsiblePerson(Request $request)
+    {
+
+        $post = Post::where('tenant_id', $request->tenant_id)->where('id', $request->post_id)->first();
+
+        if (!empty($request->persons)) {
+            foreach ($request->persons as $person) {
+
+                $part = new ResponsiblePerson;
+
+                $exists = ResponsiblePerson::where('tenant_id', $request->tenant_id)->where('user_id', $person["id"])->where('post_id', $request->post_id)->first();
+
+                if (empty($exists) || is_null($exists)) {
+
+                    $part->post_id = $request->post_id;
+                    $part->post_type = $request->post_type;
+                    $part->user_id = $person["id"];
+                    $part->tenant_id = $request->tenant_id;
+                    $part->save();
+                    $user = User::find($person["id"]);
+                    $user->notify(new NewPostNotification($post));
+                }
+						}
+
+						return response()->json(['Response' => 'Success!'], 200);
+        }
+
+    }
+
+    public function addParticipant(Request $request)
+    {
+			$post = Post::where('tenant_id', $request->tenant_id)->where('id', $request->post_id)->first();
+		  if (!empty($request->persons)) {
+				foreach ($request->persons as $person) {
+							$part = new Participant();
+							$exists = Participant::where('tenant_id', $request->tenant_id)->where('user_id', $person["id"])->where('post_id', $request->post_id)->first();
+							if (empty($exists) || is_null($exists)) {
+									$part->post_id = $request->post_id;
+									$part->post_type = $request->post_type;
+									$part->user_id = $person["id"];
+									$part->tenant_id = $request->tenant_id;
+									$part->save();
+									$user = User::find($person["id"]);
+									$user->notify(new NewPostNotification($post));
+							}
+					}
+
+					return response()->json(['Response' => 'Success!'], 200);
+			}
+    }
+
+    public function addObserver(Request $request)
+    {
+			$post = Post::where('tenant_id', $request->tenant_id)->where('id', $request->post_id)->first();
+		  if (!empty($request->persons)) {
+				foreach ($request->persons as $person) {
+							$part = new Observer();
+							$exists = Observer::where('tenant_id', $request->tenant_id)->where('user_id', $person["id"])->where('post_id', $request->post_id)->first();
+							if (empty($exists) || is_null($exists)) {
+									$part->post_id = $request->post_id;
+									$part->post_type = $request->post_type;
+									$part->user_id = $person["id"];
+									$part->tenant_id = $request->tenant_id;
+									$part->save();
+									$user = User::find($person["id"]);
+									$user->notify(new NewPostNotification($post));
+							}
+					}
+
+					return response()->json(['Response' => 'Success!'], 200);
+			}
+    }
+
+    public function markAsComplete(Request $request)
+    {
+        $post = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
+        $post->post_status = 'completed';
+				$post->save();
+				return response()->json(['Response' => 'Success!'], 200);
+		}
+
+    public function markAsRisk(Request $request)
+    {
+        $post = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
+        $post->post_status = 'at-risk';
+				$post->save();
+				return response()->json(['Response' => 'Success!'], 200);
+    }
+
+    public function markAsHold(Request $request)
+    {
+        $post = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
+        $post->post_status = 'on-hold';
+				$post->save();
+				return response()->json(['Response' => 'Success!'], 200);
+    }
+
+    public function markAsResolved(Request $request)
+    {
+        $post = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
+        $post->post_status = 'resolved';
+				$post->save();
+				return response()->json(['Response' => 'Success!'], 200);
+    }
+
+    public function markAsClosed(Request $request)
+    {
+        $post = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
+        $post->post_status = 'closed';
+				$post->save();
+				return response()->json(['Response' => 'Success!'], 200);
+
+    }
+
+    public function removeResponsiblePerson(Request $request)
+    {
+        $responsiblePerson = ResponsiblePerson::where('tenant_id', $request->tenant_id)->where('user_id', $request->user_id)->where('post_id', $request->post_id)->first();
+        if (!empty($responsiblePerson)) {
+            $responsiblePerson->delete();
+        }
+				return response()->json(['Response' => 'Success!'], 200);
+    }
+
+    public function removeObserver(Request $request)
+    {
+        $observer = Observer::where('tenant_id', $request->tenant_id)->where('user_id', $request->user_id)->where('post_id', $request->post_id)->first();
+        if (!empty($observer)) {
+            $observer->delete();
+        }
+				return response()->json(['Response' => 'Success!'], 200);
+    }
+
+    public function removeParticipant(Request $request)
+    {
+        $participant = Participant::where('tenant_id', $request->tenant_id)->where('user_id', $request->user_id)->where('post_id', $request->post_id)->first();
+        if (!empty($participant)) {
+            $participant->delete();
+        }
+				return response()->json(['Response' => 'Success!'], 200);
     }
 
     public function uploadReport(Request $request)
