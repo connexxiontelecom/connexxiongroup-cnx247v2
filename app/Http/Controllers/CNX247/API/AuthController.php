@@ -88,6 +88,8 @@ class AuthController extends Controller {
 
             }
 
+					$user['avatar'] = 	url("/assets/images/avatars/thumbnails/" . $user['avatar']);
+
             return response()->json(compact('user'));
     }
 
