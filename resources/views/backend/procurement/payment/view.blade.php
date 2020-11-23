@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="form-group">
                                     <strong for="">Payment Amount</strong>
-                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($payment->amount,2)}}</p>
+                                    <p>{{$payment->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol }}{{number_format($payment->amount/$payment->exchange_rate,2)}}</p>
 
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <strong for="">Date</strong>
-                                            <p>{{!is_null($payment->date_inputed) ? date('d F, Y', strtotime($payment->date_inputed)) : '-'}}</p>
+                                            <p>{{!is_null($payment->date_now) ? date('d F, Y', strtotime($payment->date_now)) : '-'}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +92,7 @@
                                                     <p>{{!is_null($item->created_at) ? date('d F, Y', strtotime($item->created_at)) : '-'}}</p>
                                                 </td>
                                                 <td>
-                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->pay_amount,2)}}</p>
+                                                    <p>{{$payment->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol }}{{number_format($item->pay_amount/$payment->exchange_rate,2)}}</p>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -120,7 +120,7 @@
                                         </td>
                                         <td>
                                             <hr>
-                                            <h5 class="text-primary total"><span class="totalSpan">{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($payment->amount,2)}}</span></h5>
+                                            <h5 class="text-primary total"><span class="totalSpan">{{$payment->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol }}{{number_format($payment->amount/$payment->exchange_rate,2)}}</span></h5>
                                         </td>
                                     </tr>
                                     </tbody>

@@ -61,12 +61,23 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
+                                    <label for="">Vendor</label>
+                                    <select name="vendor" id="vendor" class="text-white  js-example-basic-single form-control">
+                                        <option disabled selected>Select vendor</option>
+                                        @foreach($vendors as $vendor)
+                                                <option value="{{$vendor->id}}">{{$vendor->company_name ?? ''}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('vendor')
+                                    <i class="text-danger mt-2 d-flex">{{$message}}</i>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
                                     <label for="">Payment Amount</label>
-                                    <input type="text" name="payment_amount_placeholder" id="payment_amount" placeholder="Payment Amount" value="{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{ number_format($pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') - $pending_bills->sum('paid_amount'),2) }}" readonly class="form-control">
+                                    <input type="text" name="payment_amount_placeholder" id="payment_amount" placeholder="Payment Amount" value="Total" readonly class="form-control">
                                     @error('payment_amount')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
-																	<input type="hidden" name="payment_amount" value="{{$pending_bills->sum('bill_amount') + $pending_bills->sum('vat_amount') - $pending_bills->sum('paid_amount')}}">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -110,38 +121,7 @@
                                         </tr>
                                         </thead>
                                         <tbody id="products">
-                                        @foreach($pending_bills as $item)
-                                            <tr class="item">
-                                                <td>
-                                                    <div class="checkbox-fade fade-in-primary">
-                                                        <label>
-                                                            <input type="checkbox" value="" data-amount="{{number_format($item->bill_amount - $item->paid_amount + $item->vat_amount, 0, ',', '')}}" class="select-invoice">
-                                                            <span class="cr">
-                                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                                    </span>
-                                                            <span></span>
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <p><a target="_blank" href="javascript:void(0);">Bill #{{$item->bill_no}} ({{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->created_at))}})</a></p>
-                                                        <input type="hidden" value="{{$item->id}}" name="bills[]">
-                                                        <input type="hidden" name="description[]" value="Bill #{{$item->bill_no}} ({{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->created_at))}})">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <p>{{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->bill_date))}}</p>
-                                                </td>
-                                                <td>
-                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount +  $item->vat_amount,2)}}</p>
-                                                </td>
-                                                <td>
-                                                    <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->bill_amount  - $item->paid_amount + $item->vat_amount,2)}}</p>
-                                                </td>
-                                                <td><input type="text" class="form-control payment autonumber" name="payment[]" style="width: 120px;"></td>
-                                            </tr>
-                                        @endforeach
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -166,7 +146,7 @@
                                         </td>
                                         <td>
                                             <hr>
-                                            <h5 class="text-primary total">{{Auth::user()->tenant->currency->symbol ?? 'N'}}<span class="totalSpan">0.00</span></h5>
+                                            <h5 class="text-primary total"><span class="totalSpan">0.00</span></h5>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -231,7 +211,16 @@
             });
             $(document).on("change", ".payment", function() {
                 setTotal();
-            });
+						});
+
+						$(document).on('change', '#vendor', function(e){
+							e.preventDefault();
+							axios.post('/get/this/vendor',{vendor:$(this).val()})
+							.then(response=>{
+								$('#products').html(response.data);
+								totalBills();
+							});
+						});
             //format as currency
             function formatAsCurrency(amount){
                 return "₦"+Number(amount).toFixed(2);
@@ -246,6 +235,15 @@
 							//var vat = ($('#vat').val() * sum)/100;
 									//$(".vat").text(vat.toLocaleString());
 									$(".totalSpan").text((sum).toLocaleString());
+					}
+					function totalBills(){
+							var sum = 0;
+							$(".bills").each(function(){
+									sum += +$(this).val();
+							});
+							//var vat = ($('#vat').val() * sum)/100;
+									//$(".vat").text(vat.toLocaleString());
+									$("#payment_amount").val(sum);
 					}
     </script>
 @endsection

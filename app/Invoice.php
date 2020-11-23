@@ -29,4 +29,8 @@ class Invoice extends Model
         public function converter(){
             return $this->belongsTo(User::class, 'issued_by');
         }
+        //currency
+        public function getCurrency(){
+            return $this->belongsTo(Currency::class, 'currency_id');
+        }
 }

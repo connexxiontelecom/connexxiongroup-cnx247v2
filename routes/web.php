@@ -444,6 +444,7 @@ Route::post('/store-vendor-service', 'CNX247\Backend\SupplierController@storeVen
 Route::post('/vendor-bill/details', 'CNX247\Backend\SupplierController@vendorDetails');
 Route::get('/vendor-bill/view/{id}', 'CNX247\Backend\SupplierController@viewBill')->name('view-bill');
 Route::get('/vendor/payment', 'CNX247\Backend\SupplierController@vendorPayment')->name('vendor-payment');
+Route::post('/get/this/vendor', 'CNX247\Backend\SupplierController@getVendorPendingBills');
 #Payment
 Route::get('/vendor/payments', 'CNX247\Backend\SupplierController@payments')->name('payments');
 Route::get('/vendor/payment/new', 'CNX247\Backend\SupplierController@newPayment')->name('new-payment');

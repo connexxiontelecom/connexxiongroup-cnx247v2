@@ -25,6 +25,7 @@ use App\ProductCategory;
 use App\DefaultAccount;
 use App\Policy;
 use App\Bank;
+use App\Currency;
 use Auth;
 use Image;
 use DB;
@@ -150,7 +151,8 @@ class CRMController extends Controller
         $status = null;
         $client = Client::where('slug', $slug)->first();
         $invoice = Invoice::orderBy('id', 'DESC')->first();
-        $products = Product::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
+				$products = Product::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->get();
+				$currencies = Currency::all();
         $invoiceNo = null;
         if(!empty($client) ){
             if(!empty($invoice) ){
@@ -166,14 +168,16 @@ class CRMController extends Controller
                 'invoice_no'=>$invoiceNo,
                 'products'=>$products,
                 'status'=>$status,
-                'accounts'=>$accounts
+								'accounts'=>$accounts,
+								'currencies'=>$currencies
                 ]);
             }else{
                 return view('backend.crm.clients.convert-to-lead',
                 ['client'=>$client,
                 'invoice_no'=>$invoiceNo,
                 'products'=>$products,
-                'status'=>0
+								'status'=>0,
+								'currencies'=>$currencies
                 ]);
             }
         }else{
@@ -194,14 +198,16 @@ class CRMController extends Controller
                 'due_date'=>'required|after_or_equal:issue_date',
                 'description.*'=>'required',
                 'quantity.*'=>'required',
-                'client_account'=>'required'
+								'client_account'=>'required',
+								'currency'=>'required'
             ]);
         }else{
             $this->validate($request,[
                 'issue_date'=>'required',
                 'due_date'=>'required|after_or_equal:issue_date',
                 'description.*'=>'required',
-                'quantity.*'=>'required'
+								'quantity.*'=>'required',
+								'currency'=>'required'
             ]);
 
         }
@@ -238,13 +244,12 @@ class CRMController extends Controller
         $invoice->issued_by = Auth::user()->id;
         $invoice->issue_date = $request->issue_date;
         $invoice->due_date = $request->due_date;
-        $invoice->total = $request->totalAmount;
-        $invoice->sub_total = $request->subTotal;
+        $invoice->total = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$request->tax_rate)/100 * $request->exchange_rate ) : ($totalAmount + ($totalAmount*$request->tax_rate)/100 ) ;
+        $invoice->sub_total = $request->currency != Auth::user()->tenant->currency->id ? $request->subTotal * $request->exchange_rate : $request->subTotal;
         $invoice->tax_rate = $request->tax_rate ?? 0;
-        $invoice->discount_rate = $request->discount_rate ?? 0;
-        $invoice->tax_value = $request->tax_amount ?? 0;
-        $invoice->discount_value = $request->discounted_amount ?? 0;
-        $invoice->cash = $request->cash_amount ?? 0;
+        $invoice->tax_value = $request->currency != Auth::user()->tenant->currency->id ?  $request->tax_amount * $request->exchange_rate : $request->tax_amount;
+				$invoice->currency_id = $request->currency;
+				$invoice->exchange_rate = $request->exchange_rate ?? 1;
         $invoice->slug = substr(sha1(time()), 23,40);
         $invoice->save();
         #invoiceId
@@ -257,7 +262,7 @@ class CRMController extends Controller
             $item->product_id = $pro->id;
             $item->quantity = $request->quantity[$i];
             $item->unit_cost = $request->unit_cost[$i];
-            $item->total = $request->quantity[$i] * $request->unit_cost[$i];
+            $item->total = $request->currency != Auth::user()->tenant->currency->id ? (($request->quantity[$i] * $request->unit_cost[$i]) * $request->exchange_rate) : $request->quantity[$i] * $request->unit_cost[$i];
             $item->invoice_id = $invoiceId;
             $item->client_id = $request->clientId;
             $item->tenant_id = Auth::user()->tenant_id;
@@ -277,7 +282,7 @@ class CRMController extends Controller
                     'glcode' => $client->glcode,
                     'posted_by' => Auth::user()->id,
                     'narration' => 'Invoice generation for ' . $invoice->client->company_name ?? '',
-                    'dr_amount' => $invoice->sub_total + ($invoice->sub_total*$invoice->tax_rate)/100,
+                    'dr_amount' => $request->currency != Auth::user()->tenant->currency->id ? ($invoice->sub_total * $request->exchange_rate) + ((($invoice->sub_total*$invoice->tax_rate)/100) * $request->exchange_rate) :  ($invoice->sub_total) + ($invoice->sub_total*$invoice->tax_rate)/100 ,
                     'cr_amount' => 0,
                     'ref_no' => $ref_no,
                     'bank' => 0,
@@ -291,7 +296,7 @@ class CRMController extends Controller
                     'posted_by' => Auth::user()->id,
                     'narration' => 'VAT on invoice no. '.$invoice->invoice_no.' for '.$invoice->client->company_name,
                     'dr_amount' => 0,
-                    'cr_amount' => ($invoice->sub_total*$invoice->tax_rate)/100 ?? 0,
+                    'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ? (($invoice->sub_total*$invoice->tax_rate)/100 * $request->exchange_rate) : ($invoice->sub_total*$invoice->tax_rate)/100,
                     'ref_no' => $ref_no,
                     'bank' => 0,
                     'ob' => 0,
@@ -305,7 +310,7 @@ class CRMController extends Controller
                         'posted_by' => Auth::user()->id,
                         'narration' => 'Invoice generation for ' . $d->description,
                         'dr_amount' => 0,
-                        'cr_amount' => $d->quantity * $d->unit_cost ?? 0,
+                        'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ? (($d->quantity * $d->unit_cost) * $request->exchange_rate) : $d->quantity * $d->unit_cost,
                         'ref_no' => $ref_no,
                         'bank' => 0,
                         'ob' => 0,
@@ -401,7 +406,10 @@ class CRMController extends Controller
                         ->join('banks as b', 'b.bank_gl_code', '=', 'c.glcode')
                         ->get();
             $pending_invoices = Invoice::where('tenant_id', Auth::user()->tenant_id)
-                                        ->where('status', '!=',2)->where('client_id', $invoice->client_id)->get();
+																				->where('status', '!=',2)
+																				->where('client_id', $invoice->client_id)
+																				->where('currency_id', $invoice->currency_id)
+																				->get();
             return view('backend.crm.clients.receive-payment', [
                 'invoice'=>$invoice,
                 'pending_invoices'=>$pending_invoices,
@@ -426,12 +434,18 @@ class CRMController extends Controller
 
 				$totalAmount = 0;
 				$arrayCount = 0;
+				$currencyArray = [];
+				$exchangeRateArray = [];
 				for($i = 0;  $i<count($request->payment); $i++){
 					if(str_replace(',','',$request->payment[$i]) != null || str_replace(',','',$request->payment[$i]) != ''){
-						$totalAmount += str_replace(',','',$request->payment[$i]);
+						$totalAmount += (int)str_replace(',','',$request->payment[$i]) * $request->exchange_rate[$i];
 							$arrayCount++;
+						array_push($currencyArray, $request->currency[$i]);
+						array_push($exchangeRateArray, $request->exchange_rate[$i]);
 					}
 			}
+			$currency = array_values($currencyArray);
+			$exchange_rate = array_values($exchangeRateArray);
         //Check if deal already exist
         $dealExist = Deal::where('client_id', $request->clientId)->where('tenant_id', Auth::user()->tenant_id)->first();
         if(empty($dealExist)){
@@ -447,6 +461,8 @@ class CRMController extends Controller
         $receipt->client_id = $request->clientId;
         $receipt->issue_date = $request->payment_date;
         $receipt->amount = $totalAmount;
+        $receipt->currency_id = $request->currency[0];
+        $receipt->exchange_rate = $request->exchange_rate[0];
         $receipt->payment_type = $request->payment_method;
         $receipt->ref_no = $request->reference_no;
         $receipt->memo = $request->memo;
@@ -462,7 +478,9 @@ class CRMController extends Controller
             $detail->tenant_id = Auth::user()->tenant_id;
             $detail->invoice_id = $request->invoices[$j];
             $detail->receipt_id = $receiptId;
-            $detail->payment = str_replace(',','',$reIndexed[$j]);
+            $detail->currency_id = $currency[$j];
+            $detail->exchange_rate = $exchange_rate[$j];
+            $detail->payment = (str_replace(',','',$reIndexed[$j]) * $request->exchange_rate[$j]);
             $detail->save();
 						#Update invoice
             /* $invoice = Invoice::where('id', $request->invoices[$j])->where('tenant_id', Auth::user()->tenant_id)->first();
@@ -474,7 +492,7 @@ class CRMController extends Controller
 						$receiptInvoice =  new ReceiptInvoice;
 						$receiptInvoice->receipt_id = $receiptId;
 						$receiptInvoice->invoice_id = $request->invoices[$j];
-						$receiptInvoice->amount = str_replace(',','',$reIndexed[$j]);
+						$receiptInvoice->amount = (str_replace(',','',$reIndexed[$j]) * $request->exchange_rate[$j]);
 						$receiptInvoice->tenant_id = Auth::user()->tenant_id;
 						$receiptInvoice->save();
         }
@@ -676,9 +694,10 @@ class CRMController extends Controller
     public function printReceipt($slug){
         $receipt = Receipt::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
         if(!empty($receipt)){
-            $invoices = ReceiptItem::where('tenant_id', Auth::user()->tenant_id)->where('receipt_id', $receipt->id)->get();
+						$invoices = ReceiptItem::where('tenant_id', Auth::user()->tenant_id)->where('receipt_id', $receipt->id)->get();
+						$invoiceBalance = Invoice::where('tenant_id', Auth::user()->tenant_id)->where('client_id', $receipt->client_id)->get();
 
-            return view('backend.crm.receipt.print-receipt', ['receipt'=>$receipt, 'invoices'=>$invoices]);
+            return view('backend.crm.receipt.print-receipt', ['receipt'=>$receipt, 'invoices'=>$invoices, 'invoiceBalance'=>$invoiceBalance]);
         }else{
             return "receipts not found";
         }
@@ -756,7 +775,6 @@ class CRMController extends Controller
                 'product_name'=>'required',
                 'product_description'=>'required',
                 'price'=>'required',
-                'product_category'=>'required',
                 'featured_image'=>'required',
                 'account'=>'required'
             ]);
@@ -766,7 +784,6 @@ class CRMController extends Controller
                 'product_name'=>'required',
                 'product_description'=>'required',
                 'price'=>'required',
-                'product_category'=>'required',
                 'featured_image'=>'required'
             ]);
         }
@@ -786,7 +803,7 @@ class CRMController extends Controller
         $product->price = $request->price;
         $product->added_by = Auth::user()->id;
         $product->tenant_id = Auth::user()->tenant_id;
-        $product->category_id = $request->product_category;
+        $product->category_id = $request->product_category ?? 1;
         $product->slug = substr(sha1(time()), 23,40);
         $product->glcode = $request->account;
         $product->featured_image = $featured_image;

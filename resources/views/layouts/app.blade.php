@@ -162,7 +162,7 @@
                                                         }, 'google_translate_element');
                                                     }
                                                 </script>
-                                                <script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                                                <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
                                             <button class="btn btn-out-dashed btn-primary btn-square ml-1" data-toggle="modal" data-target="#themeModal">Themes</button>
                                         </div>
                                     </div>
