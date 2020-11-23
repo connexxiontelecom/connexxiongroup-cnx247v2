@@ -52,11 +52,11 @@
                                     <td>{{$i++}}</td>
                                     <td>{{$bill->getVendor->company_name ?? ''}}</td>
                                     <td>{{date('d F, Y', strtotime($bill->bill_date))}}</td>
-                                    <td>{{number_format($bill->bill_amount + $bill->vat_amount,2)}}</td>
+                                    <td>{{number_format($bill->bill_amount,2)}}</td>
                                     <td>{{number_format($bill->vat_amount,2)}}</td>
                                     <td>{{$bill->vat_charge}}%</td>
                                     <td>{{number_format($bill->paid_amount,2)}}</td>
-                                    <td>{{number_format($bill->bill_amount + $bill->vat_amount - $bill->paid_amount,2)}}</td>
+                                    <td>{{number_format($bill->bill_amount - $bill->paid_amount,2)}}</td>
                                     <td>{{date('d F, Y', strtotime($bill->created_at))}}</td>
                                     <td>
                                         <a href="{{route('view-bill', $bill->slug)}}" class="btn btn-mini btn-info"><i class="ti-eye mr-2"></i>View</a>

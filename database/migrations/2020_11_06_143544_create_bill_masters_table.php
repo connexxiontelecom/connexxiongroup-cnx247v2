@@ -23,6 +23,7 @@ class CreateBillMastersTable extends Migration
             $table->string('status')->default('unpaid');
             $table->dateTime('bill_date');
             $table->double('bill_amount');
+            $table->string('attachment')->nullable();
             $table->double('vat_amount');
             $table->double('vat_charge');
             $table->unsignedBigInteger('billed_to');

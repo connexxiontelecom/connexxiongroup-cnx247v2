@@ -140,16 +140,18 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="card">
-                                                <div class="card-block">
-                                                    <h5 class="sub-title">Activity Log</h5>
-                                                    <ul>
-                                                        @foreach ($logs as $log)
-                                                            <li>
-                                                                <i class="icofont icofont-hand-right text-info"></i> {{$log->log}} <small class="text-info">{{date('d F, Y', strtotime($log->created_at))}} @ {{date('h:i a', strtotime($log->created_at))}}</small>
-                                                            </li>
-                                                            <hr>
-                                                        @endforeach
-                                                    </ul>
+                                                <div class="card-block" >
+																										<h5 class="sub-title">Activity Log</h5>
+																										<div style="height: 500px; overflow-y: scroll;">
+																											<ul>
+																													@foreach ($logs as $log)
+																															<li>
+																																	<i class="icofont icofont-hand-right text-info"></i> {{$log->log}} <small class="text-info">{{date('d F, Y', strtotime($log->created_at))}} @ {{date('h:i a', strtotime($log->created_at))}}</small>
+																															</li>
+																															<hr>
+																													@endforeach
+																											</ul>
+																										</div>
                                                 </div>
                                             </div>
                                         </div>

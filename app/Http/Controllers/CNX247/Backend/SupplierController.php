@@ -10,10 +10,13 @@ use App\Supplier;
 use App\BillDetail;
 use App\BillMaster;
 use App\Industry;
+use App\Currency;
 use App\PurchaseOrderDetail;
 use App\PurchaseOrder;
 use App\PaymentBill;
 use App\Policy;
+use App\BudgetFinance;
+use App\ProjectBudget;
 use App\Service;
 use App\PayMaster;
 use App\PayDetail;
@@ -210,7 +213,17 @@ class SupplierController extends Controller
         $this->validate($request,[
             'po'=>'required',
             'supplier'=>'required'
-        ]);
+				]);
+				if(!empty($request->file('vendor_invoice'))){
+					$extension = $request->file('vendor_invoice');
+					$extension = $request->file('vendor_invoice')->getClientOriginalExtension(); // getting excel extension
+					$dir = 'assets/uploads/attachments/';
+					$filename = 'vendor_invoice_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+					$request->file('vendor_invoice')->move(public_path($dir), $filename);
+			}else{
+					$filename = '';
+			}
+
         $review = new SupplierReview;
         $review->supplier_id = $request->supplier;
         $review->po_id = $request->po;
@@ -230,6 +243,7 @@ class SupplierController extends Controller
         $bill->ref_no = $ref_no;
         $bill->bill_date = now();
         $bill->bill_amount = $po->total;
+        $bill->attachment = $filename;
         $bill->vat_amount = ($po->total * $policy->vat)/100;
         $bill->vat_charge = $policy->vat;
         $bill->billed_to = $po->supplier_id;
@@ -348,14 +362,15 @@ class SupplierController extends Controller
     public function newVendorBill(){
         $vendors = Supplier::where('tenant_id', Auth::user()->tenant_id)->get();
         $services = Service::where('tenant_id', Auth::user()->tenant_id)->get();
-        $bill = BillMaster::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->first();
+				$bill = BillMaster::where('tenant_id', Auth::user()->tenant_id)->orderBy('id', 'DESC')->first();
+				$currencies = Currency::all();
         $billNo = null;
         if(!empty($bill)){
             $billNo = $bill->bill_no + 1;
         }else{
             $billNo = 10000;
         }
-        return view('backend.procurement.vendor.new-bill', ['vendors'=>$vendors, 'billNo'=>$billNo,'services'=>$services]);
+        return view('backend.procurement.vendor.new-bill', ['vendors'=>$vendors, 'billNo'=>$billNo,'services'=>$services, 'currencies'=>$currencies]);
     }
 
     public function vendorDetails(Request $request){
@@ -394,9 +409,15 @@ class SupplierController extends Controller
         $bill->vendor_id = $request->vendor;
         $bill->bill_no = $request->bill_no;
         $bill->ref_no = $ref_no;
-        $bill->bill_date = $request->issue_date;
-        $bill->bill_amount = $totalAmount;
-        $bill->vat_amount = ($totalAmount * $policy->vat)/100;
+				$bill->bill_date = $request->issue_date;
+
+        //$bill->bill_amount = $totalAmount;
+				//$bill->vat_amount = ($totalAmount * $policy->vat)/100;
+				$bill->bill_amount = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$policy->vat)/100 * $request->exchange_rate ) : ($totalAmount + ($totalAmount*$policy->vat)/100 ) ;
+				$bill->vat_amount = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $policy->vat)/100 * $request->exchange_rate : ($totalAmount*$policy->vat)/100;
+				$bill->currency_id = $request->currency;
+				$bill->exchange_rate = $request->exchange_rate;
+
         $bill->vat_charge = $policy->vat;
         $bill->billed_to = $request->vendor;
         $bill->instruction = $request->payment_instruction;
@@ -429,7 +450,7 @@ class SupplierController extends Controller
             'posted_by'=>Auth::user()->id,
             'narration'=>'Bill raised for '.$vendor->company_name,
             'dr_amount'=>0,
-            'cr_amount'=>$totalAmount,
+            'cr_amount'=>$request->currency != Auth::user()->tenant->currency->id ? $totalAmount*$request->exchange_rate : $totalAmount,
             'ref_no'=>$ref_no,
             'bank'=>0,
             'ob'=>0,
@@ -444,7 +465,7 @@ class SupplierController extends Controller
             'posted_by'=>Auth::user()->id,
             'narration'=>'VAT charged on bill no: '.$request->bill_no.' for vendor '.$vendor->company_name,
             'dr_amount'=>0,
-            'cr_amount'=>($totalAmount * $policy->vat)/100,
+            'cr_amount'=>$request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $policy->vat)/100 * $request->exchange_rate : ($totalAmount * $policy->vat)/100,
             'ref_no'=>$ref_no,
             'bank'=>0,
             'ob'=>0,
@@ -460,8 +481,8 @@ class SupplierController extends Controller
                 'glcode'=>$d->glcode,
                 'posted_by'=>Auth::user()->id,
                 'narration'=>"Bill raised for ".$vendor->company_name." Service ID: ".$d->id." - ".$d->description,
-                'dr_amount'=>($d->rate * $d->quantity) + (($d->rate * $d->quantity) * $policy->vat)/100,
-                'cr_amount'=>0,
+                'dr_amount'=>$request->currency != Auth::user()->tenant->currency->id ? ($d->amount + (($d->amount) * $policy->vat)/100) * $request->exchange_rate : ($d->amount + (($d->amount) * $policy->vat)/100) ,
+								'cr_amount'=>0,
                 'ref_no'=>$ref_no,
                 'bank'=>0,
                 'ob'=>0,
@@ -502,9 +523,10 @@ class SupplierController extends Controller
     }
 
     public function newPayment(){
-        $pending_bills  = BillMaster::where('paid', 0)->where('tenant_id', Auth::user()->tenant_id)->get();
+
         $invoice = Invoice::where('status', 0)->where('tenant_id', Auth::user()->tenant_id)->get();
 				$banks = Bank::where('tenant_id', Auth::user()->tenant_id)->get();
+				$vendors = Supplier::where('tenant_id', Auth::user()->tenant_id)->get();
 				$status = PaymentBill::where('tenant_id', Auth::user()->tenant_id)
 																			->where('bill_id', 1)
 																			->where('trash',0)
@@ -515,31 +537,55 @@ class SupplierController extends Controller
 					'invoice'=>$invoice,
 				'banks'=>$banks,
 				'totalAmount'=>$totalAmount,
-				'pending_bills'=>$pending_bills,
-				'status'=>$status
+				'status'=>$status,
+				'vendors'=>$vendors
 				]);
-    }
+		}
+
+		public function getVendorPendingBills(Request $request){
+			$this->validate($request,[
+				'vendor'=>'required'
+			]);
+			$pending_bills  = BillMaster::where('paid', 0)->where('tenant_id', Auth::user()->tenant_id)->where('vendor_id',$request->vendor)->get();
+			if(count($pending_bills) > 0){
+				return view('backend.procurement.payment.pending-bills', ['pending_bills'=>$pending_bills]);
+			}
+
+		}
 
     public function storePayment(Request $request){
-			 // dd($request->all());
+			  //dd($request->all());
         /*  $request->validate([
             'bank'=>'required',
             'payment_amount'=>'required',
             'reference_no'=>'required',
             'bills.*'=>'required',
-            'payment.*'=>'required',
+						'payment.*'=>'required',
+						'vendor'=>'required',
             'issue_date'=>'required|date'
         ]); */
 				$payment_total = 0;
+				//$billTotal = 0;
 				$arrayCount = 0;
-
+				$exchangeRateArray = [];
+				$currencyArray = [];
         for($p = 0; $p<count($request->payment); $p++){
 					if(str_replace(',','',$request->payment[$p]) != null){
 						$payment_total += str_replace(',','',$request->payment[$p]);
+						//$billTotal += $request->billTotal[$p];
 							$arrayCount++;
+							array_push($exchangeRateArray, $request->exchange_rate[$p]);
+							array_push($currencyArray, $request->currency[$p]);
 					}
 				}
-        if($payment_total > $request->payment_amount){
+				#exchange_rate
+				$exchangeRate = array_filter($exchangeRateArray);
+				$reIndexedExchangeRate = array_values($exchangeRate);
+				#currency
+				$currency = array_filter($currencyArray);
+				$reIndexedCurrency = array_values($currency);
+
+        if($payment_total > $request->payment_amount_placeholder){
             session()->flash("error", "<strong>Ooops!</strong> Your total payment cannot be more than due amount.");
             return back();
         }else{
@@ -547,9 +593,12 @@ class SupplierController extends Controller
             $pay->tenant_id = Auth::user()->tenant_id;
             $pay->bank_id = $request->bank;
             $pay->date_inputed = $request->issue_date;
-            $pay->amount = $payment_total;
+            $pay->amount = $payment_total * $reIndexedExchangeRate[0];
+            $pay->vendor_id = $request->vendor;
             $pay->ref_no = $request->reference_no;
             $pay->memo = $request->memo;
+            $pay->exchange_rate = $reIndexedExchangeRate[0];
+            $pay->currency_id = $reIndexedCurrency[0];
             $pay->user_id = Auth::user()->id;
             $pay->date_now = now();
             $pay->slug = substr(sha1(time()),32,40);
@@ -570,7 +619,7 @@ class SupplierController extends Controller
             for($n = 0; $n < $arrayCount; $n++){
                 $detail = new PayDetail();
                 $detail->bill_id = $reIndexedBills[$n];
-                $detail->pay_amount = str_replace(',','',$reIndexedPayment[$n]);
+                $detail->pay_amount = str_replace(',','',$reIndexedPayment[$n])  * $reIndexedExchangeRate[$n];
                 $detail->pay_id = $paymentId;
                 $detail->tenant_id = Auth::user()->tenant_id;
                 $detail->description = $reIndexedDescription[$n];
@@ -625,6 +674,7 @@ class SupplierController extends Controller
     {
         $payment = PayMaster::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
         if (!empty($payment)) {
+					$ref_no = strtoupper(substr(sha1(time()), 32,40));
             $payment->posted = 1;
             $payment->posted_date = now();
             $payment->save();
@@ -641,7 +691,7 @@ class SupplierController extends Controller
             'narration' => 'Payment to ' . $vendor->company_name ?? '',
             'dr_amount' => 0,
             'cr_amount' => $payment->amount,
-            'ref_no' => $payment->ref_no ?? '',
+            'ref_no' => $ref_no ?? '',
             'bank' => 0,
             'ob' => 0,
             'posted' => 1,
@@ -650,22 +700,23 @@ class SupplierController extends Controller
         ];
         DB::table(Auth::user()->tenant_id . '_gl')->insert($bankGl);
         foreach($bills as $b){
+						$vendorGl = [
+								'glcode' => $vendor->glcode,
+								'posted_by' => Auth::user()->id,
+								'narration' => 'Payment for ' . $b->description,
+								'dr_amount' => $b->pay_amount ?? 0,
+								'cr_amount' => 0,
+								'ref_no' => $ref_no ?? '',
+								'bank' => 0,
+								'ob' => 0,
+								'posted' => 1,
+								'transaction_date'=>$payment->date_inputed,
+								'created_at' => $payment->date_inputed,
+						];
+						DB::table(Auth::user()->tenant_id . '_gl')->insert($vendorGl);
+					}
             $perBill = BillDetail::where('bill_id', $b->id)->get();
-            foreach($perBill as $per){
-                $vendorGl = [
-                    'glcode' => $vendor->glcode,
-                    'posted_by' => Auth::user()->id,
-                    'narration' => 'Payment for ' . $b->description,
-                    'dr_amount' => ($per->quantity * $per->rate) ?? 0,
-                    'cr_amount' => 0,
-                    'ref_no' => $payment->ref_no ?? '',
-                    'bank' => 0,
-                    'ob' => 0,
-                    'posted' => 1,
-                    'transaction_date'=>$payment->date_inputed,
-                    'created_at' => $payment->date_inputed,
-                ];
-								DB::table(Auth::user()->tenant_id . '_gl')->insert($vendorGl);
+            foreach($bills as $per){
 
 								$temp = PaymentBill::where('tenant_id',Auth::user()->tenant_id)
 																		->where('bill_id', $per->bill_id)
@@ -675,21 +726,17 @@ class SupplierController extends Controller
 											$temp->posted = 1;
 											$temp->save();
 											$billMaster = BillMaster::find($per->bill_id);
-											$billMaster->paid_amount += str_replace(',','',$reIndexedPayment[$n]);
-												if($billMaster->paid_amount + $bill->vat_amount >= $billMaster->bill_amount){
-														$billMaster->status = 'paid';
-														$billMaster->paid = 1;
-													}
-													$billMaster->save();
-												/* if(str_replace(',','',$reIndexedPayment[$n]) < $bill->bill_amount){
-														$billMaster->status = 'partial';
+											if(!empty($billMaster) ){
+												$billMaster->paid_amount += $billMaster->bill_amount;
+													if($billMaster->paid_amount + $bill->vat_amount >= $billMaster->bill_amount){
+															$billMaster->status = 'paid';
+															$billMaster->paid = 1;
+														}
 														$billMaster->save();
-												} */
-												//$bill->save();
+											}
 
 										}
-										//$bill = BillMaster::where('id', $per->bill_id)->where('tenant_id', Auth::user()->tenant_id)->first();
-										$bill->paid_amount += $d->payment;
+										$bill->paid_amount += $per->pay_amount;
 										if($bill->paid_amount >= $bill->bill_amount){
 												$bill->status = 1;
 										}
@@ -705,7 +752,7 @@ class SupplierController extends Controller
 																	->where('id', $budgetFinance->budget_id)
 																	->first();
 										if(!empty($budget)){
-											$budget->actual_amount += $d->payment;
+											$budget->actual_amount += $per->pay_amount;
 											$budget->save();
 											$budgetFinance->payment_id = $payment->id;
 											$budgetFinance->save();
@@ -713,7 +760,7 @@ class SupplierController extends Controller
 
 										}
             }
-        }
+
         session()->flash("success", "<strong>Success!</strong> Payment posted.");
         return redirect()->route('payments');
     }

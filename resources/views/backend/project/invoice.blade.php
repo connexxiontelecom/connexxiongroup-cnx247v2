@@ -252,16 +252,38 @@
 																<h6 class="text-primary"> <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="vat"> 0.00</span></h6>
 														</td>
 												</tr>
-                            <tr class="text-info">
-                                <td>
-                                    <hr>
-                                    <h5 class="text-primary">Total :</h5>
-                                </td>
-                                <td>
-                                    <hr>
-                                    <h5 class="text-primary"> <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="total">0.00</span></h5>
-                                </td>
-                            </tr>
+												<tr>
+													<th>Currency :</th>
+													<td>
+														<div class="form-group">
+															<select name="currency" id="currency" value="{{old('currency')}}" class="js-example-basic-single">
+																	<option value="{{Auth::user()->tenant->currency->id}}" selected>{{Auth::user()->tenant->currency->name ?? ''}} ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</option>
+																	@foreach($currencies->where('id', '!=', Auth::user()->tenant->currency->id) as $currency)
+																			<option value="{{$currency->id}}" data-abbr="{{$currency->abbr}}">{{$currency->name ?? ''}} ({{$currency->symbol ?? ''}})</option>
+																	@endforeach
+															</select>
+															@error('currency')
+																	<i class="text-danger mt-3 d-flex ">{{$message}}</i>
+															@enderror
+													</div>
+													</td>
+											</tr>
+											<tr class="exchange-rate">
+													<th>Exchange Rate :</th>
+													<td>
+															<input type="text" placeholder="Exchange rate" value="1" class="form-control" id="exchange_rate" name="exchange_rate">
+													</td>
+											</tr>
+											<tr class="text-info">
+													<td>
+															<hr>
+															<h5 class="text-primary">Total :</h5>
+													</td>
+													<td>
+															<hr>
+															<h5 class="text-primary"> <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="total">0.00</span></h5>
+													</td>
+											</tr>
                         </tbody>
                     </table>
                 </div>
@@ -313,6 +335,9 @@
 <script src="/assets/pages/form-masking/form-mask.js"></script>
 <script>
     $(document).ready(function(){
+			var defaultCurrency = "{{Auth::user()->tenant->currency->id}}";
+			var string = null;
+			$('.exchange-rate').hide();
         if($('#setAccount') == 1){
                 $('.client-account-wrapper').show();
                 $('#setAccount').val(1);
@@ -348,7 +373,21 @@
 						setTotal();
 						$(this).val().toLocaleString();
         });
-
+				$(document).on('change', '#currency', function(e){
+					e.preventDefault();
+						if(defaultCurrency != $(this).val()){
+							var abbr = $(this).find(':selected').data('abbr')
+							string = abbr+"_"+"{{Auth::user()->tenant->currency->abbr}}";
+							var url = "https://free.currconv.com/api/v7/convert?q="+string+"&compact=ultra&apiKey=c6616c96883701c84660";
+							axios.get(url)
+							.then(response=>{
+								$('#exchange_rate').val(response.data[string]);
+							});
+							$('.exchange-rate').show();
+						}else{
+							$('.exchange-rate').hide();
+						}
+				});
         $(document).on('change', '#budget', function(e){
             e.preventDefault();
             axios.post('/project/get-budget',{budget:$(this).val()})

@@ -213,6 +213,10 @@
 																@endforeach
 															</select>
 													</div>
+													<div class="form-group">
+														<label for="">Vendor Invoice</label>
+														<input type="file" id="vendor_invoice" class="form-control-file">
+													</div>
 											</form>
 									</div>
 									<div class="modal-footer d-flex justify-content-center">
@@ -259,6 +263,7 @@
 <script>
     $(document).ready(function(){
         var po = null;
+        var attachment = null;
         //print without commission
         $(document).on('click', '#printInvoice', function(event){
             $('#purchaseContainer').printThis({
@@ -284,15 +289,26 @@
             po = $(this).val();
 
         });
+        $(document).on('change', '#vendor_invoice', function(e){
+						e.preventDefault();
+						var extension = $(this).val().split('.').pop().toLowerCase();
+            if ($.inArray(extension, ['csv', 'xls', 'xlsx', 'pdf', 'doc', 'docx', 'png', 'jpg', 'jpeg', 'gif','ppt', 'pptx']) == -1) {
+                $.notify("Error! Please upload a supported file format: ['csv', 'xls', 'xlsx', 'pdf', 'doc', 'docx', 'png', 'jpg', 'jpeg', 'gif']", "error");
+            }else{
+								attachment = $('#vendor_invoice').prop('files')[0];
+
+            }
+
+        });
         $(document).on('click', '#submitSupplierReviewBtn', function(e){
-            e.preventDefault();
-            axios.post('/procurement/review/purchase-order', {
-                po:po,
-                supplier:$('#supplier').val(),
-                //rating:$('#rate').val(),
-								//review:$('#poReviewContent').val(),
-								service_account:$('#service_account').val()
-            })
+						e.preventDefault();
+						form_data = new FormData;
+						form_data.append('supplier', $('#supplier').val());
+						form_data.append('vendor_invoice', attachment);
+						form_data.append('service_account', $('#service_account').val());
+						form_data.append('po',po);
+
+            axios.post('/procurement/review/purchase-order', form_data)
             .then(response=>{
                 $.notify(response.data.message, 'success');
                 $('#poReviewModal').modal('hide');

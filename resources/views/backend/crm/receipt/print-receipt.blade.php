@@ -102,7 +102,7 @@
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Ref.<span>#{{$receipt->ref_no}}</span></h6>
                     <h6 class="text-uppercase text-primary">Total Due :
-                        <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->amount,2)}}</span>
+                        <span>{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}} {{number_format(($invoiceBalance->sum('total') / $invoiceBalance->sum('exchange_rate')) - ($receipt->amount/$receipt->exchange_rate),2) }}</span>
                     </h6>
                 </div>
             </div>
@@ -113,19 +113,19 @@
                             <thead>
                                 <tr class="thead-default">
                                     <th>Description</th>
-                                    <th>Amount Due</th>
                                     <th>Payment</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($invoices as $item)
-                                    <tr>
-                                        <td>
-                                            <p>Receipt for Invoice # {{$item->invoice_id}}</p>
-                                        </td>
-                                        <td>{{number_format($item->quantity)}}</td>
-                                        <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->payment, 2)}}</td>
-                                    </tr>
+																@foreach ($invoices as $item)
+																	@foreach ($item->getInvoiceDescription as $desc)
+																		<tr>
+																				<td>
+																						<p>{!! $desc->description ?? '' !!}</p>
+																				</td>
+																				<td>{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($item->payment/$receipt->exchange_rate)}}</td>
+																		</tr>
+																	@endforeach
 
                                 @endforeach
                             </tbody>
@@ -145,7 +145,7 @@
                                 </td>
                                 <td>
                                     <hr>
-                                    <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->amount,2)}}</h5>
+                                    <h5 class="text-primary">{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($receipt->amount/$receipt->exchange_rate,2)}}</h5>
                                 </td>
                             </tr>
                         </tbody>
