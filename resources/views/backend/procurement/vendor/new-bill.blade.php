@@ -145,6 +145,28 @@
                             <div class="col-sm-12">
                                 <table class="table table-responsive invoice-table invoice-total">
                                     <tbody>
+																			<tr>
+																				<th>Currency :</th>
+																				<td>
+																					<div class="form-group">
+																						<select name="currency" id="currency" value="{{old('currency')}}" class="js-example-basic-single">
+																								<option value="{{Auth::user()->tenant->currency->id}}" selected>{{Auth::user()->tenant->currency->name ?? ''}} ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</option>
+																								@foreach($currencies->where('id', '!=', Auth::user()->tenant->currency->id) as $currency)
+																										<option value="{{$currency->id}}">{{$currency->name ?? ''}} ({{$currency->symbol ?? ''}})</option>
+																								@endforeach
+																						</select>
+																						@error('currency')
+																								<i class="text-danger mt-3 d-flex ">{{$message}}</i>
+																						@enderror
+																				</div>
+																				</td>
+																		</tr>
+																		<tr class="exchange-rate">
+																				<th>Exchange Rate :</th>
+																				<td>
+																						<input type="text" placeholder="Exchange rate" value="1" class="form-control" id="exchange_rate" name="exchange_rate">
+																				</td>
+																		</tr>
                                     <tr class="text-info">
                                         <td>
                                             <hr>
@@ -185,6 +207,8 @@
     <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
     <script>
         $(document).ready(function(){
+					var defaultCurrency = "{{Auth::user()->tenant->currency->id}}";
+			$('.exchange-rate').hide();
             $(".select-product").select2({
                 placeholder: "Select product/service"
             });
@@ -201,7 +225,16 @@
                     placeholder: "Select product or service"
                 });
                 $(".select-product").last().next().next().remove();
-            });
+						});
+
+						$(document).on('change', '#currency', function(e){
+							e.preventDefault();
+								if(defaultCurrency != $(this).val()){
+									$('.exchange-rate').show();
+								}else{
+									$('.exchange-rate').hide();
+								}
+						});
 
             //Remove line
             $(document).on('click', '.remove-line', function(e){

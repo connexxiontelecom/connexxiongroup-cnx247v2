@@ -204,21 +204,25 @@ Convert to Lead
                                 </td>
                             </tr>
                             <tr>
-                                <th>Discount (%) :</th>
+                                <th>Currency :</th>
                                 <td>
-                                    <input type="text" placeholder="Discount Rate" class="form-control" id="discount_rate" name="discount_rate">
+																	<div class="form-group">
+																		<select name="currency" id="currency" value="{{old('currency')}}" class="js-example-basic-single">
+																			<option value="{{Auth::user()->tenant->currency->id}}" selected>{{Auth::user()->tenant->currency->name ?? ''}} ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</option>
+																			@foreach($currencies->where('id', '!=', Auth::user()->tenant->currency->id) as $currency)
+																					<option value="{{$currency->id}}">{{$currency->name ?? ''}} ({{$currency->symbol ?? ''}})</option>
+																			@endforeach
+																	</select>
+																	@error('currency')
+																			<i class="text-danger mt-3 d-flex ">{{$message}}</i>
+																	@enderror
+																</div>
                                 </td>
                             </tr>
-                            <tr>
-                                <th>Discounted amount :</th>
+                            <tr class="exchange-rate">
+                                <th>Exchange Rate :</th>
                                 <td>
-                                    <input type="text" readonly placeholder="Discount Amount" class="form-control" id="discounted_amount" name="discounted_amount">
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Cash :</th>
-                                <td>
-                                    <input type="text" placeholder="Cash Amount" class="form-control" id="cash_amount" name="cash_amount">
+                                    <input type="text" placeholder="Exchange rate" value="1" class="form-control" id="exchange_rate" name="exchange_rate">
                                 </td>
                             </tr>
                             <tr class="text-info">
@@ -287,10 +291,14 @@ Convert to Lead
 <script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
 <script>
+
     $(document).ready(function(){
+			var defaultCurrency = "{{Auth::user()->tenant->currency->id}}";
+			var string = null;
         $(".select-product").select2({
             placeholder: "Select product/service"
-        });
+				});
+				$('.exchange-rate').hide();
         var grand_total = 0;
         $('.invoice-detail-table').on('mouseup keyup', 'input[type=number]', ()=> calculateTotals());
 
@@ -303,7 +311,24 @@ Convert to Lead
                 placeholder: "Select product or service"
             });
             $(".select-product").last().next().next().remove();
-        });
+				});
+
+				$(document).on('change', '#currency', function(e){
+					e.preventDefault();
+					if(defaultCurrency != $(this).val()){
+							var abbr = $(this).find(':selected').data('abbr')
+							string = abbr+"_"+"{{Auth::user()->tenant->currency->abbr}}";
+							var url = "https://free.currconv.com/api/v7/convert?q="+string+"&compact=ultra&apiKey=c6616c96883701c84660";
+							axios.get(url)
+							.then(response=>{
+								console.log(response.data);
+								$('#exchange_rate').val(response.data[string]);
+							});
+							$('.exchange-rate').show();
+						}else{
+							$('.exchange-rate').hide();
+						}
+				});
 
         //Remove line
         $(document).on('click', '.remove-line', function(e){
@@ -321,7 +346,7 @@ Convert to Lead
             $('#subTotal').val(total);
             $('#totalAmount').val(grand_total);
             $('.total').text(total.toLocaleString());
-            $('.balance').text(total);
+            $('.balance').text(total.toLocaleString());
         }
 
         //calculate subtotals
@@ -337,21 +362,17 @@ Convert to Lead
             e.preventDefault();
             setTotal();
         });
-        $('#tax_rate, #discount_rate, #cash_amount').on('change', function(e){
+        $('#tax_rate').on('change', function(e){
             e.preventDefault();
             var total = $('#totalAmount').val();
             var tax = 0;
-            var discount = 0;
-            var cash = 0;
             tax = (total*$('#tax_rate').val()/100);
-            discount = (total*$('#discount_rate').val()/100);
-            cash = $('#cash_amount').val();
             $('#tax_amount').val(tax);
-            $('#discounted_amount').val(discount);
-            $('.sub-total').text($('#subTotal').val());
-            $('.total').text(((total-discount+tax)-cash));
-            $('#totalAmount').val(((total-discount+tax)-cash));
-            $('.balance').text(((total-discount+tax)-cash));
+						$('.sub-total').text($('#subTotal').val());
+						var main = 0;
+						main = tax  += +total;
+						$(".total").text(main.toLocaleString());
+            $('.balance').text(main.toLocaleString());
 
         });
 
@@ -361,12 +382,19 @@ Convert to Lead
         }
     });
 
-    function setTotal(){
+/*     function setTotal(){
         var sum = 0;
         $(".payment").each(function(){
             sum += +$(this).val();
         });
             $(".total").text(sum);
-    }
+		} */
+		function setTotal(){
+        var sum = 0;
+        $(".payment").each(function(){
+						sum += +$(this).val().replace(/,/g, '');
+            $(".total").text(sum.toLocaleString());
+        });
+		}
 </script>
 @endsection

@@ -20,5 +20,9 @@ class BillMaster extends Model
 
     public function billItems(){
         return $this->hasMany(BillDetail::class, 'bill_id');
-    }
+		}
+		//currency
+		public function getCurrency(){
+			return $this->belongsTo(Currency::class, 'currency_id');
+	}
 }

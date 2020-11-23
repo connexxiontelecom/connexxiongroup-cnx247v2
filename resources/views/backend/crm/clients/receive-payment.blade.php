@@ -82,9 +82,9 @@ Receive Payment
                     <p><a href="mailto:{{$invoice->client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[ {{$invoice->client->email ?? ''}} ]</a></p>
                 </div>
                 <div class="col-md-4 col-sm-6">
-                    <h6 class="m-b-20">Balance: <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($pending_invoices->sum('total') + $pending_invoices->sum('tax_value') - $pending_invoices->sum('paid_amount'),2)}}</span></h6>
+                    <h6 class="m-b-20">Balance: <span>{{$invoice->getCurrency->symbol ??  'N'}}{{number_format($pending_invoices->sum('total') - $pending_invoices->sum('paid_amount'),2)}}</span></h6>
                     <h6 class="text-uppercase text-primary">Amount Received :
-                        <span class="balance">{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($pending_invoices->sum('paid_amount'),2)}}<span class="amount-received"></span> </span>
+                        <span class="balance">{{$invoice->getCurrency->symbol ?? 'N'}} {{number_format($pending_invoices->sum('paid_amount'),2)}}<span class="amount-received"></span> </span>
                     </h6>
                 </div>
                 <div class="col-md-12 col-sm-12">
@@ -162,7 +162,7 @@ Receive Payment
                                         <td>
                                             <div class="checkbox-fade fade-in-primary">
                                                 <label>
-                                                    <input type="checkbox" value="" data-amount="{{ number_format((float)$item->total + $item->tax_value - $item->paid_amount, 2, '.', '')}}" class="select-invoice">
+                                                    <input type="checkbox" value="" data-amount="{{ number_format((float)($item->total/$item->exchange_rate) - ($item->paid_amount/$item->exchange_rate), 2, '.', '')}}" class="select-invoice">
                                                     <span class="cr">
                                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                     </span>
@@ -174,16 +174,18 @@ Receive Payment
                                             <div class="form-group">
                                                 <p><a target="_blank" href="{{route('print-invoice', $item->slug)}}">Invoice #{{$item->invoice_no}} ({{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->created_at))}})</a></p>
                                                 <input type="hidden" value="{{$item->id}}" name="invoices[]">
+                                                <input type="hidden" value="{{$item->exchange_rate}}" name="exchange_rate[]">
+                                                <input type="hidden" value="{{$item->currency_id}}" name="currency[]">
                                             </div>
                                         </td>
                                         <td>
                                             <p>{{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->due_date))}}</p>
                                         </td>
                                         <td>
-                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total + $item->tax_value,2)}}</p>
+                                            <p>{{$invoice->getCurrency->symbol ?? 'N'}}{{number_format(($item->total/$item->exchange_rate) + ($item->tax_value/$item->exchange_rate),2)}}</p>
                                         </td>
                                         <td>
-                                            <p>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($item->total + $item->tax_value - $item->paid_amount,2)}}</p>
+                                            <p>{{$invoice->getCurrency->symbol ?? 'N'}}{{number_format(($item->total/$item->exchange_rate) + ($item->tax_value/$item->exchange_rate) - ($item->paid_amount/$item->exchange_rate),2)}}</p>
                                         </td>
                                         <td><input type="text" class="form-control payment autonumber" name="payment[]" style="width: 120px;"></td>
                                     </tr>
@@ -199,7 +201,7 @@ Receive Payment
                         <tbody>
                             <tr>
                                 <th>Amount Received :</th>
-                                <td class="amount-receive">{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span class="total">0.00</span> </td>
+                                <td class="amount-receive">{{$invoice->getCurrency->symbol ?? 'N'}} <span class="total">0.00</span> </td>
                             </tr>
                         </tbody>
                     </table>
@@ -277,7 +279,7 @@ Receive Payment
         var sum = 0;
         $(".payment").each(function(){
 						sum += +$(this).val().replace(/,/g, '');
-            $(".amount-received").text(sum.toLocaleString());
+            $(".total").text(sum.toLocaleString());
         });
 		}
 </script>
