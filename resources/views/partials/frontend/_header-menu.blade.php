@@ -32,6 +32,7 @@
 				<li class="has-submenu">
 					<a href="javascript:void(0)">Product</a><span class="menu-arrow"></span>
 					<ul class="submenu">
+						<li><a href="{{route('product')}}">Product</a></li>
 						<li><a href="{{route('human_resource')}}">Human Resource</a></li>
 						<li><a href="{{route('crm')}}">CRM</a></li>
 						<li><a href="{{route('accounting')}}">Accounting</a></li>

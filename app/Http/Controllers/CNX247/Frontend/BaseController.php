@@ -89,6 +89,10 @@ class BaseController extends Controller
         return view('frontend.support');
     }
 
+    public function product(){
+    	return view('frontend.product');
+		}
+
     public function contact_us(){
     	return view('frontend.contact-us');
 		}
