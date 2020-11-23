@@ -20,6 +20,8 @@ use App\User;
 use App\Notifications\SubmitTask;
 use Illuminate\Http\Request;
 
+use function PHPSTORM_META\type;
+
 class StreamController extends Controller
 {
     //
@@ -477,7 +479,7 @@ class StreamController extends Controller
             ->where('tenant_id', $tenant_id)
             ->first();
         if (empty($processor)) {
-            return; //response()->json(["error"=>"Error! Could not submit. No processor found."],400);
+            return;
         } else {
 
             $url = substr(sha1(time()), 10, 10);
@@ -507,7 +509,7 @@ class StreamController extends Controller
 
             $event = new ResponsiblePerson;
             $event->post_id = $id;
-            $event->post_type = 'expense-report';
+            $event->post_type = $request->type;
             $event->user_id = $processor->user_id;
             $event->tenant_id = $request->user_id;
             $event->save();
