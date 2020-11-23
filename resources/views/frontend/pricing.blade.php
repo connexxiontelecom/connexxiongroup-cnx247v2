@@ -8,7 +8,7 @@
 
     <style>
         .card{
-            border-radius: 0px !important;
+            /*border-radius: 0px !important;*/
         }
     </style>
 @endsection
@@ -53,20 +53,57 @@
 								<a class="nav-link px-3 rounded-pill active monthly" id="Monthly" data-toggle="pill" href="#Month" role="tab" aria-controls="Month" aria-selected="true">Monthly</a>
 							</li>
 							<li class="nav-item d-inline-block">
-								<a class="nav-link px-3 rounded-pill monthly" id="Quarterly" data-toggle="pill" href="#Quarter" role="tab" aria-controls="Quarter" aria-selected="true">Quarterly <span class="badge badge-pill badge-outline-success"> -5%</span></a>
+								<a class="nav-link px-3 rounded-pill monthly" id="Quarterly" data-toggle="pill" href="#Quarter" role="tab" aria-controls="Quarter" aria-selected="true">Quarterly <span class="badge badge-pill badge-info"> -5%</span></a>
 							</li>
 							<li class="nav-item d-inline-block">
-								<a class="nav-link px-3 rounded-pill yearly" id="Yearly" data-toggle="pill" href="#Year" role="tab" aria-controls="Year" aria-selected="false">Yearly <span class="badge badge-pill badge-outline-success"> -9%</span></a>
+								<a class="nav-link px-3 rounded-pill yearly" id="Yearly" data-toggle="pill" href="#Year" role="tab" aria-controls="Year" aria-selected="false">Yearly <span class="badge badge-pill badge-info"> -9%</span></a>
 							</li>
 						</ul>
 					</div>
 					<div class="tab-content" id="pills-tabContent">
 						<div class="tab-pane fade active show" id="Month" role="tabpanel" aria-labelledby="Monthly">
 							<div class="row">
+								<div class="col-md-4 col-12 mt-4 pt-2">
+									<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
+										<div class="card-body">
+											<h2 class="title text-uppercase mb-4">Free Trial</h2>
+											<div class="d-flex mb-1">
+												<span class="h4 mb-0 mt-2">₦ </span>
+												<span class="price h1 mb-0"> {{number_format(0)}}</span>
+												<span class="h4 align-self-end">/mo</span>
+											</div>
+											<small class="text-center text-muted mb-4">
+												Start free and gain access to all features of CNX247 ERP Solution for 2 weeks to see how we suit your business needs and transform your processes.
+											</small>
+											<div class="mt-4">
+												<span class="mt-2 badge badge-pill badge-success">Calls</span>
+												<span class="mt-2 badge badge-pill badge-success">Emails</span>
+												<span class="mt-2 badge badge-pill badge-success">SMS</span>
+												<span class="mt-2 badge badge-pill badge-success">CNX Stream</span>
+												<span class="mt-2 badge badge-pill badge-success">CNX Drive</span>
+												<span class="mt-2 badge badge-pill badge-success">Chat</span>
+												<span class="mt-2 badge badge-pill badge-success">Workflow</span>
+												<span class="mt-2 badge badge-pill badge-success">Activity Stream</span>
+												<span class="mt-2 badge badge-pill badge-success">CRM</span>
+												<span class="mt-2 badge badge-pill badge-success">Project</span>
+												<span class="mt-2 badge badge-pill badge-success">Reports</span>
+												<span class="mt-2 badge badge-pill badge-success">Procurement</span>
+												<span class="mt-2 badge badge-pill badge-success">Task</span>
+												<span class="mt-2 badge badge-pill badge-success">Workgroup</span>
+												<span class="mt-2 badge badge-pill badge-success">Clock In & Out</span>
+												<span class="mt-2 badge badge-pill badge-danger">Basic Accounting</span>
+												<span class="mt-2 badge badge-pill badge-success">Full Accounting</span>
+												<span class="mt-2 badge badge-pill badge-success">HR</span>
+												<span class="mt-2 badge badge-pill badge-success">Logistics</span>
+											</div>
+											<a href="#" class="btn btn-primary mt-4">Start Free</a>
+										</div>
+									</div>
+								</div>
 								@if (count($plans) > 0)
 									@foreach ($plans as $plan)
 										@if ($plan->duration <= 30)
-											<div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
+											<div class="col-md-4 col-12 mt-4 pt-2">
 												<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
 													<div class="card-body">
 														<h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2>
@@ -78,144 +115,104 @@
 														<small class="text-center text-muted mb-4">
 															{{$plan->description}}
 														</small>
-														<ul class="list-unstyled mt-4 mb-0 pl-0">
-															<li class="h6 text-muted mb-0">
-																@if($plan->calls != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Calls: {{number_format($plan->calls).' minutes/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Calls
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->emails != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Emails: {{number_format($plan->emails).'/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Emails
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->sms != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>SMS: {{number_format($plan->sms).'/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>SMS
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Users: {{number_format($plan->team_size).' max users'}}
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->stream != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Stream: {{number_format($plan->stream).' hrs/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Stream
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->storage_size != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->chat != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Chat
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Chat
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->workflow != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workflow
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workflow
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->activity_stream != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Activity Stream
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Activity Stream
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->crm != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CRM
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CRM
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->project != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Project
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Project
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->reports != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Report & Analytics
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Report & Analytics
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->procurement != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Procurement
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Procurement
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->task != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Task
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Task
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->workgroup != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workgroup
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workgroup
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->clock_in != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Clock In & Out
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Clock In & Out
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->basic_accounting != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Basic Accounting
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Basic Accounting
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->full_accounting != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Full Accounting
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Full Accounting
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->hr != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>HR
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>HR
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->logistics != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Logistics
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Logistics
-																@endif
-															</li>
-														</ul>
+														<div class="mt-4">
+															@if($plan->calls != 0)
+																<span class="mt-2 badge badge-pill badge-success">Calls: {{number_format($plan->calls).' minutes/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Calls</span>
+															@endif
+															@if($plan->emails != 0)
+																<span class="mt-2 badge badge-pill badge-success">Emails: {{number_format($plan->emails).'/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Emails</span>
+															@endif
+															@if($plan->sms != 0)
+																<span class="mt-2 badge badge-pill badge-success">SMS: {{number_format($plan->sms).'/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">SMS</span>
+															@endif
+																<span class="mt-2 badge badge-pill badge-success">Users: {{number_format($plan->team_size).' max'}}</span>
+															@if($plan->stream != 0)
+																<span class="mt-2 badge badge-pill badge-success">CNX Stream: {{number_format($plan->stream).' hrs/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CNX Stream</span>
+															@endif
+															@if($plan->storage_size != 0)
+																<span class="mt-2 badge badge-pill badge-success">CNX Drive: {{number_format($plan->storage_size).'GB'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CNX Drive</span>
+															@endif
+															@if($plan->chat != 0)
+																<span class="mt-2 badge badge-pill badge-success">Chat</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Chat</span>
+															@endif
+															@if($plan->workflow != 0)
+																<span class="mt-2 badge badge-pill badge-success">Workflow</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Workflow</span>
+															@endif
+															@if($plan->activity_stream != 0)
+																<span class="mt-2 badge badge-pill badge-success">Activity Stream</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Activity Stream</span>
+															@endif
+															@if($plan->crm != 0)
+																<span class="mt-2 badge badge-pill badge-success">CRM</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CRM</span>
+															@endif
+															@if($plan->project != 0)
+																<span class="mt-2 badge badge-pill badge-success">Project</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Project</span>
+															@endif
+															@if($plan->reports != 0)
+																<span class="mt-2 badge badge-pill badge-success">Reports</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Reports</span>
+															@endif
+															@if($plan->procurement != 0)
+																<span class="mt-2 badge badge-pill badge-success">Procurement</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Procurement</span>
+															@endif
+															@if($plan->task != 0)
+																<span class="mt-2 badge badge-pill badge-success">Task</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Task</span>
+															@endif
+															@if($plan->workgroup != 0)
+																<span class="mt-2 badge badge-pill badge-success">Workgroup</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Workgroup</span>
+															@endif
+															@if($plan->clock_in != 0)
+																<span class="mt-2 badge badge-pill badge-success">Clock In & Out</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Clock In & Out</span>
+															@endif
+															@if($plan->basic_accounting != 0)
+																<span class="mt-2 badge badge-pill badge-success">Basic Accounting</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Basic Accounting</span>
+															@endif
+															@if($plan->full_accounting != 0)
+																<span class="mt-2 badge badge-pill badge-success">Full Accounting</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Full Accounting</span>
+															@endif
+															@if($plan->hr != 0)
+																<span class="mt-2 badge badge-pill badge-success">HR</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">HR</span>
+															@endif
+															@if($plan->logistics != 0)
+																<span class="mt-2 badge badge-pill badge-success">Logistics</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Logistics</span>
+															@endif
+														</div>
 														<a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
 													</div>
 												</div>
@@ -229,159 +226,156 @@
 						</div>
 						<div class="tab-pane fade" id="Quarter" role="tabpanel" aria-labelledby="Quarterly">
 							<div class="row">
+								<div class="col-md-4 col-12 mt-4 pt-2">
+									<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
+										<div class="card-body">
+											<h2 class="title text-uppercase mb-4">Free Trial</h2>
+											<div class="d-flex mb-1">
+												<span class="h4 mb-0 mt-2">₦ </span>
+												<span class="price h1 mb-0"> {{number_format(0)}}</span>
+												<span class="h4 align-self-end">/mo</span>
+											</div>
+											<small class="text-center text-muted mb-4">
+												Start free and gain access to all features of CNX247 ERP Solution for 2 weeks to see how we suit your business needs and transform your processes.
+											</small>
+											<div class="mt-4">
+												<span class="mt-2 badge badge-pill badge-success">Calls</span>
+												<span class="mt-2 badge badge-pill badge-success">Emails</span>
+												<span class="mt-2 badge badge-pill badge-success">SMS</span>
+												<span class="mt-2 badge badge-pill badge-success">CNX Stream</span>
+												<span class="mt-2 badge badge-pill badge-success">CNX Drive</span>
+												<span class="mt-2 badge badge-pill badge-success">Chat</span>
+												<span class="mt-2 badge badge-pill badge-success">Workflow</span>
+												<span class="mt-2 badge badge-pill badge-success">Activity Stream</span>
+												<span class="mt-2 badge badge-pill badge-success">CRM</span>
+												<span class="mt-2 badge badge-pill badge-success">Project</span>
+												<span class="mt-2 badge badge-pill badge-success">Reports</span>
+												<span class="mt-2 badge badge-pill badge-success">Procurement</span>
+												<span class="mt-2 badge badge-pill badge-success">Task</span>
+												<span class="mt-2 badge badge-pill badge-success">Workgroup</span>
+												<span class="mt-2 badge badge-pill badge-success">Clock In & Out</span>
+												<span class="mt-2 badge badge-pill badge-danger">Basic Accounting</span>
+												<span class="mt-2 badge badge-pill badge-success">Full Accounting</span>
+												<span class="mt-2 badge badge-pill badge-success">HR</span>
+												<span class="mt-2 badge badge-pill badge-success">Logistics</span>
+											</div>
+											<a href="#" class="btn btn-primary mt-4">Start Free</a>
+										</div>
+									</div>
+								</div>
 								@if (count($plans) > 0)
 									@foreach ($plans as $plan)
 										@if ($plan->duration > 30 && $plan->duration <= 90 )
-											<div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
+											<div class="col-md-4 col-12 mt-4 pt-2">
 												<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
 													<div class="card-body">
 														<h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2>
 														<div class="d-flex mb-1">
-															<span class="h4 mb-0 mt-2">{{$plan->currency->symbol}}</span>
-															<span class="price h1 mb-0">{{number_format($plan->price)}}</span>
+															<span class="h4 mb-0 mt-2">{{$plan->currency->symbol}} </span>
+															<span class="price h1 mb-0"> {{number_format($plan->price)}}</span>
 															<span class="h4 align-self-end">/mo</span>
 														</div>
 														<small class="text-center text-muted mb-4">
 															{{$plan->description}}
 														</small>
-														<ul class="list-unstyled mt-4 mb-0 pl-0">
-															<li class="h6 text-muted mb-0">
-																@if($plan->calls != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Calls: {{number_format($plan->calls).' minutes/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Calls
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->emails != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Emails: {{number_format($plan->emails).'/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Emails
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->sms != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>SMS: {{number_format($plan->sms).'/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>SMS
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Users: {{number_format($plan->team_size).' max users'}}
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->stream != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Stream: {{number_format($plan->stream).' hrs/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Stream
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->storage_size != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->chat != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Chat
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Chat
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->workflow != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workflow
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workflow
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->activity_stream != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Activity Stream
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Activity Stream
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->crm != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CRM
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CRM
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->project != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Project
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Project
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->reports != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Report & Analytics
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Report & Analytics
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->procurement != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Procurement
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Procurement
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->task != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Task
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Task
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->workgroup != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workgroup
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workgroup
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->clock_in != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Clock In & Out
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Clock In & Out
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->basic_accounting != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Basic Accounting
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Basic Accounting
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->full_accounting != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Full Accounting
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Full Accounting
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->hr != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>HR
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>HR
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->logistics != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Logistics
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Logistics
-																@endif
-															</li>
-														</ul>
+														<div class="mt-4">
+															@if($plan->calls != 0)
+																<span class="mt-2 badge badge-pill badge-success">Calls: {{number_format($plan->calls).' minutes/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Calls</span>
+															@endif
+															@if($plan->emails != 0)
+																<span class="mt-2 badge badge-pill badge-success">Emails: {{number_format($plan->emails).'/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Emails</span>
+															@endif
+															@if($plan->sms != 0)
+																<span class="mt-2 badge badge-pill badge-success">SMS: {{number_format($plan->sms).'/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">SMS</span>
+															@endif
+															<span class="mt-2 badge badge-pill badge-success">Users: {{number_format($plan->team_size).' max'}}</span>
+															@if($plan->stream != 0)
+																<span class="mt-2 badge badge-pill badge-success">CNX Stream: {{number_format($plan->stream).' hrs/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CNX Stream</span>
+															@endif
+															@if($plan->storage_size != 0)
+																<span class="mt-2 badge badge-pill badge-success">CNX Drive: {{number_format($plan->storage_size).'GB'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CNX Drive</span>
+															@endif
+															@if($plan->chat != 0)
+																<span class="mt-2 badge badge-pill badge-success">Chat</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Chat</span>
+															@endif
+															@if($plan->workflow != 0)
+																<span class="mt-2 badge badge-pill badge-success">Workflow</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Workflow</span>
+															@endif
+															@if($plan->activity_stream != 0)
+																<span class="mt-2 badge badge-pill badge-success">Activity Stream</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Activity Stream</span>
+															@endif
+															@if($plan->crm != 0)
+																<span class="mt-2 badge badge-pill badge-success">CRM</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CRM</span>
+															@endif
+															@if($plan->project != 0)
+																<span class="mt-2 badge badge-pill badge-success">Project</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Project</span>
+															@endif
+															@if($plan->reports != 0)
+																<span class="mt-2 badge badge-pill badge-success">Reports</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Reports</span>
+															@endif
+															@if($plan->procurement != 0)
+																<span class="mt-2 badge badge-pill badge-success">Procurement</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Procurement</span>
+															@endif
+															@if($plan->task != 0)
+																<span class="mt-2 badge badge-pill badge-success">Task</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Task</span>
+															@endif
+															@if($plan->workgroup != 0)
+																<span class="mt-2 badge badge-pill badge-success">Workgroup</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Workgroup</span>
+															@endif
+															@if($plan->clock_in != 0)
+																<span class="mt-2 badge badge-pill badge-success">Clock In & Out</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Clock In & Out</span>
+															@endif
+															@if($plan->basic_accounting != 0)
+																<span class="mt-2 badge badge-pill badge-success">Basic Accounting</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Basic Accounting</span>
+															@endif
+															@if($plan->full_accounting != 0)
+																<span class="mt-2 badge badge-pill badge-success">Full Accounting</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Full Accounting</span>
+															@endif
+															@if($plan->hr != 0)
+																<span class="mt-2 badge badge-pill badge-success">HR</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">HR</span>
+															@endif
+															@if($plan->logistics != 0)
+																<span class="mt-2 badge badge-pill badge-success">Logistics</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Logistics</span>
+															@endif
+														</div>
 														<a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
 													</div>
 												</div>
@@ -396,159 +390,156 @@
 
 						<div class="tab-pane fade" id="Year" role="tabpanel" aria-labelledby="Yearly">
 							<div class="row">
-								@if (count($plans) > 0)
+								<div class="col-md-4 col-12 mt-4 pt-2">
+									<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
+										<div class="card-body">
+											<h2 class="title text-uppercase mb-4">Free Trial</h2>
+											<div class="d-flex mb-1">
+												<span class="h4 mb-0 mt-2">₦ </span>
+												<span class="price h1 mb-0"> {{number_format(0)}}</span>
+												<span class="h4 align-self-end">/mo</span>
+											</div>
+											<small class="text-center text-muted mb-4">
+												Start free and gain access to all features of CNX247 ERP Solution for 2 weeks to see how we suit your business needs and transform your processes.
+											</small>
+											<div class="mt-4">
+												<span class="mt-2 badge badge-pill badge-success">Calls</span>
+												<span class="mt-2 badge badge-pill badge-success">Emails</span>
+												<span class="mt-2 badge badge-pill badge-success">SMS</span>
+												<span class="mt-2 badge badge-pill badge-success">CNX Stream</span>
+												<span class="mt-2 badge badge-pill badge-success">CNX Drive</span>
+												<span class="mt-2 badge badge-pill badge-success">Chat</span>
+												<span class="mt-2 badge badge-pill badge-success">Workflow</span>
+												<span class="mt-2 badge badge-pill badge-success">Activity Stream</span>
+												<span class="mt-2 badge badge-pill badge-success">CRM</span>
+												<span class="mt-2 badge badge-pill badge-success">Project</span>
+												<span class="mt-2 badge badge-pill badge-success">Reports</span>
+												<span class="mt-2 badge badge-pill badge-success">Procurement</span>
+												<span class="mt-2 badge badge-pill badge-success">Task</span>
+												<span class="mt-2 badge badge-pill badge-success">Workgroup</span>
+												<span class="mt-2 badge badge-pill badge-success">Clock In & Out</span>
+												<span class="mt-2 badge badge-pill badge-danger">Basic Accounting</span>
+												<span class="mt-2 badge badge-pill badge-success">Full Accounting</span>
+												<span class="mt-2 badge badge-pill badge-success">HR</span>
+												<span class="mt-2 badge badge-pill badge-success">Logistics</span>
+											</div>
+											<a href="#" class="btn btn-primary mt-4">Start Free</a>
+										</div>
+									</div>
+								</div>
+							@if (count($plans) > 0)
 									@foreach ($plans as $plan)
 										@if ($plan->duration >= 360)
-											<div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
+											<div class="col-md-4 col-12 mt-4 pt-2">
 												<div class="card pricing-rates business-rate shadow bg-light border-0 rounded">
 													<div class="card-body">
 														<h2 class="title text-uppercase mb-4">{{substr($plan->planName->name, 0, strpos($plan->planName->name,'-'))}}</h2>
 														<div class="d-flex mb-1">
-															<span class="h4 mb-0 mt-2">{{$plan->currency->symbol}}</span>
-															<span class="price h1 mb-0">{{number_format($plan->price)}}</span>
+															<span class="h4 mb-0 mt-2">{{$plan->currency->symbol}} </span>
+															<span class="price h1 mb-0"> {{number_format($plan->price)}}</span>
 															<span class="h4 align-self-end">/mo</span>
 														</div>
 														<small class="text-center text-muted mb-4">
 															{{$plan->description}}
 														</small>
-														<ul class="list-unstyled mt-4 mb-0 pl-0">
-															<li class="h6 text-muted mb-0">
-																@if($plan->calls != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Calls: {{number_format($plan->calls).' minutes/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Calls
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->emails != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Emails: {{number_format($plan->emails).'/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Emails
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->sms != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>SMS: {{number_format($plan->sms).'/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>SMS
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Users: {{number_format($plan->team_size).' max users'}}
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->stream != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Stream: {{number_format($plan->stream).' hrs/mo'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Stream
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->storage_size != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CNX Drive: {{number_format($plan->storage_size).'GB'}}
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->chat != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Chat
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Chat
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->workflow != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workflow
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workflow
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->activity_stream != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Activity Stream
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Activity Stream
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->crm != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>CRM
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>CRM
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->project != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Project
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Project
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->reports != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Report & Analytics
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Report & Analytics
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->procurement != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Procurement
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Procurement
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->task != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Task
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Task
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->workgroup != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Workgroup
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Workgroup
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->clock_in != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Clock In & Out
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Clock In & Out
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->basic_accounting != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Basic Accounting
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Basic Accounting
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->full_accounting != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Full Accounting
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Full Accounting
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->hr != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>HR
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>HR
-																@endif
-															</li>
-															<li class="h6 text-muted mb-0">
-																@if($plan->logistics != 0)
-																	<span class="text-primary h5 mr-2"><i class="uim uim-check-circle"></i></span>Logistics
-																@else
-																	<span class="text-danger h5 mr-2"><i class="uim uim-times-circle"></i></span>Logistics
-																@endif
-															</li>
-														</ul>
+														<div class="mt-4">
+															@if($plan->calls != 0)
+																<span class="mt-2 badge badge-pill badge-success">Calls: {{number_format($plan->calls).' minutes/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Calls</span>
+															@endif
+															@if($plan->emails != 0)
+																<span class="mt-2 badge badge-pill badge-success">Emails: {{number_format($plan->emails).'/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Emails</span>
+															@endif
+															@if($plan->sms != 0)
+																<span class="mt-2 badge badge-pill badge-success">SMS: {{number_format($plan->sms).'/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">SMS</span>
+															@endif
+															<span class="mt-2 badge badge-pill badge-success">Users: {{number_format($plan->team_size).' max'}}</span>
+															@if($plan->stream != 0)
+																<span class="mt-2 badge badge-pill badge-success">CNX Stream: {{number_format($plan->stream).' hrs/mo'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CNX Stream</span>
+															@endif
+															@if($plan->storage_size != 0)
+																<span class="mt-2 badge badge-pill badge-success">CNX Drive: {{number_format($plan->storage_size).'GB'}}</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CNX Drive</span>
+															@endif
+															@if($plan->chat != 0)
+																<span class="mt-2 badge badge-pill badge-success">Chat</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Chat</span>
+															@endif
+															@if($plan->workflow != 0)
+																<span class="mt-2 badge badge-pill badge-success">Workflow</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Workflow</span>
+															@endif
+															@if($plan->activity_stream != 0)
+																<span class="mt-2 badge badge-pill badge-success">Activity Stream</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Activity Stream</span>
+															@endif
+															@if($plan->crm != 0)
+																<span class="mt-2 badge badge-pill badge-success">CRM</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">CRM</span>
+															@endif
+															@if($plan->project != 0)
+																<span class="mt-2 badge badge-pill badge-success">Project</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Project</span>
+															@endif
+															@if($plan->reports != 0)
+																<span class="mt-2 badge badge-pill badge-success">Reports</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Reports</span>
+															@endif
+															@if($plan->procurement != 0)
+																<span class="mt-2 badge badge-pill badge-success">Procurement</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Procurement</span>
+															@endif
+															@if($plan->task != 0)
+																<span class="mt-2 badge badge-pill badge-success">Task</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Task</span>
+															@endif
+															@if($plan->workgroup != 0)
+																<span class="mt-2 badge badge-pill badge-success">Workgroup</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Workgroup</span>
+															@endif
+															@if($plan->clock_in != 0)
+																<span class="mt-2 badge badge-pill badge-success">Clock In & Out</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Clock In & Out</span>
+															@endif
+															@if($plan->basic_accounting != 0)
+																<span class="mt-2 badge badge-pill badge-success">Basic Accounting</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Basic Accounting</span>
+															@endif
+															@if($plan->full_accounting != 0)
+																<span class="mt-2 badge badge-pill badge-success">Full Accounting</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Full Accounting</span>
+															@endif
+															@if($plan->hr != 0)
+																<span class="mt-2 badge badge-pill badge-success">HR</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">HR</span>
+															@endif
+															@if($plan->logistics != 0)
+																<span class="mt-2 badge badge-pill badge-success">Logistics</span>
+															@else
+																<span class="mt-2 badge badge-pill badge-danger">Logistics</span>
+															@endif
+														</div>
 														<a href="{{route('create-site', ['timestamp'=>sha1(time()), 'plan'=>$plan->slug])}}" class="btn btn-primary mt-4">Buy Now</a>
 													</div>
 												</div>
