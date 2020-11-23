@@ -20,7 +20,7 @@
 			<div class="row justify-content-center">
 				<div class="col-lg-12 text-center">
 					<div class="page-next-level">
-						<h4 class="title text-light"> Human Resource </h4>
+						<h4 class="title text-light"> Accounting </h4>
 						<div class="page-next">
 							<nav aria-label="breadcrumb" class="d-inline-block">
 								<ul class="breadcrumb bg-white rounded shadow mb-0">

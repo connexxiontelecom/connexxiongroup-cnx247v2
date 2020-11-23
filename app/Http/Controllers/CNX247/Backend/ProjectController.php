@@ -8,11 +8,7 @@ use App\Notifications\NewPostNotification;
 use App\Post;
 use App\ResponsiblePerson;
 use App\ProjectBudget;
-use App\BudgetFinance;
-use App\Invoice;
-use App\InvoiceItem;
-use App\Receipt;
-use App\ReceiptItem;
+use App\ProjectDetail;
 use App\Participant;
 use App\Observer;
 use App\Priority;
@@ -21,13 +17,7 @@ use App\Currency;
 use App\Status;
 use App\Link;
 use App\User;
-use App\Client;
 use App\Budget;
-use App\Supplier;
-use App\BillMaster;
-use App\BillDetail;
-use App\Policy;
-use Schema;
 use Auth;
 use DB;
 class ProjectController extends Controller
@@ -209,39 +199,6 @@ class ProjectController extends Controller
             'data'=>$project,
             'links'=>$links
              ]);
-		}
-		  /*
-    * Project gantt chart [view]
-    */
-    public function loadprojectGanttChart($slug){
-			$project = Post::select('post_url')
-                    ->where('post_type', 'project')
-										->where('tenant_id', Auth::user()->tenant_id)
-										->where('post_url', $slug)
-										->first();
-			return view('backend.project.view-project-gantt-chart', ['project'=>$project]);
-
-	}
-    /*
-    * Project Gantt Chart
-    */
-    public function viewProjectGanttChartData($slug){
-        $project = Post::select('post_title as text', 'start_date', 'end_date', 'post_color as color')
-                    ->where('post_type', 'project')
-										->where('tenant_id', Auth::user()->tenant_id)
-										->where('post_url', $slug)
-                    ->orderBy('id', 'DESC')
-                    ->first();
-				$links = Link::all();
-				if(!empty($project)){
-					return response()->json([
-							'data'=>$project,
-							'links'=>$links
-							 ]);
-
-				}else{
-					return back();
-				}
     }
 
     /*
@@ -279,6 +236,7 @@ class ProjectController extends Controller
     * update project
     */
     public function updateProject(Request $request){
+        //return dd($request->all());
         $this->validate($request,[
             'project_name'=>'required',
             'project_description'=>'required',
@@ -515,50 +473,9 @@ class ProjectController extends Controller
             session()->flash("error", "<strong>Ooops!</strong> No record found.");
             return back();
         }
-
     }
 
     public function storeProjectInvoice(Request $request){
-        if($request->setAccount == 1){
-            $this->validate($request,[
-                'client'=>'required',
-                'date'=>'required|date',
-                'setAccount'=>'required',
-                'accounts'=>'required|array',
-                'amount'=>'required|array'
-            ]);
-        }else{
-            $this->validate($request,[
-                'client'=>'required',
-                'date'=>'required|date',
-                'accounts'=>'required|array',
-                'amount'=>'required|array'
-            ]);
-        }
-        if($request->setBudget == 1){
-            $this->validate($request,[
-                'client'=>'required',
-                'date'=>'required|date',
-                'setAccount'=>'required',
-                'accounts'=>'required|array',
-                'amount'=>'required|array',
-                'budget'=>'required'
-            ]);
-        }else{
-            $this->validate($request,[
-                'client'=>'required',
-                'date'=>'required|date',
-                'setAccount'=>'required',
-                'accounts'=>'required|array',
-                'amount'=>'required|array'
-            ]);
-        }
-        #update client
-        $updateClient = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->client)->first();
-        if($request->setAccount == 1){
-            $updateClient->glcode = $request->client_account;
-            $updateClient->save();
-        }
         if(count($request->accounts) > 0){
             $totalAmount = 0;
             $arrayCount = 0;
@@ -708,104 +625,8 @@ class ProjectController extends Controller
             }else{
                 $receipt_no = 1000;
             }
-            if(!empty($project)){
-                $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->select()->get();
-                return view('backend.project.receipt', [
-                    'project'=>$project,
-                    'accounts'=>$accounts,
-                    'status'=>$status,
-                    'client'=>$client,
-                    'receipt_no'=>$receipt_no,
-                    'invoices'=>$invoices,
-                    'banks'=>$banks
-                    ]);
-            }else{
-                session()->flash("error", "<strong>Ooops!</strong> No record found.");
-                return back();
-            }
-        }else{
-            $accounts = DB::table(Auth::user()->tenant_id.'_coa')->where('type', 'Detail')->select()->get();
-            return view('backend.project.receipt', [
-                'project'=>$project,
-                'accounts'=>$accounts,
-                'status'=>0,
-                'client'=>$client,
-                'invoice_no'=>$invoice_no,
-                'invoices'=>$invoices
-                ]);
-        }
-    }
-
-    public function storeProjectReceipt(Request $request){
-        $this->validate($request,[
-            'payment_date'=>'required|date',
-            'payment_method'=>'required',
-            'reference_no'=>'required'
-        ]);
-        if(count(array_filter($request->payment)) > 0){
-            $totalAmount = 0;
-            $arrayCount = 0;
-            for($i = 0;  $i<count($request->payment); $i++){
-                $totalAmount += str_replace( ',', '', $request->payment[$i]) ;
-                if(str_replace(',','',$request->payment[$i]) != null){
-										$arrayCount++;
-                }
-            }
-            $client = Client::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->client)->first();
-            $master = new Receipt;
-            $master->client_id = $request->client;
-            $master->project_id = $request->ref_no;
-            $master->issue_date = $request->payment_date;
-            $master->payment_type = $request->payment_method;
-            $master->ref_no = $request->ref_no;
-            $master->amount = $totalAmount;
-            $master->bank = $request->bank;
-            $master->issued_by = Auth::user()->id;
-            $master->tenant_id = Auth::user()->tenant_id;
-            $master->slug = substr(sha1(time()),32,40);
-            $master->save();
-            $receiptId = $master->id;
-								$project = Post::where('id',$request->ref_no)->where('tenant_id', Auth::user()->tenant_id)->first();
-								#Payment
-                $payment = array_filter($request->payment);
-								$reIndexedPayment = array_values($payment);
-								#Invoices
-                $invoiceArray = array_filter($request->invoices);
-								$reIndexedInvoice = array_values($invoiceArray);
-								#accounts
-								$accountArray = array_filter($request->accounts);
-								$reIndexedAccounts = array_values($accountArray);
-								//return dd($reIndexedAccounts);
-                for($j = 0; $j<$arrayCount; $j++){
-                    $invoice = new ReceiptItem;
-                    $invoice->tenant_id = Auth::user()->tenant_id;
-                    $invoice->receipt_id = $receiptId;
-                    $invoice->invoice_id = $reIndexedInvoice[$j];
-                    //$invoice->glcode = $reIndexedAccounts[$j];
-                    $invoice->payment = $reIndexedPayment[$j];
-                    $invoice->save();
-                    #project budget table
-
-                    $budget = BudgetFinance::where('project_id', $request->ref_no)
-                    ->where('tenant_id', Auth::user()->tenant_id)
-                    ->where('invoice_id',$reIndexedInvoice[$j])
-                    ->first();
-                    if(!empty($budget)){
-                        $budget->receipt_id = $receiptId;
-                        $budget->save();
-                    }
-                        $payInvoice = Invoice::where('id', $reIndexedInvoice[$j])
-                                            ->where('tenant_id', Auth::user()->tenant_id)
-                                            ->first();
-                        $payInvoice->paid_amount += str_replace(',','',$reIndexedPayment[$j]);
-                        if($payInvoice->paid_amount >= $payInvoice->total){
-                            $payInvoice->status = 1; //payment complete
-                        }
-                        $payInvoice->save();
-                }
-
             session()->flash("success", "<strong>Success! </strong> Invoice submitted.");
-            return redirect()->route('view-project', $project->post_url);
+            return redirect()->route('project-board');
         }else{
             session()->flash("error", "<strong>Ooops!</strong> Something went wrong. Try again.");
             return redirect()->route('view-project', $project->post_url);
@@ -1002,15 +823,6 @@ class ProjectController extends Controller
         if(!empty($budget)){
             return view('backend.project.common._budget-table', ['budget'=>$budget]);
         }
-    }
-
-    public function projectFinancials($slug){
-        $project = Post::where('tenant_id', Auth::user()->tenant_id)->where('post_url', $slug)->first();
-        if(!empty($project)){
-            return view('backend.project.project-financials', ['project'=>$project]);
-        }else{
-					session()->flash("error", );
-				}
     }
 
 }

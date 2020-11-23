@@ -98,8 +98,7 @@ class ViewTask extends Component
                             ->where('tenant_id',Auth::user()->tenant_id)->first();
         $this->attachments = PostAttachment::where('post_id', $this->task['id'])->where('tenant_id', Auth::user()->tenant_id)->get();
         $this->submissionAttachments = PostSubmissionAttachment::where('post_id', $this->task['id'])->where('tenant_id', Auth::user()->tenant_id)->get();
-        $this->users = User::select('first_name', 'surname', 'id')
-        ->where('account_status',1)->where('verified', 1)
+        $this->users = User::select('first_name', 'surname', 'id')->where('account_status',1)->where('verified', 1)
         ->where('tenant_id',Auth::user()->tenant_id)
         ->orderBy('first_name', 'ASC')->get();
 /* $priorities = Priority::all();
@@ -109,7 +108,8 @@ return view('backend.tasks.view-task',[
 'priorities'=>$priorities,
 'statuses'=>$statuses
 ]); */
-    }
+		}
+
 
     public function markAsComplete($id){
         $task = Post::where('id', $id)->where('tenant_id', Auth::user()->tenant_id)->first();
