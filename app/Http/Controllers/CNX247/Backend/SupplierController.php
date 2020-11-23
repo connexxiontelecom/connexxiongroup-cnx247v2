@@ -253,7 +253,8 @@ class SupplierController extends Controller
             $details->vat_amount = (($detail->quantity * $detail->unit_price) * $policy->vat)/100;
 						$details->save();
 
-        }
+				}
+				if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
         #Vendor
         $vendor = Supplier::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->supplier)->first();
         $vendorGl = [
@@ -303,7 +304,8 @@ class SupplierController extends Controller
             #Register service in GL table
 						DB::table(Auth::user()->tenant_id.'_gl')->insert($serviceGl);
 
-        }
+				}
+			}
         return response()->json(['message'=>'Success! Review submitted'], 200);
 
     }

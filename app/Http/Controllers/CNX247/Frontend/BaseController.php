@@ -111,5 +111,7 @@ class BaseController extends Controller
     public function faqs(){
         $faqs = Faq::orderBy('id', 'DESC')->get();
         return view('frontend.faqs', ['faqs'=>$faqs]);
-    }
+		}
+
+
 }
