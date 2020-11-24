@@ -14,7 +14,7 @@ use App\WorkgroupResponsiblePerson;
 use App\WorkgroupObserver;
 use App\WorkgroupParticipant;
 use App\WorkgroupMember;
-use App\workgroupModerator;
+use App\WorkgroupModerator;
 use App\WorkgroupInvite;
 use App\Participant;
 use App\Invitation;

@@ -23,6 +23,9 @@ use App\Policy;
 use App\Client;
 use App\Invoice;
 use App\InvoiceItem;
+use App\Supplier;
+use App\BillMaster;
+use App\BillDetail;
 use Auth;
 use Schema;
 use DB;
@@ -698,6 +701,7 @@ class ProjectController extends Controller
 						'issue_date'=>'required|date',
 						'budget'=>'required',
 						'currency'=>'required'
+						//'vendor_invoice'=>'mimes:jpeg,jpg,gif,png'
 						]);
 				}else{
 						$this->validate($request,[
@@ -706,6 +710,7 @@ class ProjectController extends Controller
 							'bill_no'=>'required',
 							'issue_date'=>'required|date',
 							'currency'=>'required'
+							//'vendor_invoice'=>'mimes:jpeg,jpg,gif,png'
 						]);
 				}
         $trans_ref = strtoupper(substr(sha1(time()), 35,40));
@@ -718,7 +723,16 @@ class ProjectController extends Controller
 									$arrayCount++;
 							}
             }
-        }
+				}
+						if(!empty($request->file('vendor_invoice'))){
+							$extension = $request->file('vendor_invoice');
+							$extension = $request->file('vendor_invoice')->getClientOriginalExtension(); // getting excel extension
+							$dir = 'assets/uploads/attachments/';
+							$filename = 'vendor_invoice_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+							$request->file('vendor_invoice')->move(public_path($dir), $filename);
+					}else{
+							$filename = '';
+					}
 				$ref_no = strtoupper(substr(sha1(time()), 32,40));
         $policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
         $bill = new BillMaster;
@@ -734,7 +748,8 @@ class ProjectController extends Controller
 				$bill->currency_id = $request->currency;
 				$bill->exchange_rate = $request->exchange_rate;
         $bill->instruction = $request->payment_instruction;
-        $bill->user_id = Auth::user()->id;
+				$bill->user_id = Auth::user()->id;
+				$bill->attachment = $filename;
         $bill->slug = substr(sha1(time()), 32,40);
         $bill->save();
 				$billId = $bill->id;
@@ -804,7 +819,7 @@ class ProjectController extends Controller
                 'glcode'=>$serve->glcode,
                 'posted_by'=>Auth::user()->id,
                 'narration'=>"Bill raised for ".$vendor->vendor_name." Service ID: ".$serve->description,
-                'dr_amount'=> $request->currency != Auth::user()->tenant->currency->id ? ($serve->amount + (($serve->amount) * $policy->vat)/100) * $request->exchange_rate : ($serve->amount + (($serve->amount) * $policy->vat)/100),
+                'dr_amount'=> ($serve->amount * $policy->vat)/100 + $serve->amount,
                 'cr_amount'=>0,
                 'ref_no'=>$ref_no,
                 'bank'=>0,

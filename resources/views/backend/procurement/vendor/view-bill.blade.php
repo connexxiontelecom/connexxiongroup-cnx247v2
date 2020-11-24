@@ -67,8 +67,8 @@
                             <tr class="thead-default">
                                 <th>Item Name</th>
                                 <th>Quantity</th>
-                                <th>Unit Price({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
-                                <th>Total({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
+                                <th>Unit Price({{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}})</th>
+                                <th>Total({{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}})</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -84,17 +84,17 @@
                                         <td>
                                             {{number_format($item->rate,2) ?? '0'}}
                                         </td>
-                                        <td>{{number_format($item->amount,2)}}</td>
+                                        <td>{{number_format($item->amount/$bill->exchange_rate,2)}}</td>
                                     </tr>
                                 @endforeach
                             <tr>
-                                <td colspan="4" class="text-right"><strong>VAT: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($bill->vat_amount,2)}}</td>
+                                <td colspan="4" class="text-right"><strong>VAT: </strong>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}} {{number_format($bill->vat_amount/$bill->exchange_rate,2)}}</td>
                             </tr>
                             <tr>
-                                <td colspan="4" class="text-right"><strong>Sub-total: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($bill->bill_amount,2)}}</td>
+                                <td colspan="4" class="text-right"><strong>Sub-total: </strong>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}} {{number_format(($bill->bill_amount/$bill->exchange_rate) - ($bill->vat_amount/$bill->exchange_rate),2)}}</td>
                             </tr>
                             <tr>
-                                <td colspan="4" class="text-right"><strong>Total: </strong>{{Auth::user()->tenant->currency->symbol ?? 'N'}} {{number_format($bill->bill_amount + $bill->vat_amount,2)}}</td>
+                                <td colspan="4" class="text-right"><strong>Total: </strong>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}} {{number_format($bill->bill_amount/$bill->exchange_rate,2)}}</td>
                             </tr>
                             </tbody>
                         </table>
