@@ -787,10 +787,10 @@
                                                                                             <div class="col-md-4 col-sm-6">
                                                                                                 <h6 class="m-b-20">Invoice Number <span>#{{$invoice->invoice_no}}</span></h6>
                                                                                                 <h6 class="text-uppercase text-primary">Balance Due :
-                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total + $invoice->tax_value - $invoice->paid_amount,2)}}</span>
+                                                                                                    <span>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($invoice->total/$invoice->exchange_rate - $invoice->paid_amount/$invoice->exchange_rate,2)}}</span>
                                                                                                 </h6>
                                                                                                 <h6 class="text-uppercase text-primary">Amount Paid :
-                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->paid_amount,2)}}</span>
+                                                                                                    <span>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($invoice->paid_amount/$invoice->exchange_rate,2)}}</span>
                                                                                                 </h6>
                                                                                             </div>
                                                                                         </div>
@@ -813,8 +813,8 @@
                                                                                                                         <p>{{$item->description ?? ''}}</p>
                                                                                                                     </td>
                                                                                                                     <td>{{number_format($item->quantity)}}</td>
-                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->unit_cost, 2)}}</td>
-                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->total, 2)}}</td>
+                                                                                                                    <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($item->unit_cost, 2)}}</td>
+                                                                                                                    <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($item->total/$invoice->exchange_rate, 2)}}</td>
                                                                                                                 </tr>
 
                                                                                                             @endforeach
@@ -843,15 +843,11 @@
                                                                                                     <tbody>
                                                                                                         <tr>
                                                                                                             <th>Sub Total :</th>
-                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total,2)}}</td>
+                                                                                                            <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format(($invoice->total/$invoice->exchange_rate) - ($invoice->tax_value/$invoice->exchange_rate),2)}}</td>
                                                                                                         </tr>
                                                                                                         <tr>
                                                                                                             <th>Taxes ({{$invoice->tax_rate}}%) :</th>
-                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->tax_value,2) ?? 0}}</td>
-                                                                                                        </tr>
-                                                                                                        <tr>
-                                                                                                            <th>Discount ({{$invoice->discount_rate}}%) :</th>
-                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->discount_value,2) ?? 0}}</td>
+                                                                                                            <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($invoice->tax_value/$invoice->exchange_rate,2) ?? 0}}</td>
                                                                                                         </tr>
                                                                                                         <tr class="text-info">
                                                                                                             <td>
@@ -860,7 +856,7 @@
                                                                                                             </td>
                                                                                                             <td>
                                                                                                                 <hr>
-                                                                                                                <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($invoice->total + $invoice->tax_value,2)}}</h5>
+                                                                                                                <h5 class="text-primary">{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($invoice->total/$invoice->exchange_rate,2)}}</h5>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                     </tbody>
@@ -895,7 +891,7 @@
                                                         </td>
                                                         <td>{{$invoice->client->company_name ?? ''}}</td>
                                                         <td>
-                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total + $invoice->tax_value,2)}}
+                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->total ,2)}}
                                                         </td>
                                                         <td>
                                                             {{$invoice->converter->first_name ?? ''}} {{$invoice->converter->surname ?? ''}}
@@ -1012,10 +1008,10 @@
                                                                                             <div class="col-md-4 col-sm-6">
                                                                                                 <h6 class="m-b-20">Bill Number <span>#{{$bill->bill_no ?? ''}}</span></h6>
                                                                                                 <h6 class="text-uppercase text-primary">Balance Due :
-                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->bill_amount + $bill->vat_amount - $bill->paid_amount,2)}}</span>
+                                                                                                    <span>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format(($bill->bill_amount/$bill->exchange_rate) - ($bill->paid_amount/$bill->exchange_rate),2)}}</span>
                                                                                                 </h6>
                                                                                                 <h6 class="text-uppercase text-primary">Paid Amount :
-                                                                                                    <span>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->paid_amount,2)}}</span>
+                                                                                                    <span>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($bill->paid_amount/$bill->exchange_rate,2)}}</span>
                                                                                                 </h6>
                                                                                             </div>
                                                                                         </div>
@@ -1038,8 +1034,8 @@
                                                                                                                         <p>{{$item->description ?? ''}}</p>
                                                                                                                     </td>
                                                                                                                     <td>{{number_format($item->quantity)}}</td>
-                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->rate, 2)}}</td>
-                                                                                                                    <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->amount + $item->vat_amount, 2)}}</td>
+                                                                                                                    <td>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($item->rate, 2)}}</td>
+                                                                                                                    <td>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($item->amount + $item->vat_amount, 2)}}</td>
                                                                                                                 </tr>
 
                                                                                                             @endforeach
@@ -1068,11 +1064,11 @@
                                                                                                     <tbody>
                                                                                                         <tr>
                                                                                                             <th>Sub Total :</th>
-                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->bill_amount - $bill->paid_amount,2)}}</td>
+                                                                                                            <td>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format(($bill->bill_amount/$bill->exchange_rate) - ($bill->vat_amount/$bill->exchange_rate),2)}}</td>
                                                                                                         </tr>
                                                                                                         <tr>
                                                                                                             <th>Taxes ({{$bill->vat_charge}}%) :</th>
-                                                                                                            <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->vat_amount,2) ?? 0}}</td>
+                                                                                                            <td>{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($bill->vat_amount/$bill->exchange_rate,2) ?? 0}}</td>
                                                                                                         </tr>
                                                                                                         <tr class="text-info">
                                                                                                             <td>
@@ -1081,7 +1077,7 @@
                                                                                                             </td>
                                                                                                             <td>
                                                                                                                 <hr>
-                                                                                                                <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($bill->bill_amount + $bill->vat_amount,2)}}</h5>
+                                                                                                                <h5 class="text-primary">{{ $bill->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format(($bill->bill_amount/$bill->exchange_rate),2)}}</h5>
                                                                                                             </td>
                                                                                                         </tr>
                                                                                                     </tbody>
@@ -1116,7 +1112,7 @@
                                                         </td>
                                                         <td>{{$bill->getVendor->company_name ?? ''}}</td>
                                                         <td>
-                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($bill->total,2)}}
+                                                            {{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($bill->bill_amount/$bill->exchange_rate,2)}}
                                                         </td>
                                                         <td>
                                                             {{$bill->converter->first_name ?? ''}} {{$bill->converter->surname ?? ''}}

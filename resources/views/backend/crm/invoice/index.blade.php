@@ -134,7 +134,7 @@
 													</div>
 													<div class="col-sm-4">
 															<h4 class="d-inline-block text-c-yellow m-r-10">{{Auth::user()->tenant->currency->symbol ?? 'N'}}
-																{{number_format($invoices->sum('total') * $invoices->sum('exchange_rate') + $invoices->sum('tax_value') * $invoices->sum('exchange_rate')) }}</h4>
+																{{number_format($invoices->where('posted',0)->where('trash',0)->sum('total') ) }}</h4>
 															<div class="d-inline-block">
 																	<p class="m-b-0"><i class="icofont icofont-sand-clock m-r-10 text-c-yellow"></i></p>
 																	<p class="text-muted m-b-0">Unpaid Invoices</p>
@@ -180,9 +180,9 @@
 																	<td>{{$invoice->client->company_name ?? ''}}</td>
 																	<td>{{$invoice->converter->first_name ?? ''}}  {{$invoice->converter->surname ?? ''}}</td>
 																	<td>{{$invoice->invoice_no}}</td>
-																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($invoice->total * $invoice->exchange_rate) + ($invoice->tax_value * $invoice->exchange_rate),2)}}</td>
-																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->paid_amount * $invoice->exchange_rate,2)}}</td>
-																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($invoice->total * $invoice->exchange_rate) + ($invoice->tax_value * $invoice->exchange_rate) - ($invoice->paid_amount * $invoice->exchange_rate),2)}}</td>
+																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($invoice->total),2)}}</td>
+																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($invoice->paid_amount,2)}}</td>
+																	<td>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($invoice->total)  - ($invoice->paid_amount),2)}}</td>
 																	<td>{{date('d F, Y', strtotime($invoice->due_date))}}</td>
 																	<td>
 
@@ -190,7 +190,8 @@
                                         <button class="btn btn-info btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown14" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
                                         <div class="dropdown-menu" aria-labelledby="dropdown14" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                             <a class="dropdown-item waves-light waves-effect" href="{{route('print-invoice', $invoice->slug)}}"><i class="ti-printer"></i> Print Invoice</a>
-                                            @if(($invoice->paid_amount * $invoice->exchange_rate) < ($invoice->total * $invoice->exchange_rate))
+                                            <a class="dropdown-item waves-light waves-effect" href="{{route('print-invoice', $invoice->slug)}}"><i class="ti-trash"></i> Decline Invoice</a>
+                                            @if(($invoice->paid_amount) < ($invoice->total))
                                                 <a class="dropdown-item waves-light waves-effect" href="{{route('receive-payment', $invoice->slug)}}"><i class="ti-receipt"></i> Receive Payment</a>
 																						@endif
 

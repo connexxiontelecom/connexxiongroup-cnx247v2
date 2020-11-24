@@ -101,8 +101,8 @@
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Ref.<span>#{{$receipt->ref_no}}</span></h6>
-                    <h6 class="text-uppercase text-primary">Total Due :
-                        <span>{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}} {{number_format(($invoiceBalance->sum('total') / $invoiceBalance->sum('exchange_rate')) - ($receipt->amount/$receipt->exchange_rate),2) }}</span>
+                    <h6 class="text-uppercase text-primary">Total :
+                        <span>{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}} {{number_format(($invoiceBalance->sum('total') / $receipt->exchange_rate) ,2) }}</span>
                     </h6>
                 </div>
             </div>
@@ -118,14 +118,14 @@
                             </thead>
                             <tbody>
 																@foreach ($invoices as $item)
-																	@foreach ($item->getInvoiceDescription as $desc)
-																		<tr>
-																				<td>
-																						<p>{!! $desc->description ?? '' !!}</p>
-																				</td>
-																				<td>{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($item->payment/$receipt->exchange_rate)}}</td>
-																		</tr>
-																	@endforeach
+																		@foreach ($item->getInvoiceDescription as $desc)
+																			<tr>
+																					<td>
+																							<p>{!! $desc->description ?? '' !!}</p>
+																					</td>
+																					<td>{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($item->payment/$receipt->exchange_rate)}}</td>
+																			</tr>
+																		@endforeach
 
                                 @endforeach
                             </tbody>
@@ -141,11 +141,31 @@
                             <tr class="text-info">
                                 <td>
                                     <hr>
-                                    <h5 class="text-primary">Total :</h5>
+                                    <strong class="text-primary">VAT :</strong>
                                 </td>
                                 <td>
                                     <hr>
-                                    <h5 class="text-primary">{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($receipt->amount/$receipt->exchange_rate,2)}}</h5>
+                                    <strong class="text-primary">{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($invoiceBalance->sum('tax_value') / $receipt->exchange_rate,2)}}</strong>
+                                </td>
+                            </tr>
+                            <tr class="text-info">
+                                <td>
+                                    <hr>
+                                    <strong class="text-primary">Paid :</strong>
+                                </td>
+                                <td>
+                                    <hr>
+                                    <strong class="text-primary">{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}}{{number_format($receipt->amount/$receipt->exchange_rate,2)}}</strong>
+                                </td>
+                            </tr>
+                            <tr class="text-info">
+                                <td>
+                                    <hr>
+                                    <strong class="text-primary">Balance :</strong>
+                                </td>
+                                <td>
+                                    <hr>
+                                    <strong class="text-primary">{{ $receipt->getCurrency->symbol ?? Auth::user()->tenant->currency->symbol}} {{number_format(($invoiceBalance->sum('total') / $receipt->exchange_rate) - ($receipt->amount/$receipt->exchange_rate),2) }}</strong>
                                 </td>
                             </tr>
                         </tbody>

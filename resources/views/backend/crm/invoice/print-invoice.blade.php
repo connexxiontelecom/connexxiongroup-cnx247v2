@@ -107,7 +107,7 @@
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Invoice Number <span>#{{$invoice->invoice_no}}</span></h6>
                     <h6 class="text-uppercase text-primary">Balance Due :
-                        <span>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($invoice->total - $invoice->paid_amount,2)}}</span>
+                        <span>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format(($invoice->total - $invoice->paid_amount)/$invoice->exchange_rate,2)}}</span>
                     </h6>
                 </div>
             </div>
@@ -131,7 +131,7 @@
                                         </td>
                                         <td>{{number_format($item->quantity)}}</td>
                                         <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($item->unit_cost, 2)}}</td>
-                                        <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($item->total, 2)}}</td>
+                                        <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($item->total/$invoice->exchange_rate, 2)}}</td>
                                     </tr>
 
                                 @endforeach
@@ -160,11 +160,11 @@
                         <tbody>
                             <tr>
                                 <th>Sub Total :</th>
-                                <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($invoice->sub_total,2)}}</td>
+                                <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format(($invoice->sub_total)/$invoice->exchange_rate,2)}}</td>
                             </tr>
                             <tr>
                                 <th>Taxes ({{$invoice->tax_rate}}%) :</th>
-                                <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($invoice->tax_value,2) ?? 0}}</td>
+                                <td>{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format(($invoice->tax_value)/$invoice->exchange_rate,2) ?? 0}}</td>
                             </tr>
                             <tr class="text-info">
                                 <td>
@@ -173,7 +173,7 @@
                                 </td>
                                 <td>
                                     <hr>
-                                    <h5 class="text-primary">{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format($invoice->total,2)}}</h5>
+                                    <h5 class="text-primary">{{Auth::user()->tenant->currency->id != $invoice->currency_id ? $invoice->getCurrency->symbol : Auth::user()->tenant->currency->symbol }}{{number_format(($invoice->total)/$invoice->exchange_rate,2)}}</h5>
                                 </td>
                             </tr>
                         </tbody>

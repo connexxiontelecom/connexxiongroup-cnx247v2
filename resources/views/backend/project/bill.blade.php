@@ -156,7 +156,16 @@
                                     @enderror
                                     <input type="hidden" name="totalAmount" id="totalAmount">
                                 </div>
-                            </div>
+														</div>
+														<div class="col-sm-12">
+															<div class="form-group">
+																<label for="">Vendor Invoice</label>
+																<input type="file" name="vendor_invoice" class="form-control-file">
+																@error('vendor_invoice')
+																		<i class="text-danger mt-2">{{$message}}</i>
+																@enderror
+															</div>
+														</div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">

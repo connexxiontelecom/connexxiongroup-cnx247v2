@@ -14,11 +14,20 @@ use App\Observer;
 use App\Priority;
 use App\Milestone;
 use App\Currency;
+use App\BudgetFinance;
 use App\Status;
 use App\Link;
 use App\User;
 use App\Budget;
+use App\Policy;
+use App\Client;
+use App\Invoice;
+use App\InvoiceItem;
+use App\Supplier;
+use App\BillMaster;
+use App\BillDetail;
 use Auth;
+use Schema;
 use DB;
 class ProjectController extends Controller
 {
@@ -476,12 +485,13 @@ class ProjectController extends Controller
     }
 
     public function storeProjectInvoice(Request $request){
+			//return dd($request->all());
         if(count($request->accounts) > 0){
             $totalAmount = 0;
             $arrayCount = 0;
 						for($i = 0;  $i<count($request->accounts); $i++){
-							$totalAmount += str_replace( ',', '', $request->amount[$i]) ;
 							if(str_replace(',','',$request->amount[$i]) != null){
+								$totalAmount += str_replace( ',', '', $request->amount[$i]) ;
 									$arrayCount++;
 							}
 					}
@@ -494,19 +504,12 @@ class ProjectController extends Controller
             $master->project_id = $request->ref_no;
             $master->issue_date = $request->date;
 						$master->due_date = $request->due_date;
-
-            //$master->tax_value = ($totalAmount * $policy->vat)/100;
-						//$master->total = $totalAmount;
-
-
 						$master->total = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$policy->vat)/100 * $request->exchange_rate ) : ($totalAmount + ($totalAmount*$policy->vat)/100 ) ;
 						$master->sub_total = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate) -  (($totalAmount*$policy->vat)/100 * $request->exchange_rate ): $totalAmount - ($totalAmount*$policy->vat)/100 ;
 						$master->tax_rate = $policy->vat ?? 0;
 						$master->tax_value = $request->currency != Auth::user()->tenant->currency->id ?  ($policy->vat*$totalAmount)/100 * $request->exchange_rate : ($policy->vat*$totalAmount)/100;
 						$master->currency_id = $request->currency;
 						$master->exchange_rate = $request->exchange_rate ?? 1;
-
-
             $master->issued_by = Auth::user()->id;
             $master->tenant_id = Auth::user()->tenant_id;
             $master->slug = substr(sha1(time()),32,40);
@@ -538,13 +541,18 @@ class ProjectController extends Controller
                 for($i = 0; $i<count($request->accounts); $i++){
                     $invoice = new InvoiceItem;
                     $invoice->tenant_id = Auth::user()->tenant_id;
-                    $invoice->description = $request->description[$i];
+                    $invoice->description = $request->description[$i] ?? 'No description';
                     $invoice->glcode = $request->accounts[$i];
                     $invoice->total = (int)str_replace(',','',$request->amount[$i]) * $request->exchange_rate;
                     $invoice->invoice_id = $invoiceId;
                     $invoice->client_id = $request->client;
                     $invoice->save();
-                }
+								}
+								$client = Client::where('id',$request->client)->where('tenant_id', Auth::user()->tenant_id)->first();
+								if(empty($client->glcode)){
+										$client->glcode = $request->client_account;
+										$client->save();
+								}
 
             #Check for accounting module
             if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
@@ -552,9 +560,9 @@ class ProjectController extends Controller
                 $detail = InvoiceItem::where('invoice_id', $master->id)->where('tenant_id', Auth::user()->tenant_id)->get();
                 # Post GL
                 $invoicePost = [
-                    'glcode' => $updateClient->glcode,
+                    'glcode' => $client->glcode,
                     'posted_by' => Auth::user()->id,
-                    'narration' => 'Invoice generation for ' . $updateClient->company_name ?? '',
+                    'narration' => 'Invoice generation for ' . $client->company_name ?? '',
                     'dr_amount' => $request->currency != Auth::user()->tenant->currency->id ?  ($totalAmount*$request->exchange_rate) + (($totalAmount*$policy->vat)/100 * $request->exchange_rate) : ($totalAmount + ($totalAmount*$policy->vat)/100),
                     'cr_amount' => 0,
                     'ref_no' => $ref_no,
@@ -567,7 +575,7 @@ class ProjectController extends Controller
                 $VATPost = [
                     'glcode' => $policy->glcode,
                     'posted_by' => Auth::user()->id,
-                    'narration' => 'VAT on invoice no. '.$master->invoice_no.' for '.$updateClient->company_name,
+                    'narration' => 'VAT on invoice no. '.$master->invoice_no.' for '.$client->company_name,
                     'dr_amount' => 0,
                     'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount*$policy->vat)/100 * $request->exchange_rate : ($totalAmount*$policy->vat)/100,
                     'ref_no' => $ref_no,
@@ -693,6 +701,7 @@ class ProjectController extends Controller
 						'issue_date'=>'required|date',
 						'budget'=>'required',
 						'currency'=>'required'
+						//'vendor_invoice'=>'mimes:jpeg,jpg,gif,png'
 						]);
 				}else{
 						$this->validate($request,[
@@ -701,6 +710,7 @@ class ProjectController extends Controller
 							'bill_no'=>'required',
 							'issue_date'=>'required|date',
 							'currency'=>'required'
+							//'vendor_invoice'=>'mimes:jpeg,jpg,gif,png'
 						]);
 				}
         $trans_ref = strtoupper(substr(sha1(time()), 35,40));
@@ -713,7 +723,16 @@ class ProjectController extends Controller
 									$arrayCount++;
 							}
             }
-        }
+				}
+						if(!empty($request->file('vendor_invoice'))){
+							$extension = $request->file('vendor_invoice');
+							$extension = $request->file('vendor_invoice')->getClientOriginalExtension(); // getting excel extension
+							$dir = 'assets/uploads/attachments/';
+							$filename = 'vendor_invoice_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+							$request->file('vendor_invoice')->move(public_path($dir), $filename);
+					}else{
+							$filename = '';
+					}
 				$ref_no = strtoupper(substr(sha1(time()), 32,40));
         $policy = Policy::where('tenant_id', Auth::user()->tenant_id)->first();
         $bill = new BillMaster;
@@ -729,7 +748,8 @@ class ProjectController extends Controller
 				$bill->currency_id = $request->currency;
 				$bill->exchange_rate = $request->exchange_rate;
         $bill->instruction = $request->payment_instruction;
-        $bill->user_id = Auth::user()->id;
+				$bill->user_id = Auth::user()->id;
+				$bill->attachment = $filename;
         $bill->slug = substr(sha1(time()), 32,40);
         $bill->save();
 				$billId = $bill->id;
@@ -799,7 +819,7 @@ class ProjectController extends Controller
                 'glcode'=>$serve->glcode,
                 'posted_by'=>Auth::user()->id,
                 'narration'=>"Bill raised for ".$vendor->vendor_name." Service ID: ".$serve->description,
-                'dr_amount'=> $request->currency != Auth::user()->tenant->currency->id ? ($serve->amount + (($serve->amount) * $policy->vat)/100) * $request->exchange_rate : ($serve->amount + (($serve->amount) * $policy->vat)/100),
+                'dr_amount'=> ($serve->amount * $policy->vat)/100 + $serve->amount,
                 'cr_amount'=>0,
                 'ref_no'=>$ref_no,
                 'bank'=>0,
