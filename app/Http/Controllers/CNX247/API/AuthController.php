@@ -89,6 +89,9 @@ class AuthController extends Controller {
             }
 
 					$user['avatar'] = 	url("/assets/images/avatars/thumbnails/" . $user['avatar']);
+					$user['birth_date'] = date('M j , Y', strtotime($user['birth_date']));
+					$user['start_date'] = date('M j , Y', strtotime($user['start_date']));
+					$user['hire_date'] = date('M j , Y', strtotime($user['hire_date']));
 
             return response()->json(compact('user'));
     }
