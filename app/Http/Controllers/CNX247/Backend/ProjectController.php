@@ -14,11 +14,17 @@ use App\Observer;
 use App\Priority;
 use App\Milestone;
 use App\Currency;
+use App\BudgetFinance;
 use App\Status;
 use App\Link;
 use App\User;
 use App\Budget;
+use App\Policy;
+use App\Client;
+use App\Invoice;
+use App\InvoiceItem;
 use Auth;
+use Schema;
 use DB;
 class ProjectController extends Controller
 {
@@ -476,12 +482,13 @@ class ProjectController extends Controller
     }
 
     public function storeProjectInvoice(Request $request){
+			//return dd($request->all());
         if(count($request->accounts) > 0){
             $totalAmount = 0;
             $arrayCount = 0;
 						for($i = 0;  $i<count($request->accounts); $i++){
-							$totalAmount += str_replace( ',', '', $request->amount[$i]) ;
 							if(str_replace(',','',$request->amount[$i]) != null){
+								$totalAmount += str_replace( ',', '', $request->amount[$i]) ;
 									$arrayCount++;
 							}
 					}
@@ -494,19 +501,12 @@ class ProjectController extends Controller
             $master->project_id = $request->ref_no;
             $master->issue_date = $request->date;
 						$master->due_date = $request->due_date;
-
-            //$master->tax_value = ($totalAmount * $policy->vat)/100;
-						//$master->total = $totalAmount;
-
-
 						$master->total = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$policy->vat)/100 * $request->exchange_rate ) : ($totalAmount + ($totalAmount*$policy->vat)/100 ) ;
 						$master->sub_total = $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate) -  (($totalAmount*$policy->vat)/100 * $request->exchange_rate ): $totalAmount - ($totalAmount*$policy->vat)/100 ;
 						$master->tax_rate = $policy->vat ?? 0;
 						$master->tax_value = $request->currency != Auth::user()->tenant->currency->id ?  ($policy->vat*$totalAmount)/100 * $request->exchange_rate : ($policy->vat*$totalAmount)/100;
 						$master->currency_id = $request->currency;
 						$master->exchange_rate = $request->exchange_rate ?? 1;
-
-
             $master->issued_by = Auth::user()->id;
             $master->tenant_id = Auth::user()->tenant_id;
             $master->slug = substr(sha1(time()),32,40);
@@ -538,13 +538,18 @@ class ProjectController extends Controller
                 for($i = 0; $i<count($request->accounts); $i++){
                     $invoice = new InvoiceItem;
                     $invoice->tenant_id = Auth::user()->tenant_id;
-                    $invoice->description = $request->description[$i];
+                    $invoice->description = $request->description[$i] ?? 'No description';
                     $invoice->glcode = $request->accounts[$i];
                     $invoice->total = (int)str_replace(',','',$request->amount[$i]) * $request->exchange_rate;
                     $invoice->invoice_id = $invoiceId;
                     $invoice->client_id = $request->client;
                     $invoice->save();
-                }
+								}
+								$client = Client::where('id',$request->client)->where('tenant_id', Auth::user()->tenant_id)->first();
+								if(empty($client->glcode)){
+										$client->glcode = $request->client_account;
+										$client->save();
+								}
 
             #Check for accounting module
             if(Schema::connection('mysql')->hasTable(Auth::user()->tenant_id.'_coa')){
@@ -552,9 +557,9 @@ class ProjectController extends Controller
                 $detail = InvoiceItem::where('invoice_id', $master->id)->where('tenant_id', Auth::user()->tenant_id)->get();
                 # Post GL
                 $invoicePost = [
-                    'glcode' => $updateClient->glcode,
+                    'glcode' => $client->glcode,
                     'posted_by' => Auth::user()->id,
-                    'narration' => 'Invoice generation for ' . $updateClient->company_name ?? '',
+                    'narration' => 'Invoice generation for ' . $client->company_name ?? '',
                     'dr_amount' => $request->currency != Auth::user()->tenant->currency->id ?  ($totalAmount*$request->exchange_rate) + (($totalAmount*$policy->vat)/100 * $request->exchange_rate) : ($totalAmount + ($totalAmount*$policy->vat)/100),
                     'cr_amount' => 0,
                     'ref_no' => $ref_no,
@@ -567,7 +572,7 @@ class ProjectController extends Controller
                 $VATPost = [
                     'glcode' => $policy->glcode,
                     'posted_by' => Auth::user()->id,
-                    'narration' => 'VAT on invoice no. '.$master->invoice_no.' for '.$updateClient->company_name,
+                    'narration' => 'VAT on invoice no. '.$master->invoice_no.' for '.$client->company_name,
                     'dr_amount' => 0,
                     'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount*$policy->vat)/100 * $request->exchange_rate : ($totalAmount*$policy->vat)/100,
                     'ref_no' => $ref_no,

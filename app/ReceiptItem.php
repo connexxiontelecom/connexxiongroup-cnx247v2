@@ -8,6 +8,6 @@ class ReceiptItem extends Model
 {
 		//
 		public function getInvoiceDescription(){
-			return $this->hasMany(InvoiceItem::class, 'invoice_id', 'invoice_id');
+			return $this->hasMany(InvoiceItem::class, 'invoice_id');
 		}
 }

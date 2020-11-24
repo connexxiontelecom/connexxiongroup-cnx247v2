@@ -182,10 +182,10 @@ Receive Payment
                                             <p>{{date( Auth::user()->tenant->dateFormat->format ?? 'd/M/Y', strtotime($item->due_date))}}</p>
                                         </td>
                                         <td>
-                                            <p>{{$invoice->getCurrency->symbol ?? 'N'}}{{number_format(($item->total/$item->exchange_rate) + ($item->tax_value/$item->exchange_rate),2)}}</p>
+                                            <p>{{$invoice->getCurrency->symbol ?? 'N'}}{{number_format(($item->total/$item->exchange_rate),2)}}</p>
                                         </td>
                                         <td>
-                                            <p>{{$invoice->getCurrency->symbol ?? 'N'}}{{number_format(($item->total/$item->exchange_rate) + ($item->tax_value/$item->exchange_rate) - ($item->paid_amount/$item->exchange_rate),2)}}</p>
+                                            <p>{{$invoice->getCurrency->symbol ?? 'N'}}{{number_format(($item->total/$item->exchange_rate) - ($item->paid_amount/$item->exchange_rate),2)}}</p>
                                         </td>
                                         <td><input type="text" class="form-control payment autonumber" name="payment[]" style="width: 120px;"></td>
                                     </tr>

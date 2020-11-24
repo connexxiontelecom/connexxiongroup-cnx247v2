@@ -282,7 +282,7 @@ class CRMController extends Controller
                     'glcode' => $client->glcode,
                     'posted_by' => Auth::user()->id,
                     'narration' => 'Invoice generation for ' . $invoice->client->company_name ?? '',
-                    'dr_amount' => $request->currency != Auth::user()->tenant->currency->id ? ($invoice->sub_total * $request->exchange_rate) + ((($invoice->sub_total*$invoice->tax_rate)/100) * $request->exchange_rate) :  ($invoice->sub_total) + ($invoice->sub_total*$invoice->tax_rate)/100 ,
+                    'dr_amount' => $request->currency != Auth::user()->tenant->currency->id ? ($totalAmount * $request->exchange_rate + ($totalAmount*$request->tax_rate)/100 * $request->exchange_rate ) :  ($totalAmount + ($totalAmount*$request->tax_rate)/100 ) ,
                     'cr_amount' => 0,
                     'ref_no' => $ref_no,
                     'bank' => 0,
@@ -296,7 +296,7 @@ class CRMController extends Controller
                     'posted_by' => Auth::user()->id,
                     'narration' => 'VAT on invoice no. '.$invoice->invoice_no.' for '.$invoice->client->company_name,
                     'dr_amount' => 0,
-                    'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ? (($invoice->sub_total*$invoice->tax_rate)/100 * $request->exchange_rate) : ($invoice->sub_total*$invoice->tax_rate)/100,
+                    'cr_amount' => $request->currency != Auth::user()->tenant->currency->id ?  $request->tax_amount * $request->exchange_rate : $request->tax_amount,
                     'ref_no' => $ref_no,
                     'bank' => 0,
                     'ob' => 0,
@@ -695,9 +695,21 @@ class CRMController extends Controller
         $receipt = Receipt::where('slug', $slug)->where('tenant_id', Auth::user()->tenant_id)->first();
         if(!empty($receipt)){
 						$invoices = ReceiptItem::where('tenant_id', Auth::user()->tenant_id)->where('receipt_id', $receipt->id)->get();
-						$invoiceBalance = Invoice::where('tenant_id', Auth::user()->tenant_id)->where('client_id', $receipt->client_id)->get();
+						$invoiceIds = [];
+						foreach($invoices as $in){
+							array_push($invoiceIds, $in->invoice_id);
+						}
+						$invoiceBalance = Invoice::where('tenant_id', Auth::user()->tenant_id)
+																			->where('client_id', $receipt->client_id)
+																			->whereIn('id', $invoiceIds)
+																			->get();
 
-            return view('backend.crm.receipt.print-receipt', ['receipt'=>$receipt, 'invoices'=>$invoices, 'invoiceBalance'=>$invoiceBalance]);
+						return view('backend.crm.receipt.print-receipt',
+						['receipt'=>$receipt,
+						'invoices'=>$invoices,
+						'invoiceBalance'=>$invoiceBalance,
+						'invoiceBalance'=>$invoiceBalance
+						]);
         }else{
             return "receipts not found";
         }
