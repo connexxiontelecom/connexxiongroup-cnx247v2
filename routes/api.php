@@ -77,6 +77,10 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('sharefile', 'CNX247\API\StreamController@shareFile');
 		Route::get('priorities', 'CNX247\API\StreamController@priorities');
 		Route::post('chats', 'CNX247\API\StreamController@getmessages');
+
+		Route::post('sndchat', 'CNX247\API\StreamController@sendChat');
+
+
 });
 
 //Route::get('users', 'CNX247\API\usersController@users');
