@@ -19,11 +19,19 @@ class usersController extends Controller
 				   /* parse profile picture */
 					 $user["avatar"] = url("/assets/images/avatars/thumbnails/" . $user["avatar"]);
 					 $user_id = $user['id'];
-					$user["msgs"] = Message::where(function ($query) use ($user_id, $my_id) {
+				 $messages = Message::where(function ($query) use ($user_id, $my_id) {
 					$query->where('from_id', $user_id)->where('to_id', $my_id);
 				})->oRwhere(function ($query) use ($user_id, $my_id) {
 						$query->where('from_id', $my_id)->where('to_id', $user_id);
 				})->get();
+
+
+				foreach ($messages as $message) {
+					$message["date_sent"] = date('M j h:i a , Y', strtotime($message->created_at));
+			}
+
+			$user["msgs"] = $messages;
+
 			}
 			return response()->json(['users' => $users,
 		], 500);
