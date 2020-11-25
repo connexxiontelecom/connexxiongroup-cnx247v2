@@ -878,11 +878,9 @@ class StreamController extends Controller
     public function getmessages(Request $request)
     {
 
-        $my_id = $request->user_id;
-				$user_id = $request->recipient_id;
+        $my_id = $request->my_id;
+				$user_id = $request->user_id;
 				$tenant_id = $request->tenant_id;
-
-
 			$messages = 	Message::where(function ($query) use ($user_id, $my_id) {
 					$query->where('from_id', $user_id)->where('to_id', $my_id);
 			})->oRwhere(function ($query) use ($user_id, $my_id) {
@@ -890,7 +888,7 @@ class StreamController extends Controller
 			})->get();
 
 
-        //$messages = Message::where('from_id', $sender_id)->Where("to_id", $recipient_id)->orWhere("from_id", $sender_id)->Where("to_id", $recipient_id)->where('tenant_id', $tenant_id)->get();
+
         foreach ($messages as $message) {
             $message["date_sent"] = date('M j h:i a , Y', strtotime($message->created_at));
         }
