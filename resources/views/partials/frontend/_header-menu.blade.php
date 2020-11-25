@@ -29,18 +29,18 @@
 
 		<div id="navigation">
 			<ul class="navigation-menu nav-right nav-light">
-				<li class="has-submenu">
-					<a href="javascript:void(0)">Product</a><span class="menu-arrow"></span>
-					<ul class="submenu">
-						<li><a href="{{route('product')}}">Product</a></li>
-						<li><a href="{{route('human_resource')}}">Human Resource</a></li>
-						<li><a href="{{route('crm')}}">CRM</a></li>
-						<li><a href="{{route('accounting')}}">Accounting</a></li>
-						<li><a href="javascript:void(0)">Procurement</a></li>
+{{--				<li class="has-submenu">--}}
+{{--					<a href="javascript:void(0)">Product</a><span class="menu-arrow"></span>--}}
+{{--					<ul class="submenu">--}}
+{{--						<li><a href="{{route('human_resource')}}">Human Resource</a></li>--}}
+{{--						<li><a href="{{route('crm')}}">CRM</a></li>--}}
+{{--						<li><a href="{{route('accounting')}}">Accounting</a></li>--}}
+{{--						<li><a href="javascript:void(0)">Procurement</a></li>--}}
 {{--						<li><a href="javascript:void(0)">Logistics</a></li>--}}
 {{--						<span class="badge badge-success rounded">New</span>--}}
-					</ul>
-				</li>
+{{--					</ul>--}}
+{{--				</li>--}}
+				<li><a href="{{route('product')}}">Product</a></li>
 				<li><a href="{{route('pricing')}}">Pricing</a></li>
 				<li><a href="{{route('contact_us')}}">Contact Us</a></li>
 				<li class="has-submenu">
