@@ -49,7 +49,7 @@
 							<h4 class="title mb-4">Accounting</h4>
 							<p class="text-muted">
 								<span class="text-primary font-weight-bold">CNX247</span>
-								Handles your End-to-end accounting, you don't need to worry yourself about posting and complex accounting book keeping, <span class="text-primary font-weight-bold">CNX247</span> helps you handle the mundane accounting tasks so you can focus on your business. All you get is just your balanced financial reports and books!
+								Handles your End-to-end accounting, you don't need to worry yourself about posting and complex accounting book keeping. All you get is just your balanced financial reports and books!
 							</p>
 						</div>
 					</div>

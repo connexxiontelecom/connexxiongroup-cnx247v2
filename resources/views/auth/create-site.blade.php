@@ -216,7 +216,7 @@
 										<input type="hidden" id="duration" value="{{$chosen_plan->duration}}">
 										<input type="hidden" id="plan" value="{{$chosen_plan->plan_id}}">
 										<input type="hidden" name="metadata[]" id="metadata">
-{{--										<input type="hidden" name="reference" value="{{ Paystack::genTranxRef() }}">--}}
+										<input type="hidden" name="reference" value="{{ Paystack::genTranxRef() }}">
 										<button class="btn btn-primary btn-block" type="submit" id="proceedToPay">Pay & Sign Up</button>
 									</div>
 									<div class="mx-auto">
