@@ -133,7 +133,7 @@ Convert to Lead
                         <table class="table  invoice-detail-table">
                             <thead>
                                 <tr class="thead-default">
-                                    <th>Description</th>
+                                    <th>Service/Product</th>
                                     <th>Quantity</th>
                                     <th>Amount</th>
                                     <th>Total</th>
@@ -371,6 +371,7 @@ Convert to Lead
 						$('.sub-total').text($('#subTotal').val());
 						var main = 0;
 						main = tax  += +total;
+						$(".vat_amount").text(tax.toLocaleString());
 						$(".total").text(main.toLocaleString());
             $('.balance').text(main.toLocaleString());
 

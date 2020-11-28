@@ -58,9 +58,11 @@ class SupplierController extends Controller
                         ->select('glcode', 'account_name')
                         ->where('type', 'Detail')
                         ->get();
+					return view('backend.procurement.supplier.create',['industries'=>$industries,'accounts'=>$accounts, 'status'=>1]);
+        }else{
+					return view('backend.procurement.supplier.create',['industries'=>$industries,'status'=>0]);
 
-        }
-        return view('backend.procurement.supplier.create',['industries'=>$industries,'accounts'=>$accounts]);
+				}
     }
 
     /**
