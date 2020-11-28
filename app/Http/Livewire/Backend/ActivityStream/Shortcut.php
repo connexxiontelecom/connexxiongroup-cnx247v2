@@ -127,17 +127,17 @@ class Shortcut extends Component
         $this->assisting = ResponsiblePerson::where('user_id',Auth::user()->id)
                                 ->where('tenant_id', Auth::user()->tenant_id)
                                 ->count();
-        $duration = Carbon::parse($now->today())->diffInDays($now->addMonths(3));
+        $duration = Carbon::parse($now->today())->diffInDays($now->addMonths(2));
         $current = strtotime($now->today());
         $dates = [];
         $stepVal = '+1 day';
-        while($current  <= strtotime($now->today()->addMonths(3)) ) {
+        while($current  <= strtotime($now->today()->addMonths(2)) ) {
             $dates[] = date('m-d', $current);
             $current = strtotime($stepVal, $current);
          }
 
         $users = User::where('tenant_id', Auth::user()->tenant_id)
-                        ->orderBy('id', 'ASC')
+                        ->orderBy('birth_date', 'ASC')
                         ->get();
         $userBirthDates = [];
         $userIds = [];

@@ -146,7 +146,9 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                    </div>
+																		</div>
+
+                                    @if($status == 1)
                                     <div class="row mb-4">
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -159,7 +161,16 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+																		</div>
+																		@else
+																		<div class="row mb-4">
+																			<div class="col-md-6">
+																					<div class="form-group">
+																						<label for="">Kindly generate accounts under chart of accounts to complete this process.</label>
+																					</div>
+																			</div>
+																		</div>
+                                    @endif
                                     <div class="row">
                                         <div class="col-md-12">
                                             <h6 class="sub-title">Additional Information</h6>

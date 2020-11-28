@@ -2312,7 +2312,7 @@
 																					</div>
 																					<div class="media-body">
 																							<a href="{{route('view-post-activity-stream', $event->post_url)}}">{{$event->post_title ?? ''}}</a> <br>
-																							- {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($event->start_date))}} @ <small>{{date('h:ia', strtotime($event->start_date))}}</small>
+																							- <small>{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($event->created_at))}}</small> @ <small>{{date('h:ia', strtotime($event->created_at))}}</small>
 																					</div>
 																			</div>
 																	</div>
