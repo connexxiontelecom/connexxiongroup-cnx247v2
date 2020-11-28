@@ -80,6 +80,15 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 
 		Route::post('sndchat', 'CNX247\API\StreamController@sendChat');
 
+		Route::post('drive', 'CNX247\API\DriveController@getDriveContents');
+
+		Route::post('contents', 'CNX247\API\DriveController@getContents');
+
+		Route::post('size', 'CNX247\API\DriveController@getSize');
+
+		Route::post('newfolder', 'CNX247\API\DriveController@newFolder');
+
+		Route::post('uploadtodrive', 'CNX247\API\DriveController@UploadFile');
 
 });
 
@@ -87,5 +96,6 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 Route::post('upload', 'CNX247\API\StreamController@upload');
 Route::post('projectupload', 'CNX247\API\StreamController@projectUpload');
 Route::post('uploadreport', 'CNX247\API\StreamController@uploadReport');
+//Route::post('uploadtodrive', 'CNX247\API\DriveController@UploadFile');
 
 
