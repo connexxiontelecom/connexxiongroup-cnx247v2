@@ -15,7 +15,7 @@
                 <div class="card-block-small">
                     <i class="icofont icofont-hard-disk bg-c-blue card1-icon"></i>
                     <span class="text-c-blue f-w-600">Space</span>
-                    <h4><sup class="text-danger">{{number_format(ceil($size/1024))}}MB</sup>/{{ $storage_size }} GB</h4>
+                    <h4><sup class="text-danger">{{number_format(ceil($size/1048576))}}MB</sup>/{{ $storage_size }} GB</h4>
                     <div>
                         <span class="f-left m-t-10 text-muted">
                             <i class="text-c-blue f-16 feather icon-alert-triangle m-r-10"></i>Used storage

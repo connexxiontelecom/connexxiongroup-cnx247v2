@@ -84,13 +84,21 @@ class CNX247DriveController extends Controller
 					$postAttachments = PostAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
 				//print_r($postAttachments);
 					$sum_post_attachment = 0;
-					foreach ($postAttachments as $postAttachment):
-						if(file_exists(public_path('assets\uploads\attachments\\'.$postAttachment->attachment))):
+					foreach ($postAttachments as $postAttachment){
+
+						if(file_exists(public_path('assets\uploads\attachments\\'.$postAttachment->attachment))){
 						$fileSize = \File::size(public_path('assets\uploads\attachments\\'.$postAttachment->attachment));
 						//echo $fileSize;
 						$sum_post_attachment = $sum_post_attachment + $fileSize;
-						endif;
-						endforeach;
+						}
+
+						if(file_exists(public_path('assets\uploads\requisition\\'.$postAttachment->attachment))){
+							$fileSize = \File::size(public_path('assets\uploads\requisition\\'.$postAttachment->attachment));
+							//echo $fileSize;
+							$sum_post_attachment = $sum_post_attachment + $fileSize;
+						}
+
+					}
 
 						$workgroupAttachments = WorkgroupAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
 
@@ -117,7 +125,7 @@ class CNX247DriveController extends Controller
 							endforeach;
 
 
-									$size = $sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size;
+						$size = $sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size;
 
 
 
@@ -332,43 +340,52 @@ class CNX247DriveController extends Controller
 			$size = FileModel::where('tenant_id', Auth::user()->tenant_id)
 				->where('uploaded_by', Auth::user()->id)->sum('size');
 
+
 			$postAttachments = PostAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
 			//print_r($postAttachments);
 			$sum_post_attachment = 0;
-			foreach ($postAttachments as $postAttachment):
-				if(file_exists(public_path('assets\uploads\attachments\\'.$postAttachment->attachment))):
+			foreach ($postAttachments as $postAttachment){
+				if(file_exists(public_path('assets\uploads\attachments\\'.$postAttachment->attachment))){
 					$fileSize = \File::size(public_path('assets\uploads\attachments\\'.$postAttachment->attachment));
 					//echo $fileSize;
 					$sum_post_attachment = $sum_post_attachment + $fileSize;
-				endif;
-			endforeach;
+				}
+
+				if(file_exists(public_path('assets\requisition\requisition\\'.$postAttachment->attachment))){
+					$fileSize = \File::size(public_path('assets\uploads\requisition\\'.$postAttachment->attachment));
+					//echo $fileSize;
+					$sum_post_attachment = $sum_post_attachment + $fileSize;
+				}
+
+			}
+
 
 			$workgroupAttachments = WorkgroupAttachment::where('tenant_id', Auth::user()->tenant_id)->get();
 
 			$sum_workgroup_attachment = 0;
-			foreach ($workgroupAttachments as $workgroupAttachment):
-				if(file_exists(public_path('assets\uploads\attachments\\'.$workgroupAttachment->attachment))):
+			foreach ($workgroupAttachments as $workgroupAttachment){
+				if(file_exists(public_path('assets\uploads\attachments\\'.$workgroupAttachment->attachment))){
 					$fileSize = \File::size(public_path('assets\uploads\attachments\\'.$workgroupAttachment->attachment));
 
 					$sum_workgroup_attachment = $sum_workgroup_attachment + $fileSize;
-				endif;
+			}
 
-			endforeach;
+		}
 
 			$drivers = Driver::where('tenant_id', Auth::user()->tenant_id)->get();
 
 			$sum_driver_attachment = 0;
 
-			foreach($drivers as $driver):
-				if(file_exists(public_path('assets\uploads\logistics\\'.$driver->attachment))):
+			foreach($drivers as $driver){
+				if(file_exists(public_path('assets\uploads\logistics\\'.$driver->attachment))){
 					$fileSize = \File::size(public_path('assets\uploads\logistics\\'.$driver->attachment));
 					//echo $fileSize;
 					$sum_driver_attachment = $sum_driver_attachment + $fileSize;
-				endif;
-			endforeach;
+			}
+		}
 
 
-			$size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size)/1000000000;
+			$size = ceil(($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size)/1073741824);
 
 
         if($size >= $storage_size){
