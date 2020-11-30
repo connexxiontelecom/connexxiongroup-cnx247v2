@@ -58,7 +58,7 @@
                                     </td>
                                     <td> <small class="text-uppercase">{{date('d M, Y | h:i a', strtotime($request->created_at))}}</small> </td>
                                     <td>
-                                        You are assigned to fulfill this request<br/>
+                                        You're assigned to act on this request'<br/>
                                         <div class="btn-group mt-2">
                                             @if($request->post_status == 'in-progress')
                                                     @foreach($request->responsiblePersons as $app)
@@ -70,9 +70,9 @@
                                                                 APPROVE
                                                             </button>
                                                         @elseif($app->user_id == Auth::user()->id && $app->status == 'decline')
-                                                            <i>You previously declined this request</i>
+                                                            <i>Decline,(you)</i>
                                                         @elseif($app->user_id == Auth::user()->id && $app->status == 'approve')
-                                                            <i>You previously approved this request</i>
+                                                            <i>Approved,(you)</i>
                                                         @endif
                                                     @endforeach
                                             @endif

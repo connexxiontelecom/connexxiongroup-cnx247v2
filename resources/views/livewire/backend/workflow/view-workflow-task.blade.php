@@ -147,7 +147,6 @@
         </div>
     </div>
     <div class="row">
-        <!-- Task-detail-right start -->
         <div class="col-xl-4 col-lg-12 push-xl-8 task-detail-right">
 
             <div class="card">
@@ -742,7 +741,7 @@
                     <div class="row mt-2">
                         <div class="col-md-12 p-3" style="background:#FDFBEE;">
                             <p><strong>Task:</strong></p>
-                            <p>The {{str_replace('-', ' ', $request->post_type)}} "{{$request->post_title ?? '' }}" has been approved. Please fulfill this request.</p>
+                            <p>Kindly act on this request titled: {{str_replace('-', ' ', $request->post_type)}} "{{$request->post_title ?? '' }}".</p>
                             <div class="mt-3">
                                 <label class="tx-11 font-weight-bold mb-0 text-uppercase">Requester:</label>
                                 <p class="text-muted">{{$request->first_name ?? '' }} {{$request->surname ?? ''}}</p>
