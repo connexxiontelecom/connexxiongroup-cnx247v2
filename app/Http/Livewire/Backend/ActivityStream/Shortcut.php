@@ -137,20 +137,24 @@ class Shortcut extends Component
          }
 
         $users = User::where('tenant_id', Auth::user()->tenant_id)
-                        ->orderBy('birth_date', 'ASC')
-                        ->get();
+                        ->orderByRaw('DATE_FORMAT(birth_date, "%d-%m")', 'DESC')
+												->get();
+
         $userBirthDates = [];
         $userIds = [];
         foreach($users as $user){
             $n = 0;
             array_push($userBirthDates, Carbon::parse($user->birth_date)->format('m-d'));
             if(in_array(Carbon::parse($user->birth_date)->format('m-d'), $dates) ){
+							if(!is_null($user->birth_date)){
                 array_push($userIds, $user->id);
+							}
             }
-        }
+				}
         $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
-                                ->whereIn('id', $userIds)
-                                ->get();
+																->whereIn('id', $userIds)
+																->orderByRaw('DATE_FORMAT(birth_date, "%d-%m")', 'DESC')
+																->get();
         $this->online = User::where('tenant_id', Auth::user()->tenant_id)->where('is_online', 1)->count();
         $this->workforce = User::where('tenant_id', Auth::user()->tenant_id)->count();
         return view('livewire.backend.activity-stream.shortcut',

@@ -2333,20 +2333,41 @@
 													<div class="card-block">
 															@if (count($birthdays) > 0)
 																	@foreach ($birthdays as $birthday)
-																			<div class="user-box assign-user taskboard-right-users">
-																					<div class="media">
-																							<div class="media-left media-middle photo-table">
-																									<a href="{{route('view-profile', $birthday->url)}}">
-																											<img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$birthday->avatar ?? 'avatar.png'}}" alt="{{$birthday->first_name ?? ''}}">
-																									</a>
-																							</div>
-																							<div class="media-body">
-																									<a href="{{route('view-profile', $birthday->url)}}">{{$birthday->first_name ?? ''}} {{$birthday->surname ?? ''}}</a> <br>
-																									- {{date('d M', strtotime($birthday->birth_date))}}</small>
-																							</div>
-																					</div>
-																			</div>
-																			<hr>
+																	@if (date('d-m') ==  date('d-m', strtotime($birthday->birth_date)))
+																		<div class="user-box assign-user taskboard-right-users">
+																				<div class="media">
+																						<div class="media-left media-middle photo-table">
+																								<a href="{{route('view-profile', $birthday->url)}}">
+																										<img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$birthday->avatar ?? 'avatar.png'}}" alt="{{$birthday->first_name ?? ''}}">
+
+																								</a>
+																						</div>
+																						<div class="media-body">
+																								<a href="{{route('view-profile', $birthday->url)}}">{{$birthday->first_name ?? ''}} {{$birthday->surname ?? ''}}</a> <br>
+																								- {{date('d M', strtotime($birthday->birth_date))}}</small>
+																						</div>
+																						<img src="/assets/images/gift.gif" width="50" height="50" alt="{{$birthday->first_name ?? ''}} {{$birthday->surname ?? ''}}">
+																				</div>
+
+																		</div>
+																		<hr>
+																	@else
+																		<div class="user-box assign-user taskboard-right-users">
+																				<div class="media">
+																						<div class="media-left media-middle photo-table">
+																								<a href="{{route('view-profile', $birthday->url)}}">
+																										<img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$birthday->avatar ?? 'avatar.png'}}" alt="{{$birthday->first_name ?? ''}}">
+																								</a>
+																						</div>
+																						<div class="media-body">
+																								<a href="{{route('view-profile', $birthday->url)}}">{{$birthday->first_name ?? ''}} {{$birthday->surname ?? ''}}</a> <br>
+																								- {{date('d M', strtotime($birthday->birth_date))}}</small>
+																						</div>
+																				</div>
+																		</div>
+																		<hr>
+
+																	@endif
 																	@endforeach
 															@else
 																	<p class="text-center text-muted">There're no birthdays</p>

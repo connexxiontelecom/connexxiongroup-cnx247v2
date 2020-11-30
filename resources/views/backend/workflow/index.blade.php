@@ -29,7 +29,7 @@
                             <a class="nav-link" data-toggle="tab" href="#workflowInActivityStream" role="tab" aria-expanded="false">Statistics</a>
                             <div class="slide"></div>
                         </li>
-                    </ul>
+										</ul>
                 </div>
             </div>
 
