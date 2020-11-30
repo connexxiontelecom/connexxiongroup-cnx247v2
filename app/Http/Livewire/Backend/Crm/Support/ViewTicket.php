@@ -32,7 +32,7 @@ class ViewTicket extends Component
     * Get ticket details
     */
     public function getContent(){
-        $this->ticket = Ticket::where('slug', $this->link)->where('tenant_id', Auth::user()->tenant_id)->first();
+			$this->ticket = Ticket::where('slug', $this->link)->first();
         $this->ticket_id = $this->ticket->id;
         $this->tenant_id = $this->ticket->tenant_id;
         $this->user_id = $this->ticket->user_id;
