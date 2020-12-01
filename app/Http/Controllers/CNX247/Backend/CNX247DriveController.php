@@ -505,10 +505,7 @@ class CNX247DriveController extends Controller
     }
 
 	public function shareFolder(Request $request){
-		$this->validate($request,[
-			//'employees'=>'required',
-			'id'=>'required'
-		]);
+
 		if($request->all == 32){
 			$users = User::where('tenant_id', Auth::user()->tenant_id)->where('id', '!=', Auth::user()->id)->get();
 			//return response()->json(['message'=>$request->id]);
@@ -624,7 +621,6 @@ class CNX247DriveController extends Controller
 
 	return response()->json(['message'=>'Success! Folder deleted.'], 200);
 		//return response()->json(['error'=>'Ooops File shareing failed.'],400);
-
 
 
 	}

@@ -10,6 +10,7 @@ use App\PostAttachment;
 use App\SharedFile;
 use App\SharedFolder;
 use App\Tenant;
+use App\User;
 use App\WorkgroupAttachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -84,34 +85,32 @@ class DriveController extends Controller
         //print_r($postAttachments);
 
         $sum_post_attachment = 0;
-        foreach ($postAttachments as $postAttachment){
-            if (file_exists(public_path('assets\uploads\attachments\\' . $postAttachment->attachment))){
+        foreach ($postAttachments as $postAttachment) {
+            if (file_exists(public_path('assets\uploads\attachments\\' . $postAttachment->attachment))) {
                 $fileSize = \File::size(public_path('assets\uploads\attachments\\' . $postAttachment->attachment));
                 //echo $fileSize;
                 $sum_post_attachment = $sum_post_attachment + $fileSize;
-						}
+            }
 
+            if (file_exists(public_path('assets\uploads\requisition\\' . $postAttachment->attachment))) {
+                $fileSize = \File::size(public_path('assets\uploads\requisition\\' . $postAttachment->attachment));
+                //echo $fileSize;
+                $sum_post_attachment = $sum_post_attachment + $fileSize;
+            }
 
-
-						if(file_exists(public_path('assets\uploads\requisition\\'.$postAttachment->attachment))){
-							$fileSize = \File::size(public_path('assets\uploads\requisition\\'.$postAttachment->attachment));
-							//echo $fileSize;
-							$sum_post_attachment = $sum_post_attachment + $fileSize;
-						}
-
-					}
+        }
 
         $workgroupAttachments = WorkgroupAttachment::where('tenant_id', $request->tenant_id)->get();
 
         $sum_workgroup_attachment = 0;
-        foreach ($workgroupAttachments as $workgroupAttachment){
-            if (file_exists(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment))){
+        foreach ($workgroupAttachments as $workgroupAttachment) {
+            if (file_exists(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment))) {
                 $fileSize = \File::size(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment));
 
                 $sum_workgroup_attachment = $sum_workgroup_attachment + $fileSize;
-						}
+            }
 
-					}
+        }
 
         $drivers = Driver::where('tenant_id', $request->tenant_id)->get();
 
@@ -125,12 +124,12 @@ class DriveController extends Controller
             endif;
         endforeach;
 
-				$size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size); /// 1000000000;
+        $size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size); /// 1000000000;
 
-		//$size = 	number_format(ceil($size/1024));
-		$size = ceil(($size)/1024 / 1024);
+        //$size =     number_format(ceil($size/1024));
+        $size = ceil(($size) / 1024 / 1024);
 
-        return response()->json(["used" => $size, "size" => $storage_size, "formated"=>number_format($size)], 200);
+        return response()->json(["used" => $size, "size" => $storage_size, "formated" => number_format($size)], 200);
 
     }
 
@@ -140,80 +139,220 @@ class DriveController extends Controller
             $item[$key] = url("/assets/uploads/cnxdrive/" . $item[$key]);
         }
         return $collection;
-		}
+    }
 
-
-
-		public function newFolder(Request $request){
+    public function newFolder(Request $request)
+    {
 
         $check = Folder::where('name', $request->name_of_folder)->where('parent_id', $request->parent_folder)->get();
 
-        if(count($check) == 0){
-        $folder = new Folder;
-        $folder->parent_id = $request->parent_folder;
-        $folder->tenant_id = $request->tenant_id;
-        $folder->created_by = $request->user_id;
-        $folder->name = $request->name_of_folder;
-        $folder->permission = $request->visibility;
-        $folder->save();
+        if (count($check) == 0) {
+            $folder = new Folder;
+            $folder->parent_id = $request->parent_folder;
+            $folder->tenant_id = $request->tenant_id;
+            $folder->created_by = $request->user_id;
+            $folder->name = $request->name_of_folder;
+            $folder->permission = $request->visibility;
+            $folder->save();
 
-        if($folder){
-            return response()->json(['Response'=>'success'],200);
-        }else{
-            return response()->json(['Response'=>"error"],400);
-				}
-			}
-        else{
+            if ($folder) {
+                return response()->json(['Response' => 'success'], 200);
+            } else {
+                return response()->json(['Response' => "error"], 400);
+            }
+        } else {
 
-					return response()->json(['Response'=>'exists'],200);
-				}
+            return response()->json(['Response' => 'exists'], 200);
+        }
 
-		}
+    }
+
+    public function UploadFile(Request $request)
+    {
+        $check = FileModel::Where('name', $request->filename)
+            ->where('folder_id', $request->folder_id)
+            ->get();
+
+        if (count($check) == 0) {
+            if (!empty($request->file('attachment'))) {
+                $extension = $request->file('attachment');
+                $extension = $request->file('attachment')->getClientOriginalExtension();
+                $size = $request->file('attachment')->getSize();
+                $dir = 'assets/uploads/cnxdrive/';
+                $filename = uniqid() . '_' . time() . '_' . date('Ymd') . '.' . $extension;
+                $request->file('attachment')->move(public_path($dir), $filename);
+            } else {
+
+                $filename = '';
+            }
+
+            $folder_id = $request->folder_id;
+
+            $file = new FileModel;
+            $file->tenant_id = $request->tenant_id;
+            $file->uploaded_by = $request->user_id;
+            $file->filename = $filename;
+            $file->name = $request->filename;
+            $file->folder_id = $folder_id;
+            $file->size = $size;
+            $file->save();
+            if ($file) {
+                return response()->json(['Response' => 'success'], 200);
+            } else {
+                return response()->json(['Response' => "error"], 400);
+            }
+        } else {
+
+            return response()->json(['Response' => 'exists'], 200);
+        }
+    }
+
+
+    public function shareFile(Request $request)
+    {
+
+        if ($request->all == 32) {
+            $users = User::where('tenant_id', $request->tenant_id)->where('id', '!=', $request->user_id)->get();
+            foreach ($users as $user) {
+                $share = new SharedFile;
+                $share->owner = $request->user_id;
+                $share->file_id = $request->id;
+                $share->tenant_id = $request->tenant_id;
+                $share->shared_with = $user->id;
+                $share->save();
+            }
+        } else {
+            foreach ($request->employees as $employee) {
+                $share = new SharedFile;
+                $share->owner = $request->user_id;
+                $share->file_id = $request->id;
+                $share->tenant_id = $request->tenant_id;
+                $share->shared_with = $employee["id"];
+                $share->save();
+            }
+        }
+        if ($share) {
+            return response()->json(['Response' => 'Shared'], 200);
+        } else {
+            return response()->json(['error' => 'Sharing Failed'], 400);
+        }
+
+    }
 
 
 
-		public function UploadFile(Request $request)
-		{
-			$check = FileModel::Where('name', $request->filename)
-			->where('folder_id', $request->folder_id)
-			->get();
+    public function shareFolder(Request $request)
+    {
+        $this->validate($request, [
+            //'employees'=>'required',
+            'id' => 'required',
+        ]);
+        if ($request->all == 32) {
+            $users = User::where('tenant_id', $request->tenant_id)->where('id', '!=', $request->user_id)->get();
+            //return response()->json(['message'=>$request->id]);
+            foreach ($users as $user) {
+                $share = new SharedFolder();
+                $share->owner = $request->user_id;
+                $share->folder_id = $request->id;
+                $share->tenant_id = $request->tenant_id;
+                $share->shared_with = $user->id;
+                $share->save();
+            }
+        } else {
+            //return response()->json(['message'=>$request->id]);
+            foreach ($request->employees as $employee) {
+                $share = new SharedFolder();
+                $share->owner = $request->user_id;
+                $share->folder_id = $request->id;
+                $share->tenant_id = $request->tenant_id;
+                $share->shared_with = $employee;
+                $share->save();
+            }
+        }
+        if ($share) {
+            return response()->json(['Response' => 'shared'], 200);
+        } else {
+            return response()->json(['error' => 'Sharing failed'], 400);
+        }
 
-		if(count($check) == 0){
-			if(!empty($request->file('attachment'))){
-					$extension = $request->file('attachment');
-					$extension = $request->file('attachment')->getClientOriginalExtension();
-					$size = $request->file('attachment')->getSize();
-					$dir = 'assets/uploads/cnxdrive/';
-					$filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
-					$request->file('attachment')->move(public_path($dir), $filename);
+    }
+
+
+
+
+
+
+		public function deleteAttachment(Request $request){
+
+			$file = FileModel::where('tenant_id', $request->tenant_id)->where('id', $request->id)->first();
+			if(!empty($file) ){
+					$file->delete();
+					unlink(public_path("assets/uploads/cnxdrive/".$file->filename));
+					$shared = SharedFile::where('tenant_id', $request->tenant_id)
+															->where('file_id', $request->id)
+															->get();
+					if(!empty($shared) ){
+							foreach($shared as $sh){
+									$sh->delete();
+							}
+					}
+					return response()->json(['Response'=>'Deleted'], 200);
 			}else{
-					$filename = '';
+					return response()->json(['error'=>'Ooops! File does not exist'], 400);
 			}
 
-			$folder_id = $request->folder_id;
-
-			$file = new FileModel;
-			$file->tenant_id = $request->tenant_id;
-			$file->uploaded_by = $request->user_id;
-			$file->filename = $filename;
-			$file->name = $request->filename;
-			$file->folder_id = $folder_id;
-			$file->size = $size;
-			$file->save();
-		  if($file){
-				return response()->json(['Response'=>'success'],200);
-		}else{
-				return response()->json(['Response'=>"error"],400);
-		}
-	}
-		else{
-
-			return response()->json(['Response'=>'exists'],200);
-		}
 	}
 
 
 
 
+
+    public function deleteFolder(Request $request)
+    {
+
+        $folder = Folder::where('tenant_id', $request->tenant_id)->where('id', $request->id)->first();
+
+        $folder->delete();
+
+        $parent_folders = Folder::where('tenant_id', $request->tenant_id)->where('parent_id', $request->id)->get();
+        if (!empty($parent_folders)):
+            foreach ($parent_folders as $parent_folder):
+
+                $parent_folder->delete();
+            endforeach;
+        endif;
+
+        $shared_folders = SharedFolder::where('tenant_id', $request->tenant_id)->where('folder_id', $request->id)->get();
+        if (!empty($shared_folders)):
+            foreach ($shared_folders as $shared_folder):
+
+                $shared_folder->delete();
+            endforeach;
+        endif;
+
+        $files = FileModel::where('tenant_id', $request->tenant_id)->where('folder_id', $request->id)->get();
+        if (!empty($files)):
+            foreach ($files as $file):
+
+                if (!empty($file)) {
+
+                    unlink(public_path("assets/uploads/cnxdrive/" . $file->filename));
+                    $file->delete();
+                    $shared = SharedFile::where('tenant_id', $request->tenant_id)
+                        ->where('file_id', $request->id)
+                        ->get();
+                    if (!empty($shared)) {
+                        foreach ($shared as $sh) {
+                            $sh->delete();
+                        }
+                    }
+                }
+            endforeach;
+        endif;
+
+        return response()->json(['Response' => 'Deleted'], 200);
+        //return response()->json(['error'=>'Ooops File shareing failed.'],400);
+
+    }
 
 }
