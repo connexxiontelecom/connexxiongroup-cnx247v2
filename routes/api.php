@@ -90,6 +90,21 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 
 		Route::post('uploadtodrive', 'CNX247\API\DriveController@UploadFile');
 
+
+
+		Route::post('sharefolder', 'CNX247\API\DriveController@shareFolder');
+
+		Route::post('sharefile', 'CNX247\API\DriveController@shareFile');
+
+
+
+		Route::post('deletefolder', 'CNX247\API\DriveController@deleteFolder');
+
+		Route::post('deletefile', 'CNX247\API\DriveController@deleteAttachment');
+
+
+
+
 });
 
 //Route::get('users', 'CNX247\API\usersController@users');
