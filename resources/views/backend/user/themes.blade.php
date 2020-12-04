@@ -15,7 +15,7 @@
 		<div class="card">
 			<div class="card-block">
 				<div class="btn-group d-flex justify-content-end mb-3">
-					<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close text-white mr-2"></i> Close</button>
+
 					<button type="button" class="btn btn-success waves-effect btn-mini waves-light" id="saveThemeChangesBtn"> <i class="ti-check text-white mr-2"></i> Save Changes</button>
 					<button type="button" class="btn btn-secondary waves-effect btn-mini waves-light float-right" data-toggle="modal" data-target="#customModal" id="custome"> <i class="ti-user text-white mr-2"></i> Custom Theme</button>
 			</div>

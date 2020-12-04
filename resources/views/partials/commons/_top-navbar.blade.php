@@ -128,6 +128,11 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="{{route('cnx247-themes')}}">
+                                        <i class="icofont icofont-color-bucket"></i> Themes
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{route('logout')}}">
                                         <i class="feather icon-log-out"></i> Logout
                                     </a>
