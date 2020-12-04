@@ -210,7 +210,7 @@ Convert to Lead
 																		<select name="currency" id="currency" value="{{old('currency')}}" class="js-example-basic-single">
 																			<option value="{{Auth::user()->tenant->currency->id}}" selected>{{Auth::user()->tenant->currency->name ?? ''}} ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</option>
 																			@foreach($currencies->where('id', '!=', Auth::user()->tenant->currency->id) as $currency)
-																					<option value="{{$currency->id}}">{{$currency->name ?? ''}} ({{$currency->symbol ?? ''}})</option>
+																					<option value="{{$currency->id}}" data-abbr="{{$currency->abbr}}">{{$currency->name ?? ''}} ({{$currency->symbol ?? ''}})</option>
 																			@endforeach
 																	</select>
 																	@error('currency')
