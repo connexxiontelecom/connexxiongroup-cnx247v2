@@ -173,6 +173,7 @@ Route::get('/renew-membership/{timestamp}/{plan}', 'CNX247\Backend\UserControlle
 Route::post('/renew-membership/pay', 'CNX247\Backend\UserController@proceedToPay')->name('pay-membership');
 Route::get('/my-feedback', 'CNX247\Backend\UserController@myFeedback')->name('my-feedback');
 Route::post('/my-feedback', 'CNX247\Backend\UserController@submitFeedback');
+Route::get('/preference/themes', 'CNX247\Backend\UserController@themes')->name('cnx247-themes');
 Route::post('/switch-theme', 'CNX247\Backend\UserController@switchTheme');
 
 #HR routes

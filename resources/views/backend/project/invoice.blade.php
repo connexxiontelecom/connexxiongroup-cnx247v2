@@ -376,7 +376,7 @@
 				$(document).on('change', '#currency', function(e){
 					e.preventDefault();
 						if(defaultCurrency != $(this).val()){
-							var abbr = $(this).find(':selected').data('abbr')
+							var abbr = $(this).find(':selected').data('abbr');
 							string = abbr+"_"+"{{Auth::user()->tenant->currency->abbr}}";
 							var url = "https://free.currconv.com/api/v7/convert?q="+string+"&compact=ultra&apiKey=c6616c96883701c84660";
 							axios.get(url)
