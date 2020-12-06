@@ -134,7 +134,7 @@
 													</div>
 													<div class="col-sm-4">
 															<h4 class="d-inline-block text-c-yellow m-r-10">{{Auth::user()->tenant->currency->symbol ?? 'N'}}
-																{{number_format($invoices->where('posted',0)->where('trash',0)->sum('total') ) }}</h4>
+																{{number_format($invoices->where('posted',0)->where('trash',0)->sum('total') - $invoices->where('posted',0)->where('trash',0)->sum('paid_amount') ) }}</h4>
 															<div class="d-inline-block">
 																	<p class="m-b-0"><i class="icofont icofont-sand-clock m-r-10 text-c-yellow"></i></p>
 																	<p class="text-muted m-b-0">Unpaid Invoices</p>

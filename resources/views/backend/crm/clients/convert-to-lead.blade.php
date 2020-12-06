@@ -107,7 +107,7 @@ Convert to Lead
                 <div class="col-md-4 col-sm-6">
                     <h6 class="m-b-20">Invoice Number <span>#INV{{$invoice_no}}</span></h6>
                     <h6 class="text-uppercase text-primary">Balance :
-                        <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="balance"></span>
+                        <span></span> <span class="balance"></span>
                     </h6>
                     @if ($status == 1 && empty($client->glcode))
                     <div class="form-group">
@@ -189,7 +189,7 @@ Convert to Lead
                         <tbody>
                             <tr>
                                 <th>Sub Total :</th>
-                                <td>{{Auth::user()->tenant->currency->symbol ?? 'N'}} <span  class="sub-total">0.00</span> </td>
+                                <td> <span  class="sub-total">0.00</span> </td>
                             </tr>
                             <tr>
                                 <th>Taxes (%) :</th>
@@ -232,7 +232,7 @@ Convert to Lead
                                 </td>
                                 <td>
                                     <hr>
-                                    <h5 class="text-primary"> <span>{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span> <span class="total">0.00</span></h5>
+                                    <h5 class="text-primary"> <span></span> <span class="total">0.00</span></h5>
                                 </td>
                             </tr>
                         </tbody>
@@ -322,7 +322,10 @@ Convert to Lead
 							axios.get(url)
 							.then(response=>{
 								console.log(response.data);
-								$('#exchange_rate').val(response.data[string]);
+								$('#exchange_rate').val(response.data[string].toFixed(2));
+								var equivalent = (Number(response.data[string].toFixed(2)) * Number($('#totalAmount').val() ));
+								$('.total').text(equivalent.toLocaleString()) ;
+								$('#totalAmount').val(equivalent);
 							});
 							$('.exchange-rate').show();
 						}else{

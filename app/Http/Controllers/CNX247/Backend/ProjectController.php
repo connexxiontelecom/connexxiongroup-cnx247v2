@@ -843,6 +843,16 @@ class ProjectController extends Controller
         if(!empty($budget)){
             return view('backend.project.common._budget-table', ['budget'=>$budget]);
         }
-    }
+		}
+
+
+		public function projectFinancials($slug){
+			$project = Post::where('tenant_id', Auth::user()->tenant_id)->where('post_url', $slug)->first();
+			if(!empty($project)){
+				return view('backend.project.project-financials', ['project'=>$project]);
+			}else{
+				return back();
+			}
+		}
 
 }

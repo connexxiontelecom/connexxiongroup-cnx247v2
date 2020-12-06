@@ -151,6 +151,7 @@ class Shortcut extends Component
 							}
             }
 				}
+
         $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
 																->whereIn('id', $userIds)
 																->orderByRaw('DATE_FORMAT(birth_date, "%d-%m")', 'DESC')

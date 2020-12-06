@@ -137,13 +137,13 @@
                                 Unpaid Invoices
                             </td>
                             <td class="text-right">
-															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($project->projectInvoices->sum('total') + $project->projectInvoices->sum('tax_value')) - $project->projectInvoices->sum('paid_amount'), 2)}}
+															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($project->projectInvoices->sum('total') ) - $project->projectInvoices->sum('paid_amount'), 2)}}
                             </td>
                         </tr>
                         <tr>
                             <td>Unpaid Bills</td>
                             <td class="text-right">
-															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($project->projectBills->sum('bill_amount') + $project->projectBills->sum('vat_amount')) - $project->projectBills->sum('paid_amount'), 2)}}
+															{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format(($project->projectBills->sum('bill_amount') ) - $project->projectBills->sum('paid_amount'), 2)}}
 														</td>
                         </tr>
                     </tbody>

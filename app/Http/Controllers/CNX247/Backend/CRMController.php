@@ -430,8 +430,7 @@ class CRMController extends Controller
             'reference_no'=>'required',
             'bank'=>'required'
 				]);
-
-
+				//return dd($request->all());
 				$totalAmount = 0;
 				$arrayCount = 0;
 				$currencyArray = [];
@@ -460,7 +459,7 @@ class CRMController extends Controller
         $receipt->issued_by = Auth::user()->id;
         $receipt->client_id = $request->clientId;
         $receipt->issue_date = $request->payment_date;
-        $receipt->amount = $totalAmount;
+        $receipt->amount = $totalAmount ;
         $receipt->currency_id = $request->currency[0];
         $receipt->exchange_rate = $request->exchange_rate[0];
         $receipt->payment_type = $request->payment_method;
@@ -483,12 +482,6 @@ class CRMController extends Controller
             $detail->payment = (str_replace(',','',$reIndexed[$j]) * $request->exchange_rate[$j]);
             $detail->save();
 						#Update invoice
-            /* $invoice = Invoice::where('id', $request->invoices[$j])->where('tenant_id', Auth::user()->tenant_id)->first();
-            $invoice->paid_amount += str_replace(',','',$reIndexed[$j]);
-            if($invoice->paid_amount >= $invoice->total){
-                $invoice->status = 1; //payment complete
-            }
-						$invoice->save(); */
 						$receiptInvoice =  new ReceiptInvoice;
 						$receiptInvoice->receipt_id = $receiptId;
 						$receiptInvoice->invoice_id = $request->invoices[$j];
@@ -517,19 +510,19 @@ class CRMController extends Controller
                             ->whereMonth('created_at', date('m'))
 														->whereYear('created_at', date('Y'))
 														->where('trash', '!=',1)
-                            ->sum(\DB::raw('total + tax_value'));
+                            ->sum(\DB::raw('total'));
         $last_month = Invoice::where('tenant_id', Auth::user()->tenant_id)
 														 ->whereMonth('created_at', '=', $now->subMonth()->month)
 														 ->where('trash', '!=',1)
-														 ->sum(\DB::raw('total + tax_value'));
+														 ->sum(\DB::raw('total'));
         $thisYear = Invoice::where('tenant_id', Auth::user()->tenant_id)
 														->whereYear('created_at', date('Y'))
 														->where('trash', '!=',1)
-                            ->sum(\DB::raw('total + tax_value'));
+                            ->sum(\DB::raw('total'));
         $this_week = Invoice::where('tenant_id', Auth::user()->tenant_id)
 														->whereBetween('created_at', [$now->startOfWeek()->format('Y-m-d H:i'), $now->endOfWeek()->format('Y-m-d H:i')])
 														->where('trash', '!=',1)
-                            ->sum(\DB::raw('total + tax_value'));
+                            ->sum(\DB::raw('total'));
         return view('backend.crm.invoice.index',
         [
             'invoices'=>$invoices,
