@@ -103,6 +103,9 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('deletefile', 'CNX247\API\DriveController@deleteAttachment');
 
 
+		Route::post('approvedecline', 'CNX247\API\StreamController@verifyCode');
+
+
 
 
 });
