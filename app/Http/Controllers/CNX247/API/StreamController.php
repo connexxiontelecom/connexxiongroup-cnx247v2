@@ -19,8 +19,10 @@ use App\Priority;
 use App\RequestApprover;
 use App\ResponsiblePerson;
 use App\User;
+use Illuminate\Support\Facades\Hash;
 use function PHPSTORM_META\type;
 use Illuminate\Http\Request;
+
 
 class StreamController extends Controller
 {
@@ -757,6 +759,8 @@ class StreamController extends Controller
         }
     }
 
+
+
     public function markAsComplete(Request $request)
     {
         $post = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
@@ -905,6 +909,117 @@ class StreamController extends Controller
         $send->tenant_id = $request->tenant_id;
         $send->save();
         return response()->json(['Response' => "Sent"], 200);
-    }
+		}
+
+
+
+
+
+
+		public function verifyCode(Request $request){
+
+			$tenant_id = $request->tenant_id;
+			$id = $request->post_id;
+			$transactionPassword  = $request->password;
+			$user_id = $request->user_id;
+			$userAction = $request->action;
+
+			$user = User::where('users.tenant_id', $tenant_id)->where('users.id', $user_id)->get();
+
+		//	var_dump($user[0]['surname']);
+		//	return;
+
+			$_transactionPassword = $user[0]["transaction_password"];
+
+			if (Hash::check($transactionPassword, $_transactionPassword)) {
+					$details = Post::find($id);
+					if($userAction == 'approved'){
+							$action = ResponsiblePerson::where('post_id', $id)->where('user_id', $user_id)->first();
+							$action->status = $userAction;
+							$action->save();
+
+							//Register business process log
+							$log = new BusinessLog;
+							$log->request_id = $id;
+							$log->user_id = $user_id;
+							$log->name = "Approved";
+							$log->note = str_replace('-', ' ',$details->post_type)." ".$log->name." by ".$user[0]['first_name']." ".$user[0]['surname'] ?? " ";
+							$log->save();
+							$responsiblePersons = ResponsiblePerson::where('post_id', $id)->get();
+							$responsiblePersonIds = [];
+							foreach($responsiblePersons as $per){
+								 array_push($responsiblePersonIds, $per->user_id);
+							}
+
+							//search for processor
+							$approvers = RequestApprover::where('request_type', $details->post_type)->where('depart_id', $details->user->department_id)->where('tenant_id', $tenant_id)->get();
+							$approverIds = [];
+							if(!empty($approvers) ){
+									foreach($approvers as $approver){
+											array_push($approverIds, $approver->user_id);
+									}
+							}
+							$remainingProcessors = array_diff($approverIds,$responsiblePersonIds);
+							//identify next supervisor
+							$supervise = new BusinessLog;
+							$supervise->request_id = $id;
+							$supervise->user_id = $user_id;
+							$supervise->name = 'Log entry';
+							$supervise->note = "Identifying next processor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
+							$supervise->save();
+							//Assign next processor
+							if(!empty($remainingProcessors) ){
+									$reset = array_values($remainingProcessors);
+									for($i = 0; $i<count($reset); $i++){
+											$next = new ResponsiblePerson;
+											$next->post_id = $id;
+											$next->post_type = $details->post_type;
+											$next->user_id = $reset[$i];
+											$next->tenant_id =$tenant_id;
+											$next->save();
+											$user = User::find($reset[$i]);
+											$user->notify(new NewPostNotification($details));
+											return response()->json(['Response' =>"success"], 200);
+									break;
+									}
+							}else{
+									$status = Post::find($id);
+									$status->post_status = $userAction;
+									$status->save();
+									return response()->json(['Response' =>"success"], 200);
+									#Requisition to GL flow takes over from here
+							}
+						//	$this->actionStatus = 0;
+						//	$this->verificationPostId = null;
+
+					}else{
+							$action = ResponsiblePerson::where('post_id', $id)->where('user_id', $user_id)->first();
+							$action->status = $userAction;
+							$action->save();
+							//Register business process log
+							$log = new BusinessLog;
+							$log->request_id = $id;
+							$log->user_id = $user_id;
+							$log->name = $userAction;
+							$log->note = str_replace('-', ' ',$details->post_type)." ".$userAction." by ".$user[0]["first_name"]." ".$user[0]["surname"];
+							$log->save();
+							 //update request table finally
+							 $status = Post::find($id);
+							 $status->post_status = $userAction;
+							 $status->save();
+							 return response()->json(['Response' =>"success"], 200);
+								//	$this->actionStatus = 0;
+								//	$this->verificationPostId = null;
+
+					}
+			}else{
+					//error
+					return response()->json(['Response' => "An error has occured"], 200);
+			}
+
+	}
+
+
+
 
 }
