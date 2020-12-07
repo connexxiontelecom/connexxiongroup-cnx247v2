@@ -18,10 +18,20 @@ use App\PostSubmissionAttachment;
 use App\Priority;
 use App\RequestApprover;
 use App\ResponsiblePerson;
+use App\Tenant;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use function PHPSTORM_META\type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Driver;
+use App\FileModel;
+use App\Folder;
+use App\SharedFile;
+use App\SharedFolder;
+use App\WorkgroupAttachment;
+
+
 
 
 class StreamController extends Controller
@@ -159,7 +169,7 @@ class StreamController extends Controller
         }
 
         return response()->json(['posts' => $allposts,
-        ], 500);
+        ], 200);
 
     }
 
@@ -669,7 +679,7 @@ class StreamController extends Controller
                     //$user->notify(new NewPostNotification($file));
                 }
             }
-            $user = User::find($person);
+            $user = User::find($person['id']);
             $user->notify(new NewPostNotification($file));
         }
 
@@ -760,7 +770,6 @@ class StreamController extends Controller
     }
 
 
-
     public function markAsComplete(Request $request)
     {
         $post = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
@@ -832,6 +841,20 @@ class StreamController extends Controller
     public function uploadReport(Request $request)
     {
 
+
+			$driveCapacity = $this->getDriveSize($request);
+
+			$used = $driveCapacity['used']; //in megabytes
+
+			$capacity = $driveCapacity['capacity'];
+
+			$capacity = ($capacity * 1024); // converting GB to megabytes;
+
+			if ($used >= $capacity) {
+					return response()->json(['Response' => "full"], 400);
+			}
+
+
         if (!empty($request->file('attachment'))) {
             $extension = $request->file('attachment');
             $extension = $request->file('attachment')->getClientOriginalExtension();
@@ -849,6 +872,19 @@ class StreamController extends Controller
 
     public function upload(Request $request)
     {
+
+			$driveCapacity = $this->getDriveSize($request);
+
+			$used = $driveCapacity['used']; //in megabytes
+
+			$capacity = $driveCapacity['capacity'];
+
+			$capacity = ($capacity * 1024); // converting GB to megabytes;
+
+			if ($used >= $capacity) {
+					return response()->json(['Response' => "full"], 400);
+			}
+
         if (!empty($request->file('attachment'))) {
             $extension = $request->file('attachment');
             $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
@@ -865,6 +901,19 @@ class StreamController extends Controller
 
     public function projectUpload(Request $request)
     {
+
+			$driveCapacity = $this->getDriveSize($request);
+
+			$used = $driveCapacity['used']; //in megabytes
+
+			$capacity = $driveCapacity['capacity'];
+
+			$capacity = ($capacity * 1024); // converting GB to megabytes;
+
+			if ($used >= $capacity) {
+					return response()->json(['Response' => "full"], 400);
+			}
+
         if (!empty($request->file('attachment'))) {
             $extension = $request->file('attachment');
             $extension = $request->file('attachment')->getClientOriginalExtension(); // getting excel extension
@@ -910,9 +959,6 @@ class StreamController extends Controller
         $send->save();
         return response()->json(['Response' => "Sent"], 200);
 		}
-
-
-
 
 
 
@@ -1018,6 +1064,89 @@ class StreamController extends Controller
 			}
 
 	}
+
+
+
+
+	public function getDriveSize(Request $request)
+	{
+
+			$tenant = Tenant::where("tenant_id", $request->tenant_id)->get();
+			$planId = $tenant[0]['plan_id'];
+
+			$plan_details = DB::table('plan_features')
+					->where('plan_id', '=', $planId)->first();
+
+			//    return response()->json(["details"=>$plan_details,], 200);
+
+			$storage_size = $plan_details->storage_size;
+
+			$size = FileModel::where('tenant_id', $request->tenant_id)
+					->where('uploaded_by', $request->user_id)->sum('size');
+
+			$postAttachments = PostAttachment::where('tenant_id', $request->tenant_id)->get();
+			//print_r($postAttachments);
+
+			$sum_post_attachment = 0;
+			foreach ($postAttachments as $postAttachment) {
+					if (file_exists(public_path('assets\uploads\attachments\\' . $postAttachment->attachment))) {
+							$fileSize = \File::size(public_path('assets\uploads\attachments\\' . $postAttachment->attachment));
+							//echo $fileSize;
+							$sum_post_attachment = $sum_post_attachment + $fileSize;
+					}
+
+					if (file_exists(public_path('assets\uploads\requisition\\' . $postAttachment->attachment))) {
+							$fileSize = \File::size(public_path('assets\uploads\requisition\\' . $postAttachment->attachment));
+							//echo $fileSize;
+							$sum_post_attachment = $sum_post_attachment + $fileSize;
+					}
+
+			}
+
+			$workgroupAttachments = WorkgroupAttachment::where('tenant_id', $request->tenant_id)->get();
+
+			$sum_workgroup_attachment = 0;
+			foreach ($workgroupAttachments as $workgroupAttachment) {
+					if (file_exists(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment))) {
+							$fileSize = \File::size(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment));
+
+							$sum_workgroup_attachment = $sum_workgroup_attachment + $fileSize;
+					}
+
+			}
+
+			$drivers = Driver::where('tenant_id', $request->tenant_id)->get();
+
+			$sum_driver_attachment = 0;
+
+			foreach ($drivers as $driver):
+					if (file_exists(public_path('assets\uploads\logistics\\' . $driver->attachment))):
+							$fileSize = \File::size(public_path('assets\uploads\logistics\\' . $driver->attachment));
+							//echo $fileSize;
+							$sum_driver_attachment = $sum_driver_attachment + $fileSize;
+					endif;
+			endforeach;
+
+			$size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size); /// 1000000000;
+
+			//$size =     number_format(ceil($size/1024));
+			$size = ceil(($size) / 1024 / 1024);
+
+			$Array = array();
+			$Array['used'] = $size; //in megabytes
+			$Array['capacity'] = $storage_size; //in gigabytes
+
+			//var_dump($Array);
+
+			return $Array; //response()->json(["used" => $size, "size" => $storage_size, "formated" => number_format($size)], 200);
+
+	}
+
+
+
+
+
+
 
 
 

@@ -74,7 +74,7 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('delete', 'CNX247\API\StreamController@deletePost');
 
 
-		Route::post('sharefile', 'CNX247\API\StreamController@shareFile');
+		Route::post('streamsharefile', 'CNX247\API\StreamController@shareFile');
 		Route::get('priorities', 'CNX247\API\StreamController@priorities');
 		Route::post('chats', 'CNX247\API\StreamController@getmessages');
 
@@ -96,7 +96,7 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 
 		Route::post('sharefile', 'CNX247\API\DriveController@shareFile');
 
-
+		//Route::post('drivecapacity', 'CNX247\API\DriveController@getDriveSize');
 
 		Route::post('deletefolder', 'CNX247\API\DriveController@deleteFolder');
 
@@ -104,6 +104,8 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 
 
 		Route::post('approvedecline', 'CNX247\API\StreamController@verifyCode');
+
+
 
 
 
