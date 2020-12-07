@@ -133,6 +133,80 @@ class DriveController extends Controller
 
     }
 
+    public function getDriveSize(Request $request)
+    {
+
+        $tenant = Tenant::where("tenant_id", $request->tenant_id)->get();
+        $planId = $tenant[0]['plan_id'];
+
+        $plan_details = DB::table('plan_features')
+            ->where('plan_id', '=', $planId)->first();
+
+        //    return response()->json(["details"=>$plan_details,], 200);
+
+        $storage_size = $plan_details->storage_size;
+
+        $size = FileModel::where('tenant_id', $request->tenant_id)
+            ->where('uploaded_by', $request->user_id)->sum('size');
+
+        $postAttachments = PostAttachment::where('tenant_id', $request->tenant_id)->get();
+        //print_r($postAttachments);
+
+        $sum_post_attachment = 0;
+        foreach ($postAttachments as $postAttachment) {
+            if (file_exists(public_path('assets\uploads\attachments\\' . $postAttachment->attachment))) {
+                $fileSize = \File::size(public_path('assets\uploads\attachments\\' . $postAttachment->attachment));
+                //echo $fileSize;
+                $sum_post_attachment = $sum_post_attachment + $fileSize;
+            }
+
+            if (file_exists(public_path('assets\uploads\requisition\\' . $postAttachment->attachment))) {
+                $fileSize = \File::size(public_path('assets\uploads\requisition\\' . $postAttachment->attachment));
+                //echo $fileSize;
+                $sum_post_attachment = $sum_post_attachment + $fileSize;
+            }
+
+        }
+
+        $workgroupAttachments = WorkgroupAttachment::where('tenant_id', $request->tenant_id)->get();
+
+        $sum_workgroup_attachment = 0;
+        foreach ($workgroupAttachments as $workgroupAttachment) {
+            if (file_exists(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment))) {
+                $fileSize = \File::size(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment));
+
+                $sum_workgroup_attachment = $sum_workgroup_attachment + $fileSize;
+            }
+
+        }
+
+        $drivers = Driver::where('tenant_id', $request->tenant_id)->get();
+
+        $sum_driver_attachment = 0;
+
+        foreach ($drivers as $driver):
+            if (file_exists(public_path('assets\uploads\logistics\\' . $driver->attachment))):
+                $fileSize = \File::size(public_path('assets\uploads\logistics\\' . $driver->attachment));
+                //echo $fileSize;
+                $sum_driver_attachment = $sum_driver_attachment + $fileSize;
+            endif;
+        endforeach;
+
+        $size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size); /// 1000000000;
+
+        //$size =     number_format(ceil($size/1024));
+        $size = ceil(($size) / 1024 / 1024);
+
+        $Array = array();
+        $Array['used'] = $size; //in megabytes
+        $Array['capacity'] = $storage_size; //in gigabytes
+
+        //var_dump($Array);
+
+        return $Array; //response()->json(["used" => $size, "size" => $storage_size, "formated" => number_format($size)], 200);
+
+    }
+
     public function parseUrl($collection, $key)
     {
         foreach ($collection as $item) {
@@ -169,6 +243,19 @@ class DriveController extends Controller
 
     public function UploadFile(Request $request)
     {
+
+        $driveCapacity = $this->getDriveSize($request);
+
+        $used = $driveCapacity['used']; //in megabytes
+
+        $capacity = $driveCapacity['capacity'];
+
+        $capacity = ($capacity * 1024); // converting GB to megabytes;
+
+        if ($used >= $capacity) {
+            return response()->json(['Response' => "error"], 400);
+        }
+
         $check = FileModel::Where('name', $request->filename)
             ->where('folder_id', $request->folder_id)
             ->get();
@@ -207,7 +294,6 @@ class DriveController extends Controller
         }
     }
 
-
     public function shareFile(Request $request)
     {
 
@@ -238,8 +324,6 @@ class DriveController extends Controller
         }
 
     }
-
-
 
     public function shareFolder(Request $request)
     {
@@ -277,35 +361,27 @@ class DriveController extends Controller
 
     }
 
+    public function deleteAttachment(Request $request)
+    {
 
+        $file = FileModel::where('tenant_id', $request->tenant_id)->where('id', $request->id)->first();
+        if (!empty($file)) {
+            $file->delete();
+            unlink(public_path("assets/uploads/cnxdrive/" . $file->filename));
+            $shared = SharedFile::where('tenant_id', $request->tenant_id)
+                ->where('file_id', $request->id)
+                ->get();
+            if (!empty($shared)) {
+                foreach ($shared as $sh) {
+                    $sh->delete();
+                }
+            }
+            return response()->json(['Response' => 'Deleted'], 200);
+        } else {
+            return response()->json(['error' => 'Ooops! File does not exist'], 400);
+        }
 
-
-
-
-		public function deleteAttachment(Request $request){
-
-			$file = FileModel::where('tenant_id', $request->tenant_id)->where('id', $request->id)->first();
-			if(!empty($file) ){
-					$file->delete();
-					unlink(public_path("assets/uploads/cnxdrive/".$file->filename));
-					$shared = SharedFile::where('tenant_id', $request->tenant_id)
-															->where('file_id', $request->id)
-															->get();
-					if(!empty($shared) ){
-							foreach($shared as $sh){
-									$sh->delete();
-							}
-					}
-					return response()->json(['Response'=>'Deleted'], 200);
-			}else{
-					return response()->json(['error'=>'Ooops! File does not exist'], 400);
-			}
-
-	}
-
-
-
-
+    }
 
     public function deleteFolder(Request $request)
     {
