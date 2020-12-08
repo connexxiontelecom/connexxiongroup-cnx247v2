@@ -47,6 +47,8 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('comment', 'CNX247\API\StreamController@comment');
 		Route::post('users', 'CNX247\API\usersController@users');
 
+		Route::post('savetoken', 'CNX247\API\usersController@saveUserDeviceToken');
+
 		Route::post('newtask', 'CNX247\API\StreamController@storeTask');
 		Route::post('newproject', 'CNX247\API\StreamController@storeProject');
 		Route::post('newannouncement', 'CNX247\API\StreamController@storeAnnouncement');
@@ -79,6 +81,11 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('chats', 'CNX247\API\StreamController@getmessages');
 
 		Route::post('sndchat', 'CNX247\API\StreamController@sendChat');
+
+		//Route::post('notify', 'CNX247\API\StreamController@pushtoToken');
+
+
+
 
 		Route::post('drive', 'CNX247\API\DriveController@getDriveContents');
 
