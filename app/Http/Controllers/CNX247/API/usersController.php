@@ -39,5 +39,20 @@ class usersController extends Controller
 
 
 
+		public function saveUserDeviceToken(Request $request)
+		{
+
+			$tenant_id = $request->tenant_id;
+			$user_id = $request->user_id;
+			$token = $request->token;
+			$user  = User::find($user_id);
+			$user->device_token =$token;
+			$user->save();
+
+		}
+
+
+
+
 
 }//end class
