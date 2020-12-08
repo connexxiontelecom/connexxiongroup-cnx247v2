@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\CNX247\API;
 
 use App\BusinessLog;
+use App\Driver;
+use App\FileModel;
 use App\Http\Controllers\Controller;
 use App\Message;
 use App\Notifications\NewPostNotification;
@@ -20,19 +22,11 @@ use App\RequestApprover;
 use App\ResponsiblePerson;
 use App\Tenant;
 use App\User;
-use Illuminate\Support\Facades\Hash;
+use App\WorkgroupAttachment;
 use function PHPSTORM_META\type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Driver;
-use App\FileModel;
-use App\Folder;
-use App\SharedFile;
-use App\SharedFolder;
-use App\WorkgroupAttachment;
-
-
-
+use Illuminate\Support\Facades\Hash;
 
 class StreamController extends Controller
 {
@@ -242,8 +236,11 @@ class StreamController extends Controller
                 $part->tenant_id = $request->tenant_id;
                 $part->save();
                 $darray["persons"][] = $person["id"];
-                $user = User::find($person);
-                //$user->notify(new NewPostNotification($task));
+                $user = User::find($person['id']);
+								$user->notify(new NewPostNotification($task));
+								$body = "New Task";
+								$title = "You have a new task";
+								$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
             }
         }
         //participants
@@ -257,7 +254,10 @@ class StreamController extends Controller
                 $part->user_id = $participant["id"];
                 $part->tenant_id = $request->tenant_id;
                 $part->save();
-                $darray["participants"][] = $participant["id"];
+								$darray["participants"][] = $participant["id"];
+								$body = "New Task";
+								$title = "You have a new task";
+								$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
             }
         }
         //observers
@@ -271,7 +271,10 @@ class StreamController extends Controller
                 $part->user_id = $observer["id"];
                 $part->tenant_id = $request->tenant_id;
                 $part->save();
-                $darray["observes"][] = $observer["id"];
+								$darray["observes"][] = $observer["id"];
+								$body = "New Task";
+								$title = "You have a new task";
+								$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
 
             }
         }
@@ -320,7 +323,7 @@ class StreamController extends Controller
                 $part->tenant_id = $request->tenant_id;
                 $part->save();
                 $darray["persons"][] = $person["id"];
-                $user = User::find($person);
+                $user = User::find($person['id']);
                 //$user->notify(new NewPostNotification($task));
             }
         }
@@ -391,7 +394,10 @@ class StreamController extends Controller
             $part->post_type = 'announcement';
             $part->user_id = 32;
             $part->tenant_id = $request->tenant_id;
-            $part->save();
+						$part->save();
+						$body = "Announcement";
+						$title = "You have a new announcement";
+						$this->ToAllUsers($request->tenant_id, $title, $body);
         } else {
             if (!empty($request->persons)) {
 
@@ -406,8 +412,12 @@ class StreamController extends Controller
                     $part->tenant_id = $request->tenant_id;
                     $part->save();
                     //send notification
-                    //    $user = User::find($person);
-                    //    $user->notify(new NewPostNotification($announcement));
+                    $user = User::find($person['id']);
+										$user->notify(new NewPostNotification($announcement));
+										$body = "New Announcement";
+										$title = "You have a new announcement";
+										$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
+
                 }
             }
         }
@@ -454,7 +464,10 @@ class StreamController extends Controller
             $part->post_type = 'event';
             $part->user_id = 32;
             $part->tenant_id = $request->tenant_id;
-            $part->save();
+						$part->save();
+						$body = "New Event";
+						$title = "You have a new event";
+						$this->ToAllUsers($request->tenant_id, $title, $body);
         } else {
             if (!empty($request->persons)) {
                 foreach ($request->persons as $person) {
@@ -467,8 +480,11 @@ class StreamController extends Controller
                     $part->tenant_id = $request->tenant_id;
                     $part->save();
                     //send notification
-                    $user = User::find($person);
-                    $user->notify(new NewPostNotification($event));
+                    $user = User::find($person['id']);
+										$user->notify(new NewPostNotification($event));
+										$body = "New Event";
+										$title = "You have a new event";
+										$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
                 }
             }
         }
@@ -526,7 +542,11 @@ class StreamController extends Controller
             $event->tenant_id = $request->user_id;
             $event->save();
             $user = User::find($processor->user_id);
-            $user->notify(new NewPostNotification($expense));
+						$user->notify(new NewPostNotification($expense));
+
+						$body = "New Requistion";
+						$title = "You have a request";
+						$this->ToSpecificUser($request->tenant_id, $title, $body, $person['id']);
 
             //Register business process log
             $log = new BusinessLog;
@@ -614,7 +634,9 @@ class StreamController extends Controller
         $submit->tenant_id = $request->tenant_id;
         $submit->date_submitted = now();
         $submit->note = $request->leave_note;
-        $submit->save();
+				$submit->save();
+
+
 
         if (!empty($request->attachment)) {
             $attach = new PostSubmissionAttachment;
@@ -626,7 +648,11 @@ class StreamController extends Controller
 
         $user = User::where('id', $request->owner)->where('tenant_id', $request->tenant_id)->first();
         $content = Post::where('id', $request->post_id)->where('tenant_id', $request->tenant_id)->first();
-        $user->notify(new SubmitTask($submit, $content));
+				$user->notify(new SubmitTask($submit, $content));
+				$user  = User::find($request->user_id);
+				$body = $user["first_name"]."   ".$user['surname']."Just made a Submission";
+				$title = "Task Submission";
+				$this->ToSpecificUser($request->tenant_id, $title, $body,$request->owner);
         return response()->json(['Response' => 'Success!'], 200);
 
     }
@@ -663,7 +689,12 @@ class StreamController extends Controller
             $part->post_type = 'file';
             $part->user_id = 32;
             $part->tenant_id = $request->tenant_id;
-            $part->save();
+						$part->save();
+
+						$body = "A new file was shared with you";
+						$title = "File Shared";
+						$this->ToAllUsers($request->tenant_id, $title, $body);
+
         } else {
 
             if (!empty($request->persons)) {
@@ -675,12 +706,17 @@ class StreamController extends Controller
                     $part->tenant_id = $request->tenant_id;
                     $part->save();
                     //send notification
-                    //$user = User::find($person);
-                    //$user->notify(new NewPostNotification($file));
+                    $user = User::find($person['id']);
+										$user->notify(new NewPostNotification($file));
+
+										$body = "A new file was shared with you";
+										$title = "File Shared";
+										$this->ToSpecificUser($request->tenant_id, $title, $body,$part->user_id);
+
                 }
             }
-            $user = User::find($person['id']);
-            $user->notify(new NewPostNotification($file));
+            //$user = User::find($person['id']);
+            //$user->notify(new NewPostNotification($file));
         }
 
         if ($file) {
@@ -716,7 +752,11 @@ class StreamController extends Controller
                     $part->tenant_id = $request->tenant_id;
                     $part->save();
                     $user = User::find($person["id"]);
-                    $user->notify(new NewPostNotification($post));
+										$user->notify(new NewPostNotification($post));
+
+										$body = "New Task";
+										$title = "You have a new task";
+										$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
                 }
             }
 
@@ -739,7 +779,11 @@ class StreamController extends Controller
                     $part->tenant_id = $request->tenant_id;
                     $part->save();
                     $user = User::find($person["id"]);
-                    $user->notify(new NewPostNotification($post));
+										$user->notify(new NewPostNotification($post));
+
+										$body = "New Task";
+										$title = "You have a new task";
+										$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
                 }
             }
 
@@ -761,14 +805,17 @@ class StreamController extends Controller
                     $part->tenant_id = $request->tenant_id;
                     $part->save();
                     $user = User::find($person["id"]);
-                    $user->notify(new NewPostNotification($post));
+										$user->notify(new NewPostNotification($post));
+
+										$body = "New Task";
+										$title = "You have a new task";
+										$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
                 }
             }
 
             return response()->json(['Response' => 'Success!'], 200);
         }
     }
-
 
     public function markAsComplete(Request $request)
     {
@@ -841,19 +888,17 @@ class StreamController extends Controller
     public function uploadReport(Request $request)
     {
 
+        $driveCapacity = $this->getDriveSize($request);
 
-			$driveCapacity = $this->getDriveSize($request);
+        $used = $driveCapacity['used']; //in megabytes
 
-			$used = $driveCapacity['used']; //in megabytes
+        $capacity = $driveCapacity['capacity'];
 
-			$capacity = $driveCapacity['capacity'];
+        $capacity = ($capacity * 1024); // converting GB to megabytes;
 
-			$capacity = ($capacity * 1024); // converting GB to megabytes;
-
-			if ($used >= $capacity) {
-					return response()->json(['Response' => "full"], 400);
-			}
-
+        if ($used >= $capacity) {
+            return response()->json(['Response' => "full"], 400);
+        }
 
         if (!empty($request->file('attachment'))) {
             $extension = $request->file('attachment');
@@ -873,17 +918,17 @@ class StreamController extends Controller
     public function upload(Request $request)
     {
 
-			$driveCapacity = $this->getDriveSize($request);
+        $driveCapacity = $this->getDriveSize($request);
 
-			$used = $driveCapacity['used']; //in megabytes
+        $used = $driveCapacity['used']; //in megabytes
 
-			$capacity = $driveCapacity['capacity'];
+        $capacity = $driveCapacity['capacity'];
 
-			$capacity = ($capacity * 1024); // converting GB to megabytes;
+        $capacity = ($capacity * 1024); // converting GB to megabytes;
 
-			if ($used >= $capacity) {
-					return response()->json(['Response' => "full"], 400);
-			}
+        if ($used >= $capacity) {
+            return response()->json(['Response' => "full"], 400);
+        }
 
         if (!empty($request->file('attachment'))) {
             $extension = $request->file('attachment');
@@ -902,17 +947,17 @@ class StreamController extends Controller
     public function projectUpload(Request $request)
     {
 
-			$driveCapacity = $this->getDriveSize($request);
+        $driveCapacity = $this->getDriveSize($request);
 
-			$used = $driveCapacity['used']; //in megabytes
+        $used = $driveCapacity['used']; //in megabytes
 
-			$capacity = $driveCapacity['capacity'];
+        $capacity = $driveCapacity['capacity'];
 
-			$capacity = ($capacity * 1024); // converting GB to megabytes;
+        $capacity = ($capacity * 1024); // converting GB to megabytes;
 
-			if ($used >= $capacity) {
-					return response()->json(['Response' => "full"], 400);
-			}
+        if ($used >= $capacity) {
+            return response()->json(['Response' => "full"], 400);
+        }
 
         if (!empty($request->file('attachment'))) {
             $extension = $request->file('attachment');
@@ -932,15 +977,13 @@ class StreamController extends Controller
     {
 
         $my_id = $request->my_id;
-				$user_id = $request->user_id;
-				$tenant_id = $request->tenant_id;
-			$messages = 	Message::where(function ($query) use ($user_id, $my_id) {
-					$query->where('from_id', $user_id)->where('to_id', $my_id);
-			})->oRwhere(function ($query) use ($user_id, $my_id) {
-					$query->where('from_id', $my_id)->where('to_id', $user_id);
-			})->get();
-
-
+        $user_id = $request->user_id;
+        $tenant_id = $request->tenant_id;
+        $messages = Message::where(function ($query) use ($user_id, $my_id) {
+            $query->where('from_id', $user_id)->where('to_id', $my_id);
+        })->oRwhere(function ($query) use ($user_id, $my_id) {
+            $query->where('from_id', $my_id)->where('to_id', $user_id);
+        })->get();
 
         foreach ($messages as $message) {
             $message["date_sent"] = date('M j h:i a , Y', strtotime($message->created_at));
@@ -956,191 +999,255 @@ class StreamController extends Controller
         $send->to_id = $request->receiver;
         $send->from_id = $request->sender_id;
         $send->tenant_id = $request->tenant_id;
-        $send->save();
+				$send->save();
+				$user = User::find($request->sender_id);
+				$title = $user->first_name ." ".$user->surname;
+				$this->ToSpecificUser($request->tenant_id, $title, $request->message, $request->sender_id);
         return response()->json(['Response' => "Sent"], 200);
+    }
+
+    public function verifyCode(Request $request)
+    {
+
+        $tenant_id = $request->tenant_id;
+        $id = $request->post_id;
+        $transactionPassword = $request->password;
+        $user_id = $request->user_id;
+        $userAction = $request->action;
+
+        $user = User::where('users.tenant_id', $tenant_id)->where('users.id', $user_id)->get();
+
+        //    var_dump($user[0]['surname']);
+        //    return;
+
+        $_transactionPassword = $user[0]["transaction_password"];
+
+        if (Hash::check($transactionPassword, $_transactionPassword)) {
+            $details = Post::find($id);
+            if ($userAction == 'approved') {
+                $action = ResponsiblePerson::where('post_id', $id)->where('user_id', $user_id)->first();
+                $action->status = $userAction;
+                $action->save();
+
+                //Register business process log
+                $log = new BusinessLog;
+                $log->request_id = $id;
+                $log->user_id = $user_id;
+                $log->name = "Approved";
+                $log->note = str_replace('-', ' ', $details->post_type) . " " . $log->name . " by " . $user[0]['first_name'] . " " . $user[0]['surname'] ?? " ";
+                $log->save();
+                $responsiblePersons = ResponsiblePerson::where('post_id', $id)->get();
+                $responsiblePersonIds = [];
+                foreach ($responsiblePersons as $per) {
+                    array_push($responsiblePersonIds, $per->user_id);
+                }
+
+                //search for processor
+                $approvers = RequestApprover::where('request_type', $details->post_type)->where('depart_id', $details->user->department_id)->where('tenant_id', $tenant_id)->get();
+                $approverIds = [];
+                if (!empty($approvers)) {
+                    foreach ($approvers as $approver) {
+                        array_push($approverIds, $approver->user_id);
+                    }
+                }
+                $remainingProcessors = array_diff($approverIds, $responsiblePersonIds);
+                //identify next supervisor
+                $supervise = new BusinessLog;
+                $supervise->request_id = $id;
+                $supervise->user_id = $user_id;
+                $supervise->name = 'Log entry';
+                $supervise->note = "Identifying next processor for " . str_replace('-', ' ', $details->post_type) . ": " . $details->post_title;
+                $supervise->save();
+                //Assign next processor
+                if (!empty($remainingProcessors)) {
+                    $reset = array_values($remainingProcessors);
+                    for ($i = 0; $i < count($reset); $i++) {
+                        $next = new ResponsiblePerson;
+                        $next->post_id = $id;
+                        $next->post_type = $details->post_type;
+                        $next->user_id = $reset[$i];
+                        $next->tenant_id = $tenant_id;
+                        $next->save();
+                        $user = User::find($reset[$i]);
+                        $user->notify(new NewPostNotification($details));
+                        return response()->json(['Response' => "success"], 200);
+                        break;
+                    }
+                } else {
+                    $status = Post::find($id);
+                    $status->post_status = $userAction;
+                    $status->save();
+                    return response()->json(['Response' => "success"], 200);
+                    #Requisition to GL flow takes over from here
+                }
+                //    $this->actionStatus = 0;
+                //    $this->verificationPostId = null;
+
+            } else {
+                $action = ResponsiblePerson::where('post_id', $id)->where('user_id', $user_id)->first();
+                $action->status = $userAction;
+                $action->save();
+                //Register business process log
+                $log = new BusinessLog;
+                $log->request_id = $id;
+                $log->user_id = $user_id;
+                $log->name = $userAction;
+                $log->note = str_replace('-', ' ', $details->post_type) . " " . $userAction . " by " . $user[0]["first_name"] . " " . $user[0]["surname"];
+                $log->save();
+                //update request table finally
+                $status = Post::find($id);
+                $status->post_status = $userAction;
+                $status->save();
+                return response()->json(['Response' => "success"], 200);
+                //    $this->actionStatus = 0;
+                //    $this->verificationPostId = null;
+
+            }
+        } else {
+            //error
+            return response()->json(['Response' => "An error has occured"], 200);
+        }
+
+    }
+
+    public function getDriveSize(Request $request)
+    {
+
+        $tenant = Tenant::where("tenant_id", $request->tenant_id)->get();
+        $planId = $tenant[0]['plan_id'];
+
+        $plan_details = DB::table('plan_features')
+            ->where('plan_id', '=', $planId)->first();
+
+        //    return response()->json(["details"=>$plan_details,], 200);
+
+        $storage_size = $plan_details->storage_size;
+
+        $size = FileModel::where('tenant_id', $request->tenant_id)
+            ->where('uploaded_by', $request->user_id)->sum('size');
+
+        $postAttachments = PostAttachment::where('tenant_id', $request->tenant_id)->get();
+        //print_r($postAttachments);
+
+        $sum_post_attachment = 0;
+        foreach ($postAttachments as $postAttachment) {
+            if (file_exists(public_path('assets\uploads\attachments\\' . $postAttachment->attachment))) {
+                $fileSize = \File::size(public_path('assets\uploads\attachments\\' . $postAttachment->attachment));
+                //echo $fileSize;
+                $sum_post_attachment = $sum_post_attachment + $fileSize;
+            }
+
+            if (file_exists(public_path('assets\uploads\requisition\\' . $postAttachment->attachment))) {
+                $fileSize = \File::size(public_path('assets\uploads\requisition\\' . $postAttachment->attachment));
+                //echo $fileSize;
+                $sum_post_attachment = $sum_post_attachment + $fileSize;
+            }
+
+        }
+
+        $workgroupAttachments = WorkgroupAttachment::where('tenant_id', $request->tenant_id)->get();
+
+        $sum_workgroup_attachment = 0;
+        foreach ($workgroupAttachments as $workgroupAttachment) {
+            if (file_exists(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment))) {
+                $fileSize = \File::size(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment));
+
+                $sum_workgroup_attachment = $sum_workgroup_attachment + $fileSize;
+            }
+
+        }
+
+        $drivers = Driver::where('tenant_id', $request->tenant_id)->get();
+
+        $sum_driver_attachment = 0;
+
+        foreach ($drivers as $driver):
+            if (file_exists(public_path('assets\uploads\logistics\\' . $driver->attachment))):
+                $fileSize = \File::size(public_path('assets\uploads\logistics\\' . $driver->attachment));
+                //echo $fileSize;
+                $sum_driver_attachment = $sum_driver_attachment + $fileSize;
+            endif;
+        endforeach;
+
+        $size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size); /// 1000000000;
+
+        //$size =     number_format(ceil($size/1024));
+        $size = ceil(($size) / 1024 / 1024);
+
+        $Array = array();
+        $Array['used'] = $size; //in megabytes
+        $Array['capacity'] = $storage_size; //in gigabytes
+
+        //var_dump($Array);
+
+        return $Array; //response()->json(["used" => $size, "size" => $storage_size, "formated" => number_format($size)], 200);
+
+    }
+
+    public function pushtoToken($token, $title, $body, $userId, $tenantId)
+    {
+        //$token, $title, $body, $userId, $tenantId
+
+        $ch = curl_init("https://fcm.googleapis.com/fcm/send");
+
+        $data = array("clickaction" => "FLUTTERNOTIFICATIONCLICK", "user" => $userId, "tenant_id" => $tenantId);
+
+        //Creating the notification array.
+        $notification = array('title' => $title, 'body' => $body);
+
+        //This array contains, the token and the notification. The 'to' attribute stores the token.
+        $arrayToSend = array('to' =>$token, 'notification' => $notification, 'data' => $data);
+
+        //Generating JSON encoded string form the above array.
+        $json = json_encode($arrayToSend);
+
+        $url = "https://fcm.googleapis.com/fcm/send";
+        //Setup headers:
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: key=AAAAQ6WOcsM:APA91bGx5qqTvsZoFYEMdLiNuM-DlH509sszesHzH5IdW-_OqyRNAw8UrT1VfimR0ITKpF4sJCK7GOoeI0zPYvhkQu4gmow783ZG77Qrj8seV_0QgWkkCBGZ7oSSzdVoTKIckOusTI8x';
+
+        //Setup curl, add headers and post parameters.
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+       // print($result);
+
+        //Send the request
+        //curl_exec($ch);
+
+        //Close request
+        curl_close($ch);
 		}
 
 
 
-		public function verifyCode(Request $request){
+		public function ToAllUsers($tenant_id, $title, $body, $userId="32")
+		{
+			$token = "/topics/all";
+			$this->pushtoToken($token, $title, $body, $userId, $tenant_id);
+		}
 
-			$tenant_id = $request->tenant_id;
-			$id = $request->post_id;
-			$transactionPassword  = $request->password;
-			$user_id = $request->user_id;
-			$userAction = $request->action;
 
-			$user = User::where('users.tenant_id', $tenant_id)->where('users.id', $user_id)->get();
-
-		//	var_dump($user[0]['surname']);
-		//	return;
-
-			$_transactionPassword = $user[0]["transaction_password"];
-
-			if (Hash::check($transactionPassword, $_transactionPassword)) {
-					$details = Post::find($id);
-					if($userAction == 'approved'){
-							$action = ResponsiblePerson::where('post_id', $id)->where('user_id', $user_id)->first();
-							$action->status = $userAction;
-							$action->save();
-
-							//Register business process log
-							$log = new BusinessLog;
-							$log->request_id = $id;
-							$log->user_id = $user_id;
-							$log->name = "Approved";
-							$log->note = str_replace('-', ' ',$details->post_type)." ".$log->name." by ".$user[0]['first_name']." ".$user[0]['surname'] ?? " ";
-							$log->save();
-							$responsiblePersons = ResponsiblePerson::where('post_id', $id)->get();
-							$responsiblePersonIds = [];
-							foreach($responsiblePersons as $per){
-								 array_push($responsiblePersonIds, $per->user_id);
-							}
-
-							//search for processor
-							$approvers = RequestApprover::where('request_type', $details->post_type)->where('depart_id', $details->user->department_id)->where('tenant_id', $tenant_id)->get();
-							$approverIds = [];
-							if(!empty($approvers) ){
-									foreach($approvers as $approver){
-											array_push($approverIds, $approver->user_id);
-									}
-							}
-							$remainingProcessors = array_diff($approverIds,$responsiblePersonIds);
-							//identify next supervisor
-							$supervise = new BusinessLog;
-							$supervise->request_id = $id;
-							$supervise->user_id = $user_id;
-							$supervise->name = 'Log entry';
-							$supervise->note = "Identifying next processor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
-							$supervise->save();
-							//Assign next processor
-							if(!empty($remainingProcessors) ){
-									$reset = array_values($remainingProcessors);
-									for($i = 0; $i<count($reset); $i++){
-											$next = new ResponsiblePerson;
-											$next->post_id = $id;
-											$next->post_type = $details->post_type;
-											$next->user_id = $reset[$i];
-											$next->tenant_id =$tenant_id;
-											$next->save();
-											$user = User::find($reset[$i]);
-											$user->notify(new NewPostNotification($details));
-											return response()->json(['Response' =>"success"], 200);
-									break;
-									}
-							}else{
-									$status = Post::find($id);
-									$status->post_status = $userAction;
-									$status->save();
-									return response()->json(['Response' =>"success"], 200);
-									#Requisition to GL flow takes over from here
-							}
-						//	$this->actionStatus = 0;
-						//	$this->verificationPostId = null;
-
-					}else{
-							$action = ResponsiblePerson::where('post_id', $id)->where('user_id', $user_id)->first();
-							$action->status = $userAction;
-							$action->save();
-							//Register business process log
-							$log = new BusinessLog;
-							$log->request_id = $id;
-							$log->user_id = $user_id;
-							$log->name = $userAction;
-							$log->note = str_replace('-', ' ',$details->post_type)." ".$userAction." by ".$user[0]["first_name"]." ".$user[0]["surname"];
-							$log->save();
-							 //update request table finally
-							 $status = Post::find($id);
-							 $status->post_status = $userAction;
-							 $status->save();
-							 return response()->json(['Response' =>"success"], 200);
-								//	$this->actionStatus = 0;
-								//	$this->verificationPostId = null;
-
-					}
-			}else{
-					//error
-					return response()->json(['Response' => "An error has occured"], 200);
+		public function ToSpecificUser($tenant_id, $title, $body, $userId)
+		{
+			$users = User::where('users.tenant_id', $tenant_id)->where('users.id', $userId)->get();
+			foreach($users as $user)
+			{
+					 $token= $user['device_token'];
+					 if($token !=null && !empty($token))
+						{
+							$this->pushtoToken($token, $title, $body, $userId, $tenant_id);
+						}
 			}
-
-	}
-
-
-
-
-	public function getDriveSize(Request $request)
-	{
-
-			$tenant = Tenant::where("tenant_id", $request->tenant_id)->get();
-			$planId = $tenant[0]['plan_id'];
-
-			$plan_details = DB::table('plan_features')
-					->where('plan_id', '=', $planId)->first();
-
-			//    return response()->json(["details"=>$plan_details,], 200);
-
-			$storage_size = $plan_details->storage_size;
-
-			$size = FileModel::where('tenant_id', $request->tenant_id)
-					->where('uploaded_by', $request->user_id)->sum('size');
-
-			$postAttachments = PostAttachment::where('tenant_id', $request->tenant_id)->get();
-			//print_r($postAttachments);
-
-			$sum_post_attachment = 0;
-			foreach ($postAttachments as $postAttachment) {
-					if (file_exists(public_path('assets\uploads\attachments\\' . $postAttachment->attachment))) {
-							$fileSize = \File::size(public_path('assets\uploads\attachments\\' . $postAttachment->attachment));
-							//echo $fileSize;
-							$sum_post_attachment = $sum_post_attachment + $fileSize;
-					}
-
-					if (file_exists(public_path('assets\uploads\requisition\\' . $postAttachment->attachment))) {
-							$fileSize = \File::size(public_path('assets\uploads\requisition\\' . $postAttachment->attachment));
-							//echo $fileSize;
-							$sum_post_attachment = $sum_post_attachment + $fileSize;
-					}
-
-			}
-
-			$workgroupAttachments = WorkgroupAttachment::where('tenant_id', $request->tenant_id)->get();
-
-			$sum_workgroup_attachment = 0;
-			foreach ($workgroupAttachments as $workgroupAttachment) {
-					if (file_exists(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment))) {
-							$fileSize = \File::size(public_path('assets\uploads\attachments\\' . $workgroupAttachment->attachment));
-
-							$sum_workgroup_attachment = $sum_workgroup_attachment + $fileSize;
-					}
-
-			}
-
-			$drivers = Driver::where('tenant_id', $request->tenant_id)->get();
-
-			$sum_driver_attachment = 0;
-
-			foreach ($drivers as $driver):
-					if (file_exists(public_path('assets\uploads\logistics\\' . $driver->attachment))):
-							$fileSize = \File::size(public_path('assets\uploads\logistics\\' . $driver->attachment));
-							//echo $fileSize;
-							$sum_driver_attachment = $sum_driver_attachment + $fileSize;
-					endif;
-			endforeach;
-
-			$size = ($sum_post_attachment + $sum_driver_attachment + $sum_workgroup_attachment + $size); /// 1000000000;
-
-			//$size =     number_format(ceil($size/1024));
-			$size = ceil(($size) / 1024 / 1024);
-
-			$Array = array();
-			$Array['used'] = $size; //in megabytes
-			$Array['capacity'] = $storage_size; //in gigabytes
-
-			//var_dump($Array);
-
-			return $Array; //response()->json(["used" => $size, "size" => $storage_size, "formated" => number_format($size)], 200);
-
-	}
+		}
 
 
 
