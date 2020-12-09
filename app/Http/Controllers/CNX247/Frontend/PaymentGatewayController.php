@@ -80,7 +80,7 @@ class PaymentGatewayController extends Controller
 						$start = now();
 						$end =  $current->addDays(14);//14 days trial
 						$key = "key_".substr(sha1(time()),21,40 );
-						$plan = 6; //trial ID
+						$plan = 21; //trial ID
 						$tenant = new Tenant;
 						$tenant->company_name = $request->company_name;
 						$tenant->site_address = $request->site_address;
