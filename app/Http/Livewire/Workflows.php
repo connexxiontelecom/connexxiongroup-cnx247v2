@@ -22,7 +22,8 @@ class Workflows extends Component
     public $actionStatus = 0;
     public $verificationPostId;
     public $transactionPassword;
-    public $userAction; //approved/declined
+		public $userAction; //approved/declined
+		public $current_action ;
 
     public function render()
     {
@@ -53,9 +54,11 @@ class Workflows extends Component
     }
 
     public function allWorkflows(){
+			$this->current_action = 'All';
         $this->getContent();
     }
     public function inprogressWorkflows(){
+			$this->current_action = 'In-progress';
        $this->requests = Post::whereIn('post_type',
                           ['purchase-request', 'expense-report',
                           'leave-request', 'business-trip',
@@ -65,6 +68,7 @@ class Workflows extends Component
                           ->get();
     }
     public function approvedWorkflows(){
+			$this->current_action = 'Approved';
         $this->requests = Post::whereIn('post_type',
                           ['purchase-request', 'expense-report',
                           'leave-request', 'business-trip',
@@ -74,6 +78,7 @@ class Workflows extends Component
                           ->paginate(1);
     }
     public function declinedWorkflows(){
+			$this->current_action = 'Declined';
        $this->requests = Post::whereIn('post_type',
                           ['purchase-request', 'expense-report',
                           'leave-request', 'business-trip',

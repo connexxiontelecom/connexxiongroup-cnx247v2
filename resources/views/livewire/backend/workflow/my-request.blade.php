@@ -4,7 +4,7 @@
 					<h5 class="sub-title">My Requests</h5>
 					@include('backend.workflow.common._run-business-process')
 					<div class="dropdown-primary dropdown open mt-2 mb-3">
-							<button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-filter mr-2"></i> Filter</button>
+							<button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-filter mr-2"></i> {{$current_action ?? 'Filter'}}</button>
 							<div class="dropdown-menu" aria-labelledby="dropdown-2" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 39px, 0px); top: 0px; left: 0px; will-change: transform;">
 									<a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="allWorkflows">All</a>
 									<a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="inprogressWorkflows">In-progress</a>
@@ -12,6 +12,10 @@
 									<a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="declinedWorkflows">Declined</a>
 							</div>
 					</div>
+					@if ($loaderStatus == 1)
+					<img src="/assets/images/loader.gif" height="70" width="70" alt="">
+
+					@endif
 					<div class="dt-responsive table-responsive">
 							<table id="datatable-request" class="table table-bordered table-striped table-md">
 									<thead>
