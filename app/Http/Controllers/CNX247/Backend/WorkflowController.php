@@ -29,8 +29,8 @@ class WorkflowController extends Controller
                 'leave-request', 'business-trip',
                 'general-request'])
             ->where('tenant_id',Auth::user()->tenant_id)
-            ->orderBy('id', 'DESC')
-						->get();
+						->orderBy('id', 'DESC')
+						->paginate(10);
 			$my_requests = Post::whereIn('post_type',
 						['purchase-request', 'expense-report',
 						'leave-request', 'business-trip',
@@ -39,7 +39,7 @@ class WorkflowController extends Controller
 						->where('user_id', Auth::user()->id)
 						->where('tenant_id',Auth::user()->tenant_id)
 						->orderBy('id', 'DESC')
-						->get();
+						->paginate(10);
 						$now = Carbon::now();
 						$overall = Post::whereIn('post_type',
 																['purchase-request', 'expense-report',

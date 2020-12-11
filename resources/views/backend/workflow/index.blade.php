@@ -128,6 +128,9 @@
 													</tbody>
 
 											</table>
+											<div class="d-flex justify-content-center">
+												{{$requests->links()}}
+											</div>
 									</div>
 								</div>
 								<div class="tab-pane" id="profile3" role="tabpanel">
@@ -184,6 +187,9 @@
 														@endforeach
 												</tbody>
 										</table>
+										<div class="d-flex justify-content-center">
+											{{$my_requests->links()}}
+										</div>
 										</div>
 								</div>
 								<div class="tab-pane" id="messages3" role="tabpanel">
