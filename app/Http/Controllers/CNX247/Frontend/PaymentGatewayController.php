@@ -116,11 +116,11 @@ class PaymentGatewayController extends Controller
 						$member->save();
 						#proceed to register new user account
 						$user = new User;
-						$user->first_name = $first_name ?? 'No First Name';
+						$user->first_name = $request->first_name ?? 'No First Name';
 						$user->password = bcrypt($request->password);
 						$user->email = $request->email;
 						$user->tenant_id = $tenant_id; //new tenantID
-						$user->verified = 0; //account verified
+						$user->verified = 1; //account verified
 						$user->url = substr(sha1(time()),29,40 );
 						$user->verification_link = substr(sha1(time()), 25,40);
 						$user->save();
