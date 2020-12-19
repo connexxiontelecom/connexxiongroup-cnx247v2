@@ -5,7 +5,6 @@
 @endsection
 
 @section('extra-styles')
-
 @endsection
 
 @section('content')

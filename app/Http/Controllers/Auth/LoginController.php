@@ -82,7 +82,6 @@ class LoginController extends Controller
 		if(!empty($user)){
 			//this account is verified
 			if(Auth::attempt(['email'=>$request->email, 'password'=>$request->password, 'account_status'=>1], $request->remember)){
-
 				//check if profile is not updated
 				if(empty(Auth::user()->department_id) ){
 					session()->flash("update_profile", "<strong>Notice: </strong> You're adviced to complete your profile");
