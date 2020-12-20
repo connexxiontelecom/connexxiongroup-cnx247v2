@@ -46,6 +46,15 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('like', 'CNX247\API\StreamController@like');
 		Route::post('comment', 'CNX247\API\StreamController@comment');
 		Route::post('users', 'CNX247\API\usersController@users');
+		Route::post('tenant', 'CNX247\API\usersController@getTenantDetails');
+
+
+		Route::post('isloggedin', 'CNX247\API\usersController@isLoggedIn');
+
+		Route::post('isloggedout', 'CNX247\API\usersController@isLoggedout');
+
+
+
 
 		Route::post('savetoken', 'CNX247\API\usersController@saveUserDeviceToken');
 
@@ -80,7 +89,9 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::get('priorities', 'CNX247\API\StreamController@priorities');
 		Route::post('chats', 'CNX247\API\StreamController@getmessages');
 
+
 		Route::post('sndchat', 'CNX247\API\StreamController@sendChat');
+		Route::post('updatechat', 'CNX247\API\StreamController@updateIsReadStatus');
 
 		//Route::post('notify', 'CNX247\API\StreamController@pushtoToken');
 

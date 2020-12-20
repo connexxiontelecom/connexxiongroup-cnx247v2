@@ -7,6 +7,7 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use App\Mail\onBoardEmployee;
+use App\Mail\StartTrial;
 use Paystack;
 use App\Plan;
 use App\PlanFeature;
@@ -80,7 +81,7 @@ class PaymentGatewayController extends Controller
 						$start = now();
 						$end =  $current->addDays(14);//14 days trial
 						$key = "key_".substr(sha1(time()),21,40 );
-						$plan = 6; //trial ID
+						$plan = 21; //trial ID
 						$tenant = new Tenant;
 						$tenant->company_name = $request->company_name;
 						$tenant->site_address = $request->site_address;
@@ -116,16 +117,16 @@ class PaymentGatewayController extends Controller
 						$member->save();
 						#proceed to register new user account
 						$user = new User;
-						$user->first_name = $first_name ?? 'No First Name';
+						$user->first_name = $request->first_name ?? 'No First Name';
 						$user->password = bcrypt($request->password);
 						$user->email = $request->email;
 						$user->tenant_id = $tenant_id; //new tenantID
-						$user->verified = 0; //account verified
+						$user->verified = 1; //account verified
 						$user->url = substr(sha1(time()),29,40 );
 						$user->verification_link = substr(sha1(time()), 25,40);
 						$user->save();
 						$user->assignRole('Human Resource');
-						//\Mail::to($user)->send(new onBoardEmployee($user, $password));
+						\Mail::to($user)->send(new StartTrial($user));
 						session()->flash("success", "<strong>Success!</strong> Trial registration done.");
 						return redirect()->route('signin');
 

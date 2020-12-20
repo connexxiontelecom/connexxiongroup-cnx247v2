@@ -163,7 +163,7 @@
                                                     }
                                                 </script>
                                                 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-                                            <button class="btn btn-out-dashed btn-primary btn-square ml-1" data-toggle="modal" data-target="#themeModal">Themes</button>
+                                            <a href="{{route('cnx247-themes')}}" class="btn btn-out-dashed btn-primary btn-square ml-1" >Themes</a>
                                         </div>
                                     </div>
                                 </div>
@@ -177,61 +177,6 @@
 </div>
 
 @yield('dialog-section')
-<div class="modal fade" id="themeModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <h5 class="sub-title">Background Theme</h5>
-                @livewire('backend.themes.theme')
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <div class="btn-group ">
-                    <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close text-white mr-2"></i> Close</button>
-                    <button type="button" class="btn btn-success waves-effect btn-mini waves-light" id="saveThemeChangesBtn"> <i class="ti-check text-white mr-2"></i> Save Changes</button>
-                </div>
-                <button type="button" class="btn btn-secondary waves-effect btn-mini waves-light float-right" data-toggle="modal" data-target="#customModal" id="custome"> <i class="ti-user text-white mr-2"></i> Custom Theme</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="customModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12 col-sm-12">
-                        <div class="card">
-                            <div class="card-block" style="background: #EEF2F4;">
-                                <h6 class="sub-title">Use Your Own Theme</h6>
-                                <form id="customeThemeForm" data-parsley-validate>
-                                    <div class="form-group">
-                                        <label for="">Background Image</label> <br>
-                                        <img src="/assets/uploads/themes/{{Auth::user()->userTheme->theme ?? ''}}" class="mb-2" height="48" width="48" alt="">
-                                        <input type="file" required name="custom_background_image" id="custom_background_image" class="form-control-file">
-                                    </div>
-                                    <div class="checkbox-fade fade-in-primary">
-                                        <label>
-                                            <input type="checkbox"  name="custom_color_scheme" id="custom_color_scheme">
-                                            <span class="cr">
-                                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                            </span>
-                                            <span>Dark Color Scheme</span>
-                                        </label>
-                                    </div>
-                                    <p><strong class="text-danger">Note:</strong> The default color scheme is light.</p>
-                                    <div class="btn-group d-flex justify-content-center">
-                                        <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close text-white mr-2"></i> Close</button>
-                                        <button type="submit" class="btn btn-success waves-effect btn-mini waves-light" id="customBackgroundBtn"> <i class="ti-check text-white mr-2"></i> Use Mine</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <script type="text/javascript" src="/assets/bower_components/jquery/js/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/bower_components/jquery-ui/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/assets/bower_components/popper.js/js/popper.min.js"></script>

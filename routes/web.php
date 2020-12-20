@@ -84,6 +84,7 @@ Route::get('/workflow-tasks', 'CNX247\Backend\WorkflowController@index')->name('
 Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewWorkflowTask')->name('view-workflow-task');
 Route::get('/workflow-business-process', 'CNX247\Backend\WorkflowController@businessProcess')->name('workflow-business-process');
 Route::post('/workflow/business-process', 'CNX247\Backend\WorkflowController@setBusinessProcess');
+Route::post('/workflow/approve-or-decline-request', 'CNX247\Backend\WorkflowController@approveOrDeclineRequest');
 #Expense report route
 Route::get('/expense-report', 'CNX247\Backend\ExpenseController@index')->name('expense-report');
 Route::post('/expense-report', 'CNX247\Backend\ExpenseController@store');
@@ -119,6 +120,11 @@ Route::post('/conversation/attachment', 'CNX247\Backend\ChatnCallsController@sen
 Route::get('/chat-n-calls', 'CNX247\Backend\ChatnCallsController@showChatnCallsView')->name('chat-n-calls');
 Route::post('/conversation/compatibility-token', 'CNX247\Backend\TokenController@newToken');
 Route::post('/conversation/call', 'CNX247\Backend\TokenController@newCall');
+Route::get('/chat', 'CNX247\Backend\ChatnCallsController@chat')->name('chat');
+Route::get('/initialize-chat', 'CNX247\Backend\ChatnCallsController@initializeChat');
+Route::get('/chat-with/{id}', 'CNX247\Backend\ChatnCallsController@chatWith');
+Route::get('/clear-messages/{id}', 'CNX247\Backend\ChatnCallsController@clearMessages');
+Route::get('/filter-contact/{search}', 'CNX247\Backend\ChatnCallsController@filterContact');
 #Route::post('/cnx247/calls', 'CNX247\Backend\ChatnCallsController@newCall');
 #CNXStream
 Route::get('/cnx247-stream', 'CNX247\Backend\CNX247Stream@index')->name('cnx247-stream');
@@ -173,6 +179,7 @@ Route::get('/renew-membership/{timestamp}/{plan}', 'CNX247\Backend\UserControlle
 Route::post('/renew-membership/pay', 'CNX247\Backend\UserController@proceedToPay')->name('pay-membership');
 Route::get('/my-feedback', 'CNX247\Backend\UserController@myFeedback')->name('my-feedback');
 Route::post('/my-feedback', 'CNX247\Backend\UserController@submitFeedback');
+Route::get('/preference/themes', 'CNX247\Backend\UserController@themes')->name('cnx247-themes');
 Route::post('/switch-theme', 'CNX247\Backend\UserController@switchTheme');
 
 #HR routes
@@ -422,6 +429,7 @@ Route::get('/my-event/calendar', 'CNX247\Backend\EventController@eventCalendar')
 Route::get('/my-event-calendar', 'CNX247\Backend\EventController@getEventCalendarData');
 Route::get('/company-calendar', 'CNX247\Backend\EventController@companyCalendar')->name('company-calendar');
 Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompanyEventData');
+Route::get('/all-events', 'CNX247\Backend\EventController@viewAllEvents')->name('view-all-events');
 
 #Procurement routes
 #Supplier routes

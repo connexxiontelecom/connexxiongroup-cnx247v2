@@ -20,6 +20,7 @@ use App\EmployeeAppraisal;
 use App\ModuleManager;
 use App\IdeaBox;
 use App\Feedback;
+use App\Theme as ThemeModel;
 use Auth;
 use Image;
 use DB;
@@ -276,6 +277,11 @@ class UserController extends Controller
             return response()->json(['error'=>'Ooops! Could not change background theme.'], 400);
 
         }
-      }
+			}
+
+
+			public function themes(){
+				return view('backend.user.themes',['themes'=>ThemeModel::orderBy('theme_name', 'ASC')->get()]);
+			}
 
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use DB;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller

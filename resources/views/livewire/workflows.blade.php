@@ -3,7 +3,7 @@
     <div class="card-block">
         <h5 class="sub-title mb-2">Assignments</h5> <br>
         <div class="dropdown-primary dropdown open mt-2 mb-3" data-intro="This is Card Header" data-step="1">
-            <button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-filter mr-2"></i>Filter</button>
+            <button class="btn btn-primary btn-sm dropdown-toggle waves-effect waves-light " type="button" id="dropdown-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-filter mr-2"></i>{{$current_action ?? 'Filter'}}</button>
             <div class="dropdown-menu" aria-labelledby="dropdown-2" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 39px, 0px); top: 0px; left: 0px; will-change: transform;">
                 <a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="allWorkflows">All</a>
                 <a class="dropdown-item waves-light waves-effect" href="javascript:void(0);" wire:click="inprogressWorkflows">In-progress</a>
