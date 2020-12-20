@@ -325,7 +325,10 @@ class StreamController extends Controller
                 $part->save();
                 $darray["persons"][] = $person["id"];
                 $user = User::find($person['id']);
-                //$user->notify(new NewPostNotification($task));
+								$user->notify(new NewPostNotification($project));
+								$body = "New Project";
+								$title = "You have been assigned a Project ";
+								$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
             }
         }
         //participants
@@ -397,7 +400,7 @@ class StreamController extends Controller
             $part->tenant_id = $request->tenant_id;
 						$part->save();
 						$body = "Announcement";
-						$title = "You have a new announcement";
+						$title = "You have a new Announcement";
 						$this->ToAllUsers($request->tenant_id, $title, $body);
         } else {
             if (!empty($request->persons)) {
@@ -416,7 +419,7 @@ class StreamController extends Controller
                     $user = User::find($person['id']);
 										$user->notify(new NewPostNotification($announcement));
 										$body = "New Announcement";
-										$title = "You have a new announcement";
+										$title = "You have a new Announcement";
 										$this->ToSpecificUser($request->tenant_id, $title, $body,$person['id']);
 
                 }
@@ -547,7 +550,7 @@ class StreamController extends Controller
 
 						$body = "New Requistion";
 						$title = "You have a request";
-						$this->ToSpecificUser($request->tenant_id, $title, $body, $person['id']);
+						$this->ToSpecificUser($request->tenant_id, $title, $body, $processor->user_id);
 
             //Register business process log
             $log = new BusinessLog;
@@ -1219,7 +1222,7 @@ class StreamController extends Controller
         //Setup headers:
         $headers = array();
         $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: key=AAAAQ6WOcsM:APA91bGx5qqTvsZoFYEMdLiNuM-DlH509sszesHzH5IdW-_OqyRNAw8UrT1VfimR0ITKpF4sJCK7GOoeI0zPYvhkQu4gmow783ZG77Qrj8seV_0QgWkkCBGZ7oSSzdVoTKIckOusTI8x';
+        $headers[] = 'Authorization: key=AAAAFdgO3BA:APA91bEWv7uF_TktP1XVFW3NRBm9mHJCfuSuatUJcocjJzt1cpkaiPKzpE5yq_s6wq5i6rye8an2FP2fFqEWqBGgYTCYaH6cK0nvNw9EohAASh5kB_qfCtCYVMCVQOQ97imHG3tpiaD2';
 
         //Setup curl, add headers and post parameters.
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -1245,9 +1248,21 @@ class StreamController extends Controller
 
 		public function ToAllUsers($tenant_id, $title, $body, $userId="32")
 		{
-			$token = "/topics/all";
-			$this->pushtoToken($token, $title, $body, $userId, $tenant_id);
+		/* 	$token = "/topics/all";
+			$this->pushtoToken($token, $title, $body, $userId, $tenant_id); */
+			$users = User::where('users.tenant_id', $tenant_id)->get();
+			foreach($users as $user)
+			{
+					 $token= $user['device_token'];
+					 if($token !=null && !empty($token))
+						{
+							$this->pushtoToken($token, $title, $body, $userId, $tenant_id);
+						}
+			}
 		}
+
+
+
 
 
 		public function ToSpecificUser($tenant_id, $title, $body, $userId)
@@ -1269,7 +1284,4 @@ class StreamController extends Controller
 
 
 
-
-
-
-}
+	}
