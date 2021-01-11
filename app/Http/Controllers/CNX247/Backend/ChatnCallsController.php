@@ -11,6 +11,7 @@ use Twilio\Jwt\AccessToken;
 use Twilio\Jwt\Grants\VoiceGrant;
 use Twilio\Rest\Client;
 use Pusher\Pusher;
+use App\Events\NewMessage;
 use App\User;
 use App\Message;
 use Auth;
@@ -20,7 +21,15 @@ class ChatnCallsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+				$this->middleware('auth');
+				// Twilio credentials
+				$this->account_sid = env('TWILIO_ACCOUNT_SID');
+				$this->auth_token = env('TWILIO_AUTH_TOKEN');
+				//The twilio number you purchased
+				$this->from = env('TWILIO_NUMBER');
+				// Initialize the Programmable Voice API
+				$this->client = new Client($this->account_sid, $this->auth_token);
+
     }
 
     /*
@@ -52,9 +61,13 @@ class ChatnCallsController extends Controller
         $send->from_id = Auth::user()->id;
         $send->tenant_id = Auth::user()->tenant_id;
         $send->save();
-        $this->showChatnCallsView();
+				//$this->showChatnCallsView();
+				broadcast(new NewMessage($send));
 
-        // pusher
+				$title =  Auth::user()->first_name ." ". Auth::user()->surname;
+				$this->ToSpecificUser($send->tenant_id, $title, $request->message, $request->receiver);
+
+       /*  // pusher
         $options = array(
             'cluster' => 'eu'
         );
@@ -66,8 +79,8 @@ class ChatnCallsController extends Controller
             $options
         );
         $data = ['from' => Auth::user()->id, 'to' => $request->receiver]; // sending from and to user id when pressed enter
-        $pusher->trigger('my-channel', 'my-event', $data);
-
+        $pusher->trigger('my-channel', 'my-event', $data);*/
+			return response()->json($send);
     }
     /*
     *
@@ -83,14 +96,8 @@ class ChatnCallsController extends Controller
             $dir = 'assets/uploads/attachments/';
             $filename = 'chat_'.uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
             $request->file('attachment')->move(public_path($dir), $filename);
-        }
+				}
 
-/*         if($request->attachment){
-            $filename = 'chat_'.time().'.'.explode('/', explode(':', substr($request->attachment, 0, strpos($request->attachment, ';')))[1])[1];
-            //share attachment
-            //$file->move(base_path('\modo\images'),$file->getClientOriginalName());
-            \Image::make($request->attachment)->resize(52, 82)->save(public_path('assets/uploads/attachments/').$filename);
-        } */
         $message = new Message;
         $message->to_id = $request->to;
         $message->from_id = Auth::user()->id;
@@ -102,66 +109,52 @@ class ChatnCallsController extends Controller
     * Chat-n-calls view
     */
     public function showChatnCallsView(){
-        $users = DB::select("select users.id, users.first_name, users.avatar,
-        users.email, users.surname, users.mobile, users.position, count(is_read) as unread,
-        messages.created_at as message_date
-        FROM users
-        LEFT  JOIN  messages
-        ON users.id = messages.from_id
-        AND is_read = 0
-        AND messages.to_id = " . Auth::id() . "
-        WHERE users.id != " . Auth::id() . "
-        AND users.tenant_id = " .Auth::user()->tenant_id. "
-        GROUP BY  messages.created_at, users.id, users.first_name, users.avatar, users.email, users.surname, users.mobile, users.position
-        ORDER BY messages.created_at DESC ");
 
-        return view('backend.chat.view.chat-n-calls', ['users'=>$users]);
+        return view('backend.chat.view.chat');
     }
 
     public function newToken(Request $request){
         $forPage = $request->forPage;
         $sid = getenv('TWILIO_ACCOUNT_SID');
         $token =  getenv('TWILIO_AUTH_TOKEN');
-        if ($forPage === route('dashboard', [], false)) {
+        //if ($forPage === route('dashboard', [], false)) {
             $this->clientToken->allowClientIncoming('support_agent');
-        } else {
+        //} else {
 
-        }
+				//}
+				$token = $this->clientToken->generateToken();
+        return response()->json(['token' => $token]);
     }
 
     /*
     * Make call
     */
     public function makeCall(Request $request){
-        // Get form input
-        $userPhone = $request->phoneNumber;
-        $encodedSalesPhone = urlencode(str_replace(' ','',$request->phoneNumber));
-        // Set URL for outbound call - this should be your public server URL
-        $host = config('app.url');//parse_url(Request::url(), PHP_URL_HOST);
-
-        // Create authenticated REST client using account credentials in
-        // <project root dir>/.env.php
-        $client = new Client(
-            getenv('TWILIO_ACCOUNT_SID'),
-            getenv('TWILIO_AUTH_TOKEN')
-        );
-
-        try {
-           $call = $client->calls->create(
-                $request->phoneNumber,
-                getenv('TWILIO_NUMBER'),
-                array(
-                    //"twiml" => "<Response><Say>Ahoy there!</Say></Response>"
-                    "url" => "http://$host/outbound/$encodedSalesPhone"//"http://demo.twilio.com/docs/voice.xml"//"http://$host/outbound/$encodedSalesPhone"
-                )
-            );
-        } catch (Exception $e) {
-            // Failed calls will throw
-            return $e;
-        }
-
-        // return a JSON response
-        return array('message' => $call);
+        $this->validate($request,[
+					'phoneNumber'=>'required'
+				]);
+				try{
+					$phoneNumber = $this->client->lookups->v1->phoneNumbers($request->phoneNumber)->fetch();
+					if($phoneNumber){
+						$call = $this->client->account->calls->create(
+							$request->phoneNumber,
+							$this->from,
+							array(
+								"record"=>TRUE,
+								"url"=>"http://demo.twilio.com/docs/voice.xml"
+							)
+						);
+						if($call){
+							echo "Call initiated";
+						}else{
+							echo "Call failed";
+						}
+					}
+				}catch(Exception $ex){
+					echo "Error: ".$ex->getMessage;
+				}catch (RestException $rest) {
+					echo 'Error: ' . $rest->getMessage();
+				}
     }
 
     public function newCall(Request $request)
