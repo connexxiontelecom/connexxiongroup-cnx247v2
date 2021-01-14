@@ -742,6 +742,7 @@
                         <div class="col-md-12 p-3" style="background:#FDFBEE;">
                             <p><strong>Task:</strong></p>
                             <p>Kindly act on this request titled: {{str_replace('-', ' ', $request->post_type)}} "{{$request->post_title ?? '' }}".</p>
+                             {!! $request->post_content !!}
                             <div class="mt-3">
                                 <label class="tx-11 font-weight-bold mb-0 text-uppercase">Requester:</label>
                                 <p class="text-muted">{{$request->first_name ?? '' }} {{$request->surname ?? ''}}</p>

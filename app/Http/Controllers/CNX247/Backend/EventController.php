@@ -89,12 +89,29 @@ class EventController extends Controller
     }
 
     public function myEventList(){
+
         $events = Post::where('post_type', 'event')
                         ->where('tenant_id', Auth::user()->tenant_id)
+<<<<<<< HEAD
 												->where('user_id', Auth::user()->id)
 												->orderBy('id', 'DESC')
                         ->get();
         return view('backend.events.event-list', ['events'=>$events]);
+=======
+                        //->where('user_id', Auth::user()->id)
+												->get();
+				$eventIds = [];
+				foreach($events as $event){
+					array_push($eventIds, $event->id);
+				}
+				$mine = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)->whereIn('post_id', $eventIds)->orWhere('post_id', 32)->get();
+				$mineIds = [];
+				foreach($mine as $m){
+					array_push($mineIds, $m->post_id);
+				}
+				$my_events = Post::where('tenant_id', Auth::user()->tenant_id)->whereIn('id', $mineIds)->orderBy('end_date', 'DESC')->get();
+        return view('backend.events.event-list', ['events'=>$my_events]);
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
     }
 
 
@@ -109,12 +126,24 @@ class EventController extends Controller
     * my event calendar data
     */
     public function getEventCalendarData(){
-        $event = Post::select('post_title as title', 'start_date as start', 'end_date as end', 'post_color as color')
-                    ->where('post_type', 'event')
-                    ->where('tenant_id', Auth::user()->tenant_id)
-                    ->where('user_id', Auth::user()->id)
-                    ->get();
-        return response($event);
+
+						$events = Post::where('post_type', 'event')
+										->where('tenant_id', Auth::user()->tenant_id)
+										->get();
+							$eventIds = [];
+							foreach($events as $event){
+							array_push($eventIds, $event->id);
+							}
+							$mine = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)->whereIn('post_id', $eventIds)->orWhere('post_id', 32)->get();
+							$mineIds = [];
+							foreach($mine as $m){
+							array_push($mineIds, $m->post_id);
+							}
+							$my_events = Post::select('post_title as title', 'start_date as start', 'end_date as end', 'post_color as color')
+																->where('post_type', 'event')
+																->where('tenant_id', Auth::user()->tenant_id)
+																->whereIn('id', $mineIds)->orderBy('end_date', 'DESC')->get();
+        return response($my_events);
     }
     /*
     * company event calendar
@@ -133,5 +162,12 @@ class EventController extends Controller
                     ->where('user_id', Auth::user()->id)
                     ->get();
         return response($event);
-    }
+		}
+
+
+		public function viewAllEvents(){
+			$events = Post::where('post_type', 'event')->where('tenant_id', Auth::user()->tenant_id)->get();
+			return view('backend.events.view-events', ['events'=>$events]);
+		}
+
 }

@@ -46,6 +46,17 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('like', 'CNX247\API\StreamController@like');
 		Route::post('comment', 'CNX247\API\StreamController@comment');
 		Route::post('users', 'CNX247\API\usersController@users');
+		Route::post('tenant', 'CNX247\API\usersController@getTenantDetails');
+
+
+		Route::post('isloggedin', 'CNX247\API\usersController@isLoggedIn');
+
+		Route::post('isloggedout', 'CNX247\API\usersController@isLoggedout');
+
+
+
+
+		Route::post('savetoken', 'CNX247\API\usersController@saveUserDeviceToken');
 
 		Route::post('newtask', 'CNX247\API\StreamController@storeTask');
 		Route::post('newproject', 'CNX247\API\StreamController@storeProject');
@@ -74,11 +85,18 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 		Route::post('delete', 'CNX247\API\StreamController@deletePost');
 
 
-		Route::post('sharefile', 'CNX247\API\StreamController@shareFile');
+		Route::post('streamsharefile', 'CNX247\API\StreamController@shareFile');
 		Route::get('priorities', 'CNX247\API\StreamController@priorities');
 		Route::post('chats', 'CNX247\API\StreamController@getmessages');
 
+
 		Route::post('sndchat', 'CNX247\API\StreamController@sendChat');
+		Route::post('updatechat', 'CNX247\API\StreamController@updateIsReadStatus');
+
+		//Route::post('notify', 'CNX247\API\StreamController@pushtoToken');
+
+
+
 
 		Route::post('drive', 'CNX247\API\DriveController@getDriveContents');
 
@@ -96,11 +114,16 @@ Route::group(['middleware' => ['jwt.verify'], 'prefix'=>'auth' ], function() {
 
 		Route::post('sharefile', 'CNX247\API\DriveController@shareFile');
 
-
+		//Route::post('drivecapacity', 'CNX247\API\DriveController@getDriveSize');
 
 		Route::post('deletefolder', 'CNX247\API\DriveController@deleteFolder');
 
 		Route::post('deletefile', 'CNX247\API\DriveController@deleteAttachment');
+
+
+		Route::post('approvedecline', 'CNX247\API\StreamController@verifyCode');
+
+
 
 
 

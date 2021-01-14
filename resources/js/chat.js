@@ -20,7 +20,10 @@ var vm = new Vue({
 			selected_user_details: '',
 			searchText:'',
 			noRecord:false,
+<<<<<<< HEAD
 			file: '',
+=======
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
 			options:{
 				height:'500px'
 			},
@@ -77,6 +80,7 @@ var vm = new Vue({
 
 
 		},
+<<<<<<< HEAD
 		triggerFileUpload(){
 			this.handleFileUpload();
 		},
@@ -95,6 +99,8 @@ var vm = new Vue({
 				});
 			//}
 		},
+=======
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
 		handleIncoming(message){
 			if(this.selected_user && message.from_id == $this.selected_user){
 				this.saveNewMessage(message);
@@ -151,6 +157,7 @@ var vm = new Vue({
 			setTimeout(() => {
 					document.getElementById('messageWrapper').scrollTop = document.getElementById('messageWrapper').scrollHeight - document.getElementById('messageWrapper').clientHeight;
 			}, 50);
+<<<<<<< HEAD
 		},
 		setupClient() {
 			axios.post("/conversation/compatibility-token", {
@@ -166,6 +173,9 @@ var vm = new Vue({
 			});
 
 	}
+=======
+		}
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
 
 	},
 

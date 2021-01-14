@@ -33,9 +33,9 @@ class OnBoarding extends Component
 
         $max_team_size = $plan_details->team_size;
 
-        if($count_users >= $max_team_size):
+        /* if($count_users >= $max_team_size):
             session()->flash("error", "<strong>Error!</strong> Upgrade Plan to add new user.");
-            endif;
+            endif; */
 
         return view('livewire.backend.hr.on-boarding', ['departments'=>Department::where('tenant_id', Auth::user()->tenant_id)->get()]);
     }
@@ -55,7 +55,7 @@ class OnBoarding extends Component
 
         $max_team_size = $plan_details->team_size;
 
-        if($count_users < $max_team_size):
+        //if($count_users < $max_team_size):
 
         $this->validate([
             'first_name'=>'required',
@@ -82,13 +82,13 @@ class OnBoarding extends Component
         $user->url = substr(sha1(time()), 29,40);
 
             $user->save();
-            \//Mail::to($user)->send(new onBoardEmployee($user, $password));
+            \Mail::to($user)->send(new onBoardEmployee($user, $password));
             session()->flash("success", "<strong>Success!</strong> Onboarding process done.");
             return redirect()->back();
-        else:
+        /* else:
             session()->flash("error", "<strong>Error!</strong> Upgrade Plan to add new user.");
             return redirect()->back();
-            endif;
+            endif; */
     }
 }
 

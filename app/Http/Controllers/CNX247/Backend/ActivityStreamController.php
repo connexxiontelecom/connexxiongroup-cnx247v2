@@ -68,7 +68,10 @@ class ActivityStreamController extends Controller
                 $receiver->tenant_id = Auth::user()->tenant_id;
                 $receiver->save();
                 $rec = User::find($person);
-                $rec->notify(new NewPostNotification($message));
+								$rec->notify(new NewPostNotification($message));
+								$body = "New Message";
+								$title = "You have a new Message";
+								$this->ToSpecificUser(Auth::user()->tenant_id, $title, $body,$person);
 
             }
         }else if($request->target == 0){
@@ -77,7 +80,11 @@ class ActivityStreamController extends Controller
             $receiver->post_id = $message_id;
             $receiver->post_type = 'message';
             $receiver->tenant_id = Auth::user()->tenant_id;
-            $receiver->save();
+						$receiver->save();
+
+						$body = "New Message";
+						$title = "You have a new Message";
+						$this->ToAllUsers( Auth::user()->tenant_id, $title, $body);
         }
         if(!empty($request->file('attachment'))){
             $attach = new PostAttachment;
@@ -179,7 +186,11 @@ class ActivityStreamController extends Controller
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
                 $user = User::find($participant);
-                $user->notify(new NewPostNotification($task));
+								$user->notify(new NewPostNotification($task));
+
+								$body = "New Task";
+								$title = "You have a new Task";
+								$this->ToSpecificUser(Auth::user()->tenant_id, $title, $body,$participant);
             }
         }
         //participants
@@ -240,7 +251,10 @@ class ActivityStreamController extends Controller
         $event_id = $event->id;
         //send notification
         $user = $event->user;
-        $user->notify(new NewPostNotification($event));
+				$user->notify(new NewPostNotification($event));
+
+
+
         //responsible persons
         if($request->target == 0){
             $part = new ResponsiblePerson;
@@ -248,7 +262,12 @@ class ActivityStreamController extends Controller
             $part->post_type = 'event';
             $part->user_id = 32;
             $part->tenant_id = Auth::user()->tenant_id;
-            $part->save();
+						$part->save();
+
+						$body = "New Event";
+						$title = "You have a new Event";
+						$this->ToAllUsers( Auth::user()->tenant_id, $title, $body);
+
         }else{
             if(!empty(json_decode($request->attendees))){
                 foreach(json_decode($request->attendees) as $attendee){
@@ -263,7 +282,10 @@ class ActivityStreamController extends Controller
                     $part->save();
                     //send notification
                     $user = User::find($attendee);
-                    $user->notify(new NewPostNotification($event));
+										$user->notify(new NewPostNotification($event));
+										$body = "New Event";
+										$title = "You have a new Event";
+										$this->ToSpecificUser(Auth::user()->tenant_id, $title, $body,$attendee);
                 }
             }
         }
@@ -273,7 +295,9 @@ class ActivityStreamController extends Controller
             return response()->json(['error'=>'Success! Ooops! Something went wrong. Try again.'], 400);
 
         }
-    }
+		}
+
+
 
     /*
     * Create announcement
@@ -322,7 +346,11 @@ class ActivityStreamController extends Controller
             $part->post_type = 'announcement';
             $part->user_id = 32;
             $part->tenant_id = Auth::user()->tenant_id;
-            $part->save();
+						$part->save();
+
+						$body = "New Announcement";
+						$title = "You have a new Announcement";
+						$this->ToAllUsers( Auth::user()->tenant_id, $title, $body);
         }else{
             foreach(json_decode($request->to) as $person){
 
@@ -336,7 +364,11 @@ class ActivityStreamController extends Controller
                 $part->save();
                 //send notification
                 $user = User::find($person);
-                $user->notify(new NewPostNotification($announcement));
+								$user->notify(new NewPostNotification($announcement));
+
+								$body = "New Announcement";
+								$title = "You have a new Announcement";
+								$this->ToSpecificUser(Auth::user()->tenant_id, $title, $body,$person);
             }
         }
         if($announcement){
@@ -388,7 +420,12 @@ class ActivityStreamController extends Controller
             $part->post_type = 'file';
             $part->user_id = 32;
             $part->tenant_id = Auth::user()->tenant_id;
-            $part->save();
+						$part->save();
+
+						$body = "New Shared File";
+						$title = "You have a new Shared File";
+						$this->ToAllUsers( Auth::user()->tenant_id, $title, $body);
+
         }else{
             foreach(json_decode($request->share_with) as $person){
 
@@ -402,7 +439,12 @@ class ActivityStreamController extends Controller
                 $part->save();
                 //send notification
                 $user = User::find($person);
-                $user->notify(new NewPostNotification($announcement));
+								$user->notify(new NewPostNotification($file));
+								$body = "New Shared File";
+								$title = "You have a new Shared File";
+								$this->ToSpecificUser(Auth::user()->tenant_id, $title, $body,$person);
+
+
             }
         }
         if($file){
@@ -437,7 +479,12 @@ class ActivityStreamController extends Controller
             $part->post_type = 'appreciation';
             $part->user_id = 32;
             $part->tenant_id = Auth::user()->tenant_id;
-            $part->save();
+						$part->save();
+
+						$body = "New Appreciation";
+						$title = Auth::user()->first_name." ".Auth::user()->surname." sent in appreciation.";
+						$this->ToAllUsers( Auth::user()->tenant_id, $title, $body);
+
         }else{
             //responsible persons
             if(!empty(json_decode($request->persons))){
@@ -450,7 +497,11 @@ class ActivityStreamController extends Controller
                     $part->save();
                      //send notification
                      $user = User::find($person);
-                     $user->notify(new NewPostNotification($app));
+										 $user->notify(new NewPostNotification($app));
+
+										 $body = "New Appreciation";
+										 $title = Auth::user()->first_name." ".Auth::user()->surname." sent in appreciation.";
+										 $this->ToSpecificUser(Auth::user()->tenant_id, $title, $body,$person);
                 }
             }
         }
@@ -515,5 +566,92 @@ class ActivityStreamController extends Controller
         $out->status = 2; //out
         $out->save();
         return response()->json(['message'=>'Success! Clocked-out'], 200);
-    }
+		}
+
+
+
+
+
+
+
+
+
+
+		public function pushtoToken($token, $title, $body, $userId, $tenantId)
+    {
+        //$token, $title, $body, $userId, $tenantId
+
+        $ch = curl_init("https://fcm.googleapis.com/fcm/send");
+
+        $data = array("clickaction" => "FLUTTERNOTIFICATIONCLICK", "user" => $userId, "tenant_id" => $tenantId);
+
+        //Creating the notification array.
+        $notification = array('title' => $title, 'body' => $body);
+
+        //This array contains, the token and the notification. The 'to' attribute stores the token.
+        $arrayToSend = array('to' =>$token, 'notification' => $notification, 'data' => $data);
+
+        //Generating JSON encoded string form the above array.
+        $json = json_encode($arrayToSend);
+
+        $url = "https://fcm.googleapis.com/fcm/send";
+        //Setup headers:
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: key=AAAAFdgO3BA:APA91bEWv7uF_TktP1XVFW3NRBm9mHJCfuSuatUJcocjJzt1cpkaiPKzpE5yq_s6wq5i6rye8an2FP2fFqEWqBGgYTCYaH6cK0nvNw9EohAASh5kB_qfCtCYVMCVQOQ97imHG3tpiaD2';
+
+        //Setup curl, add headers and post parameters.
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+       // print($result);
+
+        //Send the request
+        //curl_exec($ch);
+
+        //Close request
+        curl_close($ch);
+		}
+
+
+
+		public function ToAllUsers($tenant_id, $title, $body, $userId="32")
+		{
+		/* 	$token = "/topics/all";
+			$this->pushtoToken($token, $title, $body, $userId, $tenant_id); */
+			$users = User::where('users.tenant_id', $tenant_id)->get();
+			foreach($users as $user)
+			{
+					 $token= $user['device_token'];
+					 if($token !=null && !empty($token))
+						{
+							$this->pushtoToken($token, $title, $body, $userId, $tenant_id);
+						}
+			}
+
+		}
+
+
+		public function ToSpecificUser($tenant_id, $title, $body, $userId)
+		{
+			$users = User::where('users.tenant_id', $tenant_id)->where('users.id', $userId)->get();
+			foreach($users as $user)
+			{
+					 $token= $user['device_token'];
+					 if($token !=null && !empty($token))
+						{
+							$this->pushtoToken($token, $title, $body, $userId, $tenant_id);
+						}
+			}
+		}
+
+
+
 }

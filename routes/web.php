@@ -84,6 +84,7 @@ Route::get('/workflow-tasks', 'CNX247\Backend\WorkflowController@index')->name('
 Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewWorkflowTask')->name('view-workflow-task');
 Route::get('/workflow-business-process', 'CNX247\Backend\WorkflowController@businessProcess')->name('workflow-business-process');
 Route::post('/workflow/business-process', 'CNX247\Backend\WorkflowController@setBusinessProcess');
+Route::post('/workflow/approve-or-decline-request', 'CNX247\Backend\WorkflowController@approveOrDeclineRequest');
 #Expense report route
 Route::get('/expense-report', 'CNX247\Backend\ExpenseController@index')->name('expense-report');
 Route::post('/expense-report', 'CNX247\Backend\ExpenseController@store');
@@ -428,6 +429,7 @@ Route::get('/my-event/calendar', 'CNX247\Backend\EventController@eventCalendar')
 Route::get('/my-event-calendar', 'CNX247\Backend\EventController@getEventCalendarData');
 Route::get('/company-calendar', 'CNX247\Backend\EventController@companyCalendar')->name('company-calendar');
 Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompanyEventData');
+Route::get('/all-events', 'CNX247\Backend\EventController@viewAllEvents')->name('view-all-events');
 
 #Procurement routes
 #Supplier routes
