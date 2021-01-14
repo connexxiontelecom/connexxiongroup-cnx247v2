@@ -5,7 +5,7 @@ Receive Payment
 @endsection
 
 @section('extra-styles')
-
+<link rel="stylesheet" type="text/css" href="/assets/css/cus/datetimepicker.min.css">
 <style>
 /* The heart of the matter */
 
@@ -92,7 +92,7 @@ Receive Payment
                         <div class="col-md-3 col-lg-3 col-sm-3">
                             <div class="form-group">
                                 <label for="">Payment Date</label>
-                                <input type="date" name="payment_date" placeholder="Date" class="form-control">
+                                <input type="text" name="payment_date" id="payment_date" placeholder="dd/mm/yyyy" class="form-control">
                                 @error('payment_date')
                                     <i class="text-danger mt-2">{{$message}}</i>
                                 @enderror
@@ -244,8 +244,12 @@ Receive Payment
 <script src="\assets\pages\form-masking\jquery.inputmask.js"></script>
 <script src="/assets/pages/form-masking/autoNumeric.js"></script>
 <script src="/assets/pages/form-masking/form-mask.js"></script>
+<script type="text/javascript" src="/assets/js/cus/moment.js"></script>
+<script type="text/javascript" src="/assets/js/cus/datetimepicker.js"></script>
+
 <script>
     $(document).ready(function(){
+			$('#payment_date').datetimepicker();
         var grand_total = 0;
         var invoice_total = 0;
         $(".select-invoice").on('change', function() {

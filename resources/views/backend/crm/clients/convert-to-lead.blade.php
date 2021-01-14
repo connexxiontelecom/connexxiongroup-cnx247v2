@@ -8,7 +8,8 @@ Convert to Lead
 <link rel="stylesheet" type="text/css" href="/assets/css/component.css">
 <link rel="stylesheet" type="text/css" href="/assets/bower_components/bootstrap-multiselect/css/bootstrap-multiselect.css">
     <link rel="stylesheet" type="text/css" href="/assets/bower_components/multiselect/css/multi-select.css">
-    <link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
+		<link rel="stylesheet" href="/assets/bower_components/select2/css/select2.min.css">
+		<link rel="stylesheet" type="text/css" href="/assets/css/cus/datetimepicker.min.css">
 <style>
 /* The heart of the matter */
 
@@ -86,7 +87,7 @@ Convert to Lead
                             <tr>
                                 <th>Issue Date :</th>
                                 <td>
-                                    <input type="date" name="issue_date" placeholder="Date" class="form-control">
+                                    <input type="text" id="issue_date" name="issue_date" placeholder="dd/mm/yyyy" class="form-control">
                                     @error('issue_date')
                                         <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
@@ -95,7 +96,7 @@ Convert to Lead
                             <tr>
                                 <th>Due Date :</th>
                                 <td>
-                                    <input type="date" name="due_date" class="form-control" placeholder="Due Date">
+                                    <input type="text" id="due_date" name="due_date" class="form-control" placeholder="dd/mm/yyyy">
                                     @error('due_date')
                                         <i class="text-danger mt-2">{{$message}}</i>
                                     @enderror
@@ -290,9 +291,13 @@ Convert to Lead
 <script type="text/javascript" src="/assets/bower_components/multiselect/js/jquery.multi-select.js"></script>
 <script type="text/javascript" src="/assets/bower_components/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/assets/pages/advance-elements/select2-custom.js"></script>
+<script type="text/javascript" src="/assets/js/cus/moment.js"></script>
+<script type="text/javascript" src="/assets/js/cus/datetimepicker.js"></script>
 <script>
 
     $(document).ready(function(){
+			$('#issue_date').datetimepicker();
+			$('#due_date').datetimepicker();
 			var defaultCurrency = "{{Auth::user()->tenant->currency->id}}";
 			var string = null;
         $(".select-product").select2({

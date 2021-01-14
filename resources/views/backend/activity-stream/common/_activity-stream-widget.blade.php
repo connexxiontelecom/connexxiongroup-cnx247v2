@@ -129,13 +129,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="">Start Date <i>(Optional)</i></label>
-                                            <input type="datetime-local" required id="start_date" class="form-control form-control-normal" placeholder="Start Date">
+                                            <input type="text" required id="start_date" class="form-control form-control-normal" placeholder="dd/mm/yyyy">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="">Due Date</label>
-                                            <input type="datetime-local" required id="due_date" class="form-control form-control-normal" placeholder="Due date">
+                                            <input type="text" required id="due_date" class="form-control form-control-normal" placeholder="dd/mm/yyyy">
                                             @error('due_date')
                                                 <i class="text-danger">{{$message}}</i>
                                             @enderror
@@ -289,7 +289,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Event Date</label>
-                                            <input type="datetime-local" required id="event_start_date" class="form-control form-control-normal" placeholder="Event Start date">
+                                            <input type="text" required id="event_start_date" class="form-control form-control-normal" placeholder="dd/mm/yyyy">
                                             @error('event_start_date')
                                                 <i class="text-danger">{{$message}}</i>
                                             @enderror
@@ -298,7 +298,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Event End Date</label>
-                                            <input type="datetime-local" required id="event_end_date" class="form-control form-control-normal" placeholder="Event End Date">
+                                            <input type="text" required id="event_end_date" class="form-control form-control-normal" placeholder="dd/mm/yyyy">
                                         </div>
                                     </div>
                                 </div>

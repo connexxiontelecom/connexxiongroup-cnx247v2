@@ -77,9 +77,19 @@ class ProjectController extends Controller
         $project->post_type = 'project';
         $project->post_url = $url;
         $project->budget = $request->budget ?? '';
-        $project->sponsor = $request->project_sponsor;
-        $project->start_date = $request->start_date ?? '';
-        $project->end_date = $request->due_date;
+				$project->sponsor = $request->project_sponsor;
+
+
+       /*  $project->start_date = $request->start_date ?? '';
+				$project->end_date = $request->due_date; */
+
+				$startDateInstance = new DateTime($request->start_date);
+				$project->start_date = $startDateInstance->format('Y-m-d H:i:s');
+
+					$dueDateInstance = new DateTime($request->due_date);
+				$project->end_date = $dueDateInstance->format('Y-m-d H:i:s');
+
+
         $project->post_priority = $request->priority;
         $project->tenant_id = Auth::user()->tenant_id;
         //$task->attachment = $filename;

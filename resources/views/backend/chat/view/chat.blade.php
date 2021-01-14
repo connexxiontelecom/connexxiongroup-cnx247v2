@@ -107,7 +107,7 @@
 									<small class="ml-3 text-muted">@{{date(msg.created_at)}}</small>
 								</div>
 								<div v-else>
-									<a :href="'/assets/uploads/attachments/'+msg.attachment" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" >
+									<a :href="'/assets/uploads/attachments/'+msg.attachment" target="_blank" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" >
 										<img src="/assets/formats/file.png" height="32" width="32" >
 									</a>
 									<small class="ml-3 text-muted">@{{date(msg.created_at)}}</small>

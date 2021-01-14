@@ -112,7 +112,8 @@ class Shortcut extends Component
 
         $now = Carbon::now();
         $events = Post::where('tenant_id', Auth::user()->tenant_id)
-                                ->where('post_type', 'event')
+																->where('post_type', 'event')
+																->whereDate('start_date', '>', now())
                                 ->orderBy('id', 'DESC')
                                 ->take(5)
                                 ->get();
