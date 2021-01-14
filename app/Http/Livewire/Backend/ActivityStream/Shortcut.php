@@ -8,8 +8,6 @@ use App\WorkgroupAttachment;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 use Livewire\Component;
-//use App\Mail\RequisitionVerificationMail;
-//use App\RequisitionVerification;
 use App\Notifications\NewPostNotification;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
@@ -113,18 +111,6 @@ class Shortcut extends Component
 			endif;
 
 
-<<<<<<< HEAD
-        $now = Carbon::now();
-        $events = Post::where('tenant_id', Auth::user()->tenant_id)
-																->where('post_type', 'event')
-																->whereDate('start_date', '>', now())
-                                ->orderBy('id', 'DESC')
-                                ->take(5)
-                                ->get();
-        $this->ongoing = Post::where('post_status','in-progress')
-                                ->where('tenant_id', Auth::user()->tenant_id)
-                                ->where('post_type', 'task')
-=======
 				$now = Carbon::now();
 				$date = Carbon::now();
 				$this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
@@ -159,13 +145,13 @@ class Shortcut extends Component
 									array_push($mineIds, $m->post_id);
 									}
 				$my_events = Post::where('tenant_id', Auth::user()->tenant_id)->whereIn('id', $mineIds)
+													->whereDate('start_date', '>', now())
 													->take(5)
 													->orderBy('end_date', 'DESC')->get();
         $this->ongoing = ResponsiblePerson::where('status','in-progress')
 																->where('tenant_id', Auth::user()->tenant_id)
 																->where('post_type', 'task')
                                 ->where('user_id', Auth::user()->id)
->>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
                                 ->count();
         $this->set_by_me = Post::where('user_id',Auth::user()->id)
                                 ->where('tenant_id', Auth::user()->tenant_id)
@@ -177,44 +163,47 @@ class Shortcut extends Component
         $this->following = Observer::where('user_id',Auth::user()->id)
                                 ->where('tenant_id', Auth::user()->tenant_id)
                                 ->count();
-        //$duration = Carbon::parse($now->today())->diffInDays($now->addMonths(2));
-        $current = strtotime($now->today());
-        $dates = [];
-        $stepVal = '+1 day';
-        while($current  <= strtotime($now->today()->addMonths(2)) ) {
-            $dates[] = date('m-d', $current);
-            $current = strtotime($stepVal, $current);
-         }
-
-				$users = User::where('tenant_id', Auth::user()->tenant_id)
-				 							->whereNotNull('birth_date')
-                        ->orderByRaw('DATE_FORMAT(birth_date, "%m-%d")', 'DESC')
-												->get();
-				//return dd($users);
-        $userBirthDates = [];
-				$userIds = [];
-        foreach($users as $user){
-            $n = 0;
-            array_push($userBirthDates, Carbon::parse($user->birth_date)->format('m-d'));
-            if(in_array(Carbon::parse($user->birth_date)->format('m-d'), $dates) ){
-							if(!is_null($user->birth_date)){
-                array_push($userIds, $user->id);
+				$current = strtotime($now->today());
+				//get all tenant posts
+				$posts = Post::where('tenant_id', Auth::user()->tenant_id)
+										->get();
+							$postIds = [];
+							foreach($posts as $post){
+							array_push($postIds, $post->id);
 							}
-            }
-				}
-<<<<<<< HEAD
 
-        $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
-																->whereIn('id', $userIds)
-																->orderByRaw('DATE_FORMAT(birth_date, "%d-%m")', 'DESC')
-																->get();
-=======
-				$ids_ordered = implode(',', $userIds);
->>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
+				$created_by_me = Post::where('tenant_id', Auth::user()->tenant_id)->where('user_id', Auth::user()->id)->get();
+
+				//this IDs very important
+				$createdByMeIds = [];
+				foreach($created_by_me as $by_me){
+					array_push($createdByMeIds, $by_me->id);
+				}
+
+				$mine = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)->whereIn('post_id', $postIds)
+																	->where('user_id', Auth::user()->id)
+																	->orWhere('user_id', 32)->get();
+
+																														//same with this
+				$mineIds = [];
+				foreach($mine as $m){
+				array_push($mineIds, $m->post_id);
+				}
+
+				//join the two IDs (post created by me and ones that I'm responsible for)
+				$mergedIds = array_unique(array_merge($createdByMeIds, $mineIds));
+
+				$my_posts = Post::select('post_title as title', 'start_date as start', 'end_date as end', 'post_color as color')
+													->where('post_type', 'event')
+													->where('tenant_id', Auth::user()->tenant_id)
+													->whereIn('id', $mineIds)->orderBy('end_date', 'DESC')->get();
+
+
         $this->online = User::where('tenant_id', Auth::user()->tenant_id)->where('is_online', 1)->count();
-        $this->workforce = User::where('tenant_id', Auth::user()->tenant_id)->count();
+				$this->workforce = User::where('tenant_id', Auth::user()->tenant_id)->count();
+
         return view('livewire.backend.activity-stream.shortcut',
-                                ['posts'=> Post::where('tenant_id', Auth::user()->tenant_id)
+                                ['posts'=> Post::where('tenant_id', Auth::user()->tenant_id)->whereIn('id',$mergedIds)
                                 ->orderBy('id', 'DESC')
                                 ->paginate(10),
                     'announcements'=>Post::where('post_type', 'announcement')
