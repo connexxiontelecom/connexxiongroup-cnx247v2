@@ -5,7 +5,7 @@
 @endsection
 
 @section('extra-styles')
-
+<link rel="stylesheet" type="text/css" href="/assets/css/cus/datetimepicker.min.css">
 @endsection
 
 @section('content')
@@ -71,7 +71,7 @@
                                                  <td>
                                                      <div class="form-group">
                                                          <label for="">Latest Delivery Date:</label>
-                                                         <input type="date" placeholder="Delivery Date" class="form-control" name="delivery_date">
+                                                         <input type="text" placeholder="dd/mm/yyyy" id="delivery_date" class="form-control" name="delivery_date">
                                                          @error('delivery_date')
                                                              <i class="text-danger mt-2">{{$message}}</i>
                                                          @enderror
@@ -191,8 +191,11 @@
 @endsection
 
 @section('extra-scripts')
+<script type="text/javascript" src="/assets/js/cus/moment.js"></script>
+<script type="text/javascript" src="/assets/js/cus/datetimepicker.js"></script>
 <script>
     $(document).ready(function(){
+			$('#delivery_date').datetimepicker();
         var grand_total = 0;
         $('.invoice-detail-table').on('mouseup keyup', 'input[type=number]', ()=> calculateTotals());
 

@@ -113,6 +113,18 @@ class Shortcut extends Component
 			endif;
 
 
+<<<<<<< HEAD
+        $now = Carbon::now();
+        $events = Post::where('tenant_id', Auth::user()->tenant_id)
+																->where('post_type', 'event')
+																->whereDate('start_date', '>', now())
+                                ->orderBy('id', 'DESC')
+                                ->take(5)
+                                ->get();
+        $this->ongoing = Post::where('post_status','in-progress')
+                                ->where('tenant_id', Auth::user()->tenant_id)
+                                ->where('post_type', 'task')
+=======
 				$now = Carbon::now();
 				$date = Carbon::now();
 				$this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
@@ -153,6 +165,7 @@ class Shortcut extends Component
 																->where('tenant_id', Auth::user()->tenant_id)
 																->where('post_type', 'task')
                                 ->where('user_id', Auth::user()->id)
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
                                 ->count();
         $this->set_by_me = Post::where('user_id',Auth::user()->id)
                                 ->where('tenant_id', Auth::user()->tenant_id)
@@ -189,7 +202,15 @@ class Shortcut extends Component
 							}
             }
 				}
+<<<<<<< HEAD
+
+        $this->birthdays = User::where('tenant_id', Auth::user()->tenant_id)
+																->whereIn('id', $userIds)
+																->orderByRaw('DATE_FORMAT(birth_date, "%d-%m")', 'DESC')
+																->get();
+=======
 				$ids_ordered = implode(',', $userIds);
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
         $this->online = User::where('tenant_id', Auth::user()->tenant_id)->where('is_online', 1)->count();
         $this->workforce = User::where('tenant_id', Auth::user()->tenant_id)->count();
         return view('livewire.backend.activity-stream.shortcut',

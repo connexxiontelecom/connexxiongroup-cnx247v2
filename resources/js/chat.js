@@ -20,6 +20,10 @@ var vm = new Vue({
 			selected_user_details: '',
 			searchText:'',
 			noRecord:false,
+<<<<<<< HEAD
+			file: '',
+=======
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
 			options:{
 				height:'500px'
 			},
@@ -76,6 +80,27 @@ var vm = new Vue({
 
 
 		},
+<<<<<<< HEAD
+		triggerFileUpload(){
+			this.handleFileUpload();
+		},
+		handleFileUpload(){
+			this.$refs.attachment.click();
+			this.file = this.$refs.attachment.files[0];
+		//	if(this.file != null){
+				let formData = new FormData();
+				formData.append('attachment', this.file);
+				formData.append('to',this.selected_user);
+				axios.post('/conversation/attachment',formData)
+				.then(response=>{
+					this.file = '';
+					this.getSelectedUser(this.selected_user);
+					this.scrollToBottom();
+				});
+			//}
+		},
+=======
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
 		handleIncoming(message){
 			if(this.selected_user && message.from_id == $this.selected_user){
 				this.saveNewMessage(message);
@@ -132,7 +157,25 @@ var vm = new Vue({
 			setTimeout(() => {
 					document.getElementById('messageWrapper').scrollTop = document.getElementById('messageWrapper').scrollHeight - document.getElementById('messageWrapper').clientHeight;
 			}, 50);
+<<<<<<< HEAD
+		},
+		setupClient() {
+			axios.post("/conversation/compatibility-token", {
+					forPage: window.location.pathname,
+					_token: $('meta[name="csrf-token"]').attr('content')
+			}).then(response=> {
+					console.log(re);
+					//device = new Device();
+					//device.setup(data.token);
+					//setupHandlers(device);
+			}).catch(error=> {
+					updateCallStatus("Could not get a token from server!");
+			});
+
+	}
+=======
 		}
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
 
 	},
 

@@ -61,7 +61,7 @@ class PostingController extends Controller
             $bankGl = [
                 'glcode' => $receipt->bank,
                 'posted_by' => Auth::user()->id,
-                'narration' => 'Payment received from ' . $receipt->client->first_name ?? '',
+                'narration' => 'Payment received from ' . $receipt->client->company_name ?? '',
                 'dr_amount' => $receipt->amount,
                 'cr_amount' => 0,
                 'ref_no' => $receipt->ref_no ?? '',
@@ -99,10 +99,10 @@ class PostingController extends Controller
 								$invoice->paid_amount += $d->payment;
 								if($invoice->paid_amount >= $invoice->total){
 										$invoice->status = 1; //payment completed
-										$invoice->posted = 1; //posted
-										$invoice->posted_by = Auth::user()->id;
-										$invoice->post_date = now();
-								}
+									}
+								//$invoice->posted = 1; //posted
+								//$invoice->posted_by = Auth::user()->id;
+								//$invoice->post_date = now();
 								$invoice->save();
 								#BudgetFinance
 								$budgetFinance = BudgetFinance::where('invoice_id', $d->invoice_id)
