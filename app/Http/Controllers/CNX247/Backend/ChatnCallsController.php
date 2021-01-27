@@ -63,17 +63,10 @@ class ChatnCallsController extends Controller
         $send->save();
 				//$this->showChatnCallsView();
 				broadcast(new NewMessage($send));
-<<<<<<< HEAD
 
 				$title =  Auth::user()->first_name ." ". Auth::user()->surname;
 				$this->ToSpecificUser($send->tenant_id, $title, $request->message, $request->receiver);
 
-=======
-
-				$title =  Auth::user()->first_name ." ". Auth::user()->surname;
-				$this->ToSpecificUser($send->tenant_id, $title, $request->message, $request->receiver);
-
->>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
        /*  // pusher
         $options = array(
             'cluster' => 'eu'
@@ -188,11 +181,7 @@ class ChatnCallsController extends Controller
 
 		public function initializeChat(){
 			// get all users except the authenticated one
-<<<<<<< HEAD
 			$users = User::where('id', '!=', auth()->id())->where('account_status', 1)->where('tenant_id', Auth::user()->tenant_id)->get();
-=======
-			$users = User::where('id', '!=', auth()->id())->where('tenant_id', Auth::user()->tenant_id)->get();
->>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
 			$unreadIds = Message::select(\DB::raw('`from_id` as sender_id, count(`from_id`) as unread'))
             ->where('to_id', auth()->id())
 						->where('is_read', 0)
