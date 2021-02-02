@@ -16,8 +16,9 @@
             <div class="title-heading text-white mt-4">
               <h1 class="display-4 title-dark font-weight-bold mb-3">Manage Your Business Smartly</h1>
               <p class="para-desc para-dark mx-auto text-light">An enterprise resource planning solution designed to suit the modern African workplace.</p>
-              <div class="mt-4">
-                <a href="{{route('pricing')}}" class="btn btn-primary mt-2 mouse-down">Get Started</a>
+              <div class="watch-video mt-4 pt-2">
+                <a href="{{route('pricing')}}" class="btn btn-primary mouse-down">Get Started</a>
+                <a href="{{asset('/frontend/videos/explainer.mp4')}}" target="_blank" class="video-play-icon text-white watch mb-2 ml-3"><i class="mdi mdi-play play-icon-circle text-center d-inline-block mr-2 rounded-circle text-white position-relative play play-iconbar"></i> How It Works</a>
               </div>
             </div>
           </div><!--end col-->
@@ -32,8 +33,9 @@
             <div class="title-heading text-white mt-4">
               <h1 class="display-4 title-dark font-weight-bold mb-3">Your Enterprise Rediscovered</h1>
               <p class="para-desc para-dark mx-auto text-light">Seamlessly integrate the management of your organization's key business processes with CNX247.</p>
-              <div class="mt-4">
-                <a href="{{route('pricing')}}" class="btn btn-primary mt-2 mouse-down">Get Started</a>
+              <div class="watch-video mt-4 pt-2">
+                <a href="{{route('pricing')}}" class="btn btn-primary mouse-down">Get Started</a>
+                <a href="{{asset('/frontend/videos/explainer.mp4')}}" target="_blank" class="video-play-icon text-white watch mb-2 ml-3"><i class="mdi mdi-play play-icon-circle text-center d-inline-block mr-2 rounded-circle text-white position-relative play play-iconbar"></i> How It Works</a>
               </div>
             </div>
           </div><!--end col-->

@@ -259,11 +259,6 @@
                             <span class="pcoded-mtext">VAT</span>
                         </a>
                     </li>
-                    <li class=" ">
-                        <a href="{{route('ledger-default-variables')}}">
-                            <span class="pcoded-mtext">Ledger Defaults</span>
-                        </a>
-                    </li>
                 </ul>
             </li>
         </ul>
@@ -322,11 +317,6 @@
                     <li class=" ">
                         <a href="{{route('journal-entries')}}">
                             <span class="pcoded-mtext">Journal Voucher</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('budget-setup')}}">
-                            <span class="pcoded-mtext">Workflow</span>
                         </a>
                     </li>
                 </ul>
@@ -417,16 +407,6 @@
                             <span class="pcoded-mtext">Log</span>
                         </a>
                     </li>
-                    <!--<li class=" ">
-                        <a href="'logistics-shipping')}}">
-                            <span class="pcoded-mtext">Shipping </span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="'logistics-pick-up-points')}}">
-                            <span class="pcoded-mtext">Pick-up Points</span>
-                        </a>
-                    </li>-->
                 </ul>
             </li>
         </ul>
@@ -441,87 +421,6 @@
                     <li class=" ">
                         <a href="{{route('general-settings')}}">
                             <span class="pcoded-mtext">General Settings</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <div class="pcoded-navigatio-lavel">Administration</div>
-        <ul class="pcoded-item pcoded-left-item">
-            <li class="pcoded-hasmenu">
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="ti-briefcase"></i></span>
-                    <span class="pcoded-mtext">Administration</span>
-                </a>
-                <ul class="pcoded-submenu">
-                    <li class=" ">
-                        <a href="{{route('admin-support')}}">
-                            <span class="pcoded-mtext">Support Ticket</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('feedbacks')}}">
-                            <span class="pcoded-mtext">Feedback</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('tenants')}}">
-                            <span class="pcoded-mtext">Tenants</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('plans-n-features')}}">
-                            <span class="pcoded-mtext">Plans & Features</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('tenant-financials')}}">
-                            <span class="pcoded-mtext">Financials</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('tenant-memberships')}}">
-                            <span class="pcoded-mtext">Membership</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('constants')}}">
-                            <span class="pcoded-mtext">Constants</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('roles')}}">
-                            <span class="pcoded-mtext">Roles</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('permissions')}}">
-                            <span class="pcoded-mtext">Permissions</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('module-manager')}}">
-                            <span class="pcoded-mtext">Module Manager</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('terms-n-conditions')}}">
-                            <span class="pcoded-mtext">Terms & Conditions</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('admin-theme-gallery')}}">
-                            <span class="pcoded-mtext">Themes</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('access-faqs')}}">
-                            <span class="pcoded-mtext">FAQs</span>
-                        </a>
-                    </li>
-                    <li class=" ">
-                        <a href="{{route('privacy-policy')}}">
-                            <span class="pcoded-mtext">Privacy Policy</span>
                         </a>
                     </li>
                 </ul>

@@ -100,7 +100,7 @@
                                         <td>
                                             <p>Receipt for invoice # {{$item->invoice_id ?? ''}}</p>
                                         </td>
-                                        <td>{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($item->payment, 2)}}</td>
+                                        <td>{{$receipt->getCurrency->symbol ?? '₦'}}{{number_format($item->payment/$item->exchange_rate, 2)}}</td>
                                     </tr>
 
                                 @endforeach
@@ -120,7 +120,7 @@
                                 </td>
                                 <td>
                                     <hr>
-                                    <h5 class="text-primary">{{Auth::user()->tenant->currency->symbol ?? '₦'}}{{number_format($receipt->receiptItem->sum('payment'),2)}}</h5>
+                                    <h5 class="text-primary">{{$receipt->getCurrency->symbol ?? '₦'}}{{number_format($receipt->receiptItem->sum('payment')/$receipt->exchange_rate,2)}}</h5>
                                 </td>
                             </tr>
                         </tbody>
