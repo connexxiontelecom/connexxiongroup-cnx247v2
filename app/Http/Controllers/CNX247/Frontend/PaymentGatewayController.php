@@ -126,9 +126,14 @@ class PaymentGatewayController extends Controller
 						$user->verification_link = substr(sha1(time()), 25,40);
 						$user->save();
 						$user->assignRole('Human Resource');
-						\Mail::to($user)->send(new StartTrial($user));
-						session()->flash("success", "<strong>Success!</strong> Trial registration done.");
-						return redirect()->route('signin');
+						try{
+							\Mail::to($user)->send(new StartTrial($user));
+							session()->flash("success", "<strong>Success!</strong> Trial registration done.");
+							return redirect()->route('signin');
+						}catch(\Exception $ex){
+							session()->flash("success", "<strong>Success!</strong> Trial registration done. Use your registered email and password to login.");
+							return redirect()->route('signin');
+						}
 
 		}
     /*
