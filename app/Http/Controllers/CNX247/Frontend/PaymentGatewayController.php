@@ -274,7 +274,7 @@ class PaymentGatewayController extends Controller
                     $user->password = bcrypt($password);
                     $user->email = $email;
                     $user->tenant_id = $tenant_id; //new tenantID
-                    $user->verified = 0; //account verified
+                    $user->verified = 1; //account verified [Activate user account by default]
                     $user->url = substr(sha1(time()),29,40 );
                     $user->verification_link = substr(sha1(time()), 25,40);
                     $user->save();
