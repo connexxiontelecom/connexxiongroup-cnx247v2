@@ -126,6 +126,7 @@ class PaymentGatewayController extends Controller
 						$user->verification_link = substr(sha1(time()), 25,40);
 						$user->save();
 						$user->assignRole('Human Resource');
+
 						try{
 							\Mail::to($user)->send(new StartTrial($user));
 							session()->flash("success", "<strong>Success!</strong> Trial registration done.");
@@ -140,7 +141,7 @@ class PaymentGatewayController extends Controller
     *Proceed to make payment
     */
     public function proceedToPay(Request $request){
-      //return dd($request->all());
+
         $this->validate($request,[
                 'site_address'=>'required',
                 'company_name'=>'required',
