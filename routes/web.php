@@ -85,6 +85,9 @@ Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewW
 Route::get('/workflow-business-process', 'CNX247\Backend\WorkflowController@businessProcess')->name('workflow-business-process');
 Route::post('/workflow/business-process', 'CNX247\Backend\WorkflowController@setBusinessProcess');
 Route::post('/workflow/approve-or-decline-request', 'CNX247\Backend\WorkflowController@approveOrDeclineRequest');
+Route::post('/search-workflow-assignment', 'CNX247\Backend\WorkflowController@searchWorkflowAssignment')->name('search-workflow-assignment');
+Route::post('/search-workflow-my-requests', 'CNX247\Backend\WorkflowController@searchWorkflowMyRequests')->name('search-workflow-my-requests');
+
 #Expense report route
 Route::get('/expense-report', 'CNX247\Backend\ExpenseController@index')->name('expense-report');
 Route::post('/expense-report', 'CNX247\Backend\ExpenseController@store');
@@ -315,6 +318,7 @@ Route::post('/appreciation/new', 'CNX247\Backend\ActivityStreamController@create
 Route::post('/send/invitation/by-email', 'CNX247\Backend\ActivityStreamController@inviteUser');
 Route::post('/activity-stream/clockin', 'CNX247\Backend\ActivityStreamController@clockin');
 Route::post('/activity-stream/clockout', 'CNX247\Backend\ActivityStreamController@clockout');
+Route::post('/activity-stream/search', 'CNX247\Backend\ActivityStreamController@searchCNX247')->name('search-cnx247');
 
 #View an employee's profile
 Route::get('/activity-stream/profile/{url}', 'CNX247\Backend\ActivityStreamController@viewProfile')
