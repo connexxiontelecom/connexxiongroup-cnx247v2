@@ -11,9 +11,10 @@ use App\BusinessLog;
 use App\Department;
 use App\Post;
 use App\User;
+use App\ApplicationLog;
 use Auth;
 use Hash;
-
+use DB;
 class WorkflowController extends Controller
 {
     public function __construct()
@@ -24,18 +25,25 @@ class WorkflowController extends Controller
     * Load index page [my assignments]
     */
     public function index(){
+			$responsible = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)
+																			->where('user_id', Auth::user()->id)
+																			->whereIn('post_type',
+																						['purchase-request', 'expense-report',
+																								'leave-request', 'business-trip',
+																								'general-request'])
+																			->pluck('post_id');
 			$requests = Post::whereIn('post_type',
             ['purchase-request', 'expense-report',
                 'leave-request', 'business-trip',
                 'general-request'])
-            ->where('tenant_id',Auth::user()->tenant_id)
+						->where('tenant_id',Auth::user()->tenant_id)
+						->whereIn('id', $responsible)
 						->orderBy('id', 'DESC')
 						->paginate(10);
 			$my_requests = Post::whereIn('post_type',
 						['purchase-request', 'expense-report',
 						'leave-request', 'business-trip',
 						'general-request'])
-						//->where('post_status', 'in-progress')
 						->where('user_id', Auth::user()->id)
 						->where('tenant_id',Auth::user()->tenant_id)
 						->orderBy('id', 'DESC')
@@ -87,6 +95,14 @@ class WorkflowController extends Controller
     * Workflow task
     */
     public function viewWorkflowTask($url){
+			#Log
+			$message = Auth::user()->first_name." ".Auth::user()->surname." just viewed workflow task.";
+			$log = new ApplicationLog;
+			$log->tenant_id = Auth::user()->tenant_id;
+			$log->activity = $message;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
         return view('backend.workflow.view');
     }
 
@@ -113,7 +129,14 @@ class WorkflowController extends Controller
         $p->set_by =  Auth::user()->id;
         $p->approver_stage =  'undefined';
         $p->tenant_id =  Auth::user()->tenant_id;
-        $p->save();
+				$p->save();
+				#Log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." just set a new business process.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
         if($p){
             return response()->json(['message'=>'Success! New request processor set.'],200);
         }else{
@@ -147,6 +170,13 @@ class WorkflowController extends Controller
 							$log->name = $userAction;
 							$log->note = str_replace('-', ' ',$details->post_type)." ".$userAction." by ".Auth::user()->first_name." ".Auth::user()->surname ?? " ";
 							$log->save();
+							#Log
+							$message = Auth::user()->first_name." ".Auth::user()->surname." approved a workflow request.";
+							$alog = new ApplicationLog;
+							$alog->tenant_id = Auth::user()->tenant_id;
+							$alog->activity = $message;
+							$a->user_id = Auth::user()->id;
+							$alog->save();
 							$responsiblePersons = ResponsiblePerson::where('post_id', $post)
 																					->where('tenant_id', Auth::user()->tenant_id)
 																					->get();
@@ -205,6 +235,13 @@ class WorkflowController extends Controller
 							$log->name = $userAction;
 							$log->note = str_replace('-', ' ',$details->post_type)." ".$userAction." by ".Auth::user()->first_name." ".Auth::user()->surname;
 							$log->save();
+							#Log
+							$message = Auth::user()->first_name." ".Auth::user()->surname." declined a workflow request.";
+							$log = new ApplicationLog;
+							$log->tenant_id = Auth::user()->tenant_id;
+							$log->activity = $message;
+							$log->user_id = Auth::user()->id;
+							$log->save();
 							//update request table finally
 							$status = Post::find($post);
 							$status->post_status = $userAction;
@@ -215,6 +252,75 @@ class WorkflowController extends Controller
 					return response()->json(["error"=>"Mis-match transaction password. Try again. You can set a new transaction password by following: Profile > Settings > Security."],400);
 			}
 
+	}
+
+	public function searchWorkflowAssignment(Request $request){
+		$request->validate([
+			'search_item'=>'required'
+		]);
+		$responsible = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)
+									->where('user_id', Auth::user()->id)
+									->whereIn('post_type',
+												['purchase-request', 'expense-report',
+														'leave-request', 'business-trip',
+														'general-request'])
+									->pluck('post_id');
+
+						$resIds = [];
+
+			foreach($responsible as $res){
+				if($res == Auth::user()->id){
+					array_push($resId, $res->user_id);
+				}
+			}
+		$results = DB::table('posts as p')
+							->join('users as u', 'p.user_id','=', 'u.id')
+							->select('p.id as postId', 'u.first_name', 'p.*', 'u.*')
+							->where('u.first_name', 'LIKE', '%'.$request->search_item.'%')
+							->orWhere('p.post_title', 'LIKE', '%'.$request->search_item.'%')
+							->orWhere('p.post_content', 'LIKE', '%'.$request->search_item.'%')
+							->where('u.tenant_id',Auth::user()->tenant_id)
+							->whereIn('u.id',$resIds)
+						 	->whereIn('p.post_type',
+            	['purchase-request', 'expense-report',
+                'leave-request', 'business-trip',
+								'general-request'])
+							->get();
+				#Log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." searched for ".$request->search_item." on ".config('app.name')." in workflow assignment.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
+				return view('backend.workflow.search-result',['results'=>$results,'search'=>$request->search_item]);
+	}
+	public function searchWorkflowMyRequests(Request $request){
+		$request->validate([
+			'search_item'=>'required'
+		]);
+
+		$results = DB::table('posts as p')
+							->join('users as u', 'p.user_id','=', 'u.id')
+							->select('p.id as postId', 'u.first_name', 'p.*', 'u.*')
+							->where('u.tenant_id',Auth::user()->tenant_id)
+							->where('u.id',Auth::user()->id)
+						 	->whereIn('p.post_type',
+            	['purchase-request', 'expense-report',
+                'leave-request', 'business-trip',
+								'general-request'])
+							->where('u.first_name', 'LIKE', '%'.$request->search_item.'%')
+							->orWhere('p.post_title', 'LIKE', '%'.$request->search_item.'%')
+							//->orWhere('p.post_content', 'LIKE', '%'.$request->search_item.'%')
+							->get();
+				#Log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." searched for ".$request->search_item." on ".config('app.name')." in my request.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
+				return view('backend.workflow.my-request-search-result',['results'=>$results,'search'=>$request->seach_item]);
 	}
 
 

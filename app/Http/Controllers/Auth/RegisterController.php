@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\User;
+use App\ApplicationLog;
 
 class RegisterController extends Controller
 {
@@ -98,7 +99,14 @@ class RegisterController extends Controller
         if(!empty($user)){
             $user->verified = 1;
             $user->email_verified_at = now();
-            $user->save();
+						$user->save();
+						#Log
+						$message = $user->first_name." ".$user->surname." just verified email.";
+						$log = new ApplicationLog;
+						$log->tenant_id = $user->tenant_id;
+						$log->activity = $message;
+						$log->user_id = $user->id;
+						$log->save();
             return view('auth.welcome', ['user'=>$user]);
         }else{
             return view('auth.account-already-verified');
