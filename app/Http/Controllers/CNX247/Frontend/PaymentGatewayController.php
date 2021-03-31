@@ -72,7 +72,7 @@ class PaymentGatewayController extends Controller
 						//register new tenant
 						$latest_tenant = Tenant::orderBy('id', 'DESC')->first();
 						if(!empty($latest_tenant)){
-								$tenant_id = $latest_tenant->tenant_id + rand(100,999);
+								$tenant_id = $latest_tenant->tenant_id + 1;
 
 						}else{
 								$tenant_id = rand(100, 999);
@@ -230,7 +230,7 @@ class PaymentGatewayController extends Controller
                 //register new tenant
                 $latest_tenant = Tenant::orderBy('id', 'DESC')->first();
                 if(!empty($latest_tenant)){
-                    $tenant_id = $latest_tenant->tenant_id + rand(100,999);
+                    $tenant_id = $latest_tenant->tenant_id + 1;
 
                 }else{
                     $tenant_id = rand(100, 999);
