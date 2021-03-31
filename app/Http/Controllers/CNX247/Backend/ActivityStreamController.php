@@ -600,17 +600,19 @@ class ActivityStreamController extends Controller
     */
     public function viewProfile($url){
 
-				$user = User::where('url', $url)->where('tenant_id', Auth::user()->tenant_id)->first();
-
-				#log
-				$message = Auth::user()->first_name." ".Auth::user()->surname." viewed ".$user->first_name." ".$user->surname."'s profile.";
-				$log = new ApplicationLog;
-				$log->tenant_id = Auth::user()->tenant_id;
-				$log->activity = $message;
-				$log->user_id = Auth::user()->id;
-				$log->save();
-
-      return view('backend.activity-stream.view-employee-profile', ['user'=>$user]);
+				 $user = User::where('url', $url)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($user)){
+					#log
+						$message = Auth::user()->first_name." ".Auth::user()->surname." viewed ".$user->first_name." ".$user->surname."'s profile.";
+						$log = new ApplicationLog;
+						$log->tenant_id = Auth::user()->tenant_id;
+						$log->activity = $message;
+						$log->user_id = Auth::user()->id;
+						$log->save();
+            return view('backend.activity-stream.view-employee-profile', ['user'=>$user]);
+        }else{
+            return back();
+        }
     }
 
     public function clockin(){

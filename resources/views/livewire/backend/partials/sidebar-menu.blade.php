@@ -8,6 +8,7 @@
                     <span class="pcoded-mtext">Activity Stream</span>
                 </a>
             </li>
+            @can('view workflows')
             <li class="">
                 <a href="{{route('workflow-tasks')}}">
                     <span class="pcoded-micon"><i class="ti-menu"></i></span>
@@ -18,6 +19,8 @@
                     </span>
                 </a>
             </li>
+            @endcan
+            @can('Access Chat Calls')
             <li class="">
                 <a href="{{ route('chat-n-calls') }}">
                     <span class="pcoded-micon"><i class="ti-comment-alt"></i></span>
@@ -28,13 +31,16 @@
                     </span>
                 </a>
             </li>
+            @endcan
+            @can('Access Stream')
             <li class="">
                 <a href="{{ route('cnx247-stream') }}">
                     <span class="pcoded-micon"><i class="ti-video-camera"></i></span>
                     <span class="pcoded-mtext">CNX247 Stream</span>
                 </a>
             </li>
-
+            @endcan
+            @can('Access Project')
                 <li class="">
                     <a href="{{ route('project-board')  }}">
                         <span class="pcoded-micon"><i class="ti-briefcase"></i></span>
@@ -45,7 +51,7 @@
                         </span>
                     </a>
                 </li>
-
+            @endcan
                 <li class="">
                     <a href="{{ route('task-board')  }}">
                         <span class="pcoded-micon"><i class="ti-check-box"></i></span>
@@ -56,25 +62,30 @@
                         </span>
                     </a>
                 </li>
-
+            @can('view workgroups')
             <li class="">
                 <a href="{{route('workgroups')}}">
                     <span class="pcoded-micon"><i class="ti-infinite"></i></span>
                     <span class="pcoded-mtext">Workgroups</span>
                 </a>
             </li>
+            @endcan
+            @can('View Drive')
             <li class="">
                 <a href="{{ route('cnx247-drive') }}">
                     <span class="pcoded-micon"><i class="ti-harddrive"></i></span>
                     <span class="pcoded-mtext">CNX247.Drive</span>
                 </a>
             </li>
+            @endcan
+            @can('View Events')
             <li class="">
                 <a href="{{route('my-event-list')}}">
                     <span class="pcoded-micon"><i class="ti-calendar"></i></span>
                     <span class="pcoded-mtext">Events</span>
                 </a>
             </li>
+            @endcan
         </ul>
         <div class="pcoded-navigatio-lavel">Human Resource</div>
         <ul class="pcoded-item pcoded-left-item">
@@ -225,7 +236,7 @@
                 </ul>
             </li>
         </ul>
-
+        @can('Access Accounting')
         <div class="pcoded-navigatio-lavel">Accounting</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
@@ -347,6 +358,8 @@
                 </ul>
             </li>
         </ul>
+        @endcan
+        @can('Access Procurement')
         <div class="pcoded-navigatio-lavel">Procurement</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
@@ -379,6 +392,8 @@
                 </ul>
             </li>
         </ul>
+        @endcan
+        @can('Access Logistics')
         <div class="pcoded-navigatio-lavel">Logistics</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
@@ -410,6 +425,7 @@
                 </ul>
             </li>
         </ul>
+        @endcan
         <div class="pcoded-navigatio-lavel">System Settings</div>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
