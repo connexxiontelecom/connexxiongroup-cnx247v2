@@ -573,4 +573,12 @@
 		</div><!--end container-->
 	</section><!--end section-->
 	<!-- FAQ n Contact End -->
+
+@endsection
+
+@section('extra-scripts')
+		<script>
+			sessionStorage.setItem('link', "{{$link}}" );
+
+	</script>
 @endsection

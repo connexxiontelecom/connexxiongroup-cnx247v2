@@ -148,6 +148,7 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 
 #Payment Gateway
 Route::get('/create-site/{timestamp}/{plan}', 'CNX247\Frontend\PaymentGatewayController@createSite')->name('create-site');
+//Route::get('/create-site/{referral}/{plan}', 'CNX247\Frontend\PaymentGatewayController@showAffiliateChannel')->name('affiliate-channel');
 Route::post('/register-site', 'CNX247\Frontend\PaymentGatewayController@proceedToPay')->name('register-site');
 Route::get('/payment/gateway', 'CNX247\Frontend\PaymentGatewayController@handleGatewayCallback')->name('payment-callback');
 #Start trial
@@ -155,7 +156,7 @@ Route::get('/start-trial', 'CNX247\Frontend\PaymentGatewayController@startTrial'
 Route::post('/start-trial', 'CNX247\Frontend\PaymentGatewayController@registerTrial');
 
 #Frontend routes
-Route::get('/pricing', 'CNX247\Frontend\BaseController@pricing')->name('pricing');
+Route::get('/pricing/{ref_link?}', 'CNX247\Frontend\BaseController@pricing')->name('pricing');
 Route::get('/support', 'CNX247\Frontend\BaseController@support')->name('support');
 Route::get('/contact_us', 'CNX247\Frontend\BaseController@contact_us')->name('contact_us');
 Route::get('/faqs', 'CNX247\Frontend\BaseController@faqs')->name('faqs');
