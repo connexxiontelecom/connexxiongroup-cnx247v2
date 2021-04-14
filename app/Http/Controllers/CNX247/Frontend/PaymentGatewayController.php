@@ -331,7 +331,7 @@ class PaymentGatewayController extends Controller
 										#API call to AMP
 										if(!empty($metadata['link'])){
 												$data = [
-													'product_id'=>7,
+													'product_id'=>15,
 													'referral_code' => $metadata['link'], //referral ID
 													'amount'=> $paymentDetails['data']['amount'],
 													'company_name'=> $company_name,
