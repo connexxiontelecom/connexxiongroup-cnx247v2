@@ -272,12 +272,12 @@
 
 
 
- <button class="btn btn-sm btn-primary f-right btn-mini"
+ 					<button class="btn btn-sm btn-primary f-right btn-mini"
                 style="margin-bottom: 10px"
                 itle="Add a participant" id="_addpart">
                     <i class="fa fa-plus-square"></i>Add Participant</button>
 
-<div style="display:none; padding-right: 10px; padding-left:10px;" id="AddParticipantsContainer">
+					<div style="display:none; padding-right: 10px; padding-left:10px;" id="AddParticipantsContainer">
 
                 <form method="post" action="{{route('add-project-participants')}}" enctype="multipart/form-data" id="_addParticipants" >
                     @csrf
@@ -352,7 +352,7 @@
 
 
 
-    <button  class="btn btn-sm btn-primary f-right btn-mini" style="margin-bottom: 10px"
+   				 <button  class="btn btn-sm btn-primary f-right btn-mini" style="margin-bottom: 10px"
                 id ="_addobserv"  title="Add an observer" >
                     <i class="fa fa-plus-square"></i>Add Observer</button>
             </div>

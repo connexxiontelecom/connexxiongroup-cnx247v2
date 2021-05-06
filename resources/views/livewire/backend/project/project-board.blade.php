@@ -193,7 +193,7 @@
                             @foreach ($projects->where('user_id', Auth::user()->id) as $task)
                                 @foreach ($task->responsiblePersons as $person)
                                     <?php $sn = 1; ?>
-                                    @if ($person->user_id == Auth::user()->id)
+                                    @if ($task->user_id == Auth::user()->id)
                                         <tr>
                                             <td>
                                                {{ $sn }}

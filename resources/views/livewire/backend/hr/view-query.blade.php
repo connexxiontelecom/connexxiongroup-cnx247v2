@@ -92,7 +92,7 @@
                    <div>
                        @if (count($replies) > 0)
                         @foreach ($replies as $reply)
-                        @if ($reply->from_id == Auth::user()->id)
+                        @if (($reply->from_id == Auth::user()->id) )
                             <div class="media">
                                 <div class="media-body text-right">
                                     <p class="msg-reply bg-primary">{!! $reply->reply !!}</p>
@@ -104,18 +104,19 @@
                                     </a>
                                 </div>
                             </div>
-                        @else
-                            <div class="media">
-                                <div class="media-left friend-box">
-                                    <a href="{{route('view-profile', $reply->receiver->url)}}">
-                                        <img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$reply->receiver->avatar ?? 'avatar.png'}}" alt="{{$reply->receiver->first_name ?? ''}} {{$reply->receiver->surname ?? ''}}">
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <p class="msg-send">{!! $reply->reply !!}.</p>
-                                    <p><i class="icofont icofont-wall-clock f-12"></i> {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($reply->created_at))}} at {{date('h:ia', strtotime($reply->created_at))}}</p>
-                                </div>
-                            </div>
+
+                        @elseif($query->queried_by == Auth::user()->id)
+                            	<div class="media">
+										<div class="media-left friend-box">
+												<a href="{{route('view-profile', $reply->receiver->url)}}">
+														<img class="media-object img-radius" src="/assets/images/avatars/thumbnails/{{$reply->receiver->avatar ?? 'avatar.png'}}" alt="{{$reply->receiver->first_name ?? ''}} {{$reply->receiver->surname ?? ''}}">
+												</a>
+										</div>
+										<div class="media-body">
+												<p class="msg-send">{!! $reply->reply !!}.</p>
+												<p><i class="icofont icofont-wall-clock f-12"></i> {{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($reply->created_at))}} at {{date('h:ia', strtotime($reply->created_at))}}</p>
+										</div>
+								</div>
                         @endif
                         @endforeach
                        @else

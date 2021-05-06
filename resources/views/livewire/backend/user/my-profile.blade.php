@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="cover-profile">
-                <div class="profile-bg-img">
+                <div class="profile-bg-img" style="height:217px;">
                     <img class="profile-bg-img img-fluid" id="cover-preview" src="/assets/images/cover-photos/{{Auth::user()->cover ?? 'cover.jpeg'}}" width="1202" height="217" alt="bg-img">
                     <div class="card-block user-info">
                         <div class="col-md-12">
