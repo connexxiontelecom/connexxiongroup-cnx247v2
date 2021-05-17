@@ -81,9 +81,10 @@
                                                 <td>
                                                     @if ($ticket->status == 1)
                                                         <span class="label label-warning">Open</span>
-                                                    @else
-                                                        <span class="label label-success">Closed</span>
-
+                                                    @elseif($ticket->status == 2)
+                                                        <span class="label label-success">In-progress</span>
+																											@elseif($ticket->status == 3)
+																												<span class="label label-success">Closed</span>
                                                     @endif
                                                 </td>
                                                 <td><span class="label label-danger">{{date('d F, Y', strtotime($ticket->created_at))}} @ <small>{{date('h:ia', strtotime($ticket->created_at))}}</small></span></td>
