@@ -54,11 +54,11 @@
                                                             </td>
                                                             <td><label for="" class="label label-primary">{{$ticket->ticket_no}}</label></td>
                                                             <td>
-																															@if ($ticket->status == 1)
+																															@if ($ticket->status == 0)
 																																<span class="label label-warning">Open</span>
-																															@elseif($ticket->status == 2)
+																															@elseif($ticket->status == 1)
 																																<span class="label label-success">In-progress</span>
-																															@elseif($ticket->status == 3)
+																															@elseif($ticket->status == 2)
 																																<span class="label label-success">Closed</span>
 																															@endif
 																														</td>
