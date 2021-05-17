@@ -69,16 +69,17 @@
                                         @endphp
                                         @if (count($tickets) > 0)
                                         @foreach ($tickets as $ticket)
-                                            <tr>
-                                                <td class="txt-primary">{{$index++}}</td>
-                                                <td>
-                                                    <label for="" class="label label-primary">{{$ticket->ticket_no}}</label>
-                                                </td>
-                                                <td>
-                                                    <a href="{{route('view-ticket', $ticket->slug)}}">{{strlen($ticket->subject) > 15 ? substr($ticket->subject,0,15).'...' : $ticket->subject }}</a>
-                                                </td>
-                                                <td>{{$ticket->ticketCategory->name}}</td>
-                                                <td>
+																						@if($ticket->ticketCategory->department == Auth::user()->department_id)
+																							<tr>
+																								<td class="txt-primary">{{$index++}}</td>
+																								<td>
+																									<label for="" class="label label-primary">{{$ticket->ticket_no}}</label>
+																								</td>
+																								<td>
+																									<a href="{{route('view-ticket', $ticket->slug)}}">{{strlen($ticket->subject) > 15 ? substr($ticket->subject,0,15).'...' : $ticket->subject }}</a>
+																								</td>
+																								<td>{{$ticket->ticketCategory->name}}</td>
+																								<td>
 																									@if ($ticket->status == 0)
 																										<span class="label label-warning">Open</span>
 																									@elseif($ticket->status == 1)
@@ -86,9 +87,11 @@
 																									@elseif($ticket->status == 2)
 																										<span class="label label-success">Closed</span>
 																									@endif
-                                                </td>
-                                                <td><span class="label label-danger">{{date('d F, Y', strtotime($ticket->created_at))}} @ <small>{{date('h:ia', strtotime($ticket->created_at))}}</small></span></td>
-                                            </tr>
+																								</td>
+																								<td><span class="label label-danger">{{date('d F, Y', strtotime($ticket->created_at))}} @ <small>{{date('h:ia', strtotime($ticket->created_at))}}</small></span></td>
+																							</tr>
+																						@endif
+
                                         @endforeach
                                         @else
                                             <tr>

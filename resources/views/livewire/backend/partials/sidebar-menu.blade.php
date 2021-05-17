@@ -57,6 +57,13 @@
 											</span>
 									</a>
 							</li>
+						<li class="">
+									<a href="{{ route('admin-support')  }}">
+											<span class="pcoded-micon"><i class="ti-check-box"></i></span>
+											<span class="pcoded-mtext">Support Ticket
+											</span>
+									</a>
+							</li>
 
 								<li class="">
 										<a href="{{route('workgroups')}}">

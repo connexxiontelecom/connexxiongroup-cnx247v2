@@ -34,7 +34,7 @@
                                                                 <div id="accordion" role="tablist" aria-multiselectable="true">
                                                                    <h6 class="sub-title">Subject: {{$ticket->subject}}</h6>
                                                                    <p class="text-muted">{!! $ticket->message !!}</p>
-                                                                   @if ($ticket->user_id == Auth::user()->id || $ticket->status == 1)
+                                                                   @if ($ticket->user_id != Auth::user()->id || $ticket->status == 1)
                                                                     <p class="d-flex justify-content-center mt-3">
                                                                         <button wire:click="closeTicket" class="btn btn-primary btn-mini"> <i class="ti-check mr-2"></i> Close Ticket</button>
                                                                     </p>
