@@ -33,16 +33,14 @@
                                         <td>
                                             <strong>Categories</strong>
                                         </td>
-                                        <td class="txt-primary"><small>Overall</small></td>
+
                                     </tr>
                                     @foreach ($categories as $category)
                                         <tr>
                                             <td>
                                                 <strong>{{$category->name}}</strong>
                                             </td>
-                                            <td class="txt-danger">
-                                                <label for="" class="badge badge-primary">{{count($category->tickets)}}</label>
-                                            </td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -51,18 +49,6 @@
                     </div>
                 </div>
                 <div class="col-xl-8">
-                    <div class="card">
-                        <div class="card-block">
-                            <div class=" waves-effect waves-light m-r-10 v-middle issue-btn-group">
-                                <div class="f-right bug-issue-link m-t-5">
-                                    <ol class="breadcrumb bg-white m-0 p-t-5 p-b-0">
-                                        <li class="breadcrumb-item"><a href="#">16 Solved</a></li>
-                                        <li class="breadcrumb-item"><a href="#">19 Pending</a></li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="card">
                         <div class="card-block">
                             <div class="table-responsive">
@@ -127,11 +113,13 @@
                 if($('#category_name').val() == ''){
                     $.notify("Ooops! Something went wrong. Try again.", "error");
                 }else{
-                axios.post('/crm/support/ticket/category/new', {category_name:$('#category_name').val()})
+                axios.post('/crm/support/ticket/category/new', {category_name:$('#category_name').val(),
+								department:$('#department').val()})
                 .then(response=>{
                     $.notify(response.data.message, 'success');
                     $('#ticketCategory').modal('hide');
                     $('#category_name').val('');
+									location.reload();
                 })
                 .catch(error=>{
                     $.notify("Ooops! We couldn't save new category. Try again.", "error");

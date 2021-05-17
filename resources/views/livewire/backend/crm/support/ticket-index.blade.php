@@ -37,7 +37,8 @@
                                                 <th>Subject</th>
                                                 <th>Ticket No.</th>
                                                 <th>Status</th>
-                                                <th>Category</th>
+																							<th>Priority</th>
+																							<th>Category</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -54,12 +55,24 @@
                                                             <td><label for="" class="label label-primary">{{$ticket->ticket_no}}</label></td>
                                                             <td>
                                                                 @if ($ticket->status == 0)
-                                                                    <label for="" class="label label-warning">Open</label></td>
+                                                                    <label for="" class="label label-warning">Open</label>
                                                                 @elseif($ticket->status == 1)
-                                                                    <label for="" class="label label-success">Closed</label></td>
+                                                                    <label for="" class="label label-success">Closed</label>
                                                                 @endif
+																														</td>
+																														<td>
+																															@if ($ticket->priority == 1)
+																																Normal
+																															@elseif($ticket->priority == 2)
+																																Medium
+																															@elseif($ticket->priority == 3)
+																																High
+																															@elseif($ticket->priority == 4)
+																																Highest
+																															@endif
+																														</td>
                                                             <td>
-                                                               <label for="" class="label label-danger">{{$ticket->category}}</label>
+                                                               <label for="" class="label label-danger">{{$ticket->ticketCategory->name ?? ''}}</label>
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -75,7 +88,8 @@
                                                 <th>Subject</th>
                                                 <th>Ticket No.</th>
                                                 <th>Status</th>
-                                                <th>Category</th>
+																							<th>Priority</th>
+																							<th>Category</th>
                                             </tr>
                                             </tfoot>
                                         </table>

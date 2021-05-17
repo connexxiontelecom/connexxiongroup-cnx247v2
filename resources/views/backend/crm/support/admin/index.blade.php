@@ -32,6 +32,17 @@
                         <i class="text-danger">{{$message}}</i>
                     @enderror
                 </div>
+							<div class="form-group">
+                    <label for="" class="">Department</label>
+									<select name="department" id="department" class="form-control">
+										@foreach($departments as $department)
+											<option value="{{$department->id}}">{{$department->department_name ?? ''}}</option>
+										@endforeach
+									</select>
+                    @error('department')
+                        <i class="text-danger">{{$message}}</i>
+                    @enderror
+                </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-default waves-effect btn-mini" data-dismiss="modal">Close</button>

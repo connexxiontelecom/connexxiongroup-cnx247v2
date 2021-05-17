@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\CNX247\Backend;
 
+use App\Department;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
@@ -18,6 +19,7 @@ class SupportController extends Controller
     }
 
     public function ticket(){
+
         return view('backend.crm.support.ticket');
     }
     public function ticketHistory(){
@@ -29,7 +31,8 @@ class SupportController extends Controller
     }
 
     public function adminTicketIndex(){
-        return view('backend.crm.support.admin.index');
+    	$departments = Department::where('tenant_id', Auth::user()->tenant_id)->get();
+        return view('backend.crm.support.admin.index', ['departments'=>$departments]);
     }
     public function newTicketCategory(Request $request){
         $this->validate($request,[
@@ -37,6 +40,7 @@ class SupportController extends Controller
         ]);
         $category = new TicketCategory;
         $category->name = $request->category_name;
+        $category->department = $request->department ?? '';
         $category->save();
         return response()->json(['message'=>'Success! New category saved.'], 200);
     }

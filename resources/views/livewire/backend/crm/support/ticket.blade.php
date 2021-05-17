@@ -52,12 +52,28 @@
                                 <span class="input-group-addon"><i class="ti-check"></i></span>
                                 <select  wire:model.debounce.90000ms="category" class="form-control col-md-4">
                                     <option selected disabled>Select category</option>
-                                    <option value="1">Sales & Marketing</option>
-                                    <option value="2">Technical support</option>
-                                    <option value="3">Others</option>
+																	@foreach($categories as $cat)
+																		<option value="{{$cat->id}}">{{$cat->name ?? ''}}</option>
+																	@endforeach
                                 </select>
                             </div>
                             @error('category')
+                                <i class="text-danger mt-2">{{$message}}</i>
+                            @enderror
+                        </div>
+											<div class="form-group">
+                            <label for="">Priority</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="ti-check"></i></span>
+                                <select  wire:model.debounce.90000ms="priority" class="form-control col-md-4">
+                                    <option selected disabled>Select priority</option>
+																	<option value="1">Normal</option>
+																	<option value="2">Medium</option>
+																	<option value="3">High</option>
+																	<option value="4">Highest</option>
+                                </select>
+                            </div>
+                            @error('priority')
                                 <i class="text-danger mt-2">{{$message}}</i>
                             @enderror
                         </div>

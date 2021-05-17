@@ -275,63 +275,82 @@
 							</li>
 					</ul>
 
-				@can('accounting')
+
 					<div class="pcoded-navigatio-lavel">Accounting</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
 									<a href="javascript:void(0)">
 											<span class="pcoded-micon"><i class="icofont icofont-money-bag"></i></span>
-											<span class="pcoded-mtext">Account</span>
+											<span class="pcoded-mtext">Setup</span>
 									</a>
 									<ul class="pcoded-submenu">
-										@can('view chart of accounts')
+
 
 										<li class=" ">
 												<a href="{{route('chart-of-accounts')}}">
 														<span class="pcoded-mtext">Chart of Accounts</span>
 												</a>
 										</li>
-										@endcan
-										@can('set budget profile')
+
 
 										<li class=" ">
 												<a href="{{route('budget-profile')}}">
 														<span class="pcoded-mtext">Budget Profile</span>
 												</a>
 										</li>
-										@endcan
-										@can('set budget')
+
 
 										<li class=" ">
 												<a href="{{route('budget-setup')}}">
 														<span class="pcoded-mtext">Budget Setup</span>
 												</a>
 										</li>
-										@endcan
-										@can('set opening balance')
+
 
 											<li class=" ">
 													<a href="{{route('opening-balance')}}">
 															<span class="pcoded-mtext">Opening Balance</span>
 													</a>
 											</li>
-										@endcan
+
 											<li class=" ">
 													<a href="{{route('accounting-vat')}}">
 															<span class="pcoded-mtext">VAT</span>
 													</a>
 											</li>
-											<li class=" ">
-													<a href="{{route('ledger-default-variables')}}">
-															<span class="pcoded-mtext">Ledger Defaults</span>
-													</a>
-											</li>
 									</ul>
 							</li>
 					</ul>
+			<ul class="pcoded-item pcoded-left-item">
+				<li class="pcoded-hasmenu">
+					<a href="javascript:void(0)">
+						<span class="pcoded-micon"><i class="icofont icofont-coins"></i></span>
+						<span class="pcoded-mtext">Reports</span>
+					</a>
+					<ul class="pcoded-submenu">
 
-				@endcan
-				@can('access vendors')
+
+						<li class=" ">
+							<a href="{{route('trial-balance')}}">
+								<span class="pcoded-mtext">Trial Balance</span>
+							</a>
+						</li>
+
+
+						<li class=" ">
+							<a href="{{route('balance-sheet')}}">
+								<span class="pcoded-mtext">Balance Sheet</span>
+							</a>
+						</li>
+						<li class=" ">
+							<a href="{{route('profit-o-loss')}}">
+								<span class="pcoded-mtext">Profit/Loss</span>
+							</a>
+						</li>
+
+					</ul>
+				</li>
+			</ul>
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
@@ -339,20 +358,18 @@
                     <span class="pcoded-mtext">Vendors</span>
                 </a>
                 <ul class="pcoded-submenu">
-									@can('view vendor bills')
+
 
 									<li class=" ">
 											<a href="{{route('vendor-bills')}}">
 													<span class="pcoded-mtext">Vendor Bills</span>
 											</a>
 									</li>
-									@endcan
+
                 </ul>
             </li>
         </ul>
 
-				@endcan
-				@can('access customers')
         <ul class="pcoded-item pcoded-left-item">
             <li class="pcoded-hasmenu">
                 <a href="javascript:void(0)">
@@ -373,9 +390,6 @@
                 </ul>
             </li>
         </ul>
-
-				@endcan
-				@can('post transactions')
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
 									<a href="javascript:void(0)">
@@ -383,7 +397,7 @@
 											<span class="pcoded-mtext">Postings</span>
 									</a>
 									<ul class="pcoded-submenu">
-										@can('post transactions')
+
 
 											<li class=" ">
 													<a href="{{route('receipt-posting')}}">
@@ -400,55 +414,11 @@
 															<span class="pcoded-mtext">Journal Voucher</span>
 													</a>
 											</li>
-											<li class=" ">
-													<a href="{{route('budget-setup')}}">
-															<span class="pcoded-mtext">Workflow</span>
-													</a>
-											</li>
-										@endcan
+
 									</ul>
 							</li>
 					</ul>
 
-				@endcan
-				@can('generate report')
-					<ul class="pcoded-item pcoded-left-item">
-							<li class="pcoded-hasmenu">
-									<a href="javascript:void(0)">
-											<span class="pcoded-micon"><i class="icofont icofont-coins"></i></span>
-											<span class="pcoded-mtext">Reports</span>
-									</a>
-									<ul class="pcoded-submenu">
-										@can('acess trial balance')
-
-											<li class=" ">
-													<a href="{{route('trial-balance')}}">
-															<span class="pcoded-mtext">Trial Balance</span>
-													</a>
-											</li>
-										@endcan
-										@can('access balance sheet')
-											<li class=" ">
-													<a href="{{route('balance-sheet')}}">
-															<span class="pcoded-mtext">Balance Sheet</span>
-													</a>
-											</li>
-
-										@endcan
-										@can('access profit or loss')
-
-										<li class=" ">
-												<a href="{{route('profit-o-loss')}}">
-														<span class="pcoded-mtext">Profit/Loss</span>
-												</a>
-										</li>
-										@endcan
-									</ul>
-							</li>
-					</ul>
-
-				@endcan
-				@can('procurement')
 					<div class="pcoded-navigatio-lavel">Procurement</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
@@ -457,44 +427,36 @@
 											<span class="pcoded-mtext">Procurement</span>
 									</a>
 									<ul class="pcoded-submenu">
-										@can('add vendor')
 
 										<li class=" ">
 												<a href="{{route('new-supplier')}}">
 														<span class="pcoded-mtext">Add New Vendor</span>
 												</a>
 										</li>
-										@endcan
-											@can('view vendors')
+
 												<li class=" ">
 														<a href="{{route('suppliers')}}">
 																<span class="pcoded-mtext">Vendors</span>
 														</a>
 												</li>
 
-											@endcan
-											@can('view purchase orders')
-
 											<li class=" ">
 													<a href="{{route('purchase-orders')}}">
 															<span class="pcoded-mtext">Purchase Orders</span>
 													</a>
 											</li>
-											@endcan
-											@can('view services')
+
 
 											<li class=" ">
 													<a href="{{route('vendor-services')}}">
 															<span class="pcoded-mtext">Services</span>
 													</a>
 											</li>
-											@endcan
+
 									</ul>
 							</li>
 					</ul>
 
-				@endcan
-				@can('access logistics')
 					<div class="pcoded-navigatio-lavel">Logistics</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
@@ -503,44 +465,34 @@
 											<span class="pcoded-mtext">Logistics</span>
 									</a>
 									<ul class="pcoded-submenu">
-										@can('view drivers')
-
 										<li class=" ">
 												<a href="{{route('logistics-drivers')}}">
 														<span class="pcoded-mtext">Drivers</span>
 												</a>
 										</li>
-										@endcan
-										@can('view customers')
 											<li class=" ">
 													<a href="{{route('logistics-customers')}}">
 															<span class="pcoded-mtext">Customers</span>
 													</a>
 											</li>
 
-										@endcan
-										@can('view vehicles')
-
 										<li class=" ">
 												<a href="{{route('logistics-vehicles')}}">
 														<span class="pcoded-mtext">Vehicles</span>
 												</a>
 										</li>
-										@endcan
-										@can('view logistics log')
+
 											<li class=" ">
 													<a href="{{route('all-logs')}}">
 															<span class="pcoded-mtext">Log</span>
 													</a>
 											</li>
 
-										@endcan
+
 									</ul>
 							</li>
 					</ul>
 
-				@endcan
-				@can('update general settings')
 					<div class="pcoded-navigatio-lavel">System Settings</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
@@ -558,8 +510,6 @@
 							</li>
 					</ul>
 
-				@endcan
-				@can('access administrative area')
 					<div class="pcoded-navigatio-lavel">Administration</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
@@ -642,6 +592,6 @@
 							</li>
 					</ul>
 
-				@endcan
+
     </div>
 </nav>
