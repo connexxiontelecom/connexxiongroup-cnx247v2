@@ -56,7 +56,8 @@
                                     <thead class="text-left">
                                         <tr>
                                             <th>#</th>
-                                            <th>Ticket No.</th>
+																					<th>User</th>
+																					<th>Ticket No.</th>
                                             <th>Subject</th>
                                             <th>Category</th>
                                             <th>Status</th>
@@ -73,6 +74,9 @@
 																							<tr>
 																								<td class="txt-primary">{{$index++}}</td>
 																								<td>
+																									{{$ticket->getUser->first_name ?? ''}} {{$ticket->getUser->surname ?? ''}}
+																								</td>
+																								<td>
 																									<label for="" class="label label-primary">{{$ticket->ticket_no}}</label>
 																								</td>
 																								<td>
@@ -88,7 +92,7 @@
 																										<span class="label label-success">Closed</span>
 																									@endif
 																								</td>
-																								<td><span class="label label-danger">{{date('d F, Y', strtotime($ticket->created_at))}} @ <small>{{date('h:ia', strtotime($ticket->created_at))}}</small></span></td>
+																								<td><span class="label label-danger">{{date('d-M-Y', strtotime($ticket->created_at))}}|<small>{{date('h:ia', strtotime($ticket->created_at))}}</small></span></td>
 																							</tr>
 																						@endif
 
