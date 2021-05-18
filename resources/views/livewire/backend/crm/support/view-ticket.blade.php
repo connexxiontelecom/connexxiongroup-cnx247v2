@@ -28,11 +28,11 @@
                                                 <div class="col-md-12">
                                                     <div class="card">
                                                         <div class="card-block">
-                                                            <h5 class="sub-title">Conversation</h5>
+                                                            <h5 class="sub-title">{{$ticket->getUser->first_name ?? ''}} {{$ticket->getUser->surname ?? ''}}</h5>
                                                             <a href="{{route('admin-support')}}" class="btn btn-secondary btn-mini float-right mb-2"> <i class="ti-back-left mr-2"></i> Back To Tickets</a>
                                                             <div class="card-block accordion-block">
                                                                 <div id="accordion" role="tablist" aria-multiselectable="true">
-                                                                   <h6 class="sub-title">{{$ticket->getUser->first_name ?? ''}} {{$ticket->getUser->surname ?? ''}}  {{$ticket->subject}}</h6>
+                                                                   <h6 class="sub-title">  {{$ticket->subject}}</h6>
                                                                    <p class="text-muted">{!! $ticket->message !!}</p>
                                                                    @if ($ticket->user_id != Auth::user()->id || $ticket->status == 1)
                                                                     <p class="d-flex justify-content-center mt-3">
