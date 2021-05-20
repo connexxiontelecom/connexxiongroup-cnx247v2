@@ -506,7 +506,7 @@ class StreamController extends Controller
         $tenant_id = $request->tenant_id;
         $reporttype = $request->type;
         $processor = RequestApprover::select('user_id')
-            ->where('request_type', 'expense-report')
+            ->where('request_type', $request->type)
             ->where('depart_id', $department_id)
             ->where('tenant_id', $tenant_id)
             ->first();
@@ -543,7 +543,7 @@ class StreamController extends Controller
             $event->post_id = $id;
             $event->post_type = $request->type;
             $event->user_id = $processor->user_id;
-            $event->tenant_id = $request->user_id;
+            $event->tenant_id = $request->tenant_id;
             $event->save();
             $user = User::find($processor->user_id);
 						$user->notify(new NewPostNotification($expense));
