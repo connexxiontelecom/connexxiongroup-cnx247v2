@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 use App\Mail\onBoardEmployee;
 use App\Mail\StartTrial;
 use Paystack;
@@ -24,6 +26,31 @@ use DB;
 class PaymentGatewayController extends Controller
 {
     public function createSite($timestamp, $plan){
+        $chosen_plan = PlanFeature::where('slug', $plan)->first();
+        $industries = Industry::orderBy('industry', 'ASC')->get();
+        $permissionObj = DB::table('role_has_permissions')
+        ->select('permission_id')
+        ->where('role_id', $chosen_plan->plan_id)
+        ->distinct()
+        ->get();
+        $permissionIds = array();
+        foreach ($permissionObj as $permit) {
+            array_push($permissionIds,$permit->permission_id);
+        }
+        $moduleObj = Permission::select('module')->whereIn('id', $permissionIds)->distinct()->get();
+        $moduleIds = array();
+        foreach($moduleObj as $mod){
+            array_push($moduleIds, $mod->module);
+        }
+        $modules = ModuleManager::whereIn('id', $moduleIds)->orderBy('module_name', 'ASC')->get();
+        return view('auth.create-site',
+        ['chosen_plan'=>$chosen_plan,
+        'modules'=>$modules,
+        'industries'=>$industries
+        ]);
+    }
+
+    public function showAffiliateChannel($referral, $plan){
         $chosen_plan = PlanFeature::where('slug', $plan)->first();
         $industries = Industry::orderBy('industry', 'ASC')->get();
         $permissionObj = DB::table('role_has_permissions')
@@ -72,7 +99,7 @@ class PaymentGatewayController extends Controller
 						//register new tenant
 						$latest_tenant = Tenant::orderBy('id', 'DESC')->first();
 						if(!empty($latest_tenant)){
-								$tenant_id = $latest_tenant->tenant_id + rand(100,999);
+								$tenant_id = $latest_tenant->tenant_id + 1;
 
 						}else{
 								$tenant_id = rand(100, 999);
@@ -126,16 +153,22 @@ class PaymentGatewayController extends Controller
 						$user->verification_link = substr(sha1(time()), 25,40);
 						$user->save();
 						$user->assignRole('Human Resource');
-						\Mail::to($user)->send(new StartTrial($user));
-						session()->flash("success", "<strong>Success!</strong> Trial registration done.");
-						return redirect()->route('signin');
+
+						try{
+							\Mail::to($user)->send(new StartTrial($user));
+							session()->flash("success", "<strong>Success!</strong> Trial registration done.");
+							return redirect()->route('signin');
+						}catch(\Exception $ex){
+							session()->flash("success", "<strong>Success!</strong> Trial registration done. Use your registered email and password to login.");
+							return redirect()->route('signin');
+						}
 
 		}
     /*
     *Proceed to make payment
     */
     public function proceedToPay(Request $request){
-      //return dd($request->all());
+
         $this->validate($request,[
                 'site_address'=>'required',
                 'company_name'=>'required',
@@ -224,7 +257,7 @@ class PaymentGatewayController extends Controller
                 //register new tenant
                 $latest_tenant = Tenant::orderBy('id', 'DESC')->first();
                 if(!empty($latest_tenant)){
-                    $tenant_id = $latest_tenant->tenant_id + rand(100,999);
+                    $tenant_id = $latest_tenant->tenant_id + 1;
 
                 }else{
                     $tenant_id = rand(100, 999);
@@ -268,7 +301,7 @@ class PaymentGatewayController extends Controller
                     $user->password = bcrypt($password);
                     $user->email = $email;
                     $user->tenant_id = $tenant_id; //new tenantID
-                    $user->verified = 0; //account verified
+                    $user->verified = 1; //account verified [Activate user account by default]
                     $user->url = substr(sha1(time()),29,40 );
                     $user->verification_link = substr(sha1(time()), 25,40);
                     $user->save();
@@ -295,6 +328,22 @@ class PaymentGatewayController extends Controller
                     $trans->account_name = $paymentDetails['data']['authorization']['account_name'];
                     $trans->tenant_id = $tenant_id; //new tenantID
                     $trans->save();
+										#API call to AMP
+										if(!empty($metadata['link'])){
+												$data = [
+													'product_id'=>15,
+													'referral_code' => $metadata['link'], //referral ID
+													'amount'=> $paymentDetails['data']['amount'],
+													'company_name'=> $company_name,
+													'contact_email'=> $email,
+													'month'=> date('m'),
+													'year'=> date('Y')
+												];
+												$url = "https://amp-api.connexxiontelecom.com/public/new_product_sale";
+												$response = Http::post($url, $data);
+
+										}
+
                     return view('auth.payment-success',
                     ['name'=>$first_name]);
             }else{

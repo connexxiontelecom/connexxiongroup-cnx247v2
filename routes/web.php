@@ -85,6 +85,9 @@ Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewW
 Route::get('/workflow-business-process', 'CNX247\Backend\WorkflowController@businessProcess')->name('workflow-business-process');
 Route::post('/workflow/business-process', 'CNX247\Backend\WorkflowController@setBusinessProcess');
 Route::post('/workflow/approve-or-decline-request', 'CNX247\Backend\WorkflowController@approveOrDeclineRequest');
+Route::post('/search-workflow-assignment', 'CNX247\Backend\WorkflowController@searchWorkflowAssignment')->name('search-workflow-assignment');
+Route::post('/search-workflow-my-requests', 'CNX247\Backend\WorkflowController@searchWorkflowMyRequests')->name('search-workflow-my-requests');
+
 #Expense report route
 Route::get('/expense-report', 'CNX247\Backend\ExpenseController@index')->name('expense-report');
 Route::post('/expense-report', 'CNX247\Backend\ExpenseController@store');
@@ -119,7 +122,7 @@ Route::post('/conversation/send', 'CNX247\Backend\ChatnCallsController@sendChat'
 Route::post('/conversation/attachment', 'CNX247\Backend\ChatnCallsController@sendAttachment');
 Route::get('/chat-n-calls', 'CNX247\Backend\ChatnCallsController@showChatnCallsView')->name('chat-n-calls');
 Route::post('/conversation/compatibility-token', 'CNX247\Backend\TokenController@newToken');
-Route::post('/conversation/call', 'CNX247\Backend\TokenController@newCall');
+Route::post('/conversation/call', 'CNX247\Backend\ChatnCallsController@makeCall');
 Route::get('/chat', 'CNX247\Backend\ChatnCallsController@chat')->name('chat');
 Route::get('/initialize-chat', 'CNX247\Backend\ChatnCallsController@initializeChat');
 Route::get('/chat-with/{id}', 'CNX247\Backend\ChatnCallsController@chatWith');
@@ -145,6 +148,7 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 
 #Payment Gateway
 Route::get('/create-site/{timestamp}/{plan}', 'CNX247\Frontend\PaymentGatewayController@createSite')->name('create-site');
+//Route::get('/create-site/{referral}/{plan}', 'CNX247\Frontend\PaymentGatewayController@showAffiliateChannel')->name('affiliate-channel');
 Route::post('/register-site', 'CNX247\Frontend\PaymentGatewayController@proceedToPay')->name('register-site');
 Route::get('/payment/gateway', 'CNX247\Frontend\PaymentGatewayController@handleGatewayCallback')->name('payment-callback');
 #Start trial
@@ -152,7 +156,7 @@ Route::get('/start-trial', 'CNX247\Frontend\PaymentGatewayController@startTrial'
 Route::post('/start-trial', 'CNX247\Frontend\PaymentGatewayController@registerTrial');
 
 #Frontend routes
-Route::get('/pricing', 'CNX247\Frontend\BaseController@pricing')->name('pricing');
+Route::get('/pricing/{ref_link?}', 'CNX247\Frontend\BaseController@pricing')->name('pricing');
 Route::get('/support', 'CNX247\Frontend\BaseController@support')->name('support');
 Route::get('/contact_us', 'CNX247\Frontend\BaseController@contact_us')->name('contact_us');
 Route::get('/faqs', 'CNX247\Frontend\BaseController@faqs')->name('faqs');
@@ -315,6 +319,7 @@ Route::post('/appreciation/new', 'CNX247\Backend\ActivityStreamController@create
 Route::post('/send/invitation/by-email', 'CNX247\Backend\ActivityStreamController@inviteUser');
 Route::post('/activity-stream/clockin', 'CNX247\Backend\ActivityStreamController@clockin');
 Route::post('/activity-stream/clockout', 'CNX247\Backend\ActivityStreamController@clockout');
+Route::post('/activity-stream/search', 'CNX247\Backend\ActivityStreamController@searchCNX247')->name('search-cnx247');
 
 #View an employee's profile
 Route::get('/activity-stream/profile/{url}', 'CNX247\Backend\ActivityStreamController@viewProfile')

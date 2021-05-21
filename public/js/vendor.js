@@ -2407,6 +2407,291 @@ function once(emitter, name) {
 
 /***/ }),
 
+/***/ "./node_modules/loglevel/lib/loglevel.js":
+/*!***********************************************!*\
+  !*** ./node_modules/loglevel/lib/loglevel.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
+* loglevel - https://github.com/pimterry/loglevel
+*
+* Copyright (c) 2013 Tim Perry
+* Licensed under the MIT license.
+*/
+(function (root, definition) {
+    "use strict";
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_FACTORY__ = (definition),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+}(this, function () {
+    "use strict";
+
+    // Slightly dubious tricks to cut down minimized file size
+    var noop = function() {};
+    var undefinedType = "undefined";
+    var isIE = (typeof window !== undefinedType) && (typeof window.navigator !== undefinedType) && (
+        /Trident\/|MSIE /.test(window.navigator.userAgent)
+    );
+
+    var logMethods = [
+        "trace",
+        "debug",
+        "info",
+        "warn",
+        "error"
+    ];
+
+    // Cross-browser bind equivalent that works at least back to IE6
+    function bindMethod(obj, methodName) {
+        var method = obj[methodName];
+        if (typeof method.bind === 'function') {
+            return method.bind(obj);
+        } else {
+            try {
+                return Function.prototype.bind.call(method, obj);
+            } catch (e) {
+                // Missing bind shim or IE8 + Modernizr, fallback to wrapping
+                return function() {
+                    return Function.prototype.apply.apply(method, [obj, arguments]);
+                };
+            }
+        }
+    }
+
+    // Trace() doesn't print the message in IE, so for that case we need to wrap it
+    function traceForIE() {
+        if (console.log) {
+            if (console.log.apply) {
+                console.log.apply(console, arguments);
+            } else {
+                // In old IE, native console methods themselves don't have apply().
+                Function.prototype.apply.apply(console.log, [console, arguments]);
+            }
+        }
+        if (console.trace) console.trace();
+    }
+
+    // Build the best logging method possible for this env
+    // Wherever possible we want to bind, not wrap, to preserve stack traces
+    function realMethod(methodName) {
+        if (methodName === 'debug') {
+            methodName = 'log';
+        }
+
+        if (typeof console === undefinedType) {
+            return false; // No method possible, for now - fixed later by enableLoggingWhenConsoleArrives
+        } else if (methodName === 'trace' && isIE) {
+            return traceForIE;
+        } else if (console[methodName] !== undefined) {
+            return bindMethod(console, methodName);
+        } else if (console.log !== undefined) {
+            return bindMethod(console, 'log');
+        } else {
+            return noop;
+        }
+    }
+
+    // These private functions always need `this` to be set properly
+
+    function replaceLoggingMethods(level, loggerName) {
+        /*jshint validthis:true */
+        for (var i = 0; i < logMethods.length; i++) {
+            var methodName = logMethods[i];
+            this[methodName] = (i < level) ?
+                noop :
+                this.methodFactory(methodName, level, loggerName);
+        }
+
+        // Define log.log as an alias for log.debug
+        this.log = this.debug;
+    }
+
+    // In old IE versions, the console isn't present until you first open it.
+    // We build realMethod() replacements here that regenerate logging methods
+    function enableLoggingWhenConsoleArrives(methodName, level, loggerName) {
+        return function () {
+            if (typeof console !== undefinedType) {
+                replaceLoggingMethods.call(this, level, loggerName);
+                this[methodName].apply(this, arguments);
+            }
+        };
+    }
+
+    // By default, we use closely bound real methods wherever possible, and
+    // otherwise we wait for a console to appear, and then try again.
+    function defaultMethodFactory(methodName, level, loggerName) {
+        /*jshint validthis:true */
+        return realMethod(methodName) ||
+               enableLoggingWhenConsoleArrives.apply(this, arguments);
+    }
+
+    function Logger(name, defaultLevel, factory) {
+      var self = this;
+      var currentLevel;
+
+      var storageKey = "loglevel";
+      if (typeof name === "string") {
+        storageKey += ":" + name;
+      } else if (typeof name === "symbol") {
+        storageKey = undefined;
+      }
+
+      function persistLevelIfPossible(levelNum) {
+          var levelName = (logMethods[levelNum] || 'silent').toUpperCase();
+
+          if (typeof window === undefinedType || !storageKey) return;
+
+          // Use localStorage if available
+          try {
+              window.localStorage[storageKey] = levelName;
+              return;
+          } catch (ignore) {}
+
+          // Use session cookie as fallback
+          try {
+              window.document.cookie =
+                encodeURIComponent(storageKey) + "=" + levelName + ";";
+          } catch (ignore) {}
+      }
+
+      function getPersistedLevel() {
+          var storedLevel;
+
+          if (typeof window === undefinedType || !storageKey) return;
+
+          try {
+              storedLevel = window.localStorage[storageKey];
+          } catch (ignore) {}
+
+          // Fallback to cookies if local storage gives us nothing
+          if (typeof storedLevel === undefinedType) {
+              try {
+                  var cookie = window.document.cookie;
+                  var location = cookie.indexOf(
+                      encodeURIComponent(storageKey) + "=");
+                  if (location !== -1) {
+                      storedLevel = /^([^;]+)/.exec(cookie.slice(location))[1];
+                  }
+              } catch (ignore) {}
+          }
+
+          // If the stored level is not valid, treat it as if nothing was stored.
+          if (self.levels[storedLevel] === undefined) {
+              storedLevel = undefined;
+          }
+
+          return storedLevel;
+      }
+
+      /*
+       *
+       * Public logger API - see https://github.com/pimterry/loglevel for details
+       *
+       */
+
+      self.name = name;
+
+      self.levels = { "TRACE": 0, "DEBUG": 1, "INFO": 2, "WARN": 3,
+          "ERROR": 4, "SILENT": 5};
+
+      self.methodFactory = factory || defaultMethodFactory;
+
+      self.getLevel = function () {
+          return currentLevel;
+      };
+
+      self.setLevel = function (level, persist) {
+          if (typeof level === "string" && self.levels[level.toUpperCase()] !== undefined) {
+              level = self.levels[level.toUpperCase()];
+          }
+          if (typeof level === "number" && level >= 0 && level <= self.levels.SILENT) {
+              currentLevel = level;
+              if (persist !== false) {  // defaults to true
+                  persistLevelIfPossible(level);
+              }
+              replaceLoggingMethods.call(self, level, name);
+              if (typeof console === undefinedType && level < self.levels.SILENT) {
+                  return "No console available for logging";
+              }
+          } else {
+              throw "log.setLevel() called with invalid level: " + level;
+          }
+      };
+
+      self.setDefaultLevel = function (level) {
+          if (!getPersistedLevel()) {
+              self.setLevel(level, false);
+          }
+      };
+
+      self.enableAll = function(persist) {
+          self.setLevel(self.levels.TRACE, persist);
+      };
+
+      self.disableAll = function(persist) {
+          self.setLevel(self.levels.SILENT, persist);
+      };
+
+      // Initialize with the right level
+      var initialLevel = getPersistedLevel();
+      if (initialLevel == null) {
+          initialLevel = defaultLevel == null ? "WARN" : defaultLevel;
+      }
+      self.setLevel(initialLevel, false);
+    }
+
+    /*
+     *
+     * Top-level API
+     *
+     */
+
+    var defaultLogger = new Logger();
+
+    var _loggersByName = {};
+    defaultLogger.getLogger = function getLogger(name) {
+        if ((typeof name !== "symbol" && typeof name !== "string") || name === "") {
+          throw new TypeError("You must supply a name when creating a logger.");
+        }
+
+        var logger = _loggersByName[name];
+        if (!logger) {
+          logger = _loggersByName[name] = new Logger(
+            name, defaultLogger.getLevel(), defaultLogger.methodFactory);
+        }
+        return logger;
+    };
+
+    // Grab the current global log variable in case of overwrite
+    var _log = (typeof window !== undefinedType) ? window.log : undefined;
+    defaultLogger.noConflict = function() {
+        if (typeof window !== undefinedType &&
+               window.log === defaultLogger) {
+            window.log = _log;
+        }
+
+        return defaultLogger;
+    };
+
+    defaultLogger.getLoggers = function getLoggers() {
+        return _loggersByName;
+    };
+
+    // ES6 default export, for compatibility
+    defaultLogger['default'] = defaultLogger;
+
+    return defaultLogger;
+}));
+
+
+/***/ }),
+
 /***/ "./node_modules/precond/index.js":
 /*!***************************************!*\
   !*** ./node_modules/precond/index.js ***!
@@ -5340,6 +5625,7 @@ module.exports = { XMLHttpRequest: XMLHttpRequest };
 
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @packageDocumentation
  * @internalapi
  */
 var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
@@ -5347,6 +5633,8 @@ var connection_1 = __webpack_require__(/*! ./twilio/connection */ "./node_module
 exports.Connection = connection_1.default;
 var device_1 = __webpack_require__(/*! ./twilio/device */ "./node_modules/twilio-client/es5/twilio/device.js");
 exports.Device = device_1.default;
+var preflight_1 = __webpack_require__(/*! ./twilio/preflight/preflight */ "./node_modules/twilio-client/es5/twilio/preflight/preflight.js");
+exports.PreflightTest = preflight_1.PreflightTest;
 var PStream = __webpack_require__(/*! ./twilio/pstream */ "./node_modules/twilio-client/es5/twilio/pstream.js");
 exports.PStream = PStream;
 var instance;
@@ -5449,6 +5737,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @packageDocumentation
  * @module Voice
  * @internalapi
  */
@@ -5550,6 +5839,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @packageDocumentation
  * @module Voice
  */
 var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
@@ -6090,6 +6380,7 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @packageDocumentation
  * @module Voice
  * @publicapi
  * @internal
@@ -6124,6 +6415,14 @@ var MEDIA_DISCONNECT_ERROR = {
         twilioError: new errors_1.MediaErrors.ConnectionError(),
     },
 };
+var MULTIPLE_THRESHOLD_WARNING_NAMES = {
+    // The stat `packetsLostFraction` is monitored by two separate thresholds,
+    // `maxAverage` and `max`. Each threshold emits a different warning name.
+    packetsLostFraction: {
+        max: 'packet-loss',
+        maxAverage: 'packets-lost-fraction',
+    },
+};
 var WARNING_NAMES = {
     audioInputLevel: 'audio-input-level',
     audioOutputLevel: 'audio-output-level',
@@ -6131,13 +6430,14 @@ var WARNING_NAMES = {
     bytesSent: 'bytes-sent',
     jitter: 'jitter',
     mos: 'mos',
-    packetsLostFraction: 'packet-loss',
     rtt: 'rtt',
 };
 var WARNING_PREFIXES = {
     max: 'high-',
+    maxAverage: 'high-',
     maxDuration: 'constant-',
     min: 'low-',
+    minStandardDeviation: 'constant-',
 };
 var hasBeenWarnedHandlers = false;
 /**
@@ -6217,7 +6517,7 @@ var Connection = /** @class */ (function (_super) {
          * @private
          */
         _this.toString = function () { return '[Twilio.Connection instance]'; };
-        _this._emitWarning = function (groupPrefix, warningName, threshold, value, wasCleared) {
+        _this._emitWarning = function (groupPrefix, warningName, threshold, value, wasCleared, warningData) {
             var groupSuffix = wasCleared ? '-cleared' : '-raised';
             var groupName = groupPrefix + "warning" + groupSuffix;
             // Ignore constant input if the Connection is muted (Expected)
@@ -6246,7 +6546,7 @@ var Connection = /** @class */ (function (_super) {
             _this._publisher.post(level, groupName, warningName, { data: payloadData }, _this);
             if (warningName !== 'constant-audio-output-level') {
                 var emitName = wasCleared ? 'warning-cleared' : 'warning';
-                _this.emit(emitName, warningName);
+                _this.emit(emitName, warningName, warningData && !wasCleared ? warningData : null);
             }
         };
         /**
@@ -6443,8 +6743,20 @@ var Connection = /** @class */ (function (_super) {
             var groupPrefix = /^audio/.test(warningData.name) ?
                 'audio-level-' : 'network-quality-';
             var warningPrefix = WARNING_PREFIXES[warningData.threshold.name];
-            var warningName = warningPrefix + WARNING_NAMES[warningData.name];
-            _this._emitWarning(groupPrefix, warningName, warningData.threshold.value, warningData.values || warningData.value, wasCleared);
+            /**
+             * NOTE: There are two "packet-loss" warnings: `high-packet-loss` and
+             * `high-packets-lost-fraction`, so in this case we need to use a different
+             * `WARNING_NAME` mapping.
+             */
+            var warningName;
+            if (warningData.name in MULTIPLE_THRESHOLD_WARNING_NAMES) {
+                warningName = MULTIPLE_THRESHOLD_WARNING_NAMES[warningData.name][warningData.threshold.name];
+            }
+            else if (warningData.name in WARNING_NAMES) {
+                warningName = WARNING_NAMES[warningData.name];
+            }
+            var warning = warningPrefix + warningName;
+            _this._emitWarning(groupPrefix, warning, warningData.threshold.value, warningData.values || warningData.value, wasCleared, warningData);
         };
         /**
          * Re-emit an StatsMonitor warning-cleared as a .warning-cleared event.
@@ -6475,9 +6787,14 @@ var Connection = /** @class */ (function (_super) {
         }
         _this._mediaReconnectBackoff = Backoff.exponential(BACKOFF_CONFIG);
         _this._mediaReconnectBackoff.on('ready', function () { return _this.mediaStream.iceRestart(); });
+        // temporary call sid to be used for outgoing calls
+        _this.outboundConnectionId = generateTempCallSid();
         var publisher = _this._publisher = config.publisher;
         if (_this._direction === Connection.CallDirection.Incoming) {
             publisher.info('connection', 'incoming', null, _this);
+        }
+        else {
+            publisher.info('connection', 'outgoing', { preflight: _this.options.preflight }, _this);
         }
         var monitor = _this._monitor = new (_this.options.StatsMonitor || statsMonitor_1.default)();
         monitor.on('sample', _this._onRTCSample);
@@ -6500,6 +6817,7 @@ var Connection = /** @class */ (function (_super) {
             forceAggressiveIceNomination: _this.options.forceAggressiveIceNomination,
             isUnifiedPlan: _this._isUnifiedPlanDefault,
             maxAverageBitrate: _this.options.maxAverageBitrate,
+            preflight: _this.options.preflight,
         });
         _this.on('volume', function (inputVolume, outputVolume) {
             _this._inputVolumeStreak = _this._checkVolume(inputVolume, _this._inputVolumeStreak, _this._latestInputVolume, 'input');
@@ -6627,8 +6945,6 @@ var Connection = /** @class */ (function (_super) {
                 _this.emit('disconnect', _this);
             }
         };
-        // temporary call sid to be used for outgoing calls
-        _this.outboundConnectionId = generateTempCallSid();
         _this.pstream = config.pstream;
         _this.pstream.on('cancel', _this._onCancel);
         _this.pstream.on('ringing', _this._onRinging);
@@ -7259,10 +7575,13 @@ exports.default = Connection;
  * This file is generated on build. To make changes, see /templates/constants.js
  */
 var PACKAGE_NAME = 'twilio-client';
-var RELEASE_VERSION = '1.12.5';
-module.exports.SOUNDS_BASE_URL = 'https://sdk.twilio.com/js/client/sounds/releases/1.0.0';
+var RELEASE_VERSION = '1.13.0';
+var SOUNDS_BASE_URL = 'https://sdk.twilio.com/js/client/sounds/releases/1.0.0';
+module.exports.COWBELL_AUDIO_URL = SOUNDS_BASE_URL + "/cowbell.mp3?cache=" + RELEASE_VERSION;
+module.exports.ECHO_TEST_DURATION = 20000;
 module.exports.PACKAGE_NAME = PACKAGE_NAME;
 module.exports.RELEASE_VERSION = RELEASE_VERSION;
+module.exports.SOUNDS_BASE_URL = SOUNDS_BASE_URL;
 /**
  * All errors we plan to use need to be defined here.
  */
@@ -7294,6 +7613,7 @@ module.exports.USED_ERRORS = [
 "use strict";
 
 /**
+ * @packageDocumentation
  * @module Voice
  * @internalapi
  */
@@ -7383,6 +7703,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @packageDocumentation
  * @module Voice
  * @preferred
  * @publicapi
@@ -7393,6 +7714,7 @@ var connection_1 = __webpack_require__(/*! ./connection */ "./node_modules/twili
 var dialtonePlayer_1 = __webpack_require__(/*! ./dialtonePlayer */ "./node_modules/twilio-client/es5/twilio/dialtonePlayer.js");
 var errors_1 = __webpack_require__(/*! ./errors */ "./node_modules/twilio-client/es5/twilio/errors/index.js");
 var log_1 = __webpack_require__(/*! ./log */ "./node_modules/twilio-client/es5/twilio/log.js");
+var preflight_1 = __webpack_require__(/*! ./preflight/preflight */ "./node_modules/twilio-client/es5/twilio/preflight/preflight.js");
 var regions_1 = __webpack_require__(/*! ./regions */ "./node_modules/twilio-client/es5/twilio/regions.js");
 var util_1 = __webpack_require__(/*! ./util */ "./node_modules/twilio-client/es5/twilio/util.js");
 var C = __webpack_require__(/*! ./constants */ "./node_modules/twilio-client/es5/twilio/constants.js");
@@ -7502,6 +7824,7 @@ var Device = /** @class */ (function (_super) {
             iceServers: [],
             noRegister: false,
             pStreamFactory: PStream,
+            preflight: false,
             rtcConstraints: {},
             soundFactory: Sound,
             sounds: {},
@@ -7821,6 +8144,14 @@ var Device = /** @class */ (function (_super) {
         configurable: true
     });
     /**
+     * Run some tests to identify issues, if any, prohibiting successful calling.
+     * @param token - A Twilio JWT token string
+     * @param options
+     */
+    Device.runPreflight = function (token, options) {
+        return new preflight_1.PreflightTest(token, __assign({ audioContext: Device._getOrCreateAudioContext() }, options));
+    };
+    /**
      * String representation of {@link Device} class.
      * @private
      */
@@ -7835,6 +8166,21 @@ var Device = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    /**
+     * Initializes the AudioContext instance shared across the Client SDK,
+     * or returns the existing instance if one has already been initialized.
+     */
+    Device._getOrCreateAudioContext = function () {
+        if (!Device._audioContext) {
+            if (typeof AudioContext !== 'undefined') {
+                Device._audioContext = new AudioContext();
+            }
+            else if (typeof webkitAudioContext !== 'undefined') {
+                Device._audioContext = new webkitAudioContext();
+            }
+        }
+        return Device._audioContext;
+    };
     /**
      * Return the active {@link Connection}. Null or undefined for backward compatibility.
      */
@@ -8000,14 +8346,7 @@ var Device = /** @class */ (function (_super) {
                 ? util_1.isUnifiedPlanDefault(window, window.navigator, RTCPeerConnection, RTCRtpTransceiver)
                 : false;
         }
-        if (!Device._audioContext) {
-            if (typeof AudioContext !== 'undefined') {
-                Device._audioContext = new AudioContext();
-            }
-            else if (typeof webkitAudioContext !== 'undefined') {
-                Device._audioContext = new webkitAudioContext();
-            }
-        }
+        Device._getOrCreateAudioContext();
         if (Device._audioContext && options.fakeLocalDTMF) {
             if (!Device._dialtonePlayer) {
                 Device._dialtonePlayer = new dialtonePlayer_1.default(Device._audioContext);
@@ -8081,6 +8420,11 @@ var Device = /** @class */ (function (_super) {
         });
         if (this.options.publishEvents === false) {
             this._publisher.disable();
+        }
+        else {
+            this._publisher.on('error', function (error) {
+                _this._log.warn('Cannot connect to insights.', error);
+            });
         }
         if (this._networkInformation && typeof this._networkInformation.addEventListener === 'function') {
             this._networkInformation.addEventListener('change', this._publishNetworkChange);
@@ -8228,9 +8572,10 @@ var Device = /** @class */ (function (_super) {
             enableIceRestart: this.options.enableIceRestart,
             enableRingingState: this.options.enableRingingState,
             forceAggressiveIceNomination: this.options.forceAggressiveIceNomination,
-            getInputStream: function () { return _this._connectionInputStream; },
+            getInputStream: function () { return _this.options.fileInputStream || _this._connectionInputStream; },
             getSinkIds: function () { return _this._connectionSinkIds; },
             maxAverageBitrate: this.options.maxAverageBitrate,
+            preflight: this.options.preflight,
             rtcConfiguration: this.options.rtcConfiguration || { iceServers: this.options.iceServers },
             rtcConstraints: this.options.rtcConstraints,
             shouldPlayDisconnect: function () { return _this._enabledSounds.disconnect; },
@@ -8500,6 +8845,7 @@ exports.default = Device;
 "use strict";
 
 /**
+ * @packageDocumentation
  * @module Tools
  * @internalapi
  */
@@ -8586,6 +8932,7 @@ exports.default = DialtonePlayer;
 
 /* tslint:disable max-classes-per-file max-line-length */
 /**
+ * @packageDocumentation
  * @module Voice
  * @publicapi
  * @internal
@@ -8894,6 +9241,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @packageDocumentation
  * @internalapi
  */
 /* tslint:disable max-classes-per-file */
@@ -8906,24 +9254,30 @@ exports.SignalingErrors = generated_1.SignalingErrors;
 // Application errors that can be avoided by good app logic
 var InvalidArgumentError = /** @class */ (function (_super) {
     __extends(InvalidArgumentError, _super);
-    function InvalidArgumentError() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function InvalidArgumentError(message) {
+        var _this = _super.call(this, message) || this;
+        _this.name = 'InvalidArgumentError';
+        return _this;
     }
     return InvalidArgumentError;
 }(Error));
 exports.InvalidArgumentError = InvalidArgumentError;
 var InvalidStateError = /** @class */ (function (_super) {
     __extends(InvalidStateError, _super);
-    function InvalidStateError() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function InvalidStateError(message) {
+        var _this = _super.call(this, message) || this;
+        _this.name = 'InvalidStateError';
+        return _this;
     }
     return InvalidStateError;
 }(Error));
 exports.InvalidStateError = InvalidStateError;
 var NotSupportedError = /** @class */ (function (_super) {
     __extends(NotSupportedError, _super);
-    function NotSupportedError() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function NotSupportedError(message) {
+        var _this = _super.call(this, message) || this;
+        _this.name = 'NotSupportedError';
+        return _this;
     }
     return NotSupportedError;
 }(Error));
@@ -8952,7 +9306,9 @@ exports.getErrorByCode = getErrorByCode;
 "use strict";
 
 
+var EventEmitter = __webpack_require__(/*! events */ "./node_modules/events/events.js").EventEmitter;
 var request = __webpack_require__(/*! ./request */ "./node_modules/twilio-client/es5/twilio/request.js");
+var util = __webpack_require__(/*! util */ "./node_modules/util/util.js");
 
 /**
  * Builds Endpoint Analytics (EA) event payloads and sends them to
@@ -9038,6 +9394,8 @@ function EventPublisher(productName, token, options) {
   });
 }
 
+util.inherits(EventPublisher, EventEmitter);
+
 /**
  * Post to an EA server.
  * @private
@@ -9053,6 +9411,8 @@ function EventPublisher(productName, token, options) {
  * @returns {Promise} Fulfilled if the HTTP response is 20x.
  */
 EventPublisher.prototype._post = function _post(endpointName, level, group, name, payload, connection, force) {
+  var _this = this;
+
   if (!this.isEnabled && !force) {
     return Promise.resolve();
   }
@@ -9092,6 +9452,7 @@ EventPublisher.prototype._post = function _post(endpointName, level, group, name
   return new Promise(function (resolve, reject) {
     self._request.post(requestParams, function (err) {
       if (err) {
+        _this.emit('error', err);
         reject(err);
       } else {
         resolve();
@@ -9177,14 +9538,14 @@ EventPublisher.prototype.error = function error(group, name, payload, connection
  * @returns {Promise} Fulfilled if the HTTP response is 20x.
  */
 EventPublisher.prototype.postMetrics = function postMetrics(group, name, metrics, customFields, connection) {
-  var _this = this;
+  var _this2 = this;
 
   return new Promise(function (resolve) {
     var samples = metrics.map(formatMetric).map(function (sample) {
       return Object.assign(sample, customFields);
     });
 
-    resolve(_this._post('EndpointMetrics', 'info', group, name, samples, connection));
+    resolve(_this2._post('EndpointMetrics', 'info', group, name, samples, connection));
   });
 };
 
@@ -9251,11 +9612,12 @@ module.exports = EventPublisher;
 "use strict";
 
 /**
+ * @packageDocumentation
  * @module Voice
  * @internalapi
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var LogLevelModule = __webpack_require__(/*! loglevel */ "./node_modules/twilio-client/node_modules/loglevel/lib/loglevel.js");
+var LogLevelModule = __webpack_require__(/*! loglevel */ "./node_modules/loglevel/lib/loglevel.js");
 var constants_1 = __webpack_require__(/*! ./constants */ "./node_modules/twilio-client/es5/twilio/constants.js");
 /**
  * {@link Log} provides logging features throught the sdk using loglevel module
@@ -9355,6 +9717,7 @@ exports.default = Log;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @packageDocumentation
  * @module Voice
  */
 var constants_1 = __webpack_require__(/*! ./constants */ "./node_modules/twilio-client/es5/twilio/constants.js");
@@ -9465,6 +9828,597 @@ var OutputDeviceCollection = /** @class */ (function () {
 }());
 exports.default = OutputDeviceCollection;
 //# sourceMappingURL=outputdevicecollection.js.map
+
+/***/ }),
+
+/***/ "./node_modules/twilio-client/es5/twilio/preflight/preflight.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/twilio-client/es5/twilio/preflight/preflight.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @packageDocumentation
+ * @module Voice
+ * @preferred
+ * @publicapi
+ */
+var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
+var connection_1 = __webpack_require__(/*! ../connection */ "./node_modules/twilio-client/es5/twilio/connection.js");
+var device_1 = __webpack_require__(/*! ../device */ "./node_modules/twilio-client/es5/twilio/device.js");
+var errors_1 = __webpack_require__(/*! ../errors */ "./node_modules/twilio-client/es5/twilio/errors/index.js");
+var stats_1 = __webpack_require__(/*! ../rtc/stats */ "./node_modules/twilio-client/es5/twilio/rtc/stats.js");
+var _a = __webpack_require__(/*! ../constants */ "./node_modules/twilio-client/es5/twilio/constants.js"), COWBELL_AUDIO_URL = _a.COWBELL_AUDIO_URL, ECHO_TEST_DURATION = _a.ECHO_TEST_DURATION;
+/**
+ * Runs some tests to identify issues, if any, prohibiting successful calling.
+ */
+var PreflightTest = /** @class */ (function (_super) {
+    __extends(PreflightTest, _super);
+    /**
+     * Construct a {@link PreflightTest} instance.
+     * @constructor
+     * @param token - A Twilio JWT token string.
+     * @param options
+     */
+    function PreflightTest(token, options) {
+        var _this = _super.call(this) || this;
+        /**
+         * Whether this test has already logged an insights-connection-warning.
+         */
+        _this._hasInsightsErrored = false;
+        /**
+         * Network related timing measurements for this test
+         */
+        _this._networkTiming = {};
+        /**
+         * The options passed to {@link PreflightTest} constructor
+         */
+        _this._options = {
+            codecPreferences: [connection_1.default.Codec.PCMU, connection_1.default.Codec.Opus],
+            debug: false,
+            edge: 'roaming',
+            fakeMicInput: false,
+            signalingTimeoutMs: 10000,
+        };
+        /**
+         * Current status of this test
+         */
+        _this._status = PreflightTest.Status.Connecting;
+        Object.assign(_this._options, options);
+        _this._samples = [];
+        _this._warnings = [];
+        _this._startTime = Date.now();
+        _this._initDevice(token, __assign(__assign({}, _this._options), { fileInputStream: _this._options.fakeMicInput ?
+                _this._getStreamFromFile() : undefined }));
+        return _this;
+    }
+    /**
+     * Stops the current test and raises a failed event.
+     */
+    PreflightTest.prototype.stop = function () {
+        var _this = this;
+        var error = {
+            code: 31008,
+            message: 'Call cancelled',
+        };
+        if (this._device) {
+            this._device.once('offline', function () { return _this._onFailed(error); });
+            this._device.destroy();
+        }
+        else {
+            this._onFailed(error);
+        }
+    };
+    /**
+     * Emit a {PreflightTest.Warning}
+     */
+    PreflightTest.prototype._emitWarning = function (name, description, rtcWarning) {
+        var warning = { name: name, description: description };
+        if (rtcWarning) {
+            warning.rtcWarning = rtcWarning;
+        }
+        this._warnings.push(warning);
+        this.emit(PreflightTest.Events.Warning, warning);
+    };
+    /**
+     * Returns call quality base on the RTC Stats
+     */
+    PreflightTest.prototype._getCallQuality = function (mos) {
+        if (mos > 4.2) {
+            return PreflightTest.CallQuality.Excellent;
+        }
+        else if (mos >= 4.1 && mos <= 4.2) {
+            return PreflightTest.CallQuality.Great;
+        }
+        else if (mos >= 3.7 && mos <= 4) {
+            return PreflightTest.CallQuality.Good;
+        }
+        else if (mos >= 3.1 && mos <= 3.6) {
+            return PreflightTest.CallQuality.Fair;
+        }
+        else {
+            return PreflightTest.CallQuality.Degraded;
+        }
+    };
+    /**
+     * Returns the report for this test.
+     */
+    PreflightTest.prototype._getReport = function () {
+        var stats = this._getRTCStats();
+        var testTiming = { start: this._startTime };
+        if (this._endTime) {
+            testTiming.end = this._endTime;
+            testTiming.duration = this._endTime - this._startTime;
+        }
+        var report = {
+            callSid: this._callSid,
+            edge: this._edge,
+            iceCandidateStats: this._rtcIceCandidateStatsReport.iceCandidateStats,
+            networkTiming: this._networkTiming,
+            samples: this._samples,
+            selectedEdge: this._options.edge,
+            stats: stats,
+            testTiming: testTiming,
+            totals: this._getRTCSampleTotals(),
+            warnings: this._warnings,
+        };
+        var selectedIceCandidatePairStats = this._rtcIceCandidateStatsReport.selectedIceCandidatePairStats;
+        if (selectedIceCandidatePairStats) {
+            report.selectedIceCandidatePairStats = selectedIceCandidatePairStats;
+            report.isTurnRequired = selectedIceCandidatePairStats.localCandidate.candidateType === 'relay'
+                || selectedIceCandidatePairStats.remoteCandidate.candidateType === 'relay';
+        }
+        if (stats) {
+            report.callQuality = this._getCallQuality(stats.mos.average);
+        }
+        return report;
+    };
+    /**
+     * Returns RTC stats totals for this test
+     */
+    PreflightTest.prototype._getRTCSampleTotals = function () {
+        if (!this._latestSample) {
+            return;
+        }
+        return __assign({}, this._latestSample.totals);
+    };
+    /**
+     * Returns RTC related stats captured during the test call
+     */
+    PreflightTest.prototype._getRTCStats = function () {
+        var firstMosSampleIdx = this._samples.findIndex(function (sample) { return typeof sample.mos === 'number' && sample.mos > 0; });
+        var samples = firstMosSampleIdx >= 0
+            ? this._samples.slice(firstMosSampleIdx)
+            : [];
+        if (!samples || !samples.length) {
+            return;
+        }
+        return ['jitter', 'mos', 'rtt'].reduce(function (statObj, stat) {
+            var _a;
+            var values = samples.map(function (s) { return s[stat]; });
+            return __assign(__assign({}, statObj), (_a = {}, _a[stat] = {
+                average: Number((values.reduce(function (total, value) { return total + value; }) / values.length).toPrecision(5)),
+                max: Math.max.apply(Math, values),
+                min: Math.min.apply(Math, values),
+            }, _a));
+        }, {});
+    };
+    /**
+     * Returns a MediaStream from a media file
+     */
+    PreflightTest.prototype._getStreamFromFile = function () {
+        var audioContext = this._options.audioContext;
+        if (!audioContext) {
+            throw new errors_1.NotSupportedError('Cannot fake input audio stream: AudioContext is not supported by this browser.');
+        }
+        var audioEl = new Audio(COWBELL_AUDIO_URL);
+        audioEl.addEventListener('canplaythrough', function () { return audioEl.play(); });
+        if (typeof audioEl.setAttribute === 'function') {
+            audioEl.setAttribute('crossorigin', 'anonymous');
+        }
+        var src = audioContext.createMediaElementSource(audioEl);
+        var dest = audioContext.createMediaStreamDestination();
+        src.connect(dest);
+        return dest.stream;
+    };
+    /**
+     * Initialize the device
+     */
+    PreflightTest.prototype._initDevice = function (token, options) {
+        var _this = this;
+        try {
+            this._device = new (options.deviceFactory || device_1.default)(token, {
+                codecPreferences: options.codecPreferences,
+                debug: options.debug,
+                edge: options.edge,
+                fileInputStream: options.fileInputStream,
+                iceServers: options.iceServers,
+                preflight: true,
+                rtcConfiguration: options.rtcConfiguration,
+            });
+        }
+        catch (error) {
+            // We want to return before failing so the consumer can capture the event
+            setTimeout(function () {
+                _this._onFailed(error);
+            });
+            return;
+        }
+        this._device.once('ready', function () {
+            _this._onDeviceReady();
+        });
+        this._device.once('error', function (error) {
+            _this._onDeviceError(error);
+        });
+        this._signalingTimeoutTimer = setTimeout(function () {
+            _this._onDeviceError({
+                code: 31901,
+                message: 'WebSocket - Connection Timeout',
+            });
+        }, options.signalingTimeoutMs);
+    };
+    /**
+     * Called on {@link Device} error event
+     * @param error
+     */
+    PreflightTest.prototype._onDeviceError = function (error) {
+        this._device.destroy();
+        this._onFailed(error);
+    };
+    /**
+     * Called on {@link Device} ready event
+     */
+    PreflightTest.prototype._onDeviceReady = function () {
+        var _this = this;
+        clearTimeout(this._echoTimer);
+        clearTimeout(this._signalingTimeoutTimer);
+        this._connection = this._device.connect();
+        this._networkTiming.signaling = { start: Date.now() };
+        this._setupConnectionHandlers(this._connection);
+        this._edge = this._device.edge || undefined;
+        if (this._options.fakeMicInput) {
+            this._echoTimer = setTimeout(function () { return _this._device.disconnectAll(); }, ECHO_TEST_DURATION);
+            var audio = this._device.audio;
+            if (audio) {
+                audio.disconnect(false);
+                audio.outgoing(false);
+            }
+        }
+        this._device.once('disconnect', function () {
+            _this._device.once('offline', function () { return _this._onOffline(); });
+            _this._device.destroy();
+        });
+        var publisher = this._connection['_publisher'];
+        publisher.on('error', function () {
+            if (!_this._hasInsightsErrored) {
+                _this._emitWarning('insights-connection-error', 'Received an error when attempting to connect to Insights gateway');
+            }
+            _this._hasInsightsErrored = true;
+        });
+    };
+    /**
+     * Called when there is a fatal error
+     * @param error
+     */
+    PreflightTest.prototype._onFailed = function (error) {
+        clearTimeout(this._echoTimer);
+        clearTimeout(this._signalingTimeoutTimer);
+        this._releaseHandlers();
+        this._endTime = Date.now();
+        this._status = PreflightTest.Status.Failed;
+        this.emit(PreflightTest.Events.Failed, error);
+    };
+    /**
+     * Called when the device goes offline.
+     * This indicates that the test has been completed, but we won't know if it failed or not.
+     * The onError event will be the indicator whether the test failed.
+     */
+    PreflightTest.prototype._onOffline = function () {
+        var _this = this;
+        // We need to make sure we always execute preflight.on('completed') last
+        // as client SDK sometimes emits 'offline' event before emitting fatal errors.
+        setTimeout(function () {
+            if (_this._status === PreflightTest.Status.Failed) {
+                return;
+            }
+            clearTimeout(_this._echoTimer);
+            clearTimeout(_this._signalingTimeoutTimer);
+            _this._releaseHandlers();
+            _this._endTime = Date.now();
+            _this._status = PreflightTest.Status.Completed;
+            _this._report = _this._getReport();
+            _this.emit(PreflightTest.Events.Completed, _this._report);
+        }, 10);
+    };
+    /**
+     * Clean up all handlers for device and connection
+     */
+    PreflightTest.prototype._releaseHandlers = function () {
+        [this._device, this._connection].forEach(function (emitter) {
+            if (emitter) {
+                emitter.eventNames().forEach(function (name) { return emitter.removeAllListeners(name); });
+            }
+        });
+    };
+    /**
+     * Setup the event handlers for the {@link Connection} of the test call
+     * @param connection
+     */
+    PreflightTest.prototype._setupConnectionHandlers = function (connection) {
+        var _this = this;
+        if (this._options.fakeMicInput) {
+            // When volume events start emitting, it means all audio outputs have been created.
+            // Let's mute them if we're using fake mic input.
+            connection.once('volume', function () {
+                connection.mediaStream.outputs
+                    .forEach(function (output) { return output.audio.muted = true; });
+            });
+        }
+        connection.on('warning', function (name, data) {
+            _this._emitWarning(name, 'Received an RTCWarning. See .rtcWarning for the RTCWarning', data);
+        });
+        connection.once('accept', function () {
+            _this._callSid = connection.mediaStream.callSid;
+            _this._status = PreflightTest.Status.Connected;
+            _this.emit(PreflightTest.Events.Connected);
+        });
+        connection.on('sample', function (sample) { return __awaiter(_this, void 0, void 0, function () {
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!!this._latestSample) return [3 /*break*/, 2];
+                        _a = this;
+                        return [4 /*yield*/, (this._options.getRTCIceCandidateStatsReport || stats_1.getRTCIceCandidateStatsReport)(connection.mediaStream.version.pc)];
+                    case 1:
+                        _a._rtcIceCandidateStatsReport = _b.sent();
+                        _b.label = 2;
+                    case 2:
+                        this._latestSample = sample;
+                        this._samples.push(sample);
+                        this.emit(PreflightTest.Events.Sample, sample);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        // TODO: Update the following once the SDK supports emitting these events
+        // Let's shim for now
+        [{
+                reportLabel: 'peerConnection',
+                type: 'pcconnection',
+            }, {
+                reportLabel: 'ice',
+                type: 'iceconnection',
+            }, {
+                reportLabel: 'dtls',
+                type: 'dtlstransport',
+            }, {
+                reportLabel: 'signaling',
+                type: 'signaling',
+            }].forEach(function (_a) {
+            var type = _a.type, reportLabel = _a.reportLabel;
+            var handlerName = "on" + type + "statechange";
+            var originalHandler = connection.mediaStream[handlerName];
+            connection.mediaStream[handlerName] = function (state) {
+                var timing = _this._networkTiming[reportLabel]
+                    = _this._networkTiming[reportLabel] || { start: 0 };
+                if (state === 'connecting' || state === 'checking') {
+                    timing.start = Date.now();
+                }
+                else if ((state === 'connected' || state === 'stable') && !timing.duration) {
+                    timing.end = Date.now();
+                    timing.duration = timing.end - timing.start;
+                }
+                originalHandler(state);
+            };
+        });
+    };
+    Object.defineProperty(PreflightTest.prototype, "callSid", {
+        /**
+         * The callsid generated for the test call.
+         */
+        get: function () {
+            return this._callSid;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PreflightTest.prototype, "endTime", {
+        /**
+         * A timestamp in milliseconds of when the test ended.
+         */
+        get: function () {
+            return this._endTime;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PreflightTest.prototype, "latestSample", {
+        /**
+         * The latest WebRTC sample collected.
+         */
+        get: function () {
+            return this._latestSample;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PreflightTest.prototype, "report", {
+        /**
+         * The report for this test.
+         */
+        get: function () {
+            return this._report;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PreflightTest.prototype, "startTime", {
+        /**
+         * A timestamp in milliseconds of when the test started.
+         */
+        get: function () {
+            return this._startTime;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PreflightTest.prototype, "status", {
+        /**
+         * The status of the test.
+         */
+        get: function () {
+            return this._status;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return PreflightTest;
+}(events_1.EventEmitter));
+exports.PreflightTest = PreflightTest;
+(function (PreflightTest) {
+    /**
+     * The quality of the call determined by different mos ranges.
+     * Mos is calculated base on the WebRTC stats - rtt, jitter, and packet lost.
+     */
+    var CallQuality;
+    (function (CallQuality) {
+        /**
+         * If the average mos is over 4.2.
+         */
+        CallQuality["Excellent"] = "excellent";
+        /**
+         * If the average mos is between 4.1 and 4.2 both inclusive.
+         */
+        CallQuality["Great"] = "great";
+        /**
+         * If the average mos is between 3.7 and 4.0 both inclusive.
+         */
+        CallQuality["Good"] = "good";
+        /**
+         * If the average mos is between 3.1 and 3.6 both inclusive.
+         */
+        CallQuality["Fair"] = "fair";
+        /**
+         * If the average mos is 3.0 or below.
+         */
+        CallQuality["Degraded"] = "degraded";
+    })(CallQuality = PreflightTest.CallQuality || (PreflightTest.CallQuality = {}));
+    /**
+     * Possible events that a [[PreflightTest]] might emit.
+     */
+    var Events;
+    (function (Events) {
+        /**
+         * See [[PreflightTest.completedEvent]]
+         */
+        Events["Completed"] = "completed";
+        /**
+         * See [[PreflightTest.connectedEvent]]
+         */
+        Events["Connected"] = "connected";
+        /**
+         * See [[PreflightTest.failedEvent]]
+         */
+        Events["Failed"] = "failed";
+        /**
+         * See [[PreflightTest.sampleEvent]]
+         */
+        Events["Sample"] = "sample";
+        /**
+         * See [[PreflightTest.warningEvent]]
+         */
+        Events["Warning"] = "warning";
+    })(Events = PreflightTest.Events || (PreflightTest.Events = {}));
+    /**
+     * Possible status of the test.
+     */
+    var Status;
+    (function (Status) {
+        /**
+         * Connection to Twilio has initiated.
+         */
+        Status["Connecting"] = "connecting";
+        /**
+         * Connection to Twilio has been established.
+         */
+        Status["Connected"] = "connected";
+        /**
+         * The connection to Twilio has been disconnected and the test call has completed.
+         */
+        Status["Completed"] = "completed";
+        /**
+         * The test has stopped and failed.
+         */
+        Status["Failed"] = "failed";
+    })(Status = PreflightTest.Status || (PreflightTest.Status = {}));
+})(PreflightTest = exports.PreflightTest || (exports.PreflightTest = {}));
+exports.PreflightTest = PreflightTest;
+//# sourceMappingURL=preflight.js.map
 
 /***/ }),
 
@@ -9676,10 +10630,11 @@ PStream.prototype.register = function (mediaCapabilities) {
   this._publish('register', regPayload, true);
 };
 
-PStream.prototype.invite = function (sdp, callsid, params) {
+PStream.prototype.invite = function (sdp, callsid, preflight, params) {
   var payload = {
     callsid: callsid,
     sdp: sdp,
+    preflight: !!preflight,
     twilio: params ? { params: params } : {}
   };
   this._publish('invite', payload, true);
@@ -9779,6 +10734,7 @@ module.exports = PStream;
 var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
+ * @packageDocumentation
  * @module Voice
  * This module describes valid and deprecated regions.
  */
@@ -10200,6 +11156,7 @@ module.exports = getUserMedia;
 "use strict";
 
 /**
+ * @packageDocumentation
  * @module Voice
  * @internalapi
  */
@@ -10298,24 +11255,18 @@ module.exports = {
   !*** ./node_modules/twilio-client/es5/twilio/rtc/mockrtcstatsreport.js ***!
   \*************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
+/***/ (function(module, exports) {
 
 /**
  * This file was imported from another project. If making changes to this file, please don't
  * make them here. Make them on the linked repo below, then copy back:
  * https://code.hq.twilio.com/client/MockRTCStatsReport
  */
-
 /* eslint-disable no-undefined */
-
 // The legacy max volume, which is the positive half of a signed short integer.
 var OLD_MAX_VOLUME = 32767;
-
-var NativeRTCStatsReport = typeof window !== 'undefined' ? window.RTCStatsReport : undefined;
-
+var NativeRTCStatsReport = typeof window !== 'undefined'
+    ? window.RTCStatsReport : undefined;
 /**
  * Create a MockRTCStatsReport wrapper around a Map of RTCStats objects. If RTCStatsReport is available
  *   natively, it will be inherited so that instanceof checks pass.
@@ -10325,51 +11276,48 @@ var NativeRTCStatsReport = typeof window !== 'undefined' ? window.RTCStatsReport
  *   with a MockRTCStatsReport object.
  */
 function MockRTCStatsReport(statsMap) {
-  if (!(this instanceof MockRTCStatsReport)) {
-    return new MockRTCStatsReport(statsMap);
-  }
-
-  var self = this;
-  Object.defineProperties(this, {
-    size: {
-      enumerable: true,
-      get: function get() {
-        return self._map.size;
-      }
-    },
-    _map: { value: statsMap }
-  });
-
-  this[Symbol.iterator] = statsMap[Symbol.iterator];
+    if (!(this instanceof MockRTCStatsReport)) {
+        return new MockRTCStatsReport(statsMap);
+    }
+    var self = this;
+    Object.defineProperties(this, {
+        size: {
+            enumerable: true,
+            get: function () {
+                return self._map.size;
+            }
+        },
+        _map: { value: statsMap }
+    });
+    this[Symbol.iterator] = statsMap[Symbol.iterator];
 }
-
 // If RTCStatsReport is available natively, inherit it. Keep our constructor.
 if (NativeRTCStatsReport) {
-  MockRTCStatsReport.prototype = Object.create(NativeRTCStatsReport.prototype);
-  MockRTCStatsReport.prototype.constructor = MockRTCStatsReport;
+    MockRTCStatsReport.prototype = Object.create(NativeRTCStatsReport.prototype);
+    MockRTCStatsReport.prototype.constructor = MockRTCStatsReport;
 }
-
 // Map the Map-like read methods to the underlying Map
 ['entries', 'forEach', 'get', 'has', 'keys', 'values'].forEach(function (key) {
-  MockRTCStatsReport.prototype[key] = function () {
-    var _map;
-
-    return (_map = this._map)[key].apply(_map, arguments);
-  };
+    MockRTCStatsReport.prototype[key] = function () {
+        var _a;
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        return (_a = this._map)[key].apply(_a, args);
+    };
 });
-
 /**
  * Convert an array of RTCStats objects into a mock RTCStatsReport object.
  * @param {Array<RTCStats>}
  * @return {MockRTCStatsReport}
  */
 MockRTCStatsReport.fromArray = function fromArray(array) {
-  return new MockRTCStatsReport(array.reduce(function (map, rtcStats) {
-    map.set(rtcStats.id, rtcStats);
-    return map;
-  }, new Map()));
+    return new MockRTCStatsReport(array.reduce(function (map, rtcStats) {
+        map.set(rtcStats.id, rtcStats);
+        return map;
+    }, new Map()));
 };
-
 /**
  * Convert a legacy RTCStatsResponse object into a mock RTCStatsReport object.
  * @param {RTCStatsResponse} statsResponse - An RTCStatsResponse object returned by the
@@ -10377,344 +11325,341 @@ MockRTCStatsReport.fromArray = function fromArray(array) {
  * @return {MockRTCStatsReport} A mock RTCStatsReport object.
  */
 MockRTCStatsReport.fromRTCStatsResponse = function fromRTCStatsResponse(statsResponse) {
-  var activeCandidatePairId = void 0;
-  var transportIds = new Map();
-
-  var statsMap = statsResponse.result().reduce(function (map, report) {
-    var id = report.id;
-    switch (report.type) {
-      case 'googCertificate':
-        map.set(id, createRTCCertificateStats(report));
-        break;
-      case 'datachannel':
-        map.set(id, createRTCDataChannelStats(report));
-        break;
-      case 'googCandidatePair':
-        if (getBoolean(report, 'googActiveConnection')) {
-          activeCandidatePairId = id;
+    var activeCandidatePairId;
+    var transportIds = new Map();
+    var statsMap = statsResponse.result().reduce(function (map, report) {
+        var id = report.id;
+        switch (report.type) {
+            case 'googCertificate':
+                map.set(id, createRTCCertificateStats(report));
+                break;
+            case 'datachannel':
+                map.set(id, createRTCDataChannelStats(report));
+                break;
+            case 'googCandidatePair':
+                if (getBoolean(report, 'googActiveConnection')) {
+                    activeCandidatePairId = id;
+                }
+                map.set(id, createRTCIceCandidatePairStats(report));
+                break;
+            case 'localcandidate':
+                map.set(id, createRTCIceCandidateStats(report, false));
+                break;
+            case 'remotecandidate':
+                map.set(id, createRTCIceCandidateStats(report, true));
+                break;
+            case 'ssrc':
+                if (isPresent(report, 'packetsReceived')) {
+                    map.set("rtp-" + id, createRTCInboundRTPStreamStats(report));
+                }
+                else {
+                    map.set("rtp-" + id, createRTCOutboundRTPStreamStats(report));
+                }
+                map.set("track-" + id, createRTCMediaStreamTrackStats(report));
+                map.set("codec-" + id, createRTCCodecStats(report));
+                break;
+            case 'googComponent':
+                var transportReport = createRTCTransportStats(report);
+                transportIds.set(transportReport.selectedCandidatePairId, id);
+                map.set(id, createRTCTransportStats(report));
+                break;
         }
-
-        map.set(id, createRTCIceCandidatePairStats(report));
-        break;
-      case 'localcandidate':
-        map.set(id, createRTCIceCandidateStats(report, false));
-        break;
-      case 'remotecandidate':
-        map.set(id, createRTCIceCandidateStats(report, true));
-        break;
-      case 'ssrc':
-        if (isPresent(report, 'packetsReceived')) {
-          map.set('rtp-' + id, createRTCInboundRTPStreamStats(report));
-        } else {
-          map.set('rtp-' + id, createRTCOutboundRTPStreamStats(report));
+        return map;
+    }, new Map());
+    if (activeCandidatePairId) {
+        var activeTransportId = transportIds.get(activeCandidatePairId);
+        if (activeTransportId) {
+            statsMap.get(activeTransportId).dtlsState = 'connected';
         }
-
-        map.set('track-' + id, createRTCMediaStreamTrackStats(report));
-        map.set('codec-' + id, createRTCCodecStats(report));
-        break;
-      case 'googComponent':
-        var transportReport = createRTCTransportStats(report);
-        transportIds.set(transportReport.selectedCandidatePairId, id);
-        map.set(id, createRTCTransportStats(report));
-        break;
     }
-
-    return map;
-  }, new Map());
-
-  if (activeCandidatePairId) {
-    var activeTransportId = transportIds.get(activeCandidatePairId);
-    if (activeTransportId) {
-      statsMap.get(activeTransportId).dtlsState = 'connected';
-    }
-  }
-
-  return new MockRTCStatsReport(statsMap);
+    return new MockRTCStatsReport(statsMap);
 };
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @returns {RTCTransportStats}
  */
 function createRTCTransportStats(report) {
-  return {
-    type: 'transport',
-    id: report.id,
-    timestamp: Date.parse(report.timestamp),
-    bytesSent: undefined,
-    bytesReceived: undefined,
-    rtcpTransportStatsId: undefined,
-    dtlsState: undefined,
-    selectedCandidatePairId: report.stat('selectedCandidatePairId'),
-    localCertificateId: report.stat('localCertificateId'),
-    remoteCertificateId: report.stat('remoteCertificateId')
-  };
+    return {
+        type: 'transport',
+        id: report.id,
+        timestamp: Date.parse(report.timestamp),
+        bytesSent: undefined,
+        bytesReceived: undefined,
+        rtcpTransportStatsId: undefined,
+        dtlsState: undefined,
+        selectedCandidatePairId: report.stat('selectedCandidatePairId'),
+        localCertificateId: report.stat('localCertificateId'),
+        remoteCertificateId: report.stat('remoteCertificateId')
+    };
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @returns {RTCCodecStats}
  */
 function createRTCCodecStats(report) {
-  return {
-    type: 'codec',
-    id: report.id,
-    timestamp: Date.parse(report.timestamp),
-    payloadType: undefined,
-    mimeType: report.stat('mediaType') + '/' + report.stat('googCodecName'),
-    clockRate: undefined,
-    channels: undefined,
-    sdpFmtpLine: undefined,
-    implementation: undefined
-  };
+    return {
+        type: 'codec',
+        id: report.id,
+        timestamp: Date.parse(report.timestamp),
+        payloadType: undefined,
+        mimeType: report.stat('mediaType') + "/" + report.stat('googCodecName'),
+        clockRate: undefined,
+        channels: undefined,
+        sdpFmtpLine: undefined,
+        implementation: undefined
+    };
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @returns {RTCMediaStreamTrackStats}
  */
 function createRTCMediaStreamTrackStats(report) {
-  return {
-    type: 'track',
-    id: report.id,
-    timestamp: Date.parse(report.timestamp),
-    trackIdentifier: report.stat('googTrackId'),
-    remoteSource: undefined,
-    ended: undefined,
-    kind: report.stat('mediaType'),
-    detached: undefined,
-    ssrcIds: undefined,
-    frameWidth: isPresent(report, 'googFrameWidthReceived') ? getInt(report, 'googFrameWidthReceived') : getInt(report, 'googFrameWidthSent'),
-    frameHeight: isPresent(report, 'googFrameHeightReceived') ? getInt(report, 'googFrameHeightReceived') : getInt(report, 'googFrameHeightSent'),
-    framesPerSecond: undefined,
-    framesSent: getInt(report, 'framesEncoded'),
-    framesReceived: undefined,
-    framesDecoded: getInt(report, 'framesDecoded'),
-    framesDropped: undefined,
-    framesCorrupted: undefined,
-    partialFramesLost: undefined,
-    fullFramesLost: undefined,
-    audioLevel: isPresent(report, 'audioOutputLevel') ? getInt(report, 'audioOutputLevel') / OLD_MAX_VOLUME : (getInt(report, 'audioInputLevel') || 0) / OLD_MAX_VOLUME,
-    echoReturnLoss: getFloat(report, 'googEchoCancellationReturnLoss'),
-    echoReturnLossEnhancement: getFloat(report, 'googEchoCancellationReturnLossEnhancement')
-  };
+    return {
+        type: 'track',
+        id: report.id,
+        timestamp: Date.parse(report.timestamp),
+        trackIdentifier: report.stat('googTrackId'),
+        remoteSource: undefined,
+        ended: undefined,
+        kind: report.stat('mediaType'),
+        detached: undefined,
+        ssrcIds: undefined,
+        frameWidth: isPresent(report, 'googFrameWidthReceived')
+            ? getInt(report, 'googFrameWidthReceived')
+            : getInt(report, 'googFrameWidthSent'),
+        frameHeight: isPresent(report, 'googFrameHeightReceived')
+            ? getInt(report, 'googFrameHeightReceived')
+            : getInt(report, 'googFrameHeightSent'),
+        framesPerSecond: undefined,
+        framesSent: getInt(report, 'framesEncoded'),
+        framesReceived: undefined,
+        framesDecoded: getInt(report, 'framesDecoded'),
+        framesDropped: undefined,
+        framesCorrupted: undefined,
+        partialFramesLost: undefined,
+        fullFramesLost: undefined,
+        audioLevel: isPresent(report, 'audioOutputLevel')
+            ? getInt(report, 'audioOutputLevel') / OLD_MAX_VOLUME
+            : (getInt(report, 'audioInputLevel') || 0) / OLD_MAX_VOLUME,
+        echoReturnLoss: getFloat(report, 'googEchoCancellationReturnLoss'),
+        echoReturnLossEnhancement: getFloat(report, 'googEchoCancellationReturnLossEnhancement')
+    };
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @param {boolean} isInbound - Whether to create an inbound stats object, or outbound.
  * @returns {RTCRTPStreamStats}
  */
 function createRTCRTPStreamStats(report, isInbound) {
-  return {
-    id: report.id,
-    timestamp: Date.parse(report.timestamp),
-    ssrc: report.stat('ssrc'),
-    associateStatsId: undefined,
-    isRemote: undefined,
-    mediaType: report.stat('mediaType'),
-    trackId: 'track-' + report.id,
-    transportId: report.stat('transportId'),
-    codecId: 'codec-' + report.id,
-    firCount: isInbound ? getInt(report, 'googFirsSent') : undefined,
-    pliCount: isInbound ? getInt(report, 'googPlisSent') : getInt(report, 'googPlisReceived'),
-    nackCount: isInbound ? getInt(report, 'googNacksSent') : getInt(report, 'googNacksReceived'),
-    sliCount: undefined,
-    qpSum: getInt(report, 'qpSum')
-  };
+    return {
+        id: report.id,
+        timestamp: Date.parse(report.timestamp),
+        ssrc: report.stat('ssrc'),
+        associateStatsId: undefined,
+        isRemote: undefined,
+        mediaType: report.stat('mediaType'),
+        trackId: "track-" + report.id,
+        transportId: report.stat('transportId'),
+        codecId: "codec-" + report.id,
+        firCount: isInbound
+            ? getInt(report, 'googFirsSent')
+            : undefined,
+        pliCount: isInbound
+            ? getInt(report, 'googPlisSent')
+            : getInt(report, 'googPlisReceived'),
+        nackCount: isInbound
+            ? getInt(report, 'googNacksSent')
+            : getInt(report, 'googNacksReceived'),
+        sliCount: undefined,
+        qpSum: getInt(report, 'qpSum')
+    };
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @returns {RTCInboundRTPStreamStats}
  */
 function createRTCInboundRTPStreamStats(report) {
-  var rtp = createRTCRTPStreamStats(report, true);
-
-  Object.assign(rtp, {
-    type: 'inbound-rtp',
-    packetsReceived: getInt(report, 'packetsReceived'),
-    bytesReceived: getInt(report, 'bytesReceived'),
-    packetsLost: getInt(report, 'packetsLost'),
-    jitter: convertMsToSeconds(report.stat('googJitterReceived')),
-    fractionLost: undefined,
-    roundTripTime: convertMsToSeconds(report.stat('googRtt')),
-    packetsDiscarded: undefined,
-    packetsRepaired: undefined,
-    burstPacketsLost: undefined,
-    burstPacketsDiscarded: undefined,
-    burstLossCount: undefined,
-    burstDiscardCount: undefined,
-    burstLossRate: undefined,
-    burstDiscardRate: undefined,
-    gapLossRate: undefined,
-    gapDiscardRate: undefined,
-    framesDecoded: getInt(report, 'framesDecoded')
-  });
-
-  return rtp;
+    var rtp = createRTCRTPStreamStats(report, true);
+    Object.assign(rtp, {
+        type: 'inbound-rtp',
+        packetsReceived: getInt(report, 'packetsReceived'),
+        bytesReceived: getInt(report, 'bytesReceived'),
+        packetsLost: getInt(report, 'packetsLost'),
+        jitter: convertMsToSeconds(report.stat('googJitterReceived')),
+        fractionLost: undefined,
+        roundTripTime: convertMsToSeconds(report.stat('googRtt')),
+        packetsDiscarded: undefined,
+        packetsRepaired: undefined,
+        burstPacketsLost: undefined,
+        burstPacketsDiscarded: undefined,
+        burstLossCount: undefined,
+        burstDiscardCount: undefined,
+        burstLossRate: undefined,
+        burstDiscardRate: undefined,
+        gapLossRate: undefined,
+        gapDiscardRate: undefined,
+        framesDecoded: getInt(report, 'framesDecoded')
+    });
+    return rtp;
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @returns {RTCOutboundRTPStreamStats}
  */
 function createRTCOutboundRTPStreamStats(report) {
-  var rtp = createRTCRTPStreamStats(report, false);
-
-  Object.assign(rtp, {
-    type: 'outbound-rtp',
-    remoteTimestamp: undefined,
-    packetsSent: getInt(report, 'packetsSent'),
-    bytesSent: getInt(report, 'bytesSent'),
-    targetBitrate: undefined,
-    framesEncoded: getInt(report, 'framesEncoded')
-  });
-
-  return rtp;
+    var rtp = createRTCRTPStreamStats(report, false);
+    Object.assign(rtp, {
+        type: 'outbound-rtp',
+        remoteTimestamp: undefined,
+        packetsSent: getInt(report, 'packetsSent'),
+        bytesSent: getInt(report, 'bytesSent'),
+        targetBitrate: undefined,
+        framesEncoded: getInt(report, 'framesEncoded')
+    });
+    return rtp;
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @param {boolean} isRemote - Whether to create for a remote candidate, or local candidate.
  * @returns {RTCIceCandidateStats}
  */
 function createRTCIceCandidateStats(report, isRemote) {
-  return {
-    type: isRemote ? 'remote-candidate' : 'local-candidate',
-    id: report.id,
-    timestamp: Date.parse(report.timestamp),
-    transportId: undefined,
-    isRemote: isRemote,
-    ip: report.stat('ipAddress'),
-    port: getInt(report, 'portNumber'),
-    protocol: report.stat('transport'),
-    candidateType: translateCandidateType(report.stat('candidateType')),
-    priority: getFloat(report, 'priority'),
-    url: undefined,
-    relayProtocol: undefined,
-    deleted: undefined
-  };
+    return {
+        type: isRemote
+            ? 'remote-candidate'
+            : 'local-candidate',
+        id: report.id,
+        timestamp: Date.parse(report.timestamp),
+        transportId: undefined,
+        isRemote: isRemote,
+        ip: report.stat('ipAddress'),
+        port: getInt(report, 'portNumber'),
+        protocol: report.stat('transport'),
+        candidateType: translateCandidateType(report.stat('candidateType')),
+        priority: getFloat(report, 'priority'),
+        url: undefined,
+        relayProtocol: undefined,
+        deleted: undefined
+    };
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @returns {RTCIceCandidatePairStats}
  */
 function createRTCIceCandidatePairStats(report) {
-  return {
-    type: 'candidate-pair',
-    id: report.id,
-    timestamp: Date.parse(report.timestamp),
-    transportId: report.stat('googChannelId'),
-    localCandidateId: report.stat('localCandidateId'),
-    remoteCandidateId: report.stat('remoteCandidateId'),
-    state: undefined,
-    priority: undefined,
-    nominated: undefined,
-    writable: getBoolean(report, 'googWritable'),
-    readable: undefined,
-    bytesSent: getInt(report, 'bytesSent'),
-    bytesReceived: getInt(report, 'bytesReceived'),
-    lastPacketSentTimestamp: undefined,
-    lastPacketReceivedTimestamp: undefined,
-    totalRoundTripTime: undefined,
-    currentRoundTripTime: convertMsToSeconds(report.stat('googRtt')),
-    availableOutgoingBitrate: undefined,
-    availableIncomingBitrate: undefined,
-    requestsReceived: getInt(report, 'requestsReceived'),
-    requestsSent: getInt(report, 'requestsSent'),
-    responsesReceived: getInt(report, 'responsesReceived'),
-    responsesSent: getInt(report, 'responsesSent'),
-    retransmissionsReceived: undefined,
-    retransmissionsSent: undefined,
-    consentRequestsSent: getInt(report, 'consentRequestsSent')
-  };
+    return {
+        type: 'candidate-pair',
+        id: report.id,
+        timestamp: Date.parse(report.timestamp),
+        transportId: report.stat('googChannelId'),
+        localCandidateId: report.stat('localCandidateId'),
+        remoteCandidateId: report.stat('remoteCandidateId'),
+        state: undefined,
+        priority: undefined,
+        nominated: undefined,
+        writable: getBoolean(report, 'googWritable'),
+        readable: undefined,
+        bytesSent: getInt(report, 'bytesSent'),
+        bytesReceived: getInt(report, 'bytesReceived'),
+        lastPacketSentTimestamp: undefined,
+        lastPacketReceivedTimestamp: undefined,
+        totalRoundTripTime: undefined,
+        currentRoundTripTime: convertMsToSeconds(report.stat('googRtt')),
+        availableOutgoingBitrate: undefined,
+        availableIncomingBitrate: undefined,
+        requestsReceived: getInt(report, 'requestsReceived'),
+        requestsSent: getInt(report, 'requestsSent'),
+        responsesReceived: getInt(report, 'responsesReceived'),
+        responsesSent: getInt(report, 'responsesSent'),
+        retransmissionsReceived: undefined,
+        retransmissionsSent: undefined,
+        consentRequestsSent: getInt(report, 'consentRequestsSent')
+    };
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @returns {RTCIceCertificateStats}
  */
 function createRTCCertificateStats(report) {
-  return {
-    type: 'certificate',
-    id: report.id,
-    timestamp: Date.parse(report.timestamp),
-    fingerprint: report.stat('googFingerprint'),
-    fingerprintAlgorithm: report.stat('googFingerprintAlgorithm'),
-    base64Certificate: report.stat('googDerBase64'),
-    issuerCertificateId: report.stat('googIssuerId')
-  };
+    return {
+        type: 'certificate',
+        id: report.id,
+        timestamp: Date.parse(report.timestamp),
+        fingerprint: report.stat('googFingerprint'),
+        fingerprintAlgorithm: report.stat('googFingerprintAlgorithm'),
+        base64Certificate: report.stat('googDerBase64'),
+        issuerCertificateId: report.stat('googIssuerId')
+    };
 }
-
 /**
  * @param {RTCLegacyStatsReport} report
  * @returns {RTCDataChannelStats}
  */
 function createRTCDataChannelStats(report) {
-  return {
-    type: 'data-channel',
-    id: report.id,
-    timestamp: Date.parse(report.timestamp),
-    label: report.stat('label'),
-    protocol: report.stat('protocol'),
-    datachannelid: report.stat('datachannelid'),
-    transportId: report.stat('transportId'),
-    state: report.stat('state'),
-    messagesSent: undefined,
-    bytesSent: undefined,
-    messagesReceived: undefined,
-    bytesReceived: undefined
-  };
+    return {
+        type: 'data-channel',
+        id: report.id,
+        timestamp: Date.parse(report.timestamp),
+        label: report.stat('label'),
+        protocol: report.stat('protocol'),
+        datachannelid: report.stat('datachannelid'),
+        transportId: report.stat('transportId'),
+        state: report.stat('state'),
+        messagesSent: undefined,
+        bytesSent: undefined,
+        messagesReceived: undefined,
+        bytesReceived: undefined
+    };
 }
-
 /**
  * @param {number} inMs - A time in milliseconds
  * @returns {number} The time in seconds
  */
 function convertMsToSeconds(inMs) {
-  return isNaN(inMs) || inMs === '' ? undefined : parseInt(inMs, 10) / 1000;
+    return isNaN(inMs) || inMs === ''
+        ? undefined
+        : parseInt(inMs, 10) / 1000;
 }
-
 /**
  * @param {string} type - A type in the legacy format
  * @returns {string} The type adjusted to new standards for known naming changes
  */
 function translateCandidateType(type) {
-  switch (type) {
-    case 'peerreflexive':
-      return 'prflx';
-    case 'serverreflexive':
-      return 'srflx';
-    case 'host':
-    case 'relay':
-    default:
-      return type;
-  }
+    switch (type) {
+        case 'peerreflexive':
+            return 'prflx';
+        case 'serverreflexive':
+            return 'srflx';
+        case 'host':
+        case 'relay':
+        default:
+            return type;
+    }
 }
-
 function getInt(report, statName) {
-  var stat = report.stat(statName);
-  return isPresent(report, statName) ? parseInt(stat, 10) : undefined;
+    var stat = report.stat(statName);
+    return isPresent(report, statName)
+        ? parseInt(stat, 10)
+        : undefined;
 }
-
 function getFloat(report, statName) {
-  var stat = report.stat(statName);
-  return isPresent(report, statName) ? parseFloat(stat) : undefined;
+    var stat = report.stat(statName);
+    return isPresent(report, statName)
+        ? parseFloat(stat)
+        : undefined;
 }
-
 function getBoolean(report, statName) {
-  var stat = report.stat(statName);
-  return isPresent(report, statName) ? stat === 'true' || stat === true : undefined;
+    var stat = report.stat(statName);
+    return isPresent(report, statName)
+        ? (stat === 'true' || stat === true)
+        : undefined;
 }
-
 function isPresent(report, statName) {
-  var stat = report.stat(statName);
-  return typeof stat !== 'undefined' && stat !== '';
+    var stat = report.stat(statName);
+    return typeof stat !== 'undefined' && stat !== '';
 }
-
 module.exports = MockRTCStatsReport;
+//# sourceMappingURL=mockrtcstatsreport.js.map
 
 /***/ }),
 
@@ -11718,7 +12663,7 @@ PeerConnection.prototype.makeOutgoingCall = function (token, params, callsid, rt
 
   function onOfferSuccess() {
     if (self.status !== 'closed') {
-      self.pstream.invite(self.version.getSDP(), self.callSid, params);
+      self.pstream.invite(self.version.getSDP(), self.callSid, self.options.preflight, params);
       self._setupRTCDtlsTransportListener();
     }
   }
@@ -12390,19 +13335,39 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 /* eslint-disable no-fallthrough */
-var _require = __webpack_require__(/*! ../errors */ "./node_modules/twilio-client/es5/twilio/errors/index.js"),
-    NotSupportedError = _require.NotSupportedError,
-    InvalidArgumentError = _require.InvalidArgumentError;
-
+var _a = __webpack_require__(/*! ../errors */ "./node_modules/twilio-client/es5/twilio/errors/index.js"), NotSupportedError = _a.NotSupportedError, InvalidArgumentError = _a.InvalidArgumentError;
 var MockRTCStatsReport = __webpack_require__(/*! ./mockrtcstatsreport */ "./node_modules/twilio-client/es5/twilio/rtc/mockrtcstatsreport.js");
-
 var ERROR_PEER_CONNECTION_NULL = 'PeerConnection is null';
 var ERROR_WEB_RTC_UNSUPPORTED = 'WebRTC statistics are unsupported';
-
+/**
+ * Generate WebRTC statistics report for the given {@link PeerConnection}
+ * @param {PeerConnection} peerConnection - Target connection.
+ * @return {Promise<RTCStatsReport>} WebRTC RTCStatsReport object
+ */
+function getRTCStatsReport(peerConnection) {
+    if (!peerConnection) {
+        return Promise.reject(new InvalidArgumentError(ERROR_PEER_CONNECTION_NULL));
+    }
+    if (typeof peerConnection.getStats !== 'function') {
+        return Promise.reject(new NotSupportedError(ERROR_WEB_RTC_UNSUPPORTED));
+    }
+    var promise;
+    try {
+        promise = peerConnection.getStats();
+    }
+    catch (e) {
+        promise = new Promise(function (resolve) { return peerConnection.getStats(resolve); }).then(MockRTCStatsReport.fromRTCStatsResponse);
+    }
+    return promise;
+}
 /**
  * @typedef {Object} StatsOptions
  * Used for testing to inject and extract methods.
@@ -12414,31 +13379,67 @@ var ERROR_WEB_RTC_UNSUPPORTED = 'WebRTC statistics are unsupported';
  * @param {StatsOptions} options - List of custom options.
  * @return {Promise<RTCSample>} Universally-formatted version of RTC stats.
  */
-function getStatistics(peerConnection, options) {
-  options = Object.assign({
-    createRTCSample: createRTCSample
-  }, options);
-
-  if (!peerConnection) {
-    return Promise.reject(new InvalidArgumentError(ERROR_PEER_CONNECTION_NULL));
-  }
-
-  if (typeof peerConnection.getStats !== 'function') {
-    return Promise.reject(new NotSupportedError(ERROR_WEB_RTC_UNSUPPORTED));
-  }
-
-  var promise = void 0;
-  try {
-    promise = peerConnection.getStats();
-  } catch (e) {
-    promise = new Promise(function (resolve) {
-      return peerConnection.getStats(resolve);
-    }).then(MockRTCStatsReport.fromRTCStatsResponse);
-  }
-
-  return promise.then(options.createRTCSample);
+function getRTCStats(peerConnection, options) {
+    options = Object.assign({
+        createRTCSample: createRTCSample
+    }, options);
+    return getRTCStatsReport(peerConnection).then(options.createRTCSample);
 }
-
+/**
+ * Generate WebRTC stats report containing relevant information about ICE candidates for the given {@link PeerConnection}
+ * @param {PeerConnection} peerConnection - Target connection.
+ * @return {Promise<RTCIceCandidateStatsReport>} RTCIceCandidateStatsReport object
+ */
+function getRTCIceCandidateStatsReport(peerConnection) {
+    return getRTCStatsReport(peerConnection).then(function (report) {
+        // Find the relevant information needed to determine selected candidates later
+        var _a = Array.from(report.values()).reduce(function (rval, stat) {
+            ['candidatePairs', 'localCandidates', 'remoteCandidates'].forEach(function (prop) {
+                if (!rval[prop]) {
+                    rval[prop] = [];
+                }
+            });
+            switch (stat.type) {
+                case 'candidate-pair':
+                    rval.candidatePairs.push(stat);
+                    break;
+                case 'local-candidate':
+                    rval.localCandidates.push(stat);
+                    break;
+                case 'remote-candidate':
+                    rval.remoteCandidates.push(stat);
+                    break;
+                case 'transport':
+                    // This transport is the one being used if selectedCandidatePairId is populated
+                    if (stat.selectedCandidatePairId) {
+                        rval.transport = stat;
+                    }
+                    break;
+            }
+            return rval;
+        }, {}), candidatePairs = _a.candidatePairs, localCandidates = _a.localCandidates, remoteCandidates = _a.remoteCandidates, transport = _a.transport;
+        // This is a report containing information about the selected candidates, such as IDs
+        // This is coming from WebRTC stats directly and doesn't contain the actual ICE Candidates info
+        var selectedCandidatePairReport = candidatePairs.find(function (pair) {
+            // Firefox
+            return pair.selected ||
+                // Spec-compliant way
+                (transport && pair.id === transport.selectedCandidatePairId);
+        });
+        var selectedIceCandidatePairStats;
+        if (selectedCandidatePairReport) {
+            selectedIceCandidatePairStats = {
+                localCandidate: localCandidates.find(function (candidate) { return candidate.id === selectedCandidatePairReport.localCandidateId; }),
+                remoteCandidate: remoteCandidates.find(function (candidate) { return candidate.id === selectedCandidatePairReport.remoteCandidateId; }),
+            };
+        }
+        // Build the return object
+        return {
+            iceCandidateStats: __spreadArrays(localCandidates, remoteCandidates),
+            selectedIceCandidatePairStats: selectedIceCandidatePairStats,
+        };
+    });
+}
 /**
  * @typedef {Object} RTCSample - A sample containing relevant WebRTC stats information.
  * @property {Number} [timestamp]
@@ -12453,8 +13454,7 @@ function getStatistics(peerConnection, options) {
  * @property {Number} [localAddress]
  * @property {Number} [remoteAddress]
  */
-function RTCSample() {}
-
+function RTCSample() { }
 /**
  * Create an RTCSample object from an RTCStatsReport
  * @private
@@ -12462,87 +13462,78 @@ function RTCSample() {}
  * @returns {RTCSample}
  */
 function createRTCSample(statsReport) {
-  var activeTransportId = null;
-  var sample = new RTCSample();
-  var fallbackTimestamp = void 0;
-
-  Array.from(statsReport.values()).forEach(function (stats) {
-    // Skip isRemote tracks which will be phased out completely and break in FF66.
-    if (stats.isRemote) {
-      return;
-    }
-
-    // Firefox hack -- Older firefox doesn't have dashes in type names
-    var type = stats.type.replace('-', '');
-
-    fallbackTimestamp = fallbackTimestamp || stats.timestamp;
-
-    // (rrowland) As I understand it, this is supposed to come in on remote-inbound-rtp but it's
-    // currently coming in on remote-outbound-rtp, so I'm leaving this outside the switch until
-    // the appropriate place to look is cleared up.
-    if (stats.remoteId) {
-      var remote = statsReport.get(stats.remoteId);
-      if (remote && remote.roundTripTime) {
-        sample.rtt = remote.roundTripTime * 1000;
-      }
-    }
-
-    switch (type) {
-      case 'inboundrtp':
-        sample.timestamp = sample.timestamp || stats.timestamp;
-        sample.jitter = stats.jitter * 1000;
-        sample.packetsLost = stats.packetsLost;
-        sample.packetsReceived = stats.packetsReceived;
-        sample.bytesReceived = stats.bytesReceived;
-
-        break;
-      case 'outboundrtp':
-        sample.timestamp = stats.timestamp;
-        sample.packetsSent = stats.packetsSent;
-        sample.bytesSent = stats.bytesSent;
-
-        if (stats.codecId) {
-          var codec = statsReport.get(stats.codecId);
-          sample.codecName = codec ? codec.mimeType && codec.mimeType.match(/(.*\/)?(.*)/)[2] : stats.codecId;
+    var activeTransportId = null;
+    var sample = new RTCSample();
+    var fallbackTimestamp;
+    Array.from(statsReport.values()).forEach(function (stats) {
+        // Skip isRemote tracks which will be phased out completely and break in FF66.
+        if (stats.isRemote) {
+            return;
         }
-
-        break;
-      case 'transport':
-        activeTransportId = stats.id;
-        break;
+        // Firefox hack -- Older firefox doesn't have dashes in type names
+        var type = stats.type.replace('-', '');
+        fallbackTimestamp = fallbackTimestamp || stats.timestamp;
+        // (rrowland) As I understand it, this is supposed to come in on remote-inbound-rtp but it's
+        // currently coming in on remote-outbound-rtp, so I'm leaving this outside the switch until
+        // the appropriate place to look is cleared up.
+        if (stats.remoteId) {
+            var remote = statsReport.get(stats.remoteId);
+            if (remote && remote.roundTripTime) {
+                sample.rtt = remote.roundTripTime * 1000;
+            }
+        }
+        switch (type) {
+            case 'inboundrtp':
+                sample.timestamp = sample.timestamp || stats.timestamp;
+                sample.jitter = stats.jitter * 1000;
+                sample.packetsLost = stats.packetsLost;
+                sample.packetsReceived = stats.packetsReceived;
+                sample.bytesReceived = stats.bytesReceived;
+                break;
+            case 'outboundrtp':
+                sample.timestamp = stats.timestamp;
+                sample.packetsSent = stats.packetsSent;
+                sample.bytesSent = stats.bytesSent;
+                if (stats.codecId) {
+                    var codec = statsReport.get(stats.codecId);
+                    sample.codecName = codec
+                        ? codec.mimeType && codec.mimeType.match(/(.*\/)?(.*)/)[2]
+                        : stats.codecId;
+                }
+                break;
+            case 'transport':
+                activeTransportId = stats.id;
+                break;
+        }
+    });
+    if (!sample.timestamp) {
+        sample.timestamp = fallbackTimestamp;
     }
-  });
-
-  if (!sample.timestamp) {
-    sample.timestamp = fallbackTimestamp;
-  }
-
-  var activeTransport = statsReport.get(activeTransportId);
-  if (!activeTransport) {
+    var activeTransport = statsReport.get(activeTransportId);
+    if (!activeTransport) {
+        return sample;
+    }
+    var selectedCandidatePair = statsReport.get(activeTransport.selectedCandidatePairId);
+    if (!selectedCandidatePair) {
+        return sample;
+    }
+    var localCandidate = statsReport.get(selectedCandidatePair.localCandidateId);
+    var remoteCandidate = statsReport.get(selectedCandidatePair.remoteCandidateId);
+    if (!sample.rtt) {
+        sample.rtt = selectedCandidatePair &&
+            (selectedCandidatePair.currentRoundTripTime * 1000);
+    }
+    Object.assign(sample, {
+        localAddress: localCandidate && localCandidate.ip,
+        remoteAddress: remoteCandidate && remoteCandidate.ip,
+    });
     return sample;
-  }
-
-  var selectedCandidatePair = statsReport.get(activeTransport.selectedCandidatePairId);
-  if (!selectedCandidatePair) {
-    return sample;
-  }
-
-  var localCandidate = statsReport.get(selectedCandidatePair.localCandidateId);
-  var remoteCandidate = statsReport.get(selectedCandidatePair.remoteCandidateId);
-
-  if (!sample.rtt) {
-    sample.rtt = selectedCandidatePair && selectedCandidatePair.currentRoundTripTime * 1000;
-  }
-
-  Object.assign(sample, {
-    localAddress: localCandidate && localCandidate.ip,
-    remoteAddress: remoteCandidate && remoteCandidate.ip
-  });
-
-  return sample;
 }
-
-module.exports = getStatistics;
+module.exports = {
+    getRTCStats: getRTCStats,
+    getRTCIceCandidateStatsReport: getRTCIceCandidateStatsReport,
+};
+//# sourceMappingURL=stats.js.map
 
 /***/ }),
 
@@ -13063,6 +14054,7 @@ module.exports = Sound;
 "use strict";
 
 /**
+ * @packageDocumentation
  * @module Voice
  * @internalapi
  */
@@ -13101,7 +14093,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var events_1 = __webpack_require__(/*! events */ "./node_modules/events/events.js");
 var errors_1 = __webpack_require__(/*! ./errors */ "./node_modules/twilio-client/es5/twilio/errors/index.js");
 var util_1 = __webpack_require__(/*! ./util */ "./node_modules/twilio-client/es5/twilio/util.js");
-var getRTCStats = __webpack_require__(/*! ./rtc/stats */ "./node_modules/twilio-client/es5/twilio/rtc/stats.js");
+var getRTCStats = __webpack_require__(/*! ./rtc/stats */ "./node_modules/twilio-client/es5/twilio/rtc/stats.js").getRTCStats;
 var Mos = __webpack_require__(/*! ./rtc/mos */ "./node_modules/twilio-client/es5/twilio/rtc/mos.js");
 // How many samples we use when testing metric thresholds
 var SAMPLE_COUNT_METRICS = 5;
@@ -13112,13 +14104,19 @@ var SAMPLE_COUNT_RAISE = 3;
 var SAMPLE_INTERVAL = 1000;
 var WARNING_TIMEOUT = 5 * 1000;
 var DEFAULT_THRESHOLDS = {
-    audioInputLevel: { maxDuration: 10 },
-    audioOutputLevel: { maxDuration: 10 },
+    audioInputLevel: { minStandardDeviation: 327.67, sampleCount: 10 },
+    audioOutputLevel: { minStandardDeviation: 327.67, sampleCount: 10 },
     bytesReceived: { clearCount: 2, min: 1, raiseCount: 3, sampleCount: 3 },
     bytesSent: { clearCount: 2, min: 1, raiseCount: 3, sampleCount: 3 },
     jitter: { max: 30 },
     mos: { min: 3 },
-    packetsLostFraction: { max: 1 },
+    packetsLostFraction: [{
+            max: 1,
+        }, {
+            clearValue: 1,
+            maxAverage: 3,
+            sampleCount: 7,
+        }],
     rtt: { max: 400 },
 };
 /**
@@ -13140,6 +14138,28 @@ function countHigh(max, values) {
  */
 function countLow(min, values) {
     return values.reduce(function (lowCount, value) { return lowCount += (value < min) ? 1 : 0; }, 0);
+}
+/**
+ * Calculate the standard deviation from a list of numbers.
+ * @private
+ * @param values The list of numbers to calculate the standard deviation from.
+ * @returns The standard deviation of a list of numbers.
+ */
+function calculateStandardDeviation(values) {
+    if (values.length <= 0) {
+        return null;
+    }
+    var valueAverage = values.reduce(function (partialSum, value) { return partialSum + value; }, 0) / values.length;
+    var diffSquared = values.map(function (value) { return Math.pow(value - valueAverage, 2); });
+    var stdDev = Math.sqrt(diffSquared.reduce(function (partialSum, value) { return partialSum + value; }, 0) / diffSquared.length);
+    return stdDev;
+}
+/**
+ * Flatten a set of numerical sample sets into a single array of samples.
+ * @param sampleSets
+ */
+function flattenSamples(sampleSets) {
+    return sampleSets.reduce(function (flat, current) { return __spreadArrays(flat, current); }, []);
 }
 /**
  * {@link StatsMonitor} polls a peerConnection via PeerConnection.getStats
@@ -13173,6 +14193,16 @@ var StatsMonitor = /** @class */ (function (_super) {
          * Sample buffer. Saves most recent samples
          */
         _this._sampleBuffer = [];
+        /**
+         * Keeps track of supplemental sample values.
+         *
+         * Currently used for constant audio detection. Contains an array of volume
+         * samples for each sample interval.
+         */
+        _this._supplementalSampleBuffers = {
+            audioInputLevel: [],
+            audioOutputLevel: [],
+        };
         /**
          * Whether warnings should be enabled
          */
@@ -13312,9 +14342,13 @@ var StatsMonitor = /** @class */ (function (_super) {
         var totalPacketsLostFraction = (totalInboundPackets > 0) ?
             (stats.packetsLost / totalInboundPackets) * 100 : 100;
         var rttValue = (typeof stats.rtt === 'number' || !previousSample) ? stats.rtt : previousSample.rtt;
+        var audioInputLevelValues = this._inputVolumes.splice(0);
+        this._supplementalSampleBuffers.audioInputLevel.push(audioInputLevelValues);
+        var audioOutputLevelValues = this._outputVolumes.splice(0);
+        this._supplementalSampleBuffers.audioOutputLevel.push(audioOutputLevelValues);
         return {
-            audioInputLevel: Math.round(util_1.average(this._inputVolumes.splice(0))),
-            audioOutputLevel: Math.round(util_1.average(this._outputVolumes.splice(0))),
+            audioInputLevel: Math.round(util_1.average(audioInputLevelValues)),
+            audioOutputLevel: Math.round(util_1.average(audioOutputLevelValues)),
             bytesReceived: currentBytesReceived,
             bytesSent: currentBytesSent,
             codecName: stats.codecName,
@@ -13378,9 +14412,20 @@ var StatsMonitor = /** @class */ (function (_super) {
             return;
         }
         this._activeWarnings.set(warningId, { timeRaised: Date.now() });
+        var thresholds = this._thresholds[statName];
+        var thresholdValue;
+        if (Array.isArray(thresholds)) {
+            var foundThreshold = thresholds.find(function (threshold) { return thresholdName in threshold; });
+            if (foundThreshold) {
+                thresholdValue = foundThreshold[thresholdName];
+            }
+        }
+        else {
+            thresholdValue = this._thresholds[statName][thresholdName];
+        }
         this.emit('warning', __assign(__assign({}, data), { name: statName, threshold: {
                 name: thresholdName,
-                value: this._thresholds[statName][thresholdName],
+                value: thresholdValue,
             } }));
     };
     /**
@@ -13399,52 +14444,92 @@ var StatsMonitor = /** @class */ (function (_super) {
      * @param statName - Name of the stat to compare.
      */
     StatsMonitor.prototype._raiseWarningsForStat = function (statName) {
-        var samples = this._sampleBuffer;
-        var limits = this._thresholds[statName];
-        var clearCount = limits.clearCount || SAMPLE_COUNT_CLEAR;
-        var raiseCount = limits.raiseCount || SAMPLE_COUNT_RAISE;
-        var sampleCount = limits.sampleCount || this._maxSampleCount;
-        var relevantSamples = samples.slice(-sampleCount);
-        var values = relevantSamples.map(function (sample) { return sample[statName]; });
-        // (rrowland) If we have a bad or missing value in the set, we don't
-        // have enough information to throw or clear a warning. Bail out.
-        var containsNull = values.some(function (value) { return typeof value === 'undefined' || value === null; });
-        if (containsNull) {
-            return;
-        }
-        var count;
-        if (typeof limits.max === 'number') {
-            count = countHigh(limits.max, values);
-            if (count >= raiseCount) {
-                this._raiseWarning(statName, 'max', { values: values, samples: relevantSamples });
+        var _this = this;
+        var limits = Array.isArray(this._thresholds[statName])
+            ? this._thresholds[statName]
+            : [this._thresholds[statName]];
+        limits.forEach(function (limit) {
+            var samples = _this._sampleBuffer;
+            var clearCount = limit.clearCount || SAMPLE_COUNT_CLEAR;
+            var raiseCount = limit.raiseCount || SAMPLE_COUNT_RAISE;
+            var sampleCount = limit.sampleCount || _this._maxSampleCount;
+            var relevantSamples = samples.slice(-sampleCount);
+            var values = relevantSamples.map(function (sample) { return sample[statName]; });
+            // (rrowland) If we have a bad or missing value in the set, we don't
+            // have enough information to throw or clear a warning. Bail out.
+            var containsNull = values.some(function (value) { return typeof value === 'undefined' || value === null; });
+            if (containsNull) {
+                return;
             }
-            else if (count <= clearCount) {
-                this._clearWarning(statName, 'max', { values: values, samples: relevantSamples });
+            var count;
+            if (typeof limit.max === 'number') {
+                count = countHigh(limit.max, values);
+                if (count >= raiseCount) {
+                    _this._raiseWarning(statName, 'max', { values: values, samples: relevantSamples });
+                }
+                else if (count <= clearCount) {
+                    _this._clearWarning(statName, 'max', { values: values, samples: relevantSamples });
+                }
             }
-        }
-        if (typeof limits.min === 'number') {
-            count = countLow(limits.min, values);
-            if (count >= raiseCount) {
-                this._raiseWarning(statName, 'min', { values: values, samples: relevantSamples });
+            if (typeof limit.min === 'number') {
+                count = countLow(limit.min, values);
+                if (count >= raiseCount) {
+                    _this._raiseWarning(statName, 'min', { values: values, samples: relevantSamples });
+                }
+                else if (count <= clearCount) {
+                    _this._clearWarning(statName, 'min', { values: values, samples: relevantSamples });
+                }
             }
-            else if (count <= clearCount) {
-                this._clearWarning(statName, 'min', { values: values, samples: relevantSamples });
+            if (typeof limit.maxDuration === 'number' && samples.length > 1) {
+                relevantSamples = samples.slice(-2);
+                var prevValue = relevantSamples[0][statName];
+                var curValue = relevantSamples[1][statName];
+                var prevStreak = _this._currentStreaks.get(statName) || 0;
+                var streak = (prevValue === curValue) ? prevStreak + 1 : 0;
+                _this._currentStreaks.set(statName, streak);
+                if (streak >= limit.maxDuration) {
+                    _this._raiseWarning(statName, 'maxDuration', { value: streak });
+                }
+                else if (streak === 0) {
+                    _this._clearWarning(statName, 'maxDuration', { value: prevStreak });
+                }
             }
-        }
-        if (typeof limits.maxDuration === 'number' && samples.length > 1) {
-            relevantSamples = samples.slice(-2);
-            var prevValue = relevantSamples[0][statName];
-            var curValue = relevantSamples[1][statName];
-            var prevStreak = this._currentStreaks.get(statName) || 0;
-            var streak = (prevValue === curValue) ? prevStreak + 1 : 0;
-            this._currentStreaks.set(statName, streak);
-            if (streak >= limits.maxDuration) {
-                this._raiseWarning(statName, 'maxDuration', { value: streak });
+            if (typeof limit.minStandardDeviation === 'number') {
+                var sampleSets = _this._supplementalSampleBuffers[statName];
+                if (!sampleSets || sampleSets.length < limit.sampleCount) {
+                    return;
+                }
+                if (sampleSets.length > limit.sampleCount) {
+                    sampleSets.splice(0, sampleSets.length - limit.sampleCount);
+                }
+                var flatSamples = flattenSamples(sampleSets.slice(-sampleCount));
+                var stdDev = calculateStandardDeviation(flatSamples);
+                if (typeof stdDev !== 'number') {
+                    return;
+                }
+                if (stdDev < limit.minStandardDeviation) {
+                    _this._raiseWarning(statName, 'minStandardDeviation', { value: stdDev });
+                }
+                else {
+                    _this._clearWarning(statName, 'minStandardDeviation', { value: stdDev });
+                }
             }
-            else if (streak === 0) {
-                this._clearWarning(statName, 'maxDuration', { value: prevStreak });
-            }
-        }
+            [
+                ['maxAverage', function (x, y) { return x > y; }],
+                ['minAverage', function (x, y) { return x < y; }],
+            ].forEach(function (_a) {
+                var thresholdName = _a[0], comparator = _a[1];
+                if (typeof limit[thresholdName] === 'number' && values.length >= sampleCount) {
+                    var avg = util_1.average(values);
+                    if (comparator(avg, limit[thresholdName])) {
+                        _this._raiseWarning(statName, thresholdName, { values: values, samples: relevantSamples });
+                    }
+                    else if (!comparator(avg, limit.clearValue || limit[thresholdName])) {
+                        _this._clearWarning(statName, thresholdName, { values: values, samples: relevantSamples });
+                    }
+                }
+            });
+        });
     };
     return StatsMonitor;
 }(events_1.EventEmitter));
@@ -13608,6 +14693,7 @@ exports.flatMap = flatMap;
 "use strict";
 
 /**
+ * @packageDocumentation
  * @module Tools
  * @internalapi
  */
@@ -13950,285 +15036,6 @@ var WSTransport = /** @class */ (function (_super) {
 }(events_1.EventEmitter));
 exports.default = WSTransport;
 //# sourceMappingURL=wstransport.js.map
-
-/***/ }),
-
-/***/ "./node_modules/twilio-client/node_modules/loglevel/lib/loglevel.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/twilio-client/node_modules/loglevel/lib/loglevel.js ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
-* loglevel - https://github.com/pimterry/loglevel
-*
-* Copyright (c) 2013 Tim Perry
-* Licensed under the MIT license.
-*/
-(function (root, definition) {
-    "use strict";
-    if (true) {
-        !(__WEBPACK_AMD_DEFINE_FACTORY__ = (definition),
-				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
-				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
-				__WEBPACK_AMD_DEFINE_FACTORY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-    } else {}
-}(this, function () {
-    "use strict";
-
-    // Slightly dubious tricks to cut down minimized file size
-    var noop = function() {};
-    var undefinedType = "undefined";
-    var isIE = (typeof window !== undefinedType) && (typeof window.navigator !== undefinedType) && (
-        /Trident\/|MSIE /.test(window.navigator.userAgent)
-    );
-
-    var logMethods = [
-        "trace",
-        "debug",
-        "info",
-        "warn",
-        "error"
-    ];
-
-    // Cross-browser bind equivalent that works at least back to IE6
-    function bindMethod(obj, methodName) {
-        var method = obj[methodName];
-        if (typeof method.bind === 'function') {
-            return method.bind(obj);
-        } else {
-            try {
-                return Function.prototype.bind.call(method, obj);
-            } catch (e) {
-                // Missing bind shim or IE8 + Modernizr, fallback to wrapping
-                return function() {
-                    return Function.prototype.apply.apply(method, [obj, arguments]);
-                };
-            }
-        }
-    }
-
-    // Trace() doesn't print the message in IE, so for that case we need to wrap it
-    function traceForIE() {
-        if (console.log) {
-            if (console.log.apply) {
-                console.log.apply(console, arguments);
-            } else {
-                // In old IE, native console methods themselves don't have apply().
-                Function.prototype.apply.apply(console.log, [console, arguments]);
-            }
-        }
-        if (console.trace) console.trace();
-    }
-
-    // Build the best logging method possible for this env
-    // Wherever possible we want to bind, not wrap, to preserve stack traces
-    function realMethod(methodName) {
-        if (methodName === 'debug') {
-            methodName = 'log';
-        }
-
-        if (typeof console === undefinedType) {
-            return false; // No method possible, for now - fixed later by enableLoggingWhenConsoleArrives
-        } else if (methodName === 'trace' && isIE) {
-            return traceForIE;
-        } else if (console[methodName] !== undefined) {
-            return bindMethod(console, methodName);
-        } else if (console.log !== undefined) {
-            return bindMethod(console, 'log');
-        } else {
-            return noop;
-        }
-    }
-
-    // These private functions always need `this` to be set properly
-
-    function replaceLoggingMethods(level, loggerName) {
-        /*jshint validthis:true */
-        for (var i = 0; i < logMethods.length; i++) {
-            var methodName = logMethods[i];
-            this[methodName] = (i < level) ?
-                noop :
-                this.methodFactory(methodName, level, loggerName);
-        }
-
-        // Define log.log as an alias for log.debug
-        this.log = this.debug;
-    }
-
-    // In old IE versions, the console isn't present until you first open it.
-    // We build realMethod() replacements here that regenerate logging methods
-    function enableLoggingWhenConsoleArrives(methodName, level, loggerName) {
-        return function () {
-            if (typeof console !== undefinedType) {
-                replaceLoggingMethods.call(this, level, loggerName);
-                this[methodName].apply(this, arguments);
-            }
-        };
-    }
-
-    // By default, we use closely bound real methods wherever possible, and
-    // otherwise we wait for a console to appear, and then try again.
-    function defaultMethodFactory(methodName, level, loggerName) {
-        /*jshint validthis:true */
-        return realMethod(methodName) ||
-               enableLoggingWhenConsoleArrives.apply(this, arguments);
-    }
-
-    function Logger(name, defaultLevel, factory) {
-      var self = this;
-      var currentLevel;
-      var storageKey = "loglevel";
-      if (name) {
-        storageKey += ":" + name;
-      }
-
-      function persistLevelIfPossible(levelNum) {
-          var levelName = (logMethods[levelNum] || 'silent').toUpperCase();
-
-          if (typeof window === undefinedType) return;
-
-          // Use localStorage if available
-          try {
-              window.localStorage[storageKey] = levelName;
-              return;
-          } catch (ignore) {}
-
-          // Use session cookie as fallback
-          try {
-              window.document.cookie =
-                encodeURIComponent(storageKey) + "=" + levelName + ";";
-          } catch (ignore) {}
-      }
-
-      function getPersistedLevel() {
-          var storedLevel;
-
-          if (typeof window === undefinedType) return;
-
-          try {
-              storedLevel = window.localStorage[storageKey];
-          } catch (ignore) {}
-
-          // Fallback to cookies if local storage gives us nothing
-          if (typeof storedLevel === undefinedType) {
-              try {
-                  var cookie = window.document.cookie;
-                  var location = cookie.indexOf(
-                      encodeURIComponent(storageKey) + "=");
-                  if (location !== -1) {
-                      storedLevel = /^([^;]+)/.exec(cookie.slice(location))[1];
-                  }
-              } catch (ignore) {}
-          }
-
-          // If the stored level is not valid, treat it as if nothing was stored.
-          if (self.levels[storedLevel] === undefined) {
-              storedLevel = undefined;
-          }
-
-          return storedLevel;
-      }
-
-      /*
-       *
-       * Public logger API - see https://github.com/pimterry/loglevel for details
-       *
-       */
-
-      self.name = name;
-
-      self.levels = { "TRACE": 0, "DEBUG": 1, "INFO": 2, "WARN": 3,
-          "ERROR": 4, "SILENT": 5};
-
-      self.methodFactory = factory || defaultMethodFactory;
-
-      self.getLevel = function () {
-          return currentLevel;
-      };
-
-      self.setLevel = function (level, persist) {
-          if (typeof level === "string" && self.levels[level.toUpperCase()] !== undefined) {
-              level = self.levels[level.toUpperCase()];
-          }
-          if (typeof level === "number" && level >= 0 && level <= self.levels.SILENT) {
-              currentLevel = level;
-              if (persist !== false) {  // defaults to true
-                  persistLevelIfPossible(level);
-              }
-              replaceLoggingMethods.call(self, level, name);
-              if (typeof console === undefinedType && level < self.levels.SILENT) {
-                  return "No console available for logging";
-              }
-          } else {
-              throw "log.setLevel() called with invalid level: " + level;
-          }
-      };
-
-      self.setDefaultLevel = function (level) {
-          if (!getPersistedLevel()) {
-              self.setLevel(level, false);
-          }
-      };
-
-      self.enableAll = function(persist) {
-          self.setLevel(self.levels.TRACE, persist);
-      };
-
-      self.disableAll = function(persist) {
-          self.setLevel(self.levels.SILENT, persist);
-      };
-
-      // Initialize with the right level
-      var initialLevel = getPersistedLevel();
-      if (initialLevel == null) {
-          initialLevel = defaultLevel == null ? "WARN" : defaultLevel;
-      }
-      self.setLevel(initialLevel, false);
-    }
-
-    /*
-     *
-     * Top-level API
-     *
-     */
-
-    var defaultLogger = new Logger();
-
-    var _loggersByName = {};
-    defaultLogger.getLogger = function getLogger(name) {
-        if (typeof name !== "string" || name === "") {
-          throw new TypeError("You must supply a name when creating a logger.");
-        }
-
-        var logger = _loggersByName[name];
-        if (!logger) {
-          logger = _loggersByName[name] = new Logger(
-            name, defaultLogger.getLevel(), defaultLogger.methodFactory);
-        }
-        return logger;
-    };
-
-    // Grab the current global log variable in case of overwrite
-    var _log = (typeof window !== undefinedType) ? window.log : undefined;
-    defaultLogger.noConflict = function() {
-        if (typeof window !== undefinedType &&
-               window.log === defaultLogger) {
-            window.log = _log;
-        }
-
-        return defaultLogger;
-    };
-
-    defaultLogger.getLoggers = function getLoggers() {
-        return _loggersByName;
-    };
-
-    return defaultLogger;
-}));
-
 
 /***/ }),
 
@@ -15040,4 +15847,4 @@ module.exports = __webpack_require__(/*! twilio-client */"./node_modules/twilio-
 
 /***/ })
 
-}]);
+},[[3,"/js/manifest"]]]);

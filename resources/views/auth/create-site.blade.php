@@ -237,6 +237,7 @@
 @section('extra-scripts')
 	<script>
 		$(document).ready(function(){
+			var link =  sessionStorage.getItem('link');
 			$(document).on('click', '#proceedToPay', function(){
 
 				var metadata = $('#metadata').val();
@@ -259,7 +260,8 @@
 					'team_size':team_size,
 					'duration':duration,
 					'plan':plan,
-					'first_name':first_name
+					'first_name':first_name,
+					'link':link
 				};
 				$('#metadata').val(JSON.stringify(fid));
 			});

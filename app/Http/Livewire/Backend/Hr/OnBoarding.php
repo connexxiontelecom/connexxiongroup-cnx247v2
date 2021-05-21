@@ -81,10 +81,16 @@ class OnBoarding extends Component
         $user->verification_link = substr(sha1(time()), 5,15);
         $user->url = substr(sha1(time()), 29,40);
 
-            $user->save();
-            \Mail::to($user)->send(new onBoardEmployee($user, $password));
-            session()->flash("success", "<strong>Success!</strong> Onboarding process done.");
-            return redirect()->back();
+						$user->save();
+						try{
+							\Mail::to($user)->send(new onBoardEmployee($user, $password));
+							session()->flash("success", "<strong>Success!</strong> Onboarding process done.");
+							return redirect()->back();
+
+						}catch(\Exception $ex){
+							session()->flash("success", "<strong>Success!</strong> Onboarding process done. <br/> Share this password with the employee.\n<strong>Password: </strong>".$password);
+							return redirect()->back();
+						}
         /* else:
             session()->flash("error", "<strong>Error!</strong> Upgrade Plan to add new user.");
             return redirect()->back();

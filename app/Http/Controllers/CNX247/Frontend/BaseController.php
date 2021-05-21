@@ -78,9 +78,9 @@ class BaseController extends Controller
     /*
     * Pricing
     */
-    public function pricing(){
+    public function pricing($ref_link = null){
         $plans = PlanFeature::orderBy('price', 'ASC')->get();
-        return view('frontend.pricing', ['plans'=>$plans]);
+        return view('frontend.pricing', ['plans'=>$plans,'link'=>$ref_link]);
     }
     /*
     * support

@@ -9,6 +9,7 @@ use App\User;
 use App\ResponsiblePerson;
 use App\Post;
 use Auth;
+use DateTime;
 class EventController extends Controller
 {
     public function __construct(){
@@ -43,9 +44,14 @@ class EventController extends Controller
         $event->post_type = 'event';
         $event->post_url = $url;
         $event->post_color = $request->color;
-        $event->tenant_id = Auth::user()->tenant_id;
-        $event->start_date = $request->event_date ?? '';
-        $event->end_date = $request->event_end_date ?? '';
+				$event->tenant_id = Auth::user()->tenant_id;
+
+				$startDateInstance = new DateTime($request->event_date);
+				$event->start_date = $startDateInstance->format('Y-m-d H:i:s');
+
+					$dueDateInstance = new DateTime($request->event_end_date);
+				$event->end_date = $dueDateInstance->format('Y-m-d H:i:s');
+
         $event->save();
         $event_id = $event->id;
         //send notification
@@ -86,6 +92,12 @@ class EventController extends Controller
 
         $events = Post::where('post_type', 'event')
                         ->where('tenant_id', Auth::user()->tenant_id)
+<<<<<<< HEAD
+												->where('user_id', Auth::user()->id)
+												->orderBy('id', 'DESC')
+                        ->get();
+        return view('backend.events.event-list', ['events'=>$events]);
+=======
                         //->where('user_id', Auth::user()->id)
 												->get();
 				$eventIds = [];
@@ -99,6 +111,7 @@ class EventController extends Controller
 				}
 				$my_events = Post::where('tenant_id', Auth::user()->tenant_id)->whereIn('id', $mineIds)->orderBy('end_date', 'DESC')->get();
         return view('backend.events.event-list', ['events'=>$my_events]);
+>>>>>>> d10b56b0079bb56b451d9002e159dfa6fec09195
     }
 
 

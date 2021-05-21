@@ -14,6 +14,8 @@ use App\Invitation;
 use App\Clocker as ClockInOut;
 use App\Observer;
 use App\User;
+use App\ApplicationLog;
+use DateTime;
 use DB;
 use Auth;
 
@@ -47,7 +49,13 @@ class ActivityStreamController extends Controller
         $message->tenant_id = Auth::user()->tenant_id;
         $message->save();
         $message_id = $message->id;
-
+					#Log
+					$message = Auth::user()->first_name." ".Auth::user()->surname." sent a message.";
+					$log = new ApplicationLog;
+					$log->tenant_id = Auth::user()->tenant_id;
+					$log->activity = $message;
+					$log->user_id = Auth::user()->id;
+					$log->save();
 
         if(!empty($request->file('attachment'))){
             $extension = $request->file('attachment');
@@ -115,11 +123,25 @@ class ActivityStreamController extends Controller
             $view->user_id = Auth::user()->id;
             $view->tenant_id = Auth::user()->tenant_id;
             $view->post_id = $request->live;
-            $view->save();
+						$view->save();
+						#Log
+						$message = Auth::user()->first_name." ".Auth::user()->surname." viewed a post on activity stream.";
+						$log = new ApplicationLog;
+						$log->tenant_id = Auth::user()->tenant_id;
+						$log->activity = $message;
+						$log->user_id = Auth::user()->id;
+						$log->save();
         }
     }
 
     public function viewPost($slug){
+				#log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." opened a post on activity stream.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
         return view('backend.activity-stream.view-post');
     }
 
@@ -143,12 +165,26 @@ class ActivityStreamController extends Controller
         $task->post_content = $request->task_description;
         $task->post_color = $request->color;
         $task->post_type = 'task';
-        $task->post_url = $url;
-        $task->start_date = $request->start_date ?? '';
-        $task->end_date = $request->due_date;
+				$task->post_url = $url;
+
+				$startDateInstance = new DateTime($request->start_date);
+				$task->start_date = $startDateInstance->format('Y-m-d H:i:s');
+
+					$dueDateInstance = new DateTime($request->due_date);
+				$task->end_date = $dueDateInstance->format('Y-m-d H:i:s');
+
+
         $task->post_priority = $request->priority;
         $task->tenant_id = Auth::user()->tenant_id;
-        $task->save();
+				$task->save();
+				#log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." created a task.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
+
         $task_id = $task->id;
         if(!empty($request->file('attachment'))){
             $extension = $request->file('attachment');
@@ -232,10 +268,22 @@ class ActivityStreamController extends Controller
         $event->post_content = $request->event_description;
         $event->post_type = 'event';
         $event->post_url = $url;
-        $event->tenant_id = Auth::user()->tenant_id;
-        $event->start_date = $request->event_start_date ?? '';
-        $event->end_date = $request->event_end_date ?? '';
-        $event->save();
+				$event->tenant_id = Auth::user()->tenant_id;
+
+				$startDateInstance = new DateTime($request->event_start_date);
+				$event->start_date = $startDateInstance->format('Y-m-d H:i:s');
+
+					$dueDateInstance = new DateTime($request->event_end_date);
+				$event->end_date = $dueDateInstance->format('Y-m-d H:i:s');
+
+				$event->save();
+				#log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." created an event.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
         $event_id = $event->id;
         //send notification
         $user = $event->user;
@@ -313,7 +361,15 @@ class ActivityStreamController extends Controller
         $announcement->post_content = $request->content;
         $announcement->post_type = 'announcement';
         $announcement->post_url = $url;
-        $announcement->save();
+				$announcement->save();
+				#log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." created an announcement.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
+
         $announcement_id = $announcement->id;
         //notify
         $user = $announcement->user;
@@ -391,7 +447,15 @@ class ActivityStreamController extends Controller
         $file->post_content = Auth::user()->first_name.' '.Auth::user()->surname.' shared a file titled <strong>'.$request->file_name.' </strong>.';
         $file->post_type = 'file';
         $file->post_url = $url;
-        $file->save();
+				$file->save();
+				#log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." shared file.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
+
         $file_id = $file->id;
         if(!empty($request->file('attachment'))){
             $attach = new PostAttachment;
@@ -459,7 +523,15 @@ class ActivityStreamController extends Controller
         $app->post_type = 'appreciation';
         $app->post_url = $url;
         $app->tenant_id = Auth::user()->tenant_id;
-        $app->save();
+				$app->save();
+				#log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." sent out an appreciation.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
+
         $app_id = $app->id;
         if($request->target == 0){
             $part = new ResponsiblePerson;
@@ -528,8 +600,19 @@ class ActivityStreamController extends Controller
     */
     public function viewProfile($url){
 
-        $user = User::where('url', $url)->where('tenant_id', Auth::user()->tenant_id)->first();
-      return view('backend.activity-stream.view-employee-profile', ['user'=>$user]);
+				 $user = User::where('url', $url)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($user)){
+					#log
+						$message = Auth::user()->first_name." ".Auth::user()->surname." viewed ".$user->first_name." ".$user->surname."'s profile.";
+						$log = new ApplicationLog;
+						$log->tenant_id = Auth::user()->tenant_id;
+						$log->activity = $message;
+						$log->user_id = Auth::user()->id;
+						$log->save();
+            return view('backend.activity-stream.view-employee-profile', ['user'=>$user]);
+        }else{
+            return back();
+        }
     }
 
     public function clockin(){
@@ -539,7 +622,14 @@ class ActivityStreamController extends Controller
         $in->clock_in = now();
         $in->tenant_id = Auth::user()->tenant_id;
         $in->status = 1; //in
-        $in->save();
+				$in->save();
+				#log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." clocked in";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
         return response()->json(['message'=>'Success! Clocked-in'], 200);
     }
     /*
@@ -552,7 +642,14 @@ class ActivityStreamController extends Controller
         $out->clock_out = now();
         $out->tenant_id = Auth::user()->tenant_id;
         $out->status = 2; //out
-        $out->save();
+				$out->save();
+				#log
+				$message = Auth::user()->first_name." ".Auth::user()->surname." logged out.";
+				$log = new ApplicationLog;
+				$log->tenant_id = Auth::user()->tenant_id;
+				$log->activity = $message;
+				$log->user_id = Auth::user()->id;
+				$log->save();
         return response()->json(['message'=>'Success! Clocked-out'], 200);
 		}
 
@@ -640,6 +737,10 @@ class ActivityStreamController extends Controller
 			}
 		}
 
-
+	public function searchCNX247(Request $request){
+			$posts = Post::where('post_title', 'LIKE', '%'.$request->search_phrase.'%')
+										->orWhere('post_content', 'LIKE', '%'.$request->search_phrase.'%')->get();
+			return view('backend.activity-stream.search-result',['posts'=>$posts,'search_phrase'=>$request->search_phrase]);
+		}
 
 }
