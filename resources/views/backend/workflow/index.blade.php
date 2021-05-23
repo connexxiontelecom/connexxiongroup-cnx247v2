@@ -111,11 +111,12 @@
 																											@if($request->post_status == 'in-progress')
 																														@foreach($request->responsiblePersons as $app)
 																																@if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
-																																		<button class="btn btn-out-dashed btn-danger btn-square btn-mini decline-request" value="{{$request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"><i class="ti-na mr-2"></i> DECLINE</button>
+																																		<a href="{{ route('view-workflow-task', $request->post_url) }}" class="btn btn-mini btn-primary">View</a>
+																																		<!--<button class="btn btn-out-dashed btn-danger btn-square btn-mini decline-request" value="$request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"><i class="ti-na mr-2"></i> DECLINE</button>
 
-																																		<button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn approve-request" value="{{$request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"> <i class="ti-check-box mr-2"></i>
+																																		<button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn approve-request" value="request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"> <i class="ti-check-box mr-2"></i>
 																																				APPROVE
-																																		</button>
+																																		</button>-->
 																																@elseif($app->user_id == Auth::user()->id && $app->status == 'decline')
 																																		<i>Decline,(you)</i>
 																																@elseif($app->user_id == Auth::user()->id && $app->status == 'approve')
@@ -297,36 +298,36 @@
 @endsection
 
 @section('dialog-section')
-<div class="modal fade" id="transactionPasswordModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
+	<div class="modal fade" id="transactionPasswordModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-					<div class="modal-header bg-warning">
-							<h4 class="modal-title">Transaction Password</h4>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span class="text-white" aria-hidden="true">&times;</span>
+				<div class="modal-header bg-warning">
+					<h4 class="modal-title">Transaction Password</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span class="text-white" aria-hidden="true">&times;</span>
 					</button>
-					</div>
-					<div class="modal-body">
-						<div class="card">
-							<div class="card-block">
-								<div class="form-group">
-									<label for="">Transaction Password</label>
-									<input type="password" placeholder="Enter Transaction Password" name="transaction_password" id="transaction_password" class="form-control">
-									<input type="hidden" id="post">
-									<input type="hidden" id="action">
-								</div>
-								<div class="form-group">
-										<div class="btn-group d-flex justify-content-center">
-											<button  data-dismiss="modal" type="button" class="btn-mini btn btn-danger"><i class="ti-close mr-2"></i> Cancel</button>
-											<button class="btn-mini btn btn-primary" type="button" id="verifyThenAct"><i class="ti-check mr-2"></i> Submit</button>
-										</div>
+				</div>
+				<div class="modal-body">
+					<div class="card">
+						<div class="card-block">
+							<div class="form-group">
+								<label for="">Transaction Password</label>
+								<input type="password" placeholder="Enter Transaction Password" name="transaction_password" id="transaction_password" class="form-control">
+								<input type="hidden" id="post">
+								<input type="hidden" id="action">
+							</div>
+							<div class="form-group">
+								<div class="btn-group d-flex justify-content-center">
+									<button  data-dismiss="modal" type="button" class="btn-mini btn btn-danger"><i class="ti-close mr-2"></i> Cancel</button>
+									<button class="btn-mini btn btn-primary" type="button" id="verifyThenAct"><i class="ti-check mr-2"></i> Submit</button>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
 			</div>
+		</div>
 	</div>
-</div>
 @endsection
 
 @section('extra-scripts')
@@ -437,7 +438,8 @@
 									}).showToast();
 									$(this).html("<i class='ti-check mr-2'></i> Submit");
 									$('#transactionPasswordModal').modal('hide');
-									location.reload();
+									console.log(response.data);
+									//location.reload();
 								})
 								.catch(error=>{
 									Toastify({
