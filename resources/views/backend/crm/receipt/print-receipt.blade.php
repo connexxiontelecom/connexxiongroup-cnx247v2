@@ -201,7 +201,7 @@
 						<div class="col-sm-12 invoice-btn-group text-center">
 								<div class="btn-group">
 										<button type="button" class="btn btn-success btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" value="{{$receipt->id}}" id="sendInvoiceViaEmail"> <i class="icofont icofont-email mr-2"></i> <span id="sendEmailAddon">Send as Email</span> </button>
-										<button type="button" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" type="button" id="printInvoice"><i class="icofont icofont-printer mr-2"></i> Print</button>
+										<button type="button" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20" onclick="generatePDF()" type="button" id=""><i class="icofont icofont-printer mr-2"></i> Print</button>
 										<a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light"><i class="ti-arrow-left mr-2"></i> Back</a>
 								</div>
 						</div>
@@ -215,15 +215,26 @@
 <script src="{{asset('/assets/js/cus/printThis.js')}}"></script>
 <script src="{{asset('/assets/js/cus/axios.min.js')}}"></script>
 <script src="{{asset('/assets/js/cus/axios-progress.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
 <script>
+	function generatePDF(){
+		var element = document.getElementById('invoiceContainer');
+		html2pdf(element,{
+			margin:       10,
+			filename:     "Receipt_No_{{$receipt->ref_no}}"+".pdf",
+			image:        { type: 'jpeg', quality: 0.98 },
+			html2canvas:  { scale: 2, logging: true, dpi: 192, letterRendering: true },
+			jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+		});
+	}
     $(document).ready(function(){
         //print without commission
-        $(document).on('click', '#printInvoice', function(event){
+/*        $(document).on('click', '#printInvoice', function(event){
             $('#invoiceContainer').printThis({
                 header:"<p></p>",
                 footer:"<p></p>",
             });
-        });
+        });*/
 
         //send invoice
         $(document).on('click', '#sendInvoiceViaEmail', function(e){
