@@ -137,20 +137,20 @@
 											<tbody class="float-left pl-3">
                             <tr>
                                 <th class="text-left"> <strong>Account Name:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
+                                <td class="text-left">{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
                             </tr>
                            @if(!is_null(Auth::user()->tenantBankDetails->sort_code))<tr>
                                 <th class="text-left"><strong>Sort Code:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->sort_code ?? ''}}</td>
+                                <td class="text-left">{{Auth::user()->tenantBankDetails->sort_code ?? ''}}</td>
 														</tr>
 														@endif
                             <tr>
                                 <th class="text-left"><strong>Account Number:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
+                                <td class="text-left">{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
                             </tr>
                             <tr>
                                 <th class="text-left"><strong>Bank:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->bank_name ?? ''}}</td>
+                                <td class="text-left">{{Auth::user()->tenantBankDetails->bank_name ?? ''}}</td>
                             </tr>
                         </tbody>
                         <tbody>
