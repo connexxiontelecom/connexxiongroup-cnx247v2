@@ -285,6 +285,12 @@
 
 					<div class="pcoded-navigatio-lavel">Accounting</div>
 					<ul class="pcoded-item pcoded-left-item">
+						<li class="">
+							<a href="{{ route('accounting-dashboard') }}">
+								<span class="pcoded-micon"><i class="ti-layers-alt"></i></span>
+								<span class="pcoded-mtext">Dashboard</span>
+							</a>
+						</li>
 							<li class="pcoded-hasmenu">
 									<a href="javascript:void(0)">
 											<span class="pcoded-micon"><i class="icofont icofont-money-bag"></i></span>
@@ -336,7 +342,11 @@
 					</a>
 					<ul class="pcoded-submenu">
 
-
+						<li class=" ">
+							<a href="{{route('audit-trail')}}">
+								<span class="pcoded-mtext">Audit Trail</span>
+							</a>
+						</li>
 						<li class=" ">
 							<a href="{{route('trial-balance')}}">
 								<span class="pcoded-mtext">Trial Balance</span>

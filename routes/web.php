@@ -534,6 +534,10 @@ Route::get('/logistics/renewal-schedule-calender', 'CNX247\Backend\LogisticsCont
     Route::post('/save-account', 'CNX247\Backend\Accounting\ChartOfAccountController@saveAccount');
     Route::get('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@vat')->name('accounting-vat');
     Route::post('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@postVat');
+Route::get('/accounting-dashboard', 'CNX247\Backend\Accounting\ChartOfAccountController@dashboard')->name('accounting-dashboard');
+Route::post('/accounting-dashboard', 'CNX247\Backend\Accounting\ChartOfAccountController@filterDashboardResult')->name('filter-dashboard');
+Route::get('/accounting/audit-trail', 'CNX247\Backend\Accounting\ChartOfAccountController@auditTrail')->name('audit-trail');
+Route::post('/accounting/audit-trail', 'CNX247\Backend\Accounting\ChartOfAccountController@retrieveAuditTrail');
     Route::get('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@openingBalance')->name('opening-balance');
     Route::post('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@postOpeningBalance');
     Route::get('/accounting/setup/ledger-default-variables', 'CNX247\Backend\Accounting\ChartOfAccountController@ledgerDefaultsVariables')->name('ledger-default-variables');
