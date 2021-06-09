@@ -308,112 +308,129 @@ class Shortcut extends Component
     public function clockIn($id){
 
     }
-    public function verifyCode($id){
-        $this->validate([
-            'transactionPassword'=>'required'
-        ]);
-        if (Hash::check($this->transactionPassword, Auth::user()->transaction_password)) {
-            $details = Post::find($id);
-            if($this->userAction == 'approved'){
-                $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
-                $action->status = $this->userAction;
-                $action->save();
-                //Register business process log
-                $log = new BusinessLog;
-                $log->request_id = $id;
-                $log->user_id = Auth::user()->id;
-                $log->name = $this->userAction;
-                $log->note = str_replace('-', ' ',$details->post_type)." ".$this->userAction." by ".Auth::user()->first_name." ".Auth::user()->surname ?? " ";
-                $log->save();
+	public function verifyCode($id){
+		$this->validate([
+			'transactionPassword'=>'required'
+		]);
+		if (Hash::check($this->transactionPassword, Auth::user()->transaction_password)) {
+			$details = Post::find($id);
+			if($this->userAction == 'approved'){
+				$action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+				$action->status = $this->userAction;
+				$action->save();
+				//Register business process log
+				$log = new BusinessLog;
+				$log->request_id = $id;
+				$log->user_id = Auth::user()->id;
+				$log->name = $this->userAction;
+				$log->note = str_replace('-', ' ',$details->post_type)." ".$this->userAction." by ".Auth::user()->first_name." ".Auth::user()->surname ?? " ";
+				$log->save();
+				$responsiblePersons = ResponsiblePerson::where('post_id', $id)
+					->get();
+				$responsiblePersonIds = [];
+				foreach($responsiblePersons as $per){
+					array_push($responsiblePersonIds, $per->user_id);
+				}
 
-							$specific = SpecificApprover::where('request_type', 'purchase-request')
-								->where('requester_id', Auth::user()->id)
-								->where('tenant_id', Auth::user()->tenant_id)
-								->get();
+				//search for processor
+				$approvers = RequestApprover::where('request_type', $details->post_type)
+					->where('depart_id', $details->user->department_id)
+					->where('tenant_id', Auth::user()->tenant_id)
+					->get();
+				$specific_approvers = SpecificApprover::where('request_type', $details->post_type)
+					->where('processor_id', Auth::user()->id)
+					->where('tenant_id', Auth::user()->tenant_id)
+					->get();
+				$specIds = [];
+				if(!empty($specific_approvers) ){
+					foreach($specific_approvers as $spec){
+						array_push($specIds, $spec->processor_id);
+					}
+				}
+				$remainingSpecProcessors = array_diff($specIds,$responsiblePersonIds);
 
-                $responsiblePersons = ResponsiblePerson::where('post_id', $id)
-                                            ->get();
-                $responsiblePersonIds = [];
-                foreach($responsiblePersons as $per){
-                   array_push($responsiblePersonIds, $per->user_id);
-                }
-                //search for processor
-                $approvers = RequestApprover::where('request_type', $details->post_type)
-                                            ->where('depart_id', $details->user->department_id)
-                                            ->where('tenant_id', Auth::user()->tenant_id)
-                                            ->get();
-                $approverIds = [];
-                $specIds = [];
-                if(!empty($specific)){
+				$approverIds = [];
+				if(!empty($approvers) ){
+					foreach($approvers as $approver){
+						array_push($approverIds, $approver->user_id);
+					}
+				}
+				$remainingProcessors = array_diff($approverIds,$responsiblePersonIds);
+				$exist = SpecificApprover::where('request_type', $details->post_type)
+					->where('requester_id', $details->user->id)
+					->where('tenant_id', Auth::user()->tenant_id)
+					->first();
+				//return dd($exist);
+				//identify next supervisor
+				$supervise = new BusinessLog;
+				$supervise->request_id = $id;
+				$supervise->user_id = Auth::user()->id;
+				$supervise->name = 'Log entry';
+				$supervise->note = "Identifying next processor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
+				$supervise->save();
+				//Assign next processor
+				if(!empty($remainingSpecProcessors)){
+					$restart = array_values($remainingSpecProcessors);
+					for($n = 0; $n<count($restart); $n++){
+						$next = new ResponsiblePerson;
+						$next->post_id = $id;
+						$next->post_type = $details->post_type;
+						$next->user_id = $restart[0];
+						$next->tenant_id = Auth::user()->tenant_id;
+						$next->save();
+						$user = User::find($restart[0]);
+						$user->notify(new NewPostNotification($details));
+					}
+				}else{
+					#Check whether the person who made the request exists in the list
+					if(!empty($exist)){
+						$status = Post::find($id);
+						$status->post_status = $this->userAction;
+						$status->save();
+					}else{
+						if(!empty($remainingProcessors) ){
+							$reset = array_values($remainingProcessors);
+							for($i = 0; $i<count($reset); $i++){
+								$next = new ResponsiblePerson;
+								$next->post_id = $id;
+								$next->post_type = $details->post_type;
+								$next->user_id = $reset[0];
+								$next->tenant_id = Auth::user()->tenant_id;
+								$next->save();
+								$user = User::find($reset[0]);
+								$user->notify(new NewPostNotification($details));
+								//break;
+							}
+						}else{
+							$status = Post::find($id);
+							$status->post_status = $this->userAction;
+							$status->save();
+							#Requisition to GL flow takes over from here
+						}
+						$this->actionStatus = 0;
+						$this->verificationPostId = null;
+						$this->getContent();
+						session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+					}
 
-								}else{
+				}
 
-								}
-                if(!empty($specific) ){
-                    foreach($specific as $spec){
-                        array_push($specIds, $spec->processor_id);
-                    }
-                }
-                if(!empty($approvers) ){
-                    foreach($approvers as $approver){
-                        array_push($approverIds, $approver->user_id);
-                    }
-                }
-                $remainingProcessors = array_diff($approverIds,$responsiblePersonIds);
-                //identify next supervisor
-                $supervise = new BusinessLog;
-                $supervise->request_id = $id;
-                $supervise->user_id = Auth::user()->id;
-                $supervise->name = 'Log entry';
-                $supervise->note = "Identifying next processor for ".str_replace('-', ' ',$details->post_type).": ".$details->post_title;
-                $supervise->save();
-                //Assign next processor
-                if(!empty($remainingProcessors) ){
-                    $reset = array_values($remainingProcessors);
-                    for($i = 0; $i<count($reset); $i++){
-                        $next = new ResponsiblePerson;
-                        $next->post_id = $id;
-                        $next->post_type = $details->post_type;
-                        $next->user_id = $reset[$i];
-                        $next->tenant_id = Auth::user()->tenant_id;
-                        $next->save();
-                        $user = User::find($reset[$i]);
-                        $user->notify(new NewPostNotification($details));
-                    break;
-                    }
-                }else{
-                    $status = Post::find($id);
-                    $status->post_status = $this->userAction;
-                    $status->save();
-                    #Requisition to GL flow takes over from here
-                }
-                $this->actionStatus = 0;
-                $this->verificationPostId = null;
-                $this->getContent();
-                session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-            }else{
-                $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
-                $action->status = $this->userAction;
-                $action->save();
-                //Register business process log
-                $log = new BusinessLog;
-                $log->request_id = $id;
-                $log->user_id = Auth::user()->id;
-                $log->name = $this->userAction;
-                $log->note = str_replace('-', ' ',$details->post_type)." ".$this->userAction." by ".Auth::user()->first_name." ".Auth::user()->surname;
-                $log->save();
-                 //update request table finally
-                 $status = Post::find($id);
-                 $status->post_status = $this->userAction;
-                 $status->save();
-                    $this->actionStatus = 0;
-                    $this->verificationPostId = null;
-                    $this->getContent();
-                    session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-            }
-        }else{
-            session()->flash("error_code", "<strong>Ooops!</strong>  Mis-match transaction password. Try again. <small>You can set a new transaction password by following: Profile > Settings > Security.</small>");
-        }
+			}else{
+				$action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+				$action->status = $this->userAction;
+				$action->save();
+				//update request table finally
+				$status = Post::find($id);
+				$status->post_status = $this->userAction;
+				$status->save();
+				$this->actionStatus = 0;
+				$this->verificationPostId = null;
+				$this->getContent();
+				session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+			}
+		}else{
+			session()->flash("error_code", "<strong>Ooops!</strong>  Mis-match transaction password. Try again. <small>You can set a new transaction password by following: Profile > Settings > Security.</small>");
+		}
 
-    }
+	}
 }
