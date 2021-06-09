@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CNX247\Backend;
 use App\Driver;
 use App\FileModel;
 use App\Http\Controllers\Controller;
+use App\SpecificApprover;
 use App\WorkgroupAttachment;
 use Illuminate\Http\Request;
 use App\Notifications\NewPostNotification;
@@ -90,12 +91,18 @@ class ExpenseController extends Controller
             'title'=>'required',
             'amount'=>'required'
         ]);
+
+			$specific = SpecificApprover::where('request_type', 'purchase-request')
+				->where('requester_id', Auth::user()->id)
+				->where('tenant_id', Auth::user()->tenant_id)
+				->first();
+
         $processor = RequestApprover::select('user_id')
                                     ->where('request_type', 'expense-report')
                                     ->where('depart_id', Auth::user()->department_id)
                                     ->where('tenant_id', Auth::user()->tenant_id)
                                     ->first();
-        if(empty($processor)){
+        if(empty($processor) && empty($specific)){
             return response()->json(["error"=>"Error! Could not submit. No processor found."],400);
         }else{
             if(!empty($request->file('attachment'))){
@@ -131,15 +138,26 @@ class ExpenseController extends Controller
                 $attachment->attachment = $filename;
                 $attachment->save();
             }
+					if(!empty($specific)){
+						$event = new ResponsiblePerson;
+						$event->post_id = $id;
+						$event->post_type = 'purchase-request';
+						$event->user_id = $specific->processor_id;
+						$event->tenant_id = Auth::user()->tenant_id;
+						$event->save();
+						$user = User::find($specific->processor_id);
+						$user->notify(new NewPostNotification($expense));
 
-            $event = new ResponsiblePerson;
-            $event->post_id = $id;
-            $event->post_type = 'expense-report';
-            $event->user_id = $processor->user_id;
-            $event->tenant_id = Auth::user()->tenant_id;
-            $event->save();
-            $user = User::find($processor->user_id);
-            $user->notify(new NewPostNotification($expense));
+					}else{
+						$event = new ResponsiblePerson;
+						$event->post_id = $id;
+						$event->post_type = 'purchase-request';
+						$event->user_id = $processor->user_id;
+						$event->tenant_id = Auth::user()->tenant_id;
+						$event->save();
+						$user = User::find($processor->user_id);
+						$user->notify(new NewPostNotification($expense));
+					}
 
             //Register business process log
             $log = new BusinessLog;

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Backend\ActivityStream;
 use App\Driver;
 use App\FileModel;
 use App\PostAttachment;
+use App\SpecificApprover;
 use App\WorkgroupAttachment;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
@@ -324,6 +325,12 @@ class Shortcut extends Component
                 $log->name = $this->userAction;
                 $log->note = str_replace('-', ' ',$details->post_type)." ".$this->userAction." by ".Auth::user()->first_name." ".Auth::user()->surname ?? " ";
                 $log->save();
+
+							$specific = SpecificApprover::where('request_type', 'purchase-request')
+								->where('requester_id', Auth::user()->id)
+								->where('tenant_id', Auth::user()->tenant_id)
+								->get();
+
                 $responsiblePersons = ResponsiblePerson::where('post_id', $id)
                                             ->get();
                 $responsiblePersonIds = [];
@@ -336,6 +343,17 @@ class Shortcut extends Component
                                             ->where('tenant_id', Auth::user()->tenant_id)
                                             ->get();
                 $approverIds = [];
+                $specIds = [];
+                if(!empty($specific)){
+
+								}else{
+
+								}
+                if(!empty($specific) ){
+                    foreach($specific as $spec){
+                        array_push($specIds, $spec->processor_id);
+                    }
+                }
                 if(!empty($approvers) ){
                     foreach($approvers as $approver){
                         array_push($approverIds, $approver->user_id);

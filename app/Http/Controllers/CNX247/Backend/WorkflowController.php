@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
+use App\SpecificApprover;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\RequestApprover;
@@ -99,12 +100,14 @@ class WorkflowController extends Controller
 
     public function businessProcess(){
         $approvers = RequestApprover::where('tenant_id',Auth::user()->tenant_id)->get();
+        $specific_approvers = SpecificApprover::where('tenant_id', Auth::user()->tenant_id)->get();
         $departments = Department::where('tenant_id',Auth::user()->tenant_id)->get();
         $employees = User::where('tenant_id',Auth::user()->tenant_id)->get();
         return view('backend.workflow.business-process',
         ['approvers'=>$approvers,
         'departments'=>$departments,
-        'employees'=>$employees
+        'employees'=>$employees,
+					'specific_approvers'=>$specific_approvers
         ]);
     }
     public function setBusinessProcess(Request $request){
@@ -119,6 +122,28 @@ class WorkflowController extends Controller
         $p->depart_id =  $request->department;
         $p->set_by =  Auth::user()->id;
         $p->approver_stage =  'undefined';
+        $p->tenant_id =  Auth::user()->tenant_id;
+        $p->save();
+        if($p){
+            return response()->json(['message'=>'Success! New request processor set.'],200);
+        }else{
+            return response()->json(['message'=>'Ooops! We could not registere new processor'],400);
+        }
+		}
+
+		public function setSpecificeBusinessProcess(Request $request){
+        $this->validate($request,[
+            'requester'=>'required',
+            'processor'=>'required',
+            'request_type'=>'required'
+        ]);
+        $p = new SpecificApprover();
+        $p->requester_id =  $request->requester;
+        $p->processor_id =  $request->processor;
+        $p->request_type =  $request->request_type;
+        //$p->depart_id =  $request->department;
+        $p->set_by =  Auth::user()->id;
+        //$p->approver_stage =  'undefined';
         $p->tenant_id =  Auth::user()->tenant_id;
         $p->save();
         if($p){
