@@ -75,7 +75,7 @@ Convert to Lead
             <div class="row invoive-info">
                 <div class="col-md-4 col-xs-12 invoice-client-info">
                     <h6>Client Information :</h6>
-                    <h6 class="m-0">{{$client->title ?? ''}} {{$client->first_name ?? ''}} {{$client->surname ?? ''}}</h6>
+                    <h6 class="m-0">{{$client->company_name ?? ''}} </h6>
                     <p class="m-0 m-t-10">{{$client->street_1 ?? ''}}. {{$client->city ?? ''}}, {{$client->postal_code ?? ''}}</p>
                     <p class="m-0">{{$client->mobile_no ?? ''}}</p>
                     <p><a href="mailto:{{$client->email ?? ''}}" class="__cf_email__" data-cfemail="eb8f8e8684ab939291c5888486">[ {{$client->email ?? ''}} ]</a></p>
@@ -181,7 +181,7 @@ Convert to Lead
             </div>
             <div class="row mb-3">
                 <div class="col-md-12 col-sm-12 col-lg-12">
-                    <button class="btn btn-mini btn-primary add-line"> <i class="ti-plus mr-2"></i> Add Line</button>
+                    <button class="btn btn-mini btn-warning add-line"> <i class="ti-plus mr-2"></i> Add Line</button>
                 </div>
             </div>
             <div class="row">
@@ -239,21 +239,21 @@ Convert to Lead
                         </tbody>
                         <tbody class="float-left pl-3">
                             <tr>
-                                <th class="text-left"> <strong>Account Name:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
+                                <th class=""> <strong>Account Name:</strong> </th>
+                                <td class="text-left">{{Auth::user()->tenantBankDetails->account_name ?? ''}}</td>
                             </tr>
                             @if(!is_null(Auth::user()->tenantBankDetails->sort_code))<tr>
-                                <th class="text-left"><strong>Sort Code:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->sort_code ?? ''}}</td>
+                                <th class=""><strong>Sort Code:</strong> </th>
+                                <td class="text-left">{{Auth::user()->tenantBankDetails->sort_code ?? ''}}</td>
 														</tr>
 														@endif
                             <tr>
-                                <th class="text-left"><strong>Account Number:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
+                                <th class=""><strong>Account Number:</strong> </th>
+                                <td class="text-left">{{Auth::user()->tenantBankDetails->account_number ?? ''}}</td>
                             </tr>
                             <tr>
-                                <th class="text-left"><strong>Bank:</strong> </th>
-                                <td>{{Auth::user()->tenantBankDetails->bank_name ?? ''}}</td>
+                                <th class=""><strong>Bank:</strong> </th>
+                                <td class="text-left">{{Auth::user()->tenantBankDetails->bank_name ?? ''}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -278,8 +278,8 @@ Convert to Lead
 
                     <input type="hidden" name="hiddenTaxRate"  id="hiddenTaxRate">
                     <input type="hidden" name="hiddenDiscountRate"  id="hiddenDiscountRate">
-                    <button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Convert {{$client->first_name ?? ''}} to Lead</button>
-                    <a href="{{url()->previous()}}" class="btn btn-danger btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
+									<a href="{{url()->previous()}}" class="btn btn-secondary btn-mini waves-effect m-b-10 btn-sm waves-light">Back</a>
+									<button type="submit" class="btn btn-primary btn-mini btn-print-invoice m-b-10 btn-sm waves-effect waves-light m-r-20"> <i class="ti-control-shuffle"></i> Convert {{$client->first_name ?? ''}} to Lead</button>
                 </div>
             </div>
         </div>

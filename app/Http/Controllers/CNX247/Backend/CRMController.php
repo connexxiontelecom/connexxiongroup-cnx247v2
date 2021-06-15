@@ -36,6 +36,7 @@ class CRMController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
+        $this->client = new Client();
     }
     //Load CRM dashboard
     public function crmDashboard(){
@@ -100,7 +101,7 @@ class CRMController extends Controller
 
     #Contacts/clients
     public function clients(){
-        return view('backend.crm.clients.index');
+        return view('backend.crm.clients.index', ['clients'=>$this->client->getAllClients()]);
     }
 
     #Contacts/uploadClientAvatar
