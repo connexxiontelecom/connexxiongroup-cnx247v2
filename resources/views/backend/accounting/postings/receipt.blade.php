@@ -35,7 +35,7 @@
                                             <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Customer Name</th>
+                                                <th>Company Name</th>
                                                 <th>Date</th>
                                                 <th> Amount ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                                 <th> Payment Type</th>
@@ -51,7 +51,7 @@
                                             @foreach($receipts as $receipt)
                                                 <tr>
                                                     <td>{{$serial++}}</td>
-                                                    <td>{{$receipt->client->first_name ?? ''}} {{$receipt->client->surname ?? ''}}</td>
+                                                    <td>{{$receipt->client->company_name ?? ''}} </td>
                                                     <td>{{date('d F, Y', strtotime($receipt->issue_date))}}</td>
                                                     <td>{{number_format($receipt->amount,2)}}</td>
                                                     <td>
@@ -70,7 +70,7 @@
                                                     <td>{{$receipt->ref_no ?? ''}}</td>
                                                     <td>{{$receipt->converter->first_name ?? ''}} {{$receipt->converter->surname ?? ''}}</td>
                                                     <td>
-                                                        <a href="{{route('receipt-posting-detail', $receipt->slug)}}" class="btn btn-primary btn-mini">Learn more</a>
+                                                        <a href="{{route('receipt-posting-detail', $receipt->slug)}}" class="btn btn-primary btn-mini">View</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -78,7 +78,7 @@
                                             <tfoot>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Customer Name</th>
+                                                <th>Company Name</th>
                                                 <th>Date</th>
                                                 <th> Amount ({{Auth::user()->tenant->currency->symbol ?? 'N'}})</th>
                                                 <th> Payment Type</th>
