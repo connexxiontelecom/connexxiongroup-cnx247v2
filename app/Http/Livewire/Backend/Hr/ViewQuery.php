@@ -36,10 +36,11 @@ class ViewQuery extends Component
     }
 
     public function getReplies(){
-        $this->replies = QueryReply::where('from_id', Auth::id())->where('to_id', $this->query->user_id)
+        $this->replies = QueryReply::where('query_id', $this->query->id)->get();
+        /*where('from_id', Auth::id())->where('to_id', $this->query->user_id)
                                     ->orWhere('from_id', $this->query->user_id)->where('to_id', Auth::id())
                                     ->where('tenant_id', Auth::user()->tenant_id)
-                                    ->get();
+                                    ->get();*/
     }
 
     public function submitReply(){

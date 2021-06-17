@@ -37,7 +37,7 @@ Route::livewire('/workflows', 'workflows')->name('workflows'); */
 #Base [Frontend routes]
 Route::get('/test', function(){
     $unread = Auth::user()->unReadNotifications;
-    return dd($unread);
+    //return dd($unread);
 });
 Route::get('/', 'CNX247\Frontend\BaseController@homepage')->name('home');
 
@@ -84,7 +84,10 @@ Route::get('/workflow-tasks', 'CNX247\Backend\WorkflowController@index')->name('
 Route::get('/workflow-task/view/{url}', 'CNX247\Backend\WorkflowController@viewWorkflowTask')->name('view-workflow-task');
 Route::get('/workflow-business-process', 'CNX247\Backend\WorkflowController@businessProcess')->name('workflow-business-process');
 Route::post('/workflow/business-process', 'CNX247\Backend\WorkflowController@setBusinessProcess');
+Route::post('/workflow/specific-business-process', 'CNX247\Backend\WorkflowController@setSpecificeBusinessProcess');
 Route::post('/workflow/approve-or-decline-request', 'CNX247\Backend\WorkflowController@approveOrDeclineRequest');
+Route::post('/search-workflow-assignment', 'CNX247\Backend\WorkflowController@searchWorkflowAssignment')->name('search-workflow-assignment');
+Route::post('/search-workflow-my-requests', 'CNX247\Backend\WorkflowController@searchWorkflowMyRequests')->name('search-workflow-my-requests');
 #Expense report route
 Route::get('/expense-report', 'CNX247\Backend\ExpenseController@index')->name('expense-report');
 Route::post('/expense-report', 'CNX247\Backend\ExpenseController@store');
@@ -246,6 +249,7 @@ Route::get('/crm/deal/view/{slug}', 'CNX247\Backend\CRMController@viewDeal')->na
 #Invoice list
 Route::get('/invoice-list', 'CNX247\Backend\CRMController@invoiceList')->name('invoice-list');
 Route::get('/print/invoice/{slug}', 'CNX247\Backend\CRMController@printInvoice')->name('print-invoice');
+Route::get('/export/invoice/{slug}', 'CNX247\Backend\CRMController@exportInvoiceAsWord')->name('export-invoice');
 Route::post('/send/invoice/email', 'CNX247\Backend\CRMController@sendInvoiceViaEmail');
 Route::get('/invoice/decline-invoice/{slug}', 'CNX247\Backend\CRMController@declineInvoice')->name('decline-invoice');
 #Receipt list
@@ -302,12 +306,14 @@ Route::get('/feedbacks', 'CNX247\Backend\CRMController@feedbacks')->name('feedba
 Route::post('/feedback-status', 'CNX247\Backend\CRMController@feedbackStatus');
 #Activity stream routes
 Route::get('/activity-stream', 'CNX247\Backend\ActivityStreamController@index')->name('activity-stream');
+/* Route::post('/activity-stream/like-unlike-post', 'CNX247\Backend\ActivityStreamShortcutController@likeUnlikePost'); */
 Route::post('/activity-stream/message', 'CNX247\Backend\ActivityStreamController@sendMessage');
 
 Route::post('/activity-stream/new/task', 'CNX247\Backend\ActivityStreamController@storeTask');
 
 Route::post('/activity-stream/live-update', 'CNX247\Backend\ActivityStreamController@postView');
 Route::get('/activity-stream/post/{slug}', 'CNX247\Backend\ActivityStreamController@viewPost')->name('view-post-activity-stream');
+Route::post('/activity-stream/search', 'CNX247\Backend\ActivityStreamController@searchCNX247')->name('search-cnx247');
 Route::post('/event/new', 'CNX247\Backend\ActivityStreamController@createEvent');
 Route::post('/announcement/new', 'CNX247\Backend\ActivityStreamController@createAnnouncement');
 Route::post('/activity-stream/upload/attachment', 'CNX247\Backend\ActivityStreamController@shareFile');
@@ -429,6 +435,7 @@ Route::get('/my-event/calendar', 'CNX247\Backend\EventController@eventCalendar')
 Route::get('/my-event-calendar', 'CNX247\Backend\EventController@getEventCalendarData');
 Route::get('/company-calendar', 'CNX247\Backend\EventController@companyCalendar')->name('company-calendar');
 Route::get('/company-event-calendar', 'CNX247\Backend\EventController@getCompanyEventData');
+Route::get('/all-events', 'CNX247\Backend\EventController@viewAllEvents')->name('view-all-events');
 
 #Procurement routes
 #Supplier routes
@@ -501,10 +508,26 @@ Route::get('/logistics/new-customer', 'CNX247\Backend\LogisticsController@newCus
 Route::post('/store-logistic-customer', 'CNX247\Backend\LogisticsController@storeCustomer')->name('store-logistic-customer');
 #Vehicle routes
 Route::get('/logistics/vehicles', 'CNX247\Backend\LogisticsController@vehicles')->name('logistics-vehicles');
+Route::get('/logistics/dvehicles', 'CNX247\Backend\LogisticsController@dvehicles')->name('logistics-dvehicles');
 Route::get('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@newVehicle')->name('logistics-new-vehicle');
 Route::post('/logistics/new-vehicle', 'CNX247\Backend\LogisticsController@storeVehicle');
 Route::get('/logistics/view-vehicle/{slug}', 'CNX247\Backend\LogisticsController@viewVehicle')->name('logistics-view-vehicle');
+Route::post('/logistics/view-vehicle/{slug}', 'CNX247\Backend\LogisticsController@viewVehicle')->name('logistics-view-vehicle');
 Route::post('/logistics/vehicle/assign', 'CNX247\Backend\LogisticsController@assignVehicleToDriver');
+
+Route::get('/logistics/renewal-type', 'CNX247\Backend\LogisticsController@renewalType')->name('renewal-type');
+Route::post('/logistics/renewal-type', 'CNX247\Backend\LogisticsController@renewalType')->name('renewal-type');
+Route::get('/logistics/vehicle-type', 'CNX247\Backend\LogisticsController@vehicleType')->name('vehicle-type');
+Route::post('/logistics/vehicle-type', 'CNX247\Backend\LogisticsController@vehicleType')->name('vehicle-type');
+Route::get('/logistics/maintenance-type', 'CNX247\Backend\LogisticsController@maintenanceType')->name('maintenance-type');
+Route::post('/logistics/maintenance-type', 'CNX247\Backend\LogisticsController@maintenanceType')->name('maintenance-type');
+Route::get('/logistics/renewal-schedule', 'CNX247\Backend\LogisticsController@renewalSchedule')->name('renewal-schedule');
+Route::get('/logistics/maintenance-schedule', 'CNX247\Backend\LogisticsController@maintenanceSchedule')->name('maintenance-schedule');
+Route::get('/logistics/maintenance-schedule-calender', 'CNX247\Backend\LogisticsController@maintenanceScheduleCalender')->name('maintenance-schedule-calender');
+Route::get('/maintenance-schedule-calender-data', 'CNX247\Backend\LogisticsController@maintenanceScheduleData')->name('maintenance-schedule-calender-data');
+Route::get('/renewal-schedule-calender-data', 'CNX247\Backend\LogisticsController@renewalScheduleData')->name('renewal-schedule-calender-data');
+Route::get('/logistics/renewal-schedule-calender', 'CNX247\Backend\LogisticsController@renewalScheduleCalender')->name('renewal-schedule-calender');
+
 #Accounting routes
     Route::get('/chart-of-accounts', 'CNX247\Backend\Accounting\ChartOfAccountController@index')->name('chart-of-accounts');
     Route::post('/new/chart-of-account', 'CNX247\Backend\Accounting\ChartOfAccountController@createCOA')->name('create-new-coa');
@@ -512,6 +535,10 @@ Route::post('/logistics/vehicle/assign', 'CNX247\Backend\LogisticsController@ass
     Route::post('/save-account', 'CNX247\Backend\Accounting\ChartOfAccountController@saveAccount');
     Route::get('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@vat')->name('accounting-vat');
     Route::post('/accounting/vat', 'CNX247\Backend\Accounting\ChartOfAccountController@postVat');
+Route::get('/accounting-dashboard', 'CNX247\Backend\Accounting\ChartOfAccountController@dashboard')->name('accounting-dashboard');
+Route::post('/accounting-dashboard', 'CNX247\Backend\Accounting\ChartOfAccountController@filterDashboardResult')->name('filter-dashboard');
+Route::get('/accounting/audit-trail', 'CNX247\Backend\Accounting\ChartOfAccountController@auditTrail')->name('audit-trail');
+Route::post('/accounting/audit-trail', 'CNX247\Backend\Accounting\ChartOfAccountController@retrieveAuditTrail');
     Route::get('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@openingBalance')->name('opening-balance');
     Route::post('/accounting/opening-balance', 'CNX247\Backend\Accounting\ChartOfAccountController@postOpeningBalance');
     Route::get('/accounting/setup/ledger-default-variables', 'CNX247\Backend\Accounting\ChartOfAccountController@ledgerDefaultsVariables')->name('ledger-default-variables');

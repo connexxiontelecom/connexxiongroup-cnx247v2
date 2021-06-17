@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
+use App\SpecificApprover;
 use Illuminate\Http\Request;
 use App\Notifications\NewPostNotification;
 use App\BusinessLog;
@@ -39,7 +40,11 @@ class LeaveRequestController extends Controller
             ->where('depart_id', Auth::user()->department_id)
             ->where('tenant_id', Auth::user()->tenant_id)
             ->first();
-    if(empty($processor)){
+			$specific = SpecificApprover::where('request_type', 'purchase-request')
+				->where('requester_id', Auth::user()->id)
+				->where('tenant_id', Auth::user()->tenant_id)
+				->first();
+    if(empty($processor) && empty($specific)){
                 session()->flash("error", "<strong>Ooops!</strong> Could not submit request. Either there's no processor for your department or you need to update your profile.");
                 return back();
             }else{
@@ -75,14 +80,27 @@ class LeaveRequestController extends Controller
                     $attachment->attachment = $filename;
                     $attachment->save();
                 }
-                $event = new ResponsiblePerson;
-                $event->post_id = $id;
-                $event->post_type = 'leave-request';
-                $event->user_id = $processor->user_id;
-                $event->tenant_id = Auth::user()->tenant_id;
-                $event->save();
-                $user = User::find($processor->user_id);
-                $user->notify(new NewPostNotification($requisition));
+			if(!empty($specific)){
+				$event = new ResponsiblePerson;
+				$event->post_id = $id;
+				$event->post_type = 'purchase-request';
+				$event->user_id = $specific->processor_id;
+				$event->tenant_id = Auth::user()->tenant_id;
+				$event->save();
+				$user = User::find($specific->processor_id);
+				$user->notify(new NewPostNotification($requisition));
+
+			}else{
+				$event = new ResponsiblePerson;
+				$event->post_id = $id;
+				$event->post_type = 'purchase-request';
+				$event->user_id = $processor->user_id;
+				$event->tenant_id = Auth::user()->tenant_id;
+				$event->save();
+				$user = User::find($processor->user_id);
+				$user->notify(new NewPostNotification($requisition));
+			}
+
 
 
                 //Register business process log

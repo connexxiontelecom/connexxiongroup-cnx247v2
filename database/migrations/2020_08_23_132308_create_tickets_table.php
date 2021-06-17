@@ -20,6 +20,7 @@ class CreateTicketsTable extends Migration
             $table->unsignedBigInteger('category')->nullable();
             $table->bigInteger('ticket_no');
             $table->tinyInteger('status')->default(1);//open=1; close=0
+            $table->tinyInteger('priority')->default(1)->comment('1=Normal, 2=Medium, 3=High, 4=Highest');
             $table->string('subject')->nullable();
             $table->text('message')->nullable();
             $table->string('attachment')->nullable();

@@ -2,17 +2,23 @@
 
 namespace App\Http\Livewire\Backend\Crm\Support;
 
+use App\TicketCategory;
 use Livewire\Component;
 use App\User;
 use App\Ticket as TicketModel;
 use Auth;
 class Ticket extends Component
 {
-    public $subject, $content, $category, $attachment;
+    public $subject, $content, $category, $attachment, $priority;
+    //public $categories;
     public function render()
     {
-        return view('livewire.backend.crm.support.ticket');
+        return view('livewire.backend.crm.support.ticket',['categories'=> TicketCategory::all()]);
     }
+
+    public function mount(){
+
+		}
 
     public function submitSupportTicket(){
         $this->validate([
@@ -42,6 +48,7 @@ class Ticket extends Component
         $ticket->message = $this->content;
         $ticket->subject = $this->subject;
         $ticket->category = $this->category;
+        $ticket->priority = $this->priority;
         $ticket->ticket_no = $ticket_no;
         $ticket->slug = substr(sha1(time()), 21,40);
         $ticket->save();

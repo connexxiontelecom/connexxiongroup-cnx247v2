@@ -28,7 +28,7 @@
                     {!! session()->get('error') !!}
                 </div>
             @endif
-            <p>Selecting accounting period to generate trial balance</p>
+            <p>Selecting accounting period to generate balance sheet</p>
             <div class="row">
                 <div class="col-md-12 col-sm-12">
                     <form action="{{route('balance-sheet')}}" method="post">

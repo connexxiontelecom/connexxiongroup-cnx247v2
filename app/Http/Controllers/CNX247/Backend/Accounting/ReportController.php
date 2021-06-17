@@ -32,6 +32,8 @@ class ReportController extends Controller
         if(!empty($inception)){
             $bfDr = DB::table(Auth::user()->tenant_id.'_gl')->whereBetween('created_at', [$inception->created_at, $current->parse($request->from)->subDays(1)])->sum('dr_amount');
             $bfCr = DB::table(Auth::user()->tenant_id.'_gl')->whereBetween('created_at', [$inception->created_at, $current->parse($request->from)->subDays(1)])->sum('cr_amount');
+
+
             $reports = DB::table(Auth::user()->tenant_id.'_gl as g')
                 ->join(Auth::user()->tenant_id.'_coa as c', 'c.glcode', '=', 'g.glcode')
                 ->select(DB::raw('sum(g.dr_amount) AS sumDebit'),DB::raw('sum(g.cr_amount) AS sumCredit'),
