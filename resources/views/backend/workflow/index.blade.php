@@ -109,20 +109,20 @@
 																							<td>
 																									<div class="btn-group mt-2">
 																											@if($request->post_status == 'in-progress')
-																														@foreach($request->responsiblePersons as $app)
-																																@if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
+																														{{--@foreach($request->responsiblePersons as $app)--}}
+																																@if($person->user_id == Auth::user()->id && $person->status == 'in-progress')
 																																		<a href="{{ route('view-workflow-task', $request->post_url) }}" class="btn btn-mini btn-primary">View</a>
 																																		<!--<button class="btn btn-out-dashed btn-danger btn-square btn-mini decline-request" value="$request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"><i class="ti-na mr-2"></i> DECLINE</button>
 
 																																		<button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn approve-request" value="request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"> <i class="ti-check-box mr-2"></i>
 																																				APPROVE
 																																		</button>-->
-																																@elseif($app->user_id == Auth::user()->id && $app->status == 'decline')
+																																@elseif($person->user_id == Auth::user()->id && $person->status == 'decline')
 																																		<i>Decline,(you)</i>
-																																@elseif($app->user_id == Auth::user()->id && $app->status == 'approve')
+																																@elseif($person->user_id == Auth::user()->id && $person->status == 'approve')
 																																		<i>Approved,(you)</i>
 																																@endif
-																														@endforeach
+																													{{--	@endforeach--}}
 																											@endif
 
 																									</div>

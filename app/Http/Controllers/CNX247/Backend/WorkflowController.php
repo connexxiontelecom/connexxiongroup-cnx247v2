@@ -40,6 +40,7 @@ class WorkflowController extends Controller
 						->whereIn('id', $responsible)
 						->orderBy('id', 'DESC')
 						->paginate(10);
+
 			$my_requests = Post::whereIn('post_type',
 						['purchase-request', 'expense-report',
 						'leave-request', 'business-trip',
@@ -81,6 +82,7 @@ class WorkflowController extends Controller
 																->where('post_status', 'approved')
 																->whereMonth('created_at', '=', $now->subMonth()->month)
 																->sum('budget');
+
         return view('backend.workflow.index',[
 					'requests'=>$requests,
 					'my_requests'=>$my_requests,
