@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\Access\Authorizable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Auth;
 use Cache;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
@@ -45,7 +46,6 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTIdentifier()
     {
         return $this->getKey();
-
 
     }
     public function getJWTCustomClaims()
@@ -112,6 +112,19 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Policy::class, 'tenant_id');
 
     }
+
+
+    /*
+     * Use-case methods
+     */
+
+	public function getAllUsers(){
+		return User::where('tenant_id', Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->get();
+	}
+
+	public function getActiveUsers(){
+		return User::where('tenant_id', Auth::user()->tenant_id)->where('account_status', 1)->orderBy('first_name', 'ASC')->get();
+	}
  /*    public function leaveWallet(){
         return $this->belongsTo(LeaveWallet::class);
     } */

@@ -23,10 +23,13 @@
 										<a class="nav-link" data-toggle="tab" href="#profile3" role="tab">My Requests</a>
 										<div class="slide"></div>
 								</li>
+								@can('view workflow statistics')
 								<li class="nav-item">
 										<a class="nav-link" data-toggle="tab" href="#messages3" role="tab">Statistics</a>
 										<div class="slide"></div>
 								</li>
+
+								@endcan
 						</ul>
 						<!-- Tab panes -->
 						<div class="tab-content card-block">
@@ -41,6 +44,20 @@
 											{!! session('success') !!}
 									</div>
 									@endif
+									<div class="row">
+									<div class="col-md-6">
+										<form action="{{route('search-workflow-assignment')}}" method="post">
+											@csrf
+											<div class="input-group input-group-button">
+													<input type="text" class="form-control" placeholder="Search item" name="search_item" id="search_item">
+													<button type="submit" class="input-group-addon btn btn-primary" id="basic-addon10">
+															<span class="">Search</span>
+													</button>
+											</div>
+
+										</form>
+									</div>
+								</div>
 									<div class="form-group col-sm-2 col-md-2 mb-3">
 										<label for="">Filter</label>
 										<select name="filter" id="filter-assignments" class="form-control">
@@ -92,19 +109,20 @@
 																							<td>
 																									<div class="btn-group mt-2">
 																											@if($request->post_status == 'in-progress')
-																														@foreach($request->responsiblePersons as $app)
-																																@if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
-																																		<button class="btn btn-out-dashed btn-danger btn-square btn-mini decline-request" value="{{$request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"><i class="ti-na mr-2"></i> DECLINE</button>
+																														{{--@foreach($request->responsiblePersons as $app)--}}
+																																@if($person->user_id == Auth::user()->id && $person->status == 'in-progress')
+																																		<a href="{{ route('view-workflow-task', $request->post_url) }}" class="btn btn-mini btn-primary">View</a>
+																																		<!--<button class="btn btn-out-dashed btn-danger btn-square btn-mini decline-request" value="$request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"><i class="ti-na mr-2"></i> DECLINE</button>
 
-																																		<button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn approve-request" value="{{$request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"> <i class="ti-check-box mr-2"></i>
+																																		<button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn approve-request" value="request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"> <i class="ti-check-box mr-2"></i>
 																																				APPROVE
-																																		</button>
-																																@elseif($app->user_id == Auth::user()->id && $app->status == 'decline')
+																																		</button>-->
+																																@elseif($person->user_id == Auth::user()->id && $person->status == 'decline')
 																																		<i>Decline,(you)</i>
-																																@elseif($app->user_id == Auth::user()->id && $app->status == 'approve')
+																																@elseif($person->user_id == Auth::user()->id && $person->status == 'approve')
 																																		<i>Approved,(you)</i>
 																																@endif
-																														@endforeach
+																													{{--	@endforeach--}}
 																											@endif
 
 																									</div>
@@ -134,6 +152,20 @@
 									<h5 class="sub-title">My Requests</h5>
 									@include('backend.workflow.common._run-business-process')
 										<div id="datatable-assignment" class="table table-stripped table-bordered nowrap mt-4">
+											<div class="row">
+												<div class="col-md-6">
+													<form action="{{route('search-workflow-my-requests')}}" method="post">
+														@csrf
+														<div class="input-group input-group-button">
+																<input type="text" class="form-control" placeholder="Search item" name="search_item" id="search_item">
+																<button type="submit" class="input-group-addon btn btn-primary" id="basic-addon10">
+																		<span class="">Search</span>
+																</button>
+														</div>
+
+													</form>
+												</div>
+											</div>
 											<div class="form-group col-sm-2 col-md-2 mb-3">
 												<label for="">Filter</label>
 												<select name="filter" id="filter-my-request" class="form-control">
@@ -189,71 +221,74 @@
 										</div>
 										</div>
 								</div>
-								<div class="tab-pane" id="messages3" role="tabpanel">
+								@can('view workflow statistics')
+									<div class="tab-pane" id="messages3" role="tabpanel">
+												<div class="row">
+													<div class="col-md-12 col-sm-12">
+														<h5 class="sub-title">Statistics</h5>
+													</div>
+												</div>
 											<div class="row">
-												<div class="col-md-12 col-sm-12">
-													<h5 class="sub-title">Statistics</h5>
-												</div>
+													<div class="col-md-6 col-xl-3">
+															<div class="card widget-card-1">
+																	<div class="card-block-small">
+																			<i class="icofont icofont-diamond bg-c-yellow card1-icon"></i>
+																			<span class="text-c-yellow f-w-600">Requisition</span>
+																			<h6>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($overall)}}</h6>
+																			<div>
+																					<span class="f-left m-t-10 text-muted">
+																							<i class="text-c-yellow f-16 ti-calendar m-r-10"></i>Overall
+																					</span>
+																			</div>
+																	</div>
+															</div>
+													</div>
+													<div class="col-md-6 col-xl-3">
+															<div class="card widget-card-1">
+																	<div class="card-block-small">
+																			<i class="icofont icofont-diamond bg-c-pink card1-icon"></i>
+																			<span class="text-c-pink f-w-600">Requisition</span>
+																			<h6>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($thisYear)}}</h6>
+																			<div>
+																					<span class="f-left m-t-10 text-muted">
+																							<i class="text-c-pink f-16 ti-calendar m-r-10"></i>This Year
+																					</span>
+																			</div>
+																	</div>
+															</div>
+													</div>
+													<div class="col-md-6 col-xl-3">
+															<div class="card widget-card-1">
+																	<div class="card-block-small">
+																			<i class="icofont icofont-diamond bg-c-green card1-icon"></i>
+																			<span class="text-c-green f-w-600">Requisition</span>
+																			<h6>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($lastMonth)}}</h6>
+																			<div>
+																					<span class="f-left m-t-10 text-muted">
+																							<i class="text-c-green f-16 ti-calendar m-r-10"></i>Last Month
+																					</span>
+																			</div>
+																	</div>
+															</div>
+													</div>
+													<div class="col-md-6 col-xl-3">
+															<div class="card widget-card-1">
+																	<div class="card-block-small">
+																			<i class="icofont icofont-diamond bg-c-blue card1-icon"></i>
+																			<span class="text-c-blue f-w-600">Requisition</span>
+																			<h6>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($thisMonth)}}</h6>
+																			<div>
+																					<span class="f-left m-t-10 text-muted">
+																							<i class="text-c-blue f-16 ti-calendar m-r-10"></i>This Month
+																					</span>
+																			</div>
+																	</div>
+															</div>
+													</div>
 											</div>
-										<div class="row">
-												<div class="col-md-6 col-xl-3">
-														<div class="card widget-card-1">
-																<div class="card-block-small">
-																		<i class="icofont icofont-diamond bg-c-yellow card1-icon"></i>
-																		<span class="text-c-yellow f-w-600">Requisition</span>
-																		<h6>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($overall)}}</h6>
-																		<div>
-																				<span class="f-left m-t-10 text-muted">
-																						<i class="text-c-yellow f-16 ti-calendar m-r-10"></i>Overall
-																				</span>
-																		</div>
-																</div>
-														</div>
-												</div>
-												<div class="col-md-6 col-xl-3">
-														<div class="card widget-card-1">
-																<div class="card-block-small">
-																		<i class="icofont icofont-diamond bg-c-pink card1-icon"></i>
-																		<span class="text-c-pink f-w-600">Requisition</span>
-																		<h6>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($thisYear)}}</h6>
-																		<div>
-																				<span class="f-left m-t-10 text-muted">
-																						<i class="text-c-pink f-16 ti-calendar m-r-10"></i>This Year
-																				</span>
-																		</div>
-																</div>
-														</div>
-												</div>
-												<div class="col-md-6 col-xl-3">
-														<div class="card widget-card-1">
-																<div class="card-block-small">
-																		<i class="icofont icofont-diamond bg-c-green card1-icon"></i>
-																		<span class="text-c-green f-w-600">Requisition</span>
-																		<h6>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($lastMonth)}}</h6>
-																		<div>
-																				<span class="f-left m-t-10 text-muted">
-																						<i class="text-c-green f-16 ti-calendar m-r-10"></i>Last Month
-																				</span>
-																		</div>
-																</div>
-														</div>
-												</div>
-												<div class="col-md-6 col-xl-3">
-														<div class="card widget-card-1">
-																<div class="card-block-small">
-																		<i class="icofont icofont-diamond bg-c-blue card1-icon"></i>
-																		<span class="text-c-blue f-w-600">Requisition</span>
-																		<h6>{{Auth::user()->tenant->currency->symbol ?? 'N'}}{{number_format($thisMonth)}}</h6>
-																		<div>
-																				<span class="f-left m-t-10 text-muted">
-																						<i class="text-c-blue f-16 ti-calendar m-r-10"></i>This Month
-																				</span>
-																		</div>
-																</div>
-														</div>
-												</div>
-										</div>
-								</div>
+									</div>
+
+								@endcan
 						</div>
 				</div>
 				</div>
@@ -263,36 +298,36 @@
 @endsection
 
 @section('dialog-section')
-<div class="modal fade" id="transactionPasswordModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
+	<div class="modal fade" id="transactionPasswordModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-					<div class="modal-header bg-warning">
-							<h4 class="modal-title">Transaction Password</h4>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span class="text-white" aria-hidden="true">&times;</span>
+				<div class="modal-header bg-warning">
+					<h4 class="modal-title">Transaction Password</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span class="text-white" aria-hidden="true">&times;</span>
 					</button>
-					</div>
-					<div class="modal-body">
-						<div class="card">
-							<div class="card-block">
-								<div class="form-group">
-									<label for="">Transaction Password</label>
-									<input type="password" placeholder="Enter Transaction Password" name="transaction_password" id="transaction_password" class="form-control">
-									<input type="hidden" id="post">
-									<input type="hidden" id="action">
-								</div>
-								<div class="form-group">
-										<div class="btn-group d-flex justify-content-center">
-											<button class="btn-mini btn btn-danger"><i class="ti-close mr-2"></i> Cancel</button>
-											<button class="btn-mini btn btn-primary" type="button" id="verifyThenAct"><i class="ti-check mr-2"></i> Submit</button>
-										</div>
+				</div>
+				<div class="modal-body">
+					<div class="card">
+						<div class="card-block">
+							<div class="form-group">
+								<label for="">Transaction Password</label>
+								<input type="password" placeholder="Enter Transaction Password" name="transaction_password" id="transaction_password" class="form-control">
+								<input type="hidden" id="post">
+								<input type="hidden" id="action">
+							</div>
+							<div class="form-group">
+								<div class="btn-group d-flex justify-content-center">
+									<button  data-dismiss="modal" type="button" class="btn-mini btn btn-danger"><i class="ti-close mr-2"></i> Cancel</button>
+									<button class="btn-mini btn btn-primary" type="button" id="verifyThenAct"><i class="ti-check mr-2"></i> Submit</button>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
 			</div>
+		</div>
 	</div>
-</div>
 @endsection
 
 @section('extra-scripts')
@@ -355,6 +390,18 @@
 								});
 						});
 
+						$(document).on('blur', '#search_item', function(e){
+							e.preventDefault();
+							var term = $(this).val();
+							axios.post('/search-workflow-assignment',{term:term})
+							.then(response=>{
+								console.log(response.data)
+							})
+							.catch(error=>{
+
+							});
+						});
+
 						$(document).on('click', '#verifyThenAct', function(e){
 							e.preventDefault();
 							$(this).text('Processing...');
@@ -391,7 +438,8 @@
 									}).showToast();
 									$(this).html("<i class='ti-check mr-2'></i> Submit");
 									$('#transactionPasswordModal').modal('hide');
-									location.reload();
+									console.log(response.data);
+									//location.reload();
 								})
 								.catch(error=>{
 									Toastify({

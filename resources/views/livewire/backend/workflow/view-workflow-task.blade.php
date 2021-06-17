@@ -33,6 +33,7 @@
                                     </div>
 
                                 </div>
+
                                     @foreach ($request->responsiblePersons as $processor)
                                         <div class="card-block" style="padding:10px;">
                                             <div class="team-box p-b-10">

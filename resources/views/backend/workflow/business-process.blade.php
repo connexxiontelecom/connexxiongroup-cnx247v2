@@ -33,229 +33,468 @@
                             <div class="card">
                                 <div class="card-block">
                                     <h5 class="sub-title">Business Process</h5>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button class="btn btn-mini btn-primary float-right mb-3 mt-1" data-target="#businessProcessModal" data-toggle="modal" type="button"><i class="ti-plus mr-2"></i>Add New Business Process</button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card-block accordion-block">
-                                                <div id="accordion" role="tablist" aria-multiselectable="true">
-                                                    <div class="accordion-panel">
-                                                        <div class="accordion-heading" role="tab" id="headingExpense">
-                                                            <h3 class="card-title accordion-title">
-                                                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseExpense" aria-expanded="true" aria-controls="collapseExpense">
-                                                                Expense Report
-                                                            </a>
-                                                        </h3>
-                                                        </div>
-                                                        <div id="collapseExpense" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingExpense">
-                                                            <div class="accordion-content accordion-desc">
-                                                                <table class="table table-bordered">
-                                                                    <thead>
-                                                                        <th>#</th>
-                                                                        <th>Approver</th>
-                                                                        <th>Department</th>
-                                                                        <th>Set By</th>
-                                                                        <th>Date</th>
-                                                                        <th>Action</th>
-                                                                    </thead>
-                                                                    @php
-                                                                        $n = 1;
-                                                                    @endphp
-                                                                    @foreach ($approvers as $item)
-                                                                        @if ($item->request_type == 'expense-report')
-                                                                            <tr>
-                                                                                <td>{{$n++}}</td>
-                                                                                <td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
-                                                                                <td>{{$item->department->department_name ?? ''}} </td>
-                                                                                <td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
-                                                                                <td>
-                                                                                    <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="accordion-panel">
-                                                        <div class="accordion-heading" role="tab" id="headingPurchase">
-                                                            <h3 class="card-title accordion-title">
-                                                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapsePurchase" aria-expanded="false" aria-controls="collapsePurchase">
-                                                                Purchase Request
-                                                            </a>
-                                                        </h3>
-                                                        </div>
-                                                        <div id="collapsePurchase" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingPurchase">
-                                                            <div class="accordion-content accordion-desc">
-                                                                <table class="table table-bordered">
-                                                                    <thead>
-                                                                        <th>#</th>
-                                                                        <th>Approver</th>
-                                                                        <th>Department</th>
-                                                                        <th>Set By</th>
-                                                                        <th>Date</th>
-                                                                        <th>Action</th>
-                                                                    </thead>
-                                                                    @php
-                                                                        $n = 1;
-                                                                    @endphp
-                                                                    @foreach ($approvers as $item)
-                                                                        @if ($item->request_type == 'purchase-request')
-                                                                            <tr>
-                                                                                <td>{{$n++}}</td>
-                                                                                <td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
-                                                                                <td>{{$item->department->department_name ?? ''}} </td>
-                                                                                <td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
-                                                                                <td>
-                                                                                    <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="accordion-panel">
-                                                        <div class=" accordion-heading" role="tab" id="headingGeneral">
-                                                            <h3 class="card-title accordion-title">
-                                                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseGeneral" aria-expanded="false" aria-controls="collapseGeneral">
-                                                                General Request
-                                                            </a>
-                                                        </h3>
-                                                        </div>
-                                                        <div id="collapseGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGeneral">
-                                                            <div class="accordion-content accordion-desc">
-                                                                <table class="table table-bordered">
-                                                                    <thead>
-                                                                        <th>#</th>
-                                                                        <th>Approver</th>
-                                                                        <th>Department</th>
-                                                                        <th>Set By</th>
-                                                                        <th>Date</th>
-                                                                        <th>Action</th>
-                                                                    </thead>
-                                                                    @php
-                                                                        $n = 1;
-                                                                    @endphp
-                                                                    @foreach ($approvers as $item)
-                                                                        @if ($item->request_type == 'general-request')
-                                                                            <tr>
-                                                                                <td>{{$n++}}</td>
-                                                                                <td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
-                                                                                <td>{{$item->department->department_name ?? ''}} </td>
-                                                                                <td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
-                                                                                <td>
-                                                                                    <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="accordion-panel">
-                                                        <div class=" accordion-heading" role="tab" id="headingBusiness">
-                                                            <h3 class="card-title accordion-title">
-                                                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseBusiness" aria-expanded="false" aria-controls="collapseBusiness">
-                                                                Business Trip
-                                                            </a>
-                                                        </h3>
-                                                        </div>
-                                                        <div id="collapseBusiness" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBusiness">
-                                                            <div class="accordion-content accordion-desc">
-                                                                <table class="table table-bordered">
-                                                                    <thead>
-                                                                        <th>#</th>
-                                                                        <th>Approver</th>
-                                                                        <th>Department</th>
-                                                                        <th>Set By</th>
-                                                                        <th>Date</th>
-                                                                        <th>Action</th>
-                                                                    </thead>
-                                                                    @php
-                                                                        $n = 1;
-                                                                    @endphp
-                                                                    @foreach ($approvers as $item)
-                                                                        @if ($item->request_type == 'business-trip')
-                                                                            <tr>
-                                                                                <td>{{$n++}}</td>
-                                                                                <td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
-                                                                                <td>{{$item->department->department_name ?? ''}} </td>
-                                                                                <td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
-                                                                                <td>
-                                                                                    <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="accordion-panel">
-                                                        <div class=" accordion-heading" role="tab" id="headingLeave">
-                                                            <h3 class="card-title accordion-title">
-                                                            <a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseLeave" aria-expanded="false" aria-controls="collapseLeave">
-                                                                Leave Approval
-                                                            </a>
-                                                        </h3>
-                                                        </div>
-                                                        <div id="collapseLeave" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLeave">
-                                                            <div class="accordion-content accordion-desc">
-                                                                <table class="table table-bordered">
-                                                                    <thead>
-                                                                        <th>#</th>
-                                                                        <th>Approver</th>
-                                                                        <th>Department</th>
-                                                                        <th>Set By</th>
-                                                                        <th>Date</th>
-                                                                        <th>Action</th>
-                                                                    </thead>
-                                                                    @php
-                                                                        $n = 1;
-                                                                    @endphp
-                                                                    @foreach ($approvers as $item)
-                                                                        @if ($item->request_type == 'leave-approval')
-                                                                            <tr>
-                                                                                <td>{{$n++}}</td>
-                                                                                <td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
-                                                                                <td>{{$item->department->department_name ?? ''}} </td>
-                                                                                <td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
-                                                                                <td>
-                                                                                    <label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <a href=""><i class="ti-pencil"></i></a>
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+																	<ul class="nav nav-tabs" id="myTab" role="tablist">
+																		<li class="nav-item">
+																			<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Department-wise</a>
+																		</li>
+																		<li class="nav-item">
+																			<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Employee-wise</a>
+																		</li>
+																	</ul>
+																	<div class="tab-content" id="myTabContent">
+																		<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+																			<div class="row">
+																				<div class="col-md-12">
+																					<button class="btn btn-mini btn-primary float-right mb-3 mt-1" data-target="#businessProcessModal" data-toggle="modal" type="button"><i class="ti-plus mr-2"></i>Add New Business Process</button>
+																				</div>
+																			</div>
+																			<div class="row mt-2">
+																				<div class="col-md-12">
+																					<div class="card-block accordion-block">
+																						<div id="accordion" role="tablist" aria-multiselectable="true">
+																							<div class="accordion-panel">
+																								<div class="accordion-heading" role="tab" id="headingExpense">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseExpense" aria-expanded="true" aria-controls="collapseExpense">
+																											Expense Report
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="collapseExpense" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingExpense">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>Approver</th>
+																											<th>Department</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($approvers as $item)
+																												@if ($item->request_type == 'expense-report')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
+																														<td>{{$item->department->department_name ?? ''}} </td>
+																														<td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																							<div class="accordion-panel">
+																								<div class="accordion-heading" role="tab" id="headingPurchase">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapsePurchase" aria-expanded="false" aria-controls="collapsePurchase">
+																											Purchase Request
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="collapsePurchase" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingPurchase">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>Approver</th>
+																											<th>Department</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($approvers as $item)
+																												@if ($item->request_type == 'purchase-request')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
+																														<td>{{$item->department->department_name ?? ''}} </td>
+																														<td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																							<div class="accordion-panel">
+																								<div class=" accordion-heading" role="tab" id="headingGeneral">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseGeneral" aria-expanded="false" aria-controls="collapseGeneral">
+																											General Request
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="collapseGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGeneral">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>Approver</th>
+																											<th>Department</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($approvers as $item)
+																												@if ($item->request_type == 'general-request')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
+																														<td>{{$item->department->department_name ?? ''}} </td>
+																														<td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																							<div class="accordion-panel">
+																								<div class=" accordion-heading" role="tab" id="headingBusiness">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseBusiness" aria-expanded="false" aria-controls="collapseBusiness">
+																											Business Trip
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="collapseBusiness" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBusiness">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>Approver</th>
+																											<th>Department</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($approvers as $item)
+																												@if ($item->request_type == 'business-trip')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
+																														<td>{{$item->department->department_name ?? ''}} </td>
+																														<td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																							<div class="accordion-panel">
+																								<div class=" accordion-heading" role="tab" id="headingLeave">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#collapseLeave" aria-expanded="false" aria-controls="collapseLeave">
+																											Leave Approval
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="collapseLeave" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLeave">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>Approver</th>
+																											<th>Department</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($approvers as $item)
+																												@if ($item->request_type == 'leave-approval')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->processor->first_name ?? ''}} {{$item->processor->surname ?? ''}}</td>
+																														<td>{{$item->department->department_name ?? ''}} </td>
+																														<td>{{$item->setBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+																			<div class="row">
+																				<div class="col-md-12">
+																					<button class="btn btn-mini btn-primary float-right mb-3 mt-1" data-target="#businessProcessEmpModal" data-toggle="modal" type="button"><i class="ti-plus mr-2"></i>Add New Business Process</button>
+																				</div>
+																			</div>
+																			<div class="row mt-2">
+																				<div class="col-md-12">
+																					<div class="card-block accordion-block">
+																						<div id="accordion" role="tablist" aria-multiselectable="true">
+																							<div class="accordion-panel">
+																								<div class="accordion-heading" role="tab" id="headingExpense">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#scollapseExpense" aria-expanded="true" aria-controls="collapseExpense">
+																											Expense Report
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="scollapseExpense" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="sheadingExpense">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>From</th>
+																											<th>To</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($specific_approvers as $item)
+																												@if ($item->request_type == 'expense-report')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->getFrom->first_name ?? ''}} {{$item->getFrom->surname ?? ''}}</td>
+																														<td>{{$item->getTo->first_name ?? ''}} {{$item->getTo->surname ?? ''}}</td>
+																														<td>{{$item->getSetBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																							<div class="accordion-panel">
+																								<div class="accordion-heading" role="tab" id="headingPurchase">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#scollapsePurchase" aria-expanded="false" aria-controls="collapsePurchase">
+																											Purchase Request
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="scollapsePurchase" class="panel-collapse collapse" role="tabpanel" aria-labelledby="sheadingPurchase">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>From</th>
+																											<th>To</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($specific_approvers as $item)
+																												@if ($item->request_type == 'purchase-request')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->getFrom->first_name ?? ''}} {{$item->getFrom->surname ?? ''}}</td>
+																														<td>{{$item->getTo->first_name ?? ''}} {{$item->getTo->surname ?? ''}}</td>
+																														<td>{{$item->getSetBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																							<div class="accordion-panel">
+																								<div class=" accordion-heading" role="tab" id="sheadingGeneral">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#scollapseGeneral" aria-expanded="false" aria-controls="collapseGeneral">
+																											General Request
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="scollapseGeneral" class="panel-collapse collapse" role="tabpanel" aria-labelledby="sheadingGeneral">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>From</th>
+																											<th>To</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($specific_approvers as $item)
+																												@if ($item->request_type == 'general-request')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->getFrom->first_name ?? ''}} {{$item->getFrom->surname ?? ''}}</td>
+																														<td>{{$item->getTo->first_name ?? ''}} {{$item->getTo->surname ?? ''}}</td>
+																														<td>{{$item->getSetBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+
+																									</div>
+																								</div>
+																							</div>
+																							<div class="accordion-panel">
+																								<div class=" accordion-heading" role="tab" id="sheadingBusiness">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#scollapseBusiness" aria-expanded="false" aria-controls="collapseBusiness">
+																											Business Trip
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="scollapseBusiness" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBusiness">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>From</th>
+																											<th>To</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($specific_approvers as $item)
+																												@if ($item->request_type == 'business-trip')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->getFrom->first_name ?? ''}} {{$item->getFrom->surname ?? ''}}</td>
+																														<td>{{$item->getTo->first_name ?? ''}} {{$item->getTo->surname ?? ''}}</td>
+																														<td>{{$item->getSetBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																							<div class="accordion-panel">
+																								<div class=" accordion-heading" role="tab" id="headingLeave">
+																									<h3 class="card-title accordion-title">
+																										<a class="accordion-msg scale_active" data-toggle="collapse" data-parent="#accordion" href="#scollapseLeave" aria-expanded="false" aria-controls="collapseLeave">
+																											Leave Approval
+																										</a>
+																									</h3>
+																								</div>
+																								<div id="scollapseLeave" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingLeave">
+																									<div class="accordion-content accordion-desc">
+																										<table class="table table-bordered">
+																											<thead>
+																											<th>#</th>
+																											<th>From</th>
+																											<th>To</th>
+																											<th>Set By</th>
+																											<th>Date</th>
+																											<th>Action</th>
+																											</thead>
+																											@php
+																												$n = 1;
+																											@endphp
+																											@foreach ($specific_approvers as $item)
+																												@if ($item->request_type == 'leave-request')
+																													<tr>
+																														<td>{{$n++}}</td>
+																														<td>{{$item->getFrom->first_name ?? ''}} {{$item->getFrom->surname ?? ''}}</td>
+																														<td>{{$item->getTo->first_name ?? ''}} {{$item->getTo->surname ?? ''}}</td>
+																														<td>{{$item->getSetBy->first_name ?? ''}} {{$item->setBy->surname ?? ''}} </td>
+																														<td>
+																															<label for="" class="label label-warning">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($item->created_at))}}</label>
+																														</td>
+																														<td>
+																															<a href=""><i class="ti-pencil"></i></a>
+																														</td>
+																													</tr>
+																												@endif
+																											@endforeach
+																										</table>
+																									</div>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+
                                 </div>
                             </div>
                         </div>
@@ -316,6 +555,55 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="businessProcessEmpModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title text-uppercase">Business Process</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" class="text-white">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="specificBusinessProcessForm"  data-parsley-validate>
+									<div class="form-group">
+										<label for="">Request Source</label>
+										<select name="requester" id="requester" class="form-control" required>
+											<option selected disabled>Select requester</option>
+											@foreach ($employees as $employee)
+												<option value="{{$employee->id}}">{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
+											@endforeach
+										</select>
+									</div>
+                    <div class="form-group">
+                        <label for="">Channel</label>
+                        <select name="channel" id="channel" class="form-control" required>
+                            <option selected disabled>Select processor</option>
+                            @foreach ($employees as $employee)
+                                <option value="{{$employee->id}}">{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Request Type</label>
+                        <select name="srequest_type" id="srequest_type" class="form-control" required>
+                            <option value="expense-report">Expense Report</option>
+                            <option value="purchase-request">Purchase Request</option>
+                            <option value="general-request">General Request</option>
+                            <option value="leave-request">Leave Approval</option>
+                            <option value="business-trip">Business Trip</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="btn-group d-flex justify-content-center">
+                        <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>
+                        <button type="submit" class="btn btn-primary waves-effect btn-mini waves-light" id="sbusinessProcessBtn"><i class="mr-2 ti-check"></i>Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('extra-scripts')
@@ -351,6 +639,39 @@
                    $('#businessProcessBtn').text('Ooops...Could not submit report.');
                    setTimeout(function () {
                        $("#businessProcessBtn").text("Save");
+                   }, 2000);
+               });
+               return false;
+       });
+
+        $('#specificBusinessProcessForm').parsley().on('field:validated', function() {
+
+       }).on('form:submit', function() {
+           var config = {
+                       onUploadProgress: function(progressEvent) {
+                       var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                       }
+               };
+               var form_data = new FormData();
+               form_data.append('requester',$('#requester').val());
+               form_data.append('processor',$('#channel').val());
+               form_data.append('request_type',$('#srequest_type').val());
+               $('#sbusinessProcessBtn').text('Processing...');
+                axios.post('/workflow/specific-business-process',form_data, config)
+               .then(response=>{
+                   $.notify(response.data.message, 'success');
+                   $('#sbusinessProcessBtn').text('Done');
+                   setTimeout(function () {
+                       $("#sbusinessProcessBtn").text("Save");
+                       window.location.reload();
+                   }, 2000);
+
+               })
+               .catch(error=>{
+                   $.notify('Error! Something went wrong.', 'error');
+                   $('#sbusinessProcessBtn').text('Ooops...Could not submit report.');
+                   setTimeout(function () {
+                       $("#sbusinessProcessBtn").text("Save");
                    }, 2000);
                });
                return false;
