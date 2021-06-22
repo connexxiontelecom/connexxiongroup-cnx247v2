@@ -17,6 +17,7 @@ class ViewTicket extends Component
     public $message, $attachment;
     public $ticket_id, $tenant_id, $user_id;
     public $messages;
+    public $status = 1;
 
     public function render()
     {
@@ -36,6 +37,8 @@ class ViewTicket extends Component
         $this->ticket_id = $this->ticket->id;
         $this->tenant_id = $this->ticket->tenant_id;
         $this->user_id = $this->ticket->user_id;
+        $this->ticket->status = 1; //open
+			$this->ticket->save();
         $this->messages = TicketConversation::where('ticket_id', $this->ticket_id)->get();
     }
 
@@ -56,7 +59,7 @@ class ViewTicket extends Component
     }
 
     public function uploadAttachment(){
-        return dd($this->attachment);
+        return ''; //dd($this->attachment);
         $this->validate([
             'attachment'=>'required'
         ]);
@@ -87,6 +90,15 @@ class ViewTicket extends Component
         $ticket->status = 0; //closed
         $ticket->save();
         session()->flash("success", "<strong>Success!</strong> Ticket closed.");
+        $this->getContent();
+        return back();
+    }
+
+    public function updateTicketStatus(){
+        $ticket = Ticket::where('id', $this->ticket_id)->where('tenant_id', $this->tenant_id)->first();
+        $ticket->status = $this->status;
+        $ticket->save();
+        session()->flash("success", "<strong>Success!</strong> Changes saved.");
         $this->getContent();
         return back();
     }

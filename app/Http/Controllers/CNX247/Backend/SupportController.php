@@ -16,6 +16,7 @@ class SupportController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->supportticket = new Ticket();
     }
 
     public function ticket(){
@@ -44,4 +45,8 @@ class SupportController extends Controller
         $category->save();
         return response()->json(['message'=>'Success! New category saved.'], 200);
     }
+
+    public function supportTickets(){
+			return view('backend.crm.support.admin.support-tickets',['tickets'=>$this->supportticket->getAllTickets()]);
+		}
 }

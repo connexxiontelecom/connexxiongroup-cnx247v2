@@ -58,7 +58,7 @@
 									</a>
 							</li>
 						<li class="">
-									<a href="{{ route('admin-support')  }}">
+									<a href="{{ route('support-tickets')  }}">
 											<span class="pcoded-micon"><i class="ti-check-box"></i></span>
 											<span class="pcoded-mtext">Support Ticket
 											</span>

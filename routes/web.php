@@ -301,6 +301,7 @@ Route::get('/support/ticket-history', 'CNX247\Backend\SupportController@ticketHi
 Route::get('/support/view-ticket/{slug}', 'CNX247\Backend\SupportController@viewTicket')->name('view-ticket');
 #Admin area support
 Route::get('/crm/support/tickets', 'CNX247\Backend\SupportController@adminTicketIndex')->name('admin-support');
+Route::get('/crm/support-tickets', 'CNX247\Backend\SupportController@supportTickets')->name('support-tickets');
 Route::post('/crm/support/ticket/category/new', 'CNX247\Backend\SupportController@newTicketCategory')->name('new-ticket-category');
 Route::get('/feedbacks', 'CNX247\Backend\CRMController@feedbacks')->name('feedbacks');
 Route::post('/feedback-status', 'CNX247\Backend\CRMController@feedbackStatus');

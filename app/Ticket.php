@@ -19,4 +19,9 @@ class Ticket extends Model
     public function getUser(){
     	return $this->belongsTo(User::class, 'user_id');
 		}
+
+
+		public function getAllTickets(){
+    	return Ticket::orderBy('id', 'DESC')->get();
+		}
 }

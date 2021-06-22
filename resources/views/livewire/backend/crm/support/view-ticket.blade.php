@@ -28,18 +28,40 @@
                                                 <div class="col-md-12">
                                                     <div class="card">
                                                         <div class="card-block">
+																													@if ($ticket->user_id != Auth::user()->id || $ticket->status == 1)
+																														<div class="input-group input-group-dropdown">
+																															<div class="input-group-btn">
+																																<select wire:model="status" id="" class="form-control ">
+																																	<option selected disabled>--Select status--</option>
+																																	<option value="2">Mark As In-progress</option>
+																																	<option value="3">Mark As Pending</option>
+																																</select>
+																															</div>
+																															<div class="input-group-btn">
+																																<button type="button" wire:click="updateTicketStatus" class="btn btn-warning text-white ">
+																																	Save changes
+																																</button>
+																															</div>
+																														</div>
+																													@endif
+
                                                             <h5 class="sub-title">{{$ticket->getUser->first_name ?? ''}} {{$ticket->getUser->surname ?? ''}}</h5>
                                                             <a href="{{route('admin-support')}}" class="btn btn-secondary btn-mini float-right mb-2"> <i class="ti-back-left mr-2"></i> Back To Tickets</a>
                                                             <div class="card-block accordion-block">
                                                                 <div id="accordion" role="tablist" aria-multiselectable="true">
-                                                                   <h6 class="sub-title">  {{$ticket->subject}}</h6>
-                                                                   <p class="text-muted">{!! $ticket->message !!}</p>
-                                                                   @if ($ticket->user_id != Auth::user()->id || $ticket->status == 1)
-                                                                    <p class="d-flex justify-content-center mt-3">
-                                                                        <button wire:click="closeTicket" class="btn btn-primary btn-mini"> <i class="ti-check mr-2"></i> Close Ticket</button>
-                                                                    </p>
+                                                                   <h6 class="sub-title">  {{$ticket->subject}}
+																																		 @if ($ticket->status == 0)
+																																			 <sup><span class="label label-default">Pending</span></sup>
+																																		 @elseif($ticket->status == 1)
+																																			 <sup><span class="label label-info">Open</span></sup>
+																																		 @elseif($ticket->status == 2)
+																																			 <sup><span class="label label-warning">In-progress</span></sup>
+																																		 @elseif($ticket->status == 3)
+																																			 <sup><span class="label label-success">Close</span></sup>
 
-                                                                   @endif
+																																		 @endif
+																																	 </h6>
+                                                                   <p class="text-muted">{!! $ticket->message !!}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
