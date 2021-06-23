@@ -35,6 +35,9 @@ class HRController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->department = new Department();
+        $this->supervisor = new Supervisor();
+        $this->employee = new User();
     }
 
     /*
@@ -186,8 +189,42 @@ class HRController extends Controller
     * HR Configurations
     */
     public function hrConfigurations(){
-        return view('backend.hr.hr-configurations');
+    	$departments = $this->department->getAllDepartments();
+        return view('backend.hr.hr-configurations',[
+        	'departments'=>$departments,
+					'supervisors'=>$this->supervisor->getAllSupervisors(),
+					'employees'=>$this->employee->getActiveUsers()
+				]);
     }
+
+    public function storeNewDepartment(Request $request){
+			$this->validate($request,[
+				'department'=>'required'
+			], [
+				'department.required'=>'Enter department name'
+			]);
+			$this->department->setNewDepartmentName($request);
+			session()->flash("success", "<strong>Success!</strong> New department name registered.");
+			return back();
+		}
+
+		public function updateDepartment(Request $request){
+			$this->validate($request,[
+				'department'=>'required',
+				'department_id'=>'required'
+			], [
+				'department.required'=>'Enter department name'
+			]);
+			$this->department->updateDepartmentName($request);
+			session()->flash("success", "<strong>Success!</strong> Changes saved.");
+			return back();
+		}
+
+		public function addNewSupervisor(Request $request){
+    	$this->validate($request,[
+    		''
+			]);
+		}
 
     /*
     * Assign Permission to employee

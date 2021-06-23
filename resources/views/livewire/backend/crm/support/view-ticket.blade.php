@@ -39,7 +39,7 @@
 																															</div>
 																															<div class="input-group-btn">
 																																<button type="button" wire:click="updateTicketStatus" class="btn btn-warning text-white ">
-																																	Save changes
+																																	Update status
 																																</button>
 																															</div>
 																														</div>

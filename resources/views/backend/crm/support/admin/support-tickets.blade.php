@@ -75,9 +75,9 @@
 													<td>
 														<a href="{{route('view-ticket', $ticket->slug)}}">{{strlen($ticket->subject) > 15 ? substr($ticket->subject,0,15).'...' : $ticket->subject }}
 															@if($ticket->ticketCategory->department != Auth::user()->department_id)
-																<sup><label for="" class="badge badge-warning">Incoming</label></sup>
+																<sup><label for="" class="badge badge-warning">Outgoing</label></sup>
 															@else
-																<sup><label for="" class="badge badge-primary">Outgoing</label></sup>
+																<sup><label for="" class="badge badge-primary">Incoming</label></sup>
 															@endif
 														</a>
 													</td>

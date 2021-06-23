@@ -223,6 +223,10 @@ Route::post('/terminate/employment', 'CNX247\Backend\HRController@terminateEmplo
 Route::get('/terminated-employment', 'CNX247\Backend\HRController@terminatedEmployment')->name('terminated-employment');
 #HR Constants
 Route::get('/hr/configurations', 'CNX247\Backend\HRController@hrConfigurations')->name('hr-configurations');
+Route::post('/add-new-department', 'CNX247\Backend\HRController@storeNewDepartment')->name('add-new-department');
+Route::post('/update-department', 'CNX247\Backend\HRController@updateDepartment')->name('update-department');
+	#Supervisor/HOD routes
+Route::post('/add-new-supervisor', 'CNX247\Backend\HRController@addNewSupervisor')->name('add-new-supervisor');
 #Assign permission(s) to employee
 Route::get('/assign/permission-to-employee/{url}', 'CNX247\Backend\HRController@assignPermissionToEmployee')
     ->name('assign-permission-to-employee');
