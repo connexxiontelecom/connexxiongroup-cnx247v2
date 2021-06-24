@@ -47,6 +47,7 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('is_online')->default(0)->nullable(); //0=offline, 1=online
 						$table->bigInteger('tenant_id')->nullable();
 						$table->dateTime('next_birth_date')->nullable();
+						$table->tinyInteger('is_hod')->default(0)->comment('0=no,1=yes')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

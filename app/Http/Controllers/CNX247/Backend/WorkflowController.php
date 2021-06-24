@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\NewPostNotification;
 use App\SpecificApprover;
+use App\Supervisor;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\RequestApprover;
@@ -309,6 +311,106 @@ class WorkflowController extends Controller
 							->get();
 
 				return view('backend.workflow.my-request-search-result',['results'=>$results,'search'=>$request->seach_item]);
+	}
+
+
+	public function processWorkflowRequest(Request $request){
+
+			$this->validate($request,[
+				'title'=>'required',
+				'amount'=>'required'
+			],[
+				'title.required'=>'Enter title.',
+				'amount.required'=>'Enter amount'
+			]);
+		$exception = SpecificApprover::where('request_type', $request->request_type)
+													->where('requester_id', Auth::user()->id)
+													->where('tenant_id', Auth::user()->tenant_id)
+													->first();
+		$processor = RequestApprover::select('user_id')
+													->where('request_type', $request->request_type)
+													->where('depart_id', Auth::user()->department_id)
+													->where('tenant_id', Auth::user()->tenant_id)
+													->first();
+
+			#Check if user is HOD
+		if(Auth::user()->is_hod == 1){
+			#Check list of exceptions
+				if(!empty($exception)){ //user exists
+					#Exist in the list of specific approvers
+					$requisition = $this->postRequest($request);
+						#Responsible persons
+					$this->publishResponsiblePersons($exception->processor_id, $request->request_type, $requisition->id);
+					$this->notifyUser($exception->processor_id,$requisition );
+					session()->flash("success", "<strong>Success!</strong> Request submitted.");
+					return back();
+				}else{
+					#Use general approval list
+					$prequest = $this->postRequest($request);
+					$this->publishResponsiblePersons($processor->user_id, $request->request_type, $prequest->id);
+					$this->notifyUser($processor->user_id, $prequest);
+					session()->flash("success", "<strong>Success!</strong> Request submitted.");
+					return back();
+				}
+		}else{
+			#Find the user's HOD
+			$hod = Supervisor::where('tenant_id', Auth::user()->tenant_id)->where('department_id', Auth::user()->department_id)->first();
+			if(empty($hod)){
+				session()->flash("error", "<strong>Whoops!</strong> We couldn't find a supervisor or HOD to process your request.");
+				return back();
+			}else{
+				$post = $this->postRequest($request);
+				$this->publishResponsiblePersons($hod->user_id, $request->request_type, $post->id);
+				$this->notifyUser($hod->user_id, $post);
+				session()->flash("success", "<strong>Success!</strong> Request submitted.");
+				return back();
+			}
+		}
+
+	}
+
+	public function publishResponsiblePersons($user_id, $post_type, $post_id){
+		$event = new ResponsiblePerson;
+		$event->post_id = $post_id;
+		$event->post_type = $post_type;
+		$event->user_id = $user_id;
+		$event->tenant_id = Auth::user()->tenant_id;
+		$event->save();
+	}
+
+	public function uploadFile(Request $request){
+			if(!empty($request->file('attachment'))){
+				$extension = $request->file('attachment');
+				$extension = $request->file('attachment')->getClientOriginalExtension();
+				$size = $request->file('attachment')->getSize();
+				$dir = 'assets/uploads/requisition/';
+				$filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+				$request->file('attachment')->move(public_path($dir), $filename);
+			}else{
+				$filename = '';
+			}
+	}
+
+	public function postRequest(Request $request){
+				$url = substr(sha1(time()), 10,10);
+				$requisition = new Post;
+				$requisition->post_title = $request->title;
+				$requisition->budget = $request->amount;
+				$requisition->currency = $request->currency;
+				$requisition->post_type = $request->request_type;
+				$requisition->post_content = $request->description;
+				$requisition->post_status = 'in-progress';
+				$requisition->user_id = Auth::user()->id;
+				$requisition->tenant_id = Auth::user()->tenant_id;
+				$requisition->post_url = $url;
+				$requisition->save();
+				return $requisition;
+	}
+
+
+	public function notifyUser($userId, $object){
+		$user = User::find($userId);
+		$user->notify(new NewPostNotification($object));
 	}
 
 

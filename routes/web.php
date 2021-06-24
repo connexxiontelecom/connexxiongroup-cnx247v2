@@ -95,6 +95,7 @@ Route::post('/expense-report', 'CNX247\Backend\ExpenseController@store');
 #Purchase request route
 Route::get('/purchase-request', 'CNX247\Backend\PurchaseRequestController@index')->name('purchase-request');
 Route::post('/purchase-request', 'CNX247\Backend\PurchaseRequestController@store');
+Route::post('/process-workflow-request', 'CNX247\Backend\WorkflowController@processWorkflowRequest')->name('process-workflow-request');
 
 #General request route
 Route::get('/general-request', 'CNX247\Backend\GeneralRequestController@index')->name('general-request');
@@ -227,6 +228,8 @@ Route::post('/add-new-department', 'CNX247\Backend\HRController@storeNewDepartme
 Route::post('/update-department', 'CNX247\Backend\HRController@updateDepartment')->name('update-department');
 	#Supervisor/HOD routes
 Route::post('/add-new-supervisor', 'CNX247\Backend\HRController@addNewSupervisor')->name('add-new-supervisor');
+//Route::post('/add-new-supervisor', 'CNX247\Backend\HRController@storeNewDepartment')->name('add-new-supervisor');
+Route::post('/update-supervisor', 'CNX247\Backend\HRController@updateSupervisor')->name('update-supervisor');
 #Assign permission(s) to employee
 Route::get('/assign/permission-to-employee/{url}', 'CNX247\Backend\HRController@assignPermissionToEmployee')
     ->name('assign-permission-to-employee');

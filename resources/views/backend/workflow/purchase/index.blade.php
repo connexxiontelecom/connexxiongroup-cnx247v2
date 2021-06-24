@@ -36,12 +36,32 @@
             </button>
             </div>
             <div class="modal-body">
-                <form id="requestForm" data-parsley-validate>
+							@if (session()->has('success'))
+								<div class="alert alert-success background-success mt-3">
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<i class="icofont icofont-close-line-circled text-white"></i>
+									</button>
+									{!! session()->get('success') !!}
+								</div>
+							@endif
+								@if (session()->has('error'))
+									<div class="alert alert-warning background-warning mt-3">
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<i class="icofont icofont-close-line-circled text-white"></i>
+										</button>
+										{!! session()->get('error') !!}
+									</div>
+								@endif
+                <form id="" action="{{route('process-workflow-request')}}" method="post"  >
+									@csrf
                     <fieldset>
 
                         <div class="form-group">
                             <label for="">Title</label>
-                            <input type="text" placeholder="Title" id="title" class="form-control" required>
+                            <input type="text" name="title" placeholder="Title" id="title" class="form-control" required>
+													@error('title')
+														<i class="text-danger">{{$message}}</i>
+													@enderror
                         </div>
                         <div class="form-group">
                             <label for="">Amount</label>
@@ -49,11 +69,15 @@
                                 <span class="input-group-addon" id="basic-addon3">{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span>
                                 <input name="amount" id="amount" required type="number" class="form-control form-control-normal" placeholder="Amount" step="0.01">
                             </div>
+													@error('amount')
+														<i class="text-danger">{{$message}}</i>
+													@enderror
+													<input type="hidden" name="request_type" value="purchase-request">
                         </div>
                         <div class="form-group">
 													@if($storage_capacity == 1):
                             <label for="">Attachment</label>
-                            <input type="file" id="uploadAttachment" class="form-control">
+                            <input type="file" name="attachment" id="uploadAttachment" class="form-control">
 														@endif
 
 													@if($storage_capacity == 0)
@@ -63,7 +87,7 @@
                         </div>
                         <div class="form-group">
                             <label for="">Description</label>
-                            <textarea name="" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
+                            <textarea name="description" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
                         </div>
                         <hr>
                         <div class="btn-group d-flex justify-content-center">
@@ -90,5 +114,5 @@
     <script type="text/javascript" src="/assets/js/cus/tinymce.js"></script>
     <script src="{{asset('/assets/js/cus/parsley.min.js')}}"></script>
     <script src="{{asset('/assets/js/cus/progressBar.js')}}"></script>
-    @stack('purchase-script')
+
 @endsection

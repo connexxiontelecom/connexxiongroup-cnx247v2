@@ -222,8 +222,29 @@ class HRController extends Controller
 
 		public function addNewSupervisor(Request $request){
     	$this->validate($request,[
-    		''
+    		'department'=>'required',
+				'supervisor'=>'required'
+			],[
+				'department.required'=>'Select department.',
+				'supervisor.required'=>'Select supervisor.'
 			]);
+    	$this->supervisor->setNewSupervisor($request);
+    	session()->flash("success", "<strong>Success!</strong> New supervisor registered.");
+    	return back();
+		}
+
+		public function updateSupervisor(Request $request){
+    	$this->validate($request,[
+    		'department'=>'required',
+				'supervisor'=>'required',
+				'supervisor_id'=>'required'
+			],[
+				'department.required'=>'Select department.',
+				'supervisor.required'=>'Select supervisor.'
+			]);
+    	$this->supervisor->updateSupervisor($request);
+    	session()->flash("success", "<strong>Success!</strong> Changes saved.");
+    	return back();
 		}
 
     /*

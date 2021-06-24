@@ -237,7 +237,6 @@
 																															<th>#</th>
 																															<th>Supervisor</th>
 																															<th>Department</th>
-																															<th>Date</th>
 																															<th>Action</th>
 																															</thead>
 																															<tbody>
@@ -249,9 +248,65 @@
 																																	<td>{{$i++}}</td>
 																																	<td>{{$super->user->first_name ?? ''}} {{$super->user->surname ?? ''}}</td>
 																																	<td>{{$super->department->department_name ?? ''}}</td>
-																																	<td>{{date('d F, Y', strtotime($super->created_at)) ?? ''}} @ <small>{{date('h:ia', strtotime($super->created_at))}}</small></td>
 																																	<td>
-																																		<a href="javascript:void(0);" wire:click="editSupervisor({{$super->user_id}})"> <i class="ti-pencil text-warning"></i> </a>
+																																		<a href="javascript:void(0);" data-toggle="modal" data-target="#supervisorModal_{{$super->id}}" > <i class="ti-pencil text-warning"></i> </a>
+																																		<div class="modal fade" id="supervisorModal_{{$super->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																																			<div class="modal-dialog" role="document">
+																																				<div class="modal-content">
+																																					<div class="modal-header">
+																																						<h5 class="modal-title" id="exampleModalLabel">Edit {{$super->user->first_name ?? ''}} {{$super->user->surname ?? ''}}</h5>
+																																						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																							<span aria-hidden="true">&times;</span>
+																																						</button>
+																																					</div>
+																																					<div class="modal-body">
+																																						<form action="{{route('update-supervisor')}}" method="post" >
+																																							@csrf
+																																							@if (session()->has('success'))
+																																								<div class="alert alert-success background-success mt-3">
+																																									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+																																										<i class="icofont icofont-close-line-circled text-white"></i>
+																																									</button>
+																																									{!! session()->get('success') !!}
+																																								</div>
+																																							@endif
+																																							<div class="form-group">
+																																								<label for="">Department</label>
+																																								<select name="department" id="department" class="form-control">
+																																									<option selected disabled>--Select department--</option>
+																																									@foreach($departments as $de)
+																																										<option value="{{$de->id}}" {{$de->id == $super->department->id ? 'selected' : ''}}>{{$de->department_name ?? ''}}</option>
+																																									@endforeach
+																																								</select>
+																																								@error('department')
+																																								<i class="text-danger mt-2">{{$message}}</i>
+																																								@enderror
+																																								<input type="hidden" name="supervisor_id" value="{{$super->id}}">
+																																							</div>
+																																							<div class="form-group">
+																																								<label for="">Supervisor</label>
+																																								<select name="supervisor" id="supervisor" class="form-control">
+																																									<option selected disabled>--Select supervisor--</option>
+																																									@foreach($employees as $emp)
+																																										<option value="{{$emp->id}}" {{$emp->id == $super->user->id ? 'selected' : ''}}>{{$emp->first_name ?? ''}} {{$emp->surname ?? ''}}</option>
+																																									@endforeach
+																																								</select>
+																																								@error('supervisor')
+																																								<i class="text-danger mt-2">{{$message}}</i>
+																																								@enderror
+																																								<input type="hidden" name="supervisor_id" value="{{$super->id}}">
+																																							</div>
+																																							<div class="form-group d-flex justify-content-center">
+																																								<div class="btn-group">
+																																									<button type="button" class="btn btn-secondary btn-mini" data-dismiss="modal">Close</button>
+																																									<button class="btn btn-mini btn-primary" type="submit"> <i class="ti-check"></i> Submit</button>
+																																								</div>
+																																							</div>
+																																						</form>
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
 																																	</td>
 																																</tr>
 																															@endforeach
