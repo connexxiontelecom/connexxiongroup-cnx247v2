@@ -28,14 +28,15 @@ class Supervisor extends Model
 
 	public function setNewSupervisor(Request $request){
 		$supervisor = new Supervisor();
-		$supervisor->department = $request->department;
-		$supervisor->supervisor = $request->supervisor;
+		$supervisor->department_id = $request->department;
+		$supervisor->user_id = $request->supervisor;
+		$supervisor->tenant_id = Auth::user()->tenant_id;
 		$supervisor->save();
 	}
 	public function updateSupervisor(Request $request){
-		$supervisor = Supervisor::where('tenant_id', Auth::user()->tenant_id)->where('id', $request->supervisor_id)->first();
-		$supervisor->department = $request->department;
-		$supervisor->supervisor = $request->supervisor;
+		$supervisor = Supervisor::where('tenant_id', Auth::user()->tenant_id)->where('user_id', $request->supervisor_id)->first();
+		$supervisor->department_id = $request->department;
+		$supervisor->user_id = $request->supervisor;
 		$supervisor->save();
 	}
 

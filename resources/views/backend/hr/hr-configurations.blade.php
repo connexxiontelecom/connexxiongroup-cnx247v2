@@ -176,7 +176,8 @@
 																													<h5 class="sub-title">Add New Supervisor</h5>
 																												</div>
 																												<div class="card-block">
-																													<form >
+																													<form action="{{route('add-new-supervisor')}}" method="post">
+																														@csrf
 																														@if (session()->has('success'))
 																															<div class="alert alert-success background-success mt-3">
 																																<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -281,7 +282,7 @@
 																																								@error('department')
 																																								<i class="text-danger mt-2">{{$message}}</i>
 																																								@enderror
-																																								<input type="hidden" name="supervisor_id" value="{{$super->id}}">
+																																								<input type="hidden" name="supervisor_id" value="{{$super->user_id}}">
 																																							</div>
 																																							<div class="form-group">
 																																								<label for="">Supervisor</label>
@@ -294,7 +295,6 @@
 																																								@error('supervisor')
 																																								<i class="text-danger mt-2">{{$message}}</i>
 																																								@enderror
-																																								<input type="hidden" name="supervisor_id" value="{{$super->id}}">
 																																							</div>
 																																							<div class="form-group d-flex justify-content-center">
 																																								<div class="btn-group">

@@ -221,6 +221,7 @@ class HRController extends Controller
 		}
 
 		public function addNewSupervisor(Request $request){
+
     	$this->validate($request,[
     		'department'=>'required',
 				'supervisor'=>'required'
@@ -234,6 +235,7 @@ class HRController extends Controller
 		}
 
 		public function updateSupervisor(Request $request){
+
     	$this->validate($request,[
     		'department'=>'required',
 				'supervisor'=>'required',
