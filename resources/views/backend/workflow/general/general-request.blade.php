@@ -36,12 +36,18 @@
             </button>
             </div>
             <div class="modal-body">
-                <form id="requestForm" data-parsley-validate>
+                <form id="" action="{{route('process-workflow-request')}}" method="post" data-parsley-validate>
+									@csrf
                     <fieldset>
 
                         <div class="form-group">
                             <label for="">Title</label>
-                            <input type="text" placeholder="Title" id="title" class="form-control" required>
+                            <input name="title" type="text" placeholder="Title" id="title" class="form-control" required>
+													@error('title')
+														<i class="text-danger">{{$message}}</i>
+													@enderror
+													<input type="hidden" name="amount" value="0">
+													<input type="hidden" name="request_type" value="general-request">
                         </div>
                         <div class="form-group">
 													@if($storage_capacity == 1)
@@ -57,7 +63,7 @@
                         </div>
                         <div class="form-group">
                             <label for="">Description</label>
-                            <textarea name="" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
+                            <textarea name="description" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
                         </div>
                         <hr>
                         <div class="btn-group d-flex justify-content-center">

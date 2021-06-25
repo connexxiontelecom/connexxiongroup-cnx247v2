@@ -43,24 +43,32 @@
             </button>
             </div>
             <div class="modal-body">
-                <form id="expenseReportForm" data-parsley-validate>
+                <form id="" action="{{route('process-workflow-request')}}" method="post" data-parsley-validate>
+									@csrf
                     <fieldset>
 
                         <div class="form-group">
                             <label for="">Title</label>
-                            <input type="text" placeholder="Title" id="title" class="form-control" required>
+                            <input type="text" name="title" placeholder="Title" id="title" class="form-control" required>
+													@error('title')
+													 <i class="text-danger">{{$message}}</i>
+													@enderror
                         </div>
                         <div class="form-group">
                             <label for="">Amount</label>
                             <div class="input-group">
                                 <span class="input-group-addon" id="basic-addon3">{{Auth::user()->tenant->currency->symbol ?? 'N'}}</span>
                                 <input name="amount" id="amount" required type="number" class="form-control form-control-normal" placeholder="Amount" step="0.01">
-                            </div>
+															<input type="hidden" name="request_type" value="expense-report">
+															@error('amount')
+															<i class="text-danger">{{$message}}</i>
+															@enderror
+														</div>
                         </div>
 											@if($storage_capacity == 1)
                         <div class="form-group">
                             <label for="">Attachment</label>
-                            <input type="file" id="uploadAttachment" class="form-control">
+                            <input name="attachment" type="file" id="uploadAttachment" class="form-control">
                         </div>
 											@endif
 
@@ -71,7 +79,10 @@
 											@endif
                         <div class="form-group">
                             <label for="">Description</label>
-                            <textarea name="" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
+                            <textarea name="description" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
+													@error('description')
+													<i class="text-danger">{{$message}}</i>
+													@enderror
                         </div>
                         <hr>
                         <div class="btn-group d-flex justify-content-center">
