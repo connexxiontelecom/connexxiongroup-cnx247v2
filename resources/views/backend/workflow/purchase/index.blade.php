@@ -52,7 +52,7 @@
 										{!! session()->get('error') !!}
 									</div>
 								@endif
-                <form id="" action="{{route('process-workflow-request')}}" method="post"  >
+                <form id="" action="{{route('process-workflow-request')}}" method="post"  enctype="multipart/form-data">
 									@csrf
                     <fieldset>
 

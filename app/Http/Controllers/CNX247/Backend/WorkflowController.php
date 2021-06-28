@@ -4,6 +4,7 @@ namespace App\Http\Controllers\CNX247\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Notifications\NewPostNotification;
+use App\PostAttachment;
 use App\SpecificApprover;
 use App\Supervisor;
 use Illuminate\Http\Request;
@@ -409,6 +410,7 @@ class WorkflowController extends Controller
 	}
 
 	public function postRequest(Request $request){
+
 				$url = substr(sha1(time()), 10,10);
 				$requisition = new Post;
 				$requisition->post_title = $request->title;
@@ -421,6 +423,25 @@ class WorkflowController extends Controller
 				$requisition->tenant_id = Auth::user()->tenant_id;
 				$requisition->post_url = $url;
 				$requisition->save();
+				#Attachment
+						if(!empty($request->file('attachment'))){
+							//$extension = $request->file('attachment');
+							$extension = $request->attachment->getClientOriginalExtension();
+							$size = $request->attachment->getSize();
+							$dir = 'assets/uploads/requisition/';
+							$filename = uniqid().'_'.time().'_'.date('Ymd').'.'.$extension;
+							$request->attachment->move(public_path($dir), $filename);
+						}else{
+							$filename = '';
+						}
+						if(!empty($request->file('attachment'))){
+							$attachment = new PostAttachment;
+							$attachment->post_id = $requisition->id;
+							$attachment->user_id = Auth::user()->id;
+							$attachment->tenant_id = Auth::user()->tenant_id;
+							$attachment->attachment = $filename;
+							$attachment->save();
+						}
 				return $requisition;
 	}
 
