@@ -355,7 +355,24 @@ class WorkflowController extends Controller
 		}else{
 			#Find the user's HOD
 			$hod = Supervisor::where('tenant_id', Auth::user()->tenant_id)->where('department_id', Auth::user()->department_id)->first();
-			if(empty($hod)){
+			if(!empty($exception)){ //user exists
+				#Exist in the list of specific approvers
+				$requisition = $this->postRequest($request);
+				#Responsible persons
+				$this->publishResponsiblePersons($exception->processor_id, $request->request_type, $requisition->id);
+				$this->notifyUser($exception->processor_id,$requisition );
+				session()->flash("success", "<strong>Success!</strong> Request submitted.");
+				return back();
+			}else{
+				#Use general approval list
+				$prequest = $this->postRequest($request);
+				$this->publishResponsiblePersons($processor->user_id, $request->request_type, $prequest->id);
+				$this->notifyUser($processor->user_id, $prequest);
+				session()->flash("success", "<strong>Success!</strong> Request submitted.");
+				return back();
+			}
+
+			/*if(empty($hod)){
 				session()->flash("error", "<strong>Whoops!</strong> We couldn't find a supervisor or HOD to process your request.");
 				return back();
 			}else{
@@ -364,7 +381,7 @@ class WorkflowController extends Controller
 				$this->notifyUser($hod->user_id, $post);
 				session()->flash("success", "<strong>Success!</strong> Request submitted.");
 				return back();
-			}
+			}*/
 		}
 
 	}
