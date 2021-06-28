@@ -9,7 +9,10 @@ use App\Ticket as TicketModel;
 use Auth;
 class Ticket extends Component
 {
-    public $subject, $content, $category, $attachment, $priority;
+    public $subject, $content;
+			public $category = 1;
+    public $attachment;
+			public $priority = 1;
     //public $categories;
     public function render()
     {
