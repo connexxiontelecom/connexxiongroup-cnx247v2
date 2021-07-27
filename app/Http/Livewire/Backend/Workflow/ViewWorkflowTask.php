@@ -122,6 +122,10 @@ class ViewWorkflowTask extends Component
                 $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
                 $action->status = $this->userAction;
                 $action->save();
+							$director = SpecificApprover::where('request_type', $details->post_type)
+								->where('requester_id', $details->user_id)
+								->where('tenant_id', Auth::user()->tenant_id)
+								->first();
                 #Check for next processor
 							$exception = SpecificApprover::where('request_type', $details->post_type)
 																					->where('requester_id', $details->user_id)
@@ -156,6 +160,18 @@ class ViewWorkflowTask extends Component
 										$this->publisNextProcessor($id, $details->post_type, $remainingException[0]);
 									}else{
 										#Publish new responsible person from the processor list
+										#Now; both exception list and that of processor list are empty
+										#If both exception list and that of processor list is empty; mark request as completed
+										$status = Post::find($id);
+										$status->post_status = $this->userAction;
+										$status->save();
+										#Requisition to GL flow takes over from here
+										$this->actionStatus = 0;
+										$this->verificationPostId = null;
+										$this->getContent();
+										session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+									}
+									if(empty($director)){
 										if(!empty($remainingProcessors)){
 											$this->publisNextProcessor($id, $details->post_type, $remainingProcessors[0]);
 										}else{
@@ -171,6 +187,7 @@ class ViewWorkflowTask extends Component
 											session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
 										}
 									}
+
 						} else{
                 $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
                 $action->status = $this->userAction;

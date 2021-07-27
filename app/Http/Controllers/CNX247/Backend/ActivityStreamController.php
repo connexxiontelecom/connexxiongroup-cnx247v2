@@ -401,8 +401,8 @@ class ActivityStreamController extends Controller
                 $part->tenant_id = Auth::user()->tenant_id;
                 $part->save();
                 //send notification
-                $user = User::find($person);
-                $user->notify(new NewPostNotification($announcement));
+                //$user = User::find($person);
+               // $user->notify(new NewPostNotification($announcement));
             }
         }
         if($file){
