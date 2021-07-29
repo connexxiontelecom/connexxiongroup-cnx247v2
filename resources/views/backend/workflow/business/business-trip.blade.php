@@ -38,35 +38,36 @@
             </button>
             </div>
             <div class="modal-body">
-                <form id="requestForm" data-parsley-validate>
+                <form autocomplete="off" id="" data-parsley-validate enctype="multipart/form-data" action="{{route('business-trip')}}" method="post">
+									@csrf
                     <fieldset>
                         <div class="form-group">
                             <label for="">Title</label>
-                            <input type="text" placeholder="Title" id="title" class="form-control" required>
+                            <input type="text" placeholder="Title" name="title" id="title" class="form-control" required>
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label for="">Purpose</label>
-                            <input type="text" placeholder="Purpose" id="purpose" class="form-control" required>
-                        </div>
+                            <input type="text" placeholder="Purpose" name="purpose" id="purpose" class="form-control" required>
+                        </div> -->
                         <div class="form-group">
                             <label for="">Destination</label>
-                            <input type="text" placeholder="Destination" id="destination" class="form-control" required>
+                            <input type="text" placeholder="Destination" name="destination" id="destination" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="">Expense</label>
-                            <input type="number" placeholder="Expense" step="0.01" id="expense" class="form-control" required>
+                            <input type="number" placeholder="Expense" name="amount" step="0.01" id="expense" class="form-control" required>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">Start Date</label>
-                                    <input type="text" placeholder="dd/mm/yyyy" id="start_date" class="form-control" required>
+                                    <input type="text" name="start_date" placeholder="dd/mm/yyyy" id="start_date" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="">End Date</label>
-                                    <input type="text" placeholder="dd/mm/yyyy" id="end_date" class="form-control" required>
+                                    <input type="text" name="end_date" placeholder="dd/mm/yyyy" id="end_date" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -74,17 +75,18 @@
 
 													@if($storage_capacity == 1)
                             <label for="">Attachment</label>
-                            <input type="file" id="uploadAttachment" class="form-control">
+                            <input type="file" name="attachment" id="uploadAttachment" class="form-control">
                       		@endif
 
 													@if($storage_capacity == 0)
 
 														Drive Capacity Full, Please Upgrade to Upload More Files
 													@endif
+														<input type="hidden" name="request_type" value="business-trip">
                         </div>
                         <div class="form-group">
                             <label for="">Description</label>
-                            <textarea name="" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
+                            <textarea name="description" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
                         </div>
                         <hr>
                         <div class="btn-group d-flex justify-content-center">

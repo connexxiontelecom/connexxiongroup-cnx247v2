@@ -34,7 +34,7 @@
 
                                 </div>
 
-                                    @foreach ($request->responsiblePersons as $processor)
+                                    @foreach ($request->responsiblePersons->where('is_seen',1) as $processor)
                                         <div class="card-block" style="padding:10px;">
                                             <div class="team-box p-b-10">
                                                 <div class="team-section d-inline-block">
@@ -84,7 +84,7 @@
                             <div class="col-md-12 d-flex justify-content-center">
                                 <div class="btn-group">
                                     @if($request->post_status == 'in-progress')
-                                        @foreach($request->responsiblePersons as $app)
+                                        @foreach($request->responsiblePersons->where('is_seen',1) as $app)
 
                                         @if($app->user_id == Auth::user()->id && $app->status == 'in-progress')
                                                 <button class="btn btn-out-dashed btn-danger btn-square btn-mini" wire:click="declineRequest({{ $request->id }})"><i class="ti-na mr-2"></i> DECLINE</button>

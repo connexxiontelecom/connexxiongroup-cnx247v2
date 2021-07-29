@@ -30,8 +30,14 @@ class ViewWorkflowTask extends Component
     public $userAction; //approved/declined
     public $actionStatus = 0;
     public $verificationPostId;
+		public $responsibleperson, $post;
+   /* public function __construct($id)
+		{
+			$this->responsibleperson = new ResponsiblePerson();
+			$this->post = new Post();
+		}*/
 
-    public function render()
+	public function render()
     {
         return view('livewire.backend.workflow.view-workflow-task');
     }
@@ -39,6 +45,8 @@ class ViewWorkflowTask extends Component
     public function mount($url = ''){
         $this->link = request('url', $url);
         $this->getContent();
+				/*$this->responsibleperson = new ResponsiblePerson();
+				$this->post = new Post();*/
     }
 
     /*
@@ -119,94 +127,31 @@ class ViewWorkflowTask extends Component
         if (Hash::check($this->transactionPassword, Auth::user()->transaction_password)) {
             $details = Post::find($id);
             if($this->userAction == 'approved'){
-                $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
-                $action->status = $this->userAction;
-                $action->save();
-							$director = SpecificApprover::where('request_type', $details->post_type)
-								->where('requester_id', $details->user_id)
-								->where('tenant_id', Auth::user()->tenant_id)
-								->first();
-                #Check for next processor
-							$exception = SpecificApprover::where('request_type', $details->post_type)
-																					->where('requester_id', $details->user_id)
-																					->where('tenant_id', Auth::user()->tenant_id)
-																					->get();
-							$processors = RequestApprover::select('user_id')
-																					->where('request_type', $details->post_type)
-																					->where('depart_id', $details->user->department_id)
-																					->where('tenant_id', Auth::user()->tenant_id)
-																					->get();
-								#Get list of those who have acted on this request
-							$published_res_persons = ResponsiblePerson::where('post_id', $id)->get();
-							$publishedList = [];
-									foreach($published_res_persons as $publist){
-										array_push($publishedList, $publist->user_id);
-									}
-							$processorList = [];
-							foreach($processors as $prolist){
-								array_push($processorList, $prolist->user_id);
+            	ResponsiblePerson::updateStatus($details->id, $this->userAction);
+            	$next = ResponsiblePerson::markFirstUnseenAsSeen($details->id);
+            	if($next == 1){
+								$this->actionStatus = 0;
+								$this->verificationPostId = null;
+								$this->getContent();
+								session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+							}else{
+								#No more persons to process request
+								Post::updatePostStatus($details->id, $this->userAction);
 							}
-							#Get list of pending processors
-							$remainingProcessors = array_values(array_diff($processorList, $publishedList));
-							#Check list of exceptions
-									$exceptionList = [];
-									foreach($exception as $list){
-										array_push($exceptionList, $list->processor_id);
-									}
-							#Then get array difference of those who have acted on the request and those in the exception list that have not.
-							$remainingException = array_values(array_diff($exceptionList, $publishedList));
-									 #Publish new responsible person from the exception list
-									if(!empty($remainingException)){
-										$this->publisNextProcessor($id, $details->post_type, $remainingException[0]);
-									}else{
-										#Publish new responsible person from the processor list
-										#Now; both exception list and that of processor list are empty
-										#If both exception list and that of processor list is empty; mark request as completed
-										$status = Post::find($id);
-										$status->post_status = $this->userAction;
-										$status->save();
-										#Requisition to GL flow takes over from here
-										$this->actionStatus = 0;
-										$this->verificationPostId = null;
-										$this->getContent();
-										session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-									}
-									if(empty($director)){
-										if(!empty($remainingProcessors)){
-											$this->publisNextProcessor($id, $details->post_type, $remainingProcessors[0]);
-										}else{
-											#Now; both exception list and that of processor list are empty
-											#If both exception list and that of processor list is empty; mark request as completed
-											$status = Post::find($id);
-											$status->post_status = $this->userAction;
-											$status->save();
-											#Requisition to GL flow takes over from here
-											$this->actionStatus = 0;
-											$this->verificationPostId = null;
-											$this->getContent();
-											session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-										}
-									}
-
 						} else{
-                $action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
-                $action->status = $this->userAction;
-                $action->save();
-                 //update request table finally
-                 $status = Post::find($id);
-                 $status->post_status = $this->userAction;
-                 $status->save();
-                    $this->actionStatus = 0;
-                    $this->verificationPostId = null;
-                    $this->getContent();
-                    session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
+							#No more persons to process request
+							Post::updatePostStatus($details->id, $this->userAction);
+							$this->actionStatus = 0;
+							$this->verificationPostId = null;
+							$this->getContent();
+							session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
             }
         }else{
             session()->flash("error_code", "<strong>Ooops!</strong>  Mis-match transaction password. Try again. <small>You can set a new transaction password by following: Profile > Settings > Security.</small>");
         }
 
     }
-
+/*
     public function publisNextProcessor($post_id, $post_type, $next_processor){
 					$next = new ResponsiblePerson;
 					$next->post_id = $post_id;
@@ -218,5 +163,5 @@ class ViewWorkflowTask extends Component
 					$this->verificationPostId = null;
 					$this->getContent();
 					session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-		}
+		}*/
 }

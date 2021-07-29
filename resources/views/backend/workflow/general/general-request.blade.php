@@ -36,7 +36,7 @@
             </button>
             </div>
             <div class="modal-body">
-                <form id="" action="{{route('process-workflow-request')}}" method="post" data-parsley-validate>
+                <form id="" action="{{route('process-workflow-request')}}" autocomplete="off" enctype="multipart/form-data" method="post" data-parsley-validate>
 									@csrf
                     <fieldset>
 
@@ -65,6 +65,7 @@
                             <label for="">Description</label>
                             <textarea name="description" id="description" cols="5" rows="5" class="form-control content" placeholder="Type here..."></textarea>
                         </div>
+											<input type="hidden" name="request_type" value="general-request">
                         <hr>
                         <div class="btn-group d-flex justify-content-center">
                             <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>

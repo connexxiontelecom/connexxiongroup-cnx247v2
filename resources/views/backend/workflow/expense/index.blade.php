@@ -43,7 +43,7 @@
             </button>
             </div>
             <div class="modal-body">
-                <form id="" action="{{route('process-workflow-request')}}" method="post" data-parsley-validate>
+                <form id="" action="{{route('process-workflow-request')}}" enctype="multipart/form-data" autocomplete="off" method="post" data-parsley-validate>
 									@csrf
                     <fieldset>
 
@@ -84,6 +84,7 @@
 													<i class="text-danger">{{$message}}</i>
 													@enderror
                         </div>
+											<input type="hidden" name="request_type" value="expense-report">
                         <hr>
                         <div class="btn-group d-flex justify-content-center">
                             <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>

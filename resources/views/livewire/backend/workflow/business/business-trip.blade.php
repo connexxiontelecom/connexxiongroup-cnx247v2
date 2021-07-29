@@ -98,7 +98,7 @@
 
 @push('business-trip-script')
 <script>
-    $(document).ready(function(){
+    /*$(document).ready(function(){
         var file_data = null;
        $(document).on('change', '#uploadAttachment', function(e){
            e.preventDefault();
@@ -151,6 +151,6 @@
                });
                return false;
        });
-       });
+       });*/
    </script>
 @endpush

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class RequestApprover extends Model
 {
@@ -20,4 +21,12 @@ class RequestApprover extends Model
      public function setBy(){
          return $this->belongsTo(User::class, 'set_by');
      }
+
+     public function getNormalApproversByRequesTypeAndDepartment($request_type){
+			 return RequestApprover::select('user_id')
+				 ->where('request_type', $request_type)
+				 ->where('depart_id', Auth::user()->department_id)
+				 ->where('tenant_id', Auth::user()->tenant_id)
+				 ->get();
+		 }
 }

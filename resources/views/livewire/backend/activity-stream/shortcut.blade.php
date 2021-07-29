@@ -2201,7 +2201,7 @@
 																			@break
 																	@endforeach
 															@elseif($post->post_type == 'purchase-request')
-																	@foreach ($post->responsiblePersons as $person)
+																	@foreach ($post->responsiblePersons->where('is_seen',1) as $person)
 																			@if($person->user_id == Auth::user()->id || $post->user_id == Auth::user()->id)
 																					<div class="social-timelines p-relative  rollover" data-live="{{$post->id}}">
 																							<div class="row timeline-right p-t-35">

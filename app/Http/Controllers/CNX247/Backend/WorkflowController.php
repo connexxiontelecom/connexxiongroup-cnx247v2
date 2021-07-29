@@ -23,6 +23,11 @@ class WorkflowController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+			$this->post = new Post();
+			$this->postattachment = new PostAttachment();
+			$this->specificapprover = new SpecificApprover();
+			$this->requestapprover = new RequestApprover();
+			$this->responsibleperson = new ResponsiblePerson();
     }
     /*
     * Load index page [my assignments]
@@ -32,12 +37,12 @@ class WorkflowController extends Controller
 																			->where('user_id', Auth::user()->id)
 																			->whereIn('post_type',
 																						['purchase-request', 'expense-report',
-																								'leave-request', 'business-trip',
+																								'leave-approval', 'business-trip',
 																								'general-request'])
 																			->pluck('post_id');
 			$requests = Post::whereIn('post_type',
             ['purchase-request', 'expense-report',
-                'leave-request', 'business-trip',
+                'leave-approval', 'business-trip',
                 'general-request'])
 						->where('tenant_id',Auth::user()->tenant_id)
 						->whereIn('id', $responsible)
@@ -46,7 +51,7 @@ class WorkflowController extends Controller
 
 			$my_requests = Post::whereIn('post_type',
 						['purchase-request', 'expense-report',
-						'leave-request', 'business-trip',
+						'leave-approval', 'business-trip',
 						'general-request'])
 						->where('user_id', Auth::user()->id)
 						->where('tenant_id',Auth::user()->tenant_id)
@@ -55,14 +60,14 @@ class WorkflowController extends Controller
 						$now = Carbon::now();
 						$overall = Post::whereIn('post_type',
 																['purchase-request', 'expense-report',
-																'leave-request', 'business-trip',
+																'leave-approval', 'business-trip',
 																'general-request'])
 																->where('tenant_id',Auth::user()->tenant_id)
 																->where('post_status', 'approved')
 																->sum('budget');
 						$thisYear = Post::whereIn('post_type',
 																['purchase-request', 'expense-report',
-																'leave-request', 'business-trip',
+																'leave-approval', 'business-trip',
 																'general-request'])
 																->where('tenant_id',Auth::user()->tenant_id)
 																->where('post_status', 'approved')
@@ -70,7 +75,7 @@ class WorkflowController extends Controller
 																->sum('budget');
 						$thisMonth = Post::whereIn('post_type',
 																['purchase-request', 'expense-report',
-																'leave-request', 'business-trip',
+																'leave-approval', 'business-trip',
 																'general-request'])
 																->where('tenant_id',Auth::user()->tenant_id)
 																->where('post_status', 'approved')
@@ -79,7 +84,7 @@ class WorkflowController extends Controller
 																->sum('budget');
 						$lastMonth = Post::whereIn('post_type',
 																['purchase-request', 'expense-report',
-																'leave-request', 'business-trip',
+																'leave-approval', 'business-trip',
 																'general-request'])
 																->where('tenant_id',Auth::user()->tenant_id)
 																->where('post_status', 'approved')
@@ -265,7 +270,7 @@ class WorkflowController extends Controller
 									->where('user_id', Auth::user()->id)
 									->whereIn('post_type',
 												['purchase-request', 'expense-report',
-														'leave-request', 'business-trip',
+														'leave-approval', 'business-trip',
 														'general-request'])
 									->pluck('post_id');
 
@@ -314,8 +319,53 @@ class WorkflowController extends Controller
 				return view('backend.workflow.my-request-search-result',['results'=>$results,'search'=>$request->seach_item]);
 	}
 
-
 	public function processWorkflowRequest(Request $request){
+		$this->validate($request,[
+			'title'=>'required',
+			'amount'=>'required',
+			'request_type'=>'required',
+		],[
+			'title.required'=>'Enter a title for your request',
+			'amount.required'=>'Enter an amount for this request'
+		]);
+		$specific_approvers = $this->specificapprover->getSpecificApproversByRequesterId($request->request_type);
+		$normal_processors = $this->requestapprover->getNormalApproversByRequesTypeAndDepartment($request->request_type);
+		if($specific_approvers->count() > 0 || $normal_processors->count() > 0){
+			#Publish new workflow request
+			$workflow = $this->post->setNewWorkflowRequest($request);
+			if(!empty($request->file('attachment'))){
+				$this->postattachment->uploadAttachment($request, $workflow->id);
+			}
+			#specific approvers has priority over normal processors
+			if($specific_approvers->count() > 0){
+				foreach($specific_approvers as $specific_approver){
+					$this->responsibleperson->setNewResponsiblePersons($workflow->id, $request->request_type, $specific_approver->processor_id);
+				}
+				$this->responsibleperson->markFirstUnseenAsSeen($workflow->id);
+				session()->flash("success", "<strong>Success!</strong> Your request was submitted successfully.");
+				return back();
+			}
+			#Check if this person is not in the exception or special list
+			if($specific_approvers->count() <= 0){
+				if($normal_processors->count() > 0){
+					foreach($normal_processors as $normal_processor){
+						$this->responsibleperson->setNewResponsiblePersons($workflow->id, $request->request_type, $normal_processor->user_id);
+					}
+					$this->responsibleperson->markFirstUnseenAsSeen($workflow->id);
+					session()->flash("success", "<strong>Success!</strong> Your request was submitted successfully.");
+					return back();
+				}else{
+					session()->flash("error", "<strong>Whoops!</strong> There're no person(s) setup to process request for you.");
+					return back();
+				}
+			}
+		}else{
+			session()->flash("error", "<strong>Whoops!</strong> There're no person(s) setup to process request for you.");
+			return back();
+		}
+	}
+
+	/*public function processWorkflowRequest(Request $request){
 
 			$this->validate($request,[
 				'title'=>'required',
@@ -382,12 +432,12 @@ class WorkflowController extends Controller
 				$this->notifyUser($hod->user_id, $post);
 				session()->flash("success", "<strong>Success!</strong> Request submitted.");
 				return back();
-			}*/
+			}
 		}
 
-	}
+	}*/
 
-	public function publishResponsiblePersons($user_id, $post_type, $post_id){
+	/*public function publishResponsiblePersons($user_id, $post_type, $post_id){
 		$event = new ResponsiblePerson;
 		$event->post_id = $post_id;
 		$event->post_type = $post_type;
@@ -444,7 +494,7 @@ class WorkflowController extends Controller
 						}
 				return $requisition;
 	}
-
+*/
 
 	public function notifyUser($userId, $object){
 		$user = User::find($userId);

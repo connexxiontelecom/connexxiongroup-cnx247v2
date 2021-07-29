@@ -86,7 +86,7 @@
 															@endphp
 															@foreach ($requests as $request)
 																	@foreach($request->responsiblePersons as $person)
-																			@if($person->user_id == Auth::user()->id)
+																			@if($person->user_id == Auth::user()->id && $person->is_seen == 1)
 																					<tr class="table-row {{$request->post_status}} all">
 																							<td class="serial-no">{{$i++}}</td>
 																							<td>

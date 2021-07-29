@@ -52,7 +52,7 @@
 										{!! session()->get('error') !!}
 									</div>
 								@endif
-                <form id="" action="{{route('process-workflow-request')}}" method="post"  enctype="multipart/form-data">
+                <form id="" action="{{route('process-workflow-request')}}" autocomplete="off" method="post"  enctype="multipart/form-data">
 									@csrf
                     <fieldset>
 
@@ -91,6 +91,7 @@
                         </div>
                         <hr>
                         <div class="btn-group d-flex justify-content-center">
+													<input type="hidden" name="request_type" value="purchase-request">
                             <button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Close</button>
                             <button type="submit" class="btn btn-primary waves-effect btn-mini waves-light" id="addNewExpenseBtn"><i class="mr-2 ti-check"></i>Submit</button>
                         </div>

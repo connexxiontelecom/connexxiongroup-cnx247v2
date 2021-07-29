@@ -89,7 +89,7 @@ class LeaveRequest extends Component
     public function getContent(){
         $this->leaves = Post::where('user_id', Auth::user()->id)
                                 ->where('tenant_id', Auth::user()->tenant_id)
-                                ->where('post_type', 'leave-request')
+                                ->where('post_type', 'leave-approval')
                                 ->orderBy('id', 'DESC')
                                 ->get();
         $this->leave_types = LeaveType::where('tenant_id', Auth::user()->tenant_id)->get();
