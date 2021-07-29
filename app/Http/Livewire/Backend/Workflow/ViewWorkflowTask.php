@@ -140,6 +140,7 @@ class ViewWorkflowTask extends Component
 							}
 						} else{
 							#No more persons to process request
+							ResponsiblePerson::updateStatus($details->id, $this->userAction);
 							Post::updatePostStatus($details->id, $this->userAction);
 							$this->actionStatus = 0;
 							$this->verificationPostId = null;

@@ -2201,7 +2201,7 @@
 																			@break
 																	@endforeach
 															@elseif($post->post_type == 'purchase-request')
-																	@foreach ($post->responsiblePersons->where('is_seen',1) as $person)
+																	@foreach ($post->responsiblePersons as $person)
 																			@if($person->user_id == Auth::user()->id || $post->user_id == Auth::user()->id)
 																					<div class="social-timelines p-relative  rollover" data-live="{{$post->id}}">
 																							<div class="row timeline-right p-t-35">
@@ -2235,6 +2235,7 @@
 																																					</div>
 																																			</div>
 																																			@foreach ($post->responsiblePersons as $processor)
+																																				@if($processor->is_seen == 1)
 																																					<div class="card-block" style="padding:10px;">
 																																							<div class="team-box p-b-10">
 																																									<div class="team-section d-inline-block">
@@ -2250,6 +2251,7 @@
 																																									</div>
 																																							</div>
 																																					</div>
+																																			@endif
 																																			@endforeach
 																																			<div class="row">
 																																					<div class="col-md-12 d-flex align-items-center bd-highlight mb-4 ">
@@ -2438,6 +2440,7 @@
 																																					</div>
 																																			</div>
 																																			@foreach ($post->responsiblePersons as $processor)
+																																			@if($processor->is_seen == 1)
 																																					<div class="card-block" style="padding:10px;">
 																																							<div class="team-box p-b-10">
 																																									<div class="team-section d-inline-block">
@@ -2453,6 +2456,7 @@
 																																									</div>
 																																							</div>
 																																					</div>
+																																				@endif
 																																			@endforeach
 																																			<div class="row">
 																																					<div class="col-md-12 d-flex align-items-center bd-highlight mb-4 ">
@@ -2641,6 +2645,7 @@
 																																					</div>
 																																			</div>
 																																			@foreach ($post->responsiblePersons as $processor)
+																																			@if($processor->is_seen == 1)
 																																					<div class="card-block" style="padding:10px;">
 																																							<div class="team-box p-b-10">
 																																									<div class="team-section d-inline-block">
@@ -2656,6 +2661,7 @@
 																																									</div>
 																																							</div>
 																																					</div>
+																																				@endif
 																																			@endforeach
 																																			<div class="row">
 																																					<div class="col-md-12 d-flex align-items-center bd-highlight mb-4 ">
@@ -2848,6 +2854,7 @@
 																																					</div>
 																																			</div>
 																																			@foreach ($post->responsiblePersons as $processor)
+																																			@if($processor->is_seen == 1)
 																																					<div class="card-block" style="padding:10px;">
 																																							<div class="team-box p-b-10">
 																																									<div class="team-section d-inline-block">
@@ -2863,6 +2870,7 @@
 																																									</div>
 																																							</div>
 																																					</div>
+																																				@endif
 																																			@endforeach
 																																			<div class="row">
 																																					<div class="col-md-12 d-flex align-items-center bd-highlight mb-4 ">
