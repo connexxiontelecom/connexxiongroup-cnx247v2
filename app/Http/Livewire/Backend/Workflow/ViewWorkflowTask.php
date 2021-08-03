@@ -152,17 +152,4 @@ class ViewWorkflowTask extends Component
         }
 
     }
-/*
-    public function publisNextProcessor($post_id, $post_type, $next_processor){
-					$next = new ResponsiblePerson;
-					$next->post_id = $post_id;
-					$next->post_type = $post_type;
-					$next->user_id = $next_processor;
-					$next->tenant_id = Auth::user()->tenant_id;
-					$next->save();
-					$this->actionStatus = 0;
-					$this->verificationPostId = null;
-					$this->getContent();
-					session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-		}*/
 }

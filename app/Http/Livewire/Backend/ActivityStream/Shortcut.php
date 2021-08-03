@@ -315,66 +315,21 @@ class Shortcut extends Component
 		if (Hash::check($this->transactionPassword, Auth::user()->transaction_password)) {
 			$details = Post::find($id);
 			if($this->userAction == 'approved'){
-				$action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
-				$action->status = $this->userAction;
-				$action->save();
-				#Check for next processor
-				$exception = SpecificApprover::where('request_type', $details->post_type)
-					->where('requester_id', $details->user_id)
-					->where('tenant_id', Auth::user()->tenant_id)
-					->get();
-				$processors = RequestApprover::select('user_id')
-					->where('request_type', $details->post_type)
-					->where('depart_id', $details->user->department_id)
-					->where('tenant_id', Auth::user()->tenant_id)
-					->get();
-				#Get list of those who have acted on this request
-				$published_res_persons = ResponsiblePerson::where('post_id', $id)->get();
-				$publishedList = [];
-				foreach($published_res_persons as $publist){
-					array_push($publishedList, $publist->user_id);
-				}
-				$processorList = [];
-				foreach($processors as $prolist){
-					array_push($processorList, $prolist->user_id);
-				}
-				#Get list of pending processors
-				$remainingProcessors = array_values(array_diff($processorList, $publishedList));
-				#Check list of exceptions
-				$exceptionList = [];
-				foreach($exception as $list){
-					array_push($exceptionList, $list->processor_id);
-				}
-				#Then get array difference of those who have acted on the request and those in the exception list that have not.
-				$remainingException = array_values(array_diff($exceptionList, $publishedList));
-				#Publish new responsible person from the exception list
-				if(!empty($remainingException)){
-					$this->publisNextProcessor($id, $details->post_type, $remainingException[0]);
+				ResponsiblePerson::updateStatus($details->id, $this->userAction);
+				$next = ResponsiblePerson::markFirstUnseenAsSeen($details->id);
+				if($next == 1){
+					$this->actionStatus = 0;
+					$this->verificationPostId = null;
+					$this->getContent();
+					session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
 				}else{
-					#Publish new responsible person from the processor list
-					if(!empty($remainingProcessors)){
-						$this->publisNextProcessor($id, $details->post_type, $remainingProcessors[0]);
-					}else{
-						#Now; both exception list and that of processor list are empty
-						#If both exception list and that of processor list is empty; mark request as completed
-						$status = Post::find($id);
-						$status->post_status = $this->userAction;
-						$status->save();
-						#Requisition to GL flow takes over from here
-						$this->actionStatus = 0;
-						$this->verificationPostId = null;
-						$this->getContent();
-						session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-					}
+					#No more persons to process request
+					Post::updatePostStatus($details->id, $this->userAction);
 				}
 			} else{
-				$action = ResponsiblePerson::where('post_id', $id)->where('user_id', Auth::user()->id)->first();
-				$action->status = $this->userAction;
-				$action->save();
-				//update request table finally
-				$status = Post::find($id);
-				$status->post_status = $this->userAction;
-				$status->save();
+				#No more persons to process request
+				ResponsiblePerson::updateStatus($details->id, $this->userAction);
+				Post::updatePostStatus($details->id, $this->userAction);
 				$this->actionStatus = 0;
 				$this->verificationPostId = null;
 				$this->getContent();
@@ -386,7 +341,7 @@ class Shortcut extends Component
 
 	}
 
-	public function publisNextProcessor($post_id, $post_type, $next_processor){
+/*	public function publisNextProcessor($post_id, $post_type, $next_processor){
 		$next = new ResponsiblePerson;
 		$next->post_id = $post_id;
 		$next->post_type = $post_type;
@@ -397,5 +352,5 @@ class Shortcut extends Component
 		$this->verificationPostId = null;
 		$this->getContent();
 		session()->flash("done", "<p class='text-success text-center'>Request verified successfully.</p>");
-	}
+	}*/
 }
