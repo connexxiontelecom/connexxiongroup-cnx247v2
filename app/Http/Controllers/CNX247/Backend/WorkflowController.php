@@ -40,6 +40,7 @@ class WorkflowController extends Controller
 																								'leave-approval', 'business-trip',
 																								'general-request'])
 																			->pluck('post_id');
+			$res = ResponsiblePerson::whereIn('post_id', $responsible)->get();
 			$requests = Post::whereIn('post_type',
             ['purchase-request', 'expense-report',
                 'leave-approval', 'business-trip',
@@ -97,9 +98,34 @@ class WorkflowController extends Controller
 					'overall'=>$overall,
 					'lastMonth'=>$lastMonth,
 					'thisMonth'=>$thisMonth,
-					'thisYear'=>$thisYear
+					'thisYear'=>$thisYear,
+					'res'=>$res
 					]);
     }
+
+    public function filterWorkflowAssignment(Request $request){
+    	$this->validate($request,[
+    		'status'=>'required'
+			]);
+			$responsible = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)
+				->where('user_id', Auth::user()->id)
+				->where('status', $request->status)
+				->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])
+				->pluck('post_id');
+			$requests = Post::whereIn('post_type',
+				['purchase-request', 'expense-report',
+					'leave-approval', 'business-trip',
+					'general-request'])
+				->where('tenant_id',Auth::user()->tenant_id)
+				->whereIn('id', $responsible)
+				->orderBy('id', 'DESC')
+				->get();
+
+			return view('backend.workflow.partials._filter-table', ['requests'=>$requests]);
+		}
 
     /*
     * Workflow task

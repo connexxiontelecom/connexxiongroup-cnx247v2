@@ -125,6 +125,8 @@ class User extends Authenticatable implements JWTSubject
 	public function getActiveUsers(){
 		return User::where('tenant_id', Auth::user()->tenant_id)->where('account_status', 1)->orderBy('first_name', 'ASC')->get();
 	}
+
+
  /*    public function leaveWallet(){
         return $this->belongsTo(LeaveWallet::class);
     } */

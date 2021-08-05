@@ -13,6 +13,96 @@
 		<div class="col-sm-12 col-md-12">
 			<div class="card">
 				<div class="card-block">
+					<div class="row">
+						<div class="col-xl-3 col-md-6">
+							<div class="card statustic-progress-card">
+								<div class="card-header">
+									<h5>Overall</h5>
+								</div>
+								<div class="card-block">
+									<div class="row align-items-center">
+										<div class="col">
+											<label class="label label-success">
+												{{$res->count() > 0 ? ceil($res->count()/$res->count() * 100) : 0 }}% <i class="m-l-10 ti-calendar"></i>
+											</label>
+										</div>
+										<div class="col text-right">
+											<h5 class="">{{number_format($res->count())}}</h5>
+										</div>
+									</div>
+									<div class="progress m-t-15">
+										<div class="progress-bar bg-c-green" style="width:{{$res->count() > 0 ? ceil($res->count()/$res->count() * 100) : 0 }}%"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="card statustic-progress-card">
+								<div class="card-header">
+									<h5>Approved</h5>
+								</div>
+								<div class="card-block">
+									<div class="row align-items-center">
+										<div class="col">
+											<label class="label bg-c-lite-green">
+												{{$res->count() > 0 ? ceil($res->where('status', 'approved')->count()/$res->count() * 100) : 0 }}% <i class="m-l-10 ti-check"></i>
+											</label>
+										</div>
+										<div class="col text-right">
+											<h5 class="">{{number_format($res->where('status', 'approved')->count())}}</h5>
+										</div>
+									</div>
+									<div class="progress m-t-15">
+										<div class="progress-bar bg-c-lite-green" style="width:{{$res->count() > 0 ? ceil($res->where('status', 'approved')->count()/$res->count() * 100) : 0 }}%"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="card statustic-progress-card">
+								<div class="card-header">
+									<h5>Declined</h5>
+								</div>
+								<div class="card-block">
+									<div class="row align-items-center">
+										<div class="col">
+											<label class="label label-danger">
+												{{$res->count() > 0 ? ceil($res->where('status', 'declined')->count()/$res->count() * 100) : 0 }}% <i class="m-l-10 ti-close"></i>
+											</label>
+										</div>
+										<div class="col text-right">
+											<h5 class="">{{ number_format($res->where('status', 'declined')->count() )}}</h5>
+										</div>
+									</div>
+									<div class="progress m-t-15">
+										<div class="progress-bar bg-c-pink" style="width:{{$res->count() > 0 ? ceil($res->where('status', 'declined')->count()/$res->count() * 100) : 0 }}%"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-md-6">
+							<div class="card statustic-progress-card">
+								<div class="card-header">
+									<h5>In-Progress</h5>
+								</div>
+								<div class="card-block">
+									<div class="row align-items-center">
+										<div class="col">
+											<label class="label label-warning">
+												{{$res->count() > 0 ? ceil($res->where('status', 'in-progress')->count()/$res->count() * 100) : 0 }}% <i class="m-l-10 icofont icofont-sand-clock"></i>
+											</label>
+										</div>
+										<div class="col text-right">
+											<h5 class="">{{number_format($res->where('status', 'in-progress')->count())}}</h5>
+										</div>
+									</div>
+									<div class="progress m-t-15">
+										<div class="progress-bar bg-c-yellow" style="width:{{$res->count() > 0 ? ceil($res->where('status', 'in-progress')->count()/$res->count() * 100) : 0 }}%"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="col-lg-12 col-xl-12">
 						<ul class="nav nav-tabs md-tabs" role="tablist">
 								<li class="nav-item">
@@ -62,13 +152,13 @@
 										<label for="">Filter</label>
 										<select name="filter" id="filter-assignments" class="form-control">
 											<option disabled selected>Filter request</option>
-											<option value="all">All</option>
+											<option disabled selected>--- Select status ---</option>
 											<option value="declined">Declined</option>
 											<option value="approved">Approved</option>
 											<option value="in-progress">In-progress</option>
 										</select>
 									</div>
-									<div class="dt-responsive table-responsive mt-4">
+									<div class="dt-responsive table-responsive mt-4" id="table-wrapper">
 											<table id="datatable-assignment" class="table table-striped table-bordered nowrap">
 													<thead>
 															<tr class="text-uppercase">
@@ -349,24 +439,11 @@
 
 						$(document).on('change', '#filter-assignments', function(e){
 							e.preventDefault();
-								$(this).find('option:selected').each(function(index){
-							var serial = 1;
-									var optionValue = $(this).attr('value');
-									if(optionValue){
-										$('.table-row').not('.'+optionValue).hide();
-										$('.'+optionValue).show();
-										var rows= $('.'+optionValue).length;
-										/*$('.'+optionValue).each(function(index) {
-											for(var i=0; i<rows; i++){
-													$('.serial-no').text(i);
-												}
-										});*/
-									}else if(optionValue == 'all'){
-										$('.table-row').css('display', 'block');
-									}else{
-										$('.table-row').hide();
-									}
-								});
+							var val = $(this).val();
+							axios.post('/workflow-tasks/filter', {status:$(this).val()})
+							.then(response=>{
+								$('#table-wrapper').html(response.data);
+							});
 						});
 						$(document).on('change', '#filter-my-request', function(e){
 							e.preventDefault();
