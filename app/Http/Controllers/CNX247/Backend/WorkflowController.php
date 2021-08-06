@@ -107,6 +107,7 @@ class WorkflowController extends Controller
     	$this->validate($request,[
     		'status'=>'required'
 			]);
+    	$counter = $request->counter ?? 10;
 			$responsible = ResponsiblePerson::where('tenant_id', Auth::user()->tenant_id)
 				->where('user_id', Auth::user()->id)
 				->where('status', $request->status)
@@ -120,8 +121,9 @@ class WorkflowController extends Controller
 					'leave-approval', 'business-trip',
 					'general-request'])
 				->where('tenant_id',Auth::user()->tenant_id)
-				->whereIn('id', $responsible)
+				->whereIn('id', $responsible) //post id actually
 				->orderBy('id', 'DESC')
+				->take($counter)
 				->get();
 
 			return view('backend.workflow.partials._filter-table', ['requests'=>$requests]);

@@ -23,15 +23,33 @@
 									<div class="row align-items-center">
 										<div class="col">
 											<label class="label label-success">
-												{{$res->count() > 0 ? ceil($res->count()/$res->count() * 100) : 0 }}% <i class="m-l-10 ti-calendar"></i>
+												{{$res->count() > 0 ? ceil($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count()/$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() * 100) : 0 }}% <i class="m-l-10 ti-calendar"></i>
 											</label>
 										</div>
 										<div class="col text-right">
-											<h5 class="">{{number_format($res->count())}}</h5>
+											<h5 class="">{{number_format($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count())}}</h5>
 										</div>
 									</div>
 									<div class="progress m-t-15">
-										<div class="progress-bar bg-c-green" style="width:{{$res->count() > 0 ? ceil($res->count()/$res->count() * 100) : 0 }}%"></div>
+										<div class="progress-bar bg-c-green" style="width:{{$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() > 0 ? ceil($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count()/$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() * 100) : 0 }}%"></div>
 									</div>
 								</div>
 							</div>
@@ -45,15 +63,36 @@
 									<div class="row align-items-center">
 										<div class="col">
 											<label class="label bg-c-lite-green">
-												{{$res->count() > 0 ? ceil($res->where('status', 'approved')->count()/$res->count() * 100) : 0 }}% <i class="m-l-10 ti-check"></i>
+												{{$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() > 0 ? ceil($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'approved')->count()/$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() * 100) : 0 }}% <i class="m-l-10 ti-check"></i>
 											</label>
 										</div>
 										<div class="col text-right">
-											<h5 class="">{{number_format($res->where('status', 'approved')->count())}}</h5>
+											<h5 class="">{{number_format($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'approved')->count())}}</h5>
 										</div>
 									</div>
 									<div class="progress m-t-15">
-										<div class="progress-bar bg-c-lite-green" style="width:{{$res->count() > 0 ? ceil($res->where('status', 'approved')->count()/$res->count() * 100) : 0 }}%"></div>
+										<div class="progress-bar bg-c-lite-green" style="width:{{$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() > 0 ? ceil($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'approved')->count()/$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() * 100) : 0 }}%"></div>
 									</div>
 								</div>
 							</div>
@@ -67,15 +106,36 @@
 									<div class="row align-items-center">
 										<div class="col">
 											<label class="label label-danger">
-												{{$res->count() > 0 ? ceil($res->where('status', 'declined')->count()/$res->count() * 100) : 0 }}% <i class="m-l-10 ti-close"></i>
+												{{$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() > 0 ? ceil($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'declined')->count()/$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() * 100) : 0 }}% <i class="m-l-10 ti-close"></i>
 											</label>
 										</div>
 										<div class="col text-right">
-											<h5 class="">{{ number_format($res->where('status', 'declined')->count() )}}</h5>
+											<h5 class="">{{ number_format($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'declined')->count() )}}</h5>
 										</div>
 									</div>
 									<div class="progress m-t-15">
-										<div class="progress-bar bg-c-pink" style="width:{{$res->count() > 0 ? ceil($res->where('status', 'declined')->count()/$res->count() * 100) : 0 }}%"></div>
+										<div class="progress-bar bg-c-pink" style="width:{{$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() > 0 ? ceil($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'declined')->count()/$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() * 100) : 0 }}%"></div>
 									</div>
 								</div>
 							</div>
@@ -89,15 +149,36 @@
 									<div class="row align-items-center">
 										<div class="col">
 											<label class="label label-warning">
-												{{$res->count() > 0 ? ceil($res->where('status', 'in-progress')->count()/$res->count() * 100) : 0 }}% <i class="m-l-10 icofont icofont-sand-clock"></i>
+												{{$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() > 0 ? ceil($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'in-progress')->count()/$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() * 100) : 0 }}% <i class="m-l-10 icofont icofont-sand-clock"></i>
 											</label>
 										</div>
 										<div class="col text-right">
-											<h5 class="">{{number_format($res->where('status', 'in-progress')->count())}}</h5>
+											<h5 class="">{{number_format($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'in-progress')->count())}}</h5>
 										</div>
 									</div>
 									<div class="progress m-t-15">
-										<div class="progress-bar bg-c-yellow" style="width:{{$res->count() > 0 ? ceil($res->where('status', 'in-progress')->count()/$res->count() * 100) : 0 }}%"></div>
+										<div class="progress-bar bg-c-yellow" style="width:{{$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() > 0 ? ceil($res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->where('status', 'in-progress')->count()/$res->whereIn('post_type',
+					['purchase-request', 'expense-report',
+						'leave-approval', 'business-trip',
+						'general-request'])->count() * 100) : 0 }}%"></div>
 									</div>
 								</div>
 							</div>
@@ -148,15 +229,20 @@
 										</form>
 									</div>
 								</div>
-									<div class="form-group col-sm-2 col-md-2 mb-3">
+									<div class="form-group col-sm-6 col-md-6 mb-3">
 										<label for="">Filter</label>
-										<select name="filter" id="filter-assignments" class="form-control">
-											<option disabled selected>Filter request</option>
-											<option disabled selected>--- Select status ---</option>
-											<option value="declined">Declined</option>
-											<option value="approved">Approved</option>
-											<option value="in-progress">In-progress</option>
-										</select>
+										<div class="input-group input-group-button">
+											<select name="status" id="status" class="form-control">
+												<option disabled selected>--- Filter ---</option>
+												<option value="declined">Declined</option>
+												<option value="approved">Approved</option>
+												<option value="in-progress">In-progress</option>
+											</select>
+											<input type="number" class="form-control" value="10" id="counter" name="counter" placeholder="Counter">
+											<span class="input-group-addon btn btn-primary" id="filter-assignments">
+													<span class="">Filter</span>
+											</span>
+										</div>
 									</div>
 									<div class="dt-responsive table-responsive mt-4" id="table-wrapper">
 											<table id="datatable-assignment" class="table table-striped table-bordered nowrap">
@@ -177,7 +263,7 @@
 															@foreach ($requests as $request)
 																	@foreach($request->responsiblePersons as $person)
 																			@if($person->user_id == Auth::user()->id && $person->is_seen == 1)
-																					<tr class="table-row {{$request->post_status}} all">
+																					<tr class="table-row  all">
 																							<td class="serial-no">{{$i++}}</td>
 																							<td>
 																									<a href="{{ route('view-workflow-task', $request->post_url) }}">{!! strlen($request->post_title) > 18 ? substr($request->post_title, 0,15).'...' : $request->post_title !!}</a>
@@ -199,20 +285,13 @@
 																							<td>
 																									<div class="btn-group mt-2">
 																											@if($request->post_status == 'in-progress')
-																														{{--@foreach($request->responsiblePersons as $app)--}}
-																																@if($person->user_id == Auth::user()->id && $person->status == 'in-progress')
-																																		<a href="{{ route('view-workflow-task', $request->post_url) }}" class="btn btn-mini btn-primary">View</a>
-																																		<!--<button class="btn btn-out-dashed btn-danger btn-square btn-mini decline-request" value="$request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"><i class="ti-na mr-2"></i> DECLINE</button>
-
-																																		<button type="button" class="btn btn-success btn-out-dashed btn-square btn-mini approveBtn approve-request" value="request->id}}" data-target="#transactionPasswordModal" data-toggle="modal"> <i class="ti-check-box mr-2"></i>
-																																				APPROVE
-																																		</button>-->
-																																@elseif($person->user_id == Auth::user()->id && $person->status == 'decline')
-																																		<i>Decline,(you)</i>
-																																@elseif($person->user_id == Auth::user()->id && $person->status == 'approve')
-																																		<i>Approved,(you)</i>
-																																@endif
-																													{{--	@endforeach--}}
+																													@if($person->user_id == Auth::user()->id && $person->status == 'in-progress')
+																															<a href="{{ route('view-workflow-task', $request->post_url) }}" class="btn btn-mini btn-primary">View</a>
+																													@elseif($person->user_id == Auth::user()->id && $person->status == 'decline')
+																															<i>Decline,(you)</i>
+																													@elseif($person->user_id == Auth::user()->id && $person->status == 'approve')
+																															<i>Approved,(you)</i>
+																													@endif
 																											@endif
 
 																									</div>
@@ -425,22 +504,11 @@
     <script>
         $(document).ready(function() {
 
-
-						$(document).on('click', '.approve-request', function(e){
+						$(document).on('click', '#filter-assignments', function(e){
 							e.preventDefault();
-							$('#action').val('approved');
-							$('#post').val($(this).val());
-						});
-						$(document).on('click', '.decline-request', function(e){
-							e.preventDefault();
-							$('#action').val('declined');
-							$('#post').val($(this).val());
-						});
-
-						$(document).on('change', '#filter-assignments', function(e){
-							e.preventDefault();
-							var val = $(this).val();
-							axios.post('/workflow-tasks/filter', {status:$(this).val()})
+							var val = $('#status').val();
+							var counter = $('#counter').val();
+							axios.post('/workflow-tasks/filter', {status:val, counter:counter})
 							.then(response=>{
 								$('#table-wrapper').html(response.data);
 							});

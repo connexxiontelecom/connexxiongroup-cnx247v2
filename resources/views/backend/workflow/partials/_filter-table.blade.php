@@ -16,7 +16,7 @@
 	@foreach ($requests as $request)
 		@foreach($request->responsiblePersons as $person)
 			@if($person->user_id == Auth::user()->id && $person->is_seen == 1)
-				<tr class="table-row {{$request->post_status}} all">
+				<tr class="table-row ">
 					<td class="serial-no">{{$i++}}</td>
 					<td>
 						<a href="{{ route('view-workflow-task', $request->post_url) }}">{!! strlen($request->post_title) > 18 ? substr($request->post_title, 0,15).'...' : $request->post_title !!}</a>
