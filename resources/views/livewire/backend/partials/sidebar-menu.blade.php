@@ -436,6 +436,7 @@
 							</li>
 					</ul>
 @endcan
+			@can('procurement')
 					<div class="pcoded-navigatio-lavel">Procurement</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
@@ -473,7 +474,9 @@
 									</ul>
 							</li>
 					</ul>
+			@endcan
 
+			@can('access logistics')
 			<div class="pcoded-navigatio-lavel">Fleet Management</div>
 			<ul class="pcoded-item pcoded-left-item">
 				<li class="pcoded-hasmenu">
@@ -564,7 +567,8 @@
 					</ul>
 				</li>
 			</ul>
-
+			@endcan
+			@can('access administrative area')
 					<div class="pcoded-navigatio-lavel">System Settings</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
@@ -581,7 +585,6 @@
 									</ul>
 							</li>
 					</ul>
-
 					<div class="pcoded-navigatio-lavel">Administration</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
@@ -663,6 +666,7 @@
 									</ul>
 							</li>
 					</ul>
+			@endcan
 
 
     </div>
