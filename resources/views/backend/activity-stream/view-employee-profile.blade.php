@@ -67,7 +67,7 @@
                     @if ($user->account_status != 2)
                         <div class="btn-group">
                         <a href="{{route('query-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Query {{$user->first_name}}"> <i class="ti-help-alt mr-4 text-danger"></i></a>
-                        <a href="{{route('assign-permission-to-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Assign Role to {{$user->first_name}}"> <i class="icofont icofont-chart-flow-alt-1 mr-4 text-warning"></i></a>
+                        @can('assign permission')<a href="{{route('assign-permission-to-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Assign Role to {{$user->first_name}}"> <i class="icofont icofont-chart-flow-alt-1 mr-4 text-warning"></i></a> @endcan
                             <a href="javascript:void(0);" data-toggle="modal" class="terminate-employment" data-user="{{$user->id}}" data-target="#terminateEmploymentModal" title="Terminate {{$user->first_name}}'s employement"> <i class="ti-na mr-4 text-danger"></i></a>
                         </div>
                     @endif
