@@ -282,7 +282,7 @@
 							</li>
 					</ul>
 
-
+	@can('accounting')
 					<div class="pcoded-navigatio-lavel">Accounting</div>
 					<ul class="pcoded-item pcoded-left-item">
 						<li class="">
@@ -435,7 +435,7 @@
 									</ul>
 							</li>
 					</ul>
-
+@endcan
 					<div class="pcoded-navigatio-lavel">Procurement</div>
 					<ul class="pcoded-item pcoded-left-item">
 							<li class="pcoded-hasmenu">
