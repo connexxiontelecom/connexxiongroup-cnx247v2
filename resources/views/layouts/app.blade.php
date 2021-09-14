@@ -117,26 +117,17 @@
     <div class="pcoded-container navbar-wrapper">
 
         @include('partials.commons._top-navbar')
-
-
         @livewire('backend.chat-n-calls.messenger-list')
-
         <div class="pcoded-main-container" id="pcoded-background" style="background: url('/assets/uploads/themes/{{Auth::user()->userTheme->theme}}'); background-size:cover; background-repeat: no-repeat;">
             <div class="pcoded-wrapper">
-
                 @livewire('backend.partials.sidebar-menu')
-
                 <div class="pcoded-content">
                     <div class="pcoded-inner-content">
                         <!-- Main-body start -->
                         <div class="main-body">
                             <div class="page-wrapper">
                                 <div class="page-body">
-
-
                                     @yield('content')
-
-
                                 </div>
                             </div>
                         </div>

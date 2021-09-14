@@ -596,8 +596,10 @@ Route::post('/update-terms-n-conditions', 'CNX247\Backend\AdminController@editTe
 Route::get('/privacy-policy', 'CNX247\Backend\AdminController@privacyPolicy')->name('privacy-policy');
 Route::get('/edit/privacy-policy/{id}', 'CNX247\Backend\AdminController@showEditPrivacyPolicyForm')->name('edit-privacy-policy');
 Route::post('/update-privacy-policy', 'CNX247\Backend\AdminController@editPrivacyPolicy')->name('update-privacy-policy');
+
 Route::get('/theme-gallery', 'CNX247\Backend\AdminController@themeGallery')->name('admin-theme-gallery');
 Route::post('/theme/gallery/upload', 'CNX247\Backend\AdminController@themeGalleryUpload');
+
 Route::get('/admin/access-faqs', 'CNX247\Backend\AdminController@accessFaqs')->name('access-faqs');
 Route::post('/faq/new', 'CNX247\Backend\AdminController@storeFaq');
 #Error routes

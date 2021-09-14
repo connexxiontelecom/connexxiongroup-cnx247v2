@@ -358,6 +358,7 @@ class WorkflowController extends Controller
 		]);
 		$specific_approvers = $this->specificapprover->getSpecificApproversByRequesterId($request->request_type);
 		$normal_processors = $this->requestapprover->getNormalApproversByRequesTypeAndDepartment($request->request_type);
+
 		if($specific_approvers->count() > 0 || $normal_processors->count() > 0){
 			#Publish new workflow request
 			$workflow = $this->post->setNewWorkflowRequest($request);

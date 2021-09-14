@@ -34,7 +34,7 @@
 																													</a>
 
 																											</div>
-																											<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{$post->created_at->diffForHumans()}}</small></div>
+																											<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}} </div>
 																									</div>
 																									<div class="card-block">
 
@@ -121,7 +121,7 @@
 																																	<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																															</a>
 																															<div class="media-body b-b-muted social-client-description">
-																																	<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																	<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																	<p class="text-muted"> {!! $comment->comment !!} </p>
 																															</div>
 																													</div>
@@ -178,7 +178,7 @@
 																																	</a>
 
 																															</div>
-																															<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{$post->created_at->diffForHumans()}}</small></div>
+																															<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}} </div>
 																													</div>
 																													<div class="card-block">
 
@@ -265,7 +265,7 @@
 																																					<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																			</a>
 																																			<div class="media-body b-b-muted social-client-description">
-																																					<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																					<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																					<p class="text-muted"> {!! $comment->comment !!} </p>
 																																			</div>
 																																	</div>
@@ -323,7 +323,7 @@
 																																		</a>
 																														@endforeach
 																										</div>
-																										<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{$post->created_at->diffForHumans()}}</small></div>
+																										<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}} </div>
 																								</div>
 																								<div class="card-block">
 
@@ -558,7 +558,7 @@
 																																					<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																			</a>
 																																			<div class="media-body b-b-muted social-client-description">
-																																					<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																					<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																					<p class="text-muted"> {!! $comment->comment !!} </p>
 																																			</div>
 																																	</div>
@@ -618,7 +618,7 @@
 																														@endforeach
 
 																												</div>
-																												<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																												<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																										</div>
 																										<div class="card-block">
 
@@ -677,7 +677,7 @@
 																																		<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																</a>
 																																<div class="media-body b-b-muted social-client-description">
-																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																		<p class="text-muted"> {!! $comment->comment !!} </p>
 																																</div>
 																														</div>
@@ -732,7 +732,7 @@
 																																				@endforeach
 
 																																		</div>
-																																		<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																																		<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																																</div>
 																																<div class="card-block">
 
@@ -791,7 +791,7 @@
 																																								<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																						</a>
 																																						<div class="media-body b-b-muted social-client-description">
-																																								<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																								<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																								<p class="text-muted"> {!! $comment->comment !!} </p>
 																																						</div>
 																																				</div>
@@ -848,7 +848,7 @@
 																														@endforeach
 
 																												</div>
-																												<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																												<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}} </div>
 																										</div>
 																										<div class="card-block">
 
@@ -939,7 +939,7 @@
 																																		<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																</a>
 																																<div class="media-body b-b-muted social-client-description">
-																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																		<p class="text-muted"> {!! $comment->comment !!} </p>
 																																</div>
 																														</div>
@@ -993,7 +993,7 @@
 																																			@endforeach
 
 																																	</div>
-																																	<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																																	<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																															</div>
 																															<div class="card-block">
 
@@ -1084,7 +1084,7 @@
 																																							<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																					</a>
 																																					<div class="media-body b-b-muted social-client-description">
-																																							<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																							<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																							<p class="text-muted"> {!! $comment->comment !!} </p>
 																																					</div>
 																																			</div>
@@ -1140,7 +1140,7 @@
 																														@endforeach
 
 																												</div>
-																												<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																												<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}} </div>
 																										</div>
 																										<div class="card-block">
 
@@ -1231,7 +1231,7 @@
 																																		<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																</a>
 																																<div class="media-body b-b-muted social-client-description">
-																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																		<p class="text-muted"> {!! $comment->comment !!} </p>
 																																</div>
 																														</div>
@@ -1285,7 +1285,7 @@
 																																		@endforeach
 
 																																</div>
-																																<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																																<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																														</div>
 																														<div class="card-block">
 
@@ -1376,7 +1376,7 @@
 																																						<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																				</a>
 																																				<div class="media-body b-b-muted social-client-description">
-																																						<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																						<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																						<p class="text-muted"> {!! $comment->comment !!} </p>
 																																				</div>
 																																		</div>
@@ -1433,7 +1433,7 @@
 																															@endforeach
 
 																													</div>
-																													<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																													<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																											</div>
 																											<div class="card-block">
 
@@ -1524,7 +1524,7 @@
 																																			<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																	</a>
 																																	<div class="media-body b-b-muted social-client-description">
-																																			<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																			<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																			<p class="text-muted"> {!! $comment->comment !!} </p>
 																																	</div>
 																															</div>
@@ -1578,7 +1578,7 @@
 																																			@endforeach
 
 																																	</div>
-																																	<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																																	<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																															</div>
 																															<div class="card-block">
 
@@ -1669,7 +1669,7 @@
 																																							<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																					</a>
 																																					<div class="media-body b-b-muted social-client-description">
-																																							<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																							<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																							<p class="text-muted"> {!! $comment->comment !!} </p>
 																																					</div>
 																																			</div>
@@ -1726,7 +1726,7 @@
 																														@endforeach
 
 																												</div>
-																												<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																												<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																										</div>
 																										<div class="card-block">
 
@@ -1817,7 +1817,7 @@
 																																		<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																</a>
 																																<div class="media-body b-b-muted social-client-description">
-																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																		<p class="text-muted"> {!! $comment->comment !!} </p>
 																																</div>
 																														</div>
@@ -1871,7 +1871,7 @@
 																																			@endforeach
 
 																																	</div>
-																																	<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																																	<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}} </div>
 																															</div>
 																															<div class="card-block">
 
@@ -1962,7 +1962,7 @@
 																																							<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																					</a>
 																																					<div class="media-body b-b-muted social-client-description">
-																																							<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																							<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																							<p class="text-muted"> {!! $comment->comment !!} </p>
 																																					</div>
 																																			</div>
@@ -2017,7 +2017,7 @@
 																																	<a href="{{route('view-workflow-task', $post->post_url)}}">{{$post->post_title ?? ''}}</a>
 
 																															</div>
-																															<div class="social-time text-muted">{{date(Auth::user()->dateFormat->format ?? 'd F, Y', strtotime($post->created_at))}} <small> about </small>{{$post->created_at->diffForHumans()}}</div>
+																															<div class="social-time text-muted">{{date(Auth::user()->dateFormat->format ?? 'd F, Y h:i a', strtotime($post->created_at))}} </div>
 																													</div>
 																													<div class="card-block">
 
@@ -2170,7 +2170,7 @@
 																																					<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																			</a>
 																																			<div class="media-body b-b-muted social-client-description">
-																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																					<p class="text-muted"> {!! $comment->comment !!} </p>
 																																			</div>
 																																	</div>
@@ -2220,7 +2220,7 @@
 																																	<a href="{{route('view-workflow-task', $post->post_url)}}">{{$post->post_title ?? ''}}</a>
 
 																															</div>
-																															<div class="social-time text-muted">{{date(Auth::user()->dateFormat->format ?? 'd F, Y', strtotime($post->created_at))}} <small> about </small>{{$post->created_at->diffForHumans()}}</div>
+																															<div class="social-time text-muted">{{date(Auth::user()->dateFormat->format ?? 'd F, Y h:i a', strtotime($post->created_at))}} </div>
 																													</div>
 																													<div class="card-block">
 
@@ -2375,7 +2375,7 @@
 																																					<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																			</a>
 																																			<div class="media-body b-b-muted social-client-description">
-																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																					<p class="text-muted"> {!! $comment->comment !!} </p>
 																																			</div>
 																																	</div>
@@ -2425,7 +2425,7 @@
 																																	<a href="{{route('view-workflow-task', $post->post_url)}}">{{$post->post_title ?? ''}}</a>
 
 																															</div>
-																															<div class="social-time text-muted">{{date(Auth::user()->dateFormat->format ?? 'd F, Y', strtotime($post->created_at))}} <small> about </small>{{$post->created_at->diffForHumans()}}</div>
+																															<div class="social-time text-muted">{{date(Auth::user()->dateFormat->format ?? 'd F, Y h:i a', strtotime($post->created_at))}} </div>
 																													</div>
 																													<div class="card-block">
 
@@ -2580,7 +2580,7 @@
 																																					<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																			</a>
 																																			<div class="media-body b-b-muted social-client-description">
-																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																					<p class="text-muted"> {!! $comment->comment !!} </p>
 																																			</div>
 																																	</div>
@@ -2630,7 +2630,7 @@
 																																	<a href="{{route('view-workflow-task', $post->post_url)}}">{{$post->post_title ?? ''}}</a>
 
 																															</div>
-																															<div class="social-time text-muted">{{date(Auth::user()->dateFormat->format ?? 'd F, Y', strtotime($post->created_at))}} <small> about </small>{{$post->created_at->diffForHumans()}}</div>
+																															<div class="social-time text-muted">{{date(Auth::user()->dateFormat->format ?? 'd F, Y h:i a', strtotime($post->created_at))}} </div>
 																													</div>
 																													<div class="card-block">
 
@@ -2789,7 +2789,7 @@
 																																					<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																			</a>
 																																			<div class="media-body b-b-muted social-client-description">
-																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																					<p class="text-muted"> {!! $comment->comment !!} </p>
 																																			</div>
 																																	</div>
@@ -2998,7 +2998,7 @@
 																																					<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																			</a>
 																																			<div class="media-body b-b-muted social-client-description">
-																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																					<div class="chat-header"> <a href="{{ route('view-profile', $comment->user->url) }}">  {{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a>  <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																					<p class="text-muted"> {!! $comment->comment !!} </p>
 																																			</div>
 																																	</div>
@@ -3050,7 +3050,7 @@
 																														@endforeach
 
 																												</div>
-																												<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																												<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																										</div>
 																										<div class="card-block">
 
@@ -3141,7 +3141,7 @@
 																																		<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																</a>
 																																<div class="media-body b-b-muted social-client-description">
-																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																		<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																		<p class="text-muted"> {!! $comment->comment !!} </p>
 																																</div>
 																														</div>
@@ -3195,7 +3195,7 @@
 																																		@endforeach
 
 																																</div>
-																																<div class="social-time text-muted">{{date('d F, Y', strtotime($post->created_at))}} | <small>{{ $post->created_at->diffForHumans()}}</small> </div>
+																																<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}}  </div>
 																														</div>
 																														<div class="card-block">
 
@@ -3286,7 +3286,7 @@
 																																						<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
 																																				</a>
 																																				<div class="media-body b-b-muted social-client-description">
-																																						<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y', strtotime($comment->created_at)) }} <small>({{ $comment->created_at->diffForHumans() }})</small></span></div>
+																																						<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
 																																						<p class="text-muted"> {!! $comment->comment !!} </p>
 																																				</div>
 																																		</div>
@@ -3417,7 +3417,7 @@
 																							</div>
 																							<div class="media-body">
 																									<a href="{{route('view-post-activity-stream', $announce->post_url)}}">{{ strlen($announce->post_title) > 35 ? substr($announce->post_title, 0, 35).'...' : $announce->post_title }}</a> <br>
-																									- {{date('d F, Y', strtotime($announce->created_at) )}} | <small>{{ $announce->created_at->diffForHumans() }}</small>
+																									- {{date('d F, Y h:i a', strtotime($announce->created_at) )}}
 																							</div>
 																					</div>
 																			</div>

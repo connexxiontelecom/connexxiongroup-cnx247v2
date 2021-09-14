@@ -22,7 +22,6 @@
 </div>
    <div class="row">
     <div class="col-sm-12">
-        <!-- Image grid card start -->
         <div class="card">
             <div class="card-block">
                 <h5 class="sub-title">Background Themes</h5>
@@ -35,8 +34,8 @@
                         <div class="col-lg-4 col-sm-6">
                             <div class="thumbnail">
                                 <div class="thumb">
-                                    <a href="/assets/uploads/themes/{{$theme->theme ?? ''}}" data-lightbox="1" data-title="{{$theme->theme_name ?? ''}}">
-                                        <img src="/assets/uploads/themes/{{$theme->theme ?? ''}}" alt="{{$theme->theme_name ?? ''}}" class="img-fluid img-thumbnail">
+                                    <a href="/assets/drive/themes/{{$theme->theme ?? ''}}" data-lightbox="1" data-title="{{$theme->theme_name ?? ''}}">
+                                        <img src="/assets/drive/themes/{{$theme->theme ?? ''}}" alt="{{$theme->theme_name ?? ''}}" class="img-fluid img-thumbnail">
                                     </a>
                                 </div>
                             </div>
