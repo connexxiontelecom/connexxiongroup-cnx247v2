@@ -1727,7 +1727,7 @@
 						})
 						.catch(error=>{
 							//$.notify(error.response.data.error, 'error');
-							console.log(error.response.data.error);
+							//console.log(error.response.data.error);
 						});
 					//alert(directory);
 				});

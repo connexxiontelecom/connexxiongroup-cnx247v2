@@ -205,14 +205,17 @@ class Shortcut extends Component
 				$this->workforce = User::where('tenant_id', Auth::user()->tenant_id)->count();
 
         return view('livewire.backend.activity-stream.shortcut',
-                                ['posts'=> Post::where('tenant_id', Auth::user()->tenant_id)->whereIn('id',$mergedIds)
+                                [
+                                	'posts'=> Post::where('tenant_id', Auth::user()->tenant_id)->whereIn('id',$mergedIds)
                                 ->orderBy('id', 'DESC')
                                 ->paginate(10),
-                    'announcements'=>Post::where('post_type', 'announcement')
+                    							'announcements'=>Post::where('post_type', 'announcement')
                                 ->where('tenant_id', Auth::user()->tenant_id)
                                 ->orderBy('id', 'DESC')->take(5)->get(),
                                 'events'=>$my_events,
 																	'storage_capacity' => $storage,
+																	'employees'=>User::where('tenant_id', Auth::user()->tenant_id)->where('account_status', 1)->orderBy('first_name', 'ASC')->get()
+
 
         ]);
     }

@@ -2977,7 +2977,8 @@
 																																	</a>
 																															@endif
 
-																															<a href="#"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
+																															<a href="#"> <i class="icofont icofont-comment text-muted"></i>
+																																<span class="b-r-muted">Comments ({{ count($post->postComments) }})</span></a>
 																															<a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
 																																	<div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
 																																			@foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
@@ -3044,7 +3045,6 @@
 																												<span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
 
 																												<div class="chat-header f-w-600">{{$post->user->first_name ?? ''}} {{$post->user->surname ?? ''}} {<i class="ti-clipboard text-inverse mr-1 ml-1"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Internal memo"></i>} <i class="zmdi zmdi-long-arrow-right text-primary"></i>
-
 																														@foreach($post->responsiblePersons as $res)
 																																		<small>{{ $res->user->first_name}} {{ $res->user->surname}}</small>,
 																														@endforeach
@@ -3058,6 +3058,8 @@
 																														<a href="{{route('view-internal-memo', $post->post_url)}}">
 																																<h5 class="sub-title">{{ $post->post_title ?? '' }}</h5>
 																														</a>
+																													<p>
+																													</p>
 																														<p class="text-muted">{!! strlen(strip_tags($post->post_content)) > 339 ? substr(strip_tags($post->post_content), 0,339).'...<a href='.route('view-post-activity-stream', $post->post_url).'>Read more</a>' : strip_tags($post->post_content) !!}</p>
 																														@foreach ($post->postAttachment as $attach)
 																														@switch(pathinfo($attach->attachment, PATHINFO_EXTENSION))
@@ -3066,37 +3068,533 @@
 																																		<img src="/assets/formats/ppt.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
 																																		{{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
 																																</a>
-																																@break
+																															<div class="dropdown-secondary dropdown">
+																																<button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+																																<div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+																																	<a class="dropdown-item waves-light waves-effect" target="_blank" href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="ti-download text-success mr-2"></i> Download</a>
+																																	@if(Auth::user()->id == $post->user_id)
+																																		<a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal_{{$attach->id}}" data-directory="{{ $post->post_title ?? ''}}" data-file="{{$post->post_title ?? 'File name'}}" data-unique="{{$attach->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+																																	@endif
+																																</div>
+																															</div>
+																															<div class="modal fade" id="shareFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<form action="{{route('share-with-the-following')}}" method="post">
+																																		@csrf
+																																		<div class="modal-content">
+																																			<div class="modal-header bg-primary">
+																																				<h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> Share File</h6>
+																																				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																					<span aria-hidden="true" class="text-white">&times;</span>
+																																				</button>
+																																			</div>
+																																			<div class="modal-body">
+																																				<div class="container">
+																																					<div class="row">
+																																						<div class="col-md-12">
+																																							<p>Share <strong id="fileToShare"></strong> with...</p>
+																																							<hr>
+																																							<div class="form-group">
+																																								@foreach ($employees as $employee)
+																																									<div class="checkbox-fade fade-in-primary">
+																																										<label>
+																																											<input type="checkbox" value="{{$employee->id}}" name="employees[]" id="employee[]">
+																																											<span class="cr">
+																																											<i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+																																									</span>
+																																											<span>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</span>
+																																										</label>
+																																									</div>
+																																								@endforeach
+																																								<input type="hidden" name="file" value="{{$attach->id}}">
+																																							</div>
+
+																																						</div>
+																																					</div>
+																																				</div>
+																																			</div>
+																																			<div class="modal-footer d-flex justify-content-center">
+																																				<div class="btn-group">
+																																					<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																					<button type="submit" id="" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Share File</button>
+																																				</div>
+																																			</div>
+																																		</div>
+																																	</form>
+																																</div>
+																															</div>
+																															<div class="modal fade" id="deleteFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<div class="modal-content">
+																																		<div class="modal-header bg-danger">
+																																			<h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+																																			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																				<span aria-hidden="true" class="text-white">&times;</span>
+																																			</button>
+																																		</div>
+																																		<div class="modal-body">
+																																			<div class="container">
+																																				<div class="row">
+																																					<div class="col-md-12">
+																																						<p>This action cannot be undone. Are you sure you want to delete <strong id="fileToDelete"></strong> ?</p>
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
+																																		<div class="modal-footer d-flex justify-content-center">
+																																			<div class="btn-group">
+																																				<button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																				<button type="button" id="deleteFileBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete File</button>
+																																			</div>
+																																		</div>
+																																	</div>
+																																</div>
+																															</div>
+
+																															@break
 																																@case('xls')
 																																<a href="/assets/uploads/attachments/{{$attach->attachment}}" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
 																																		<img src="/assets/formats/xls.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
 																																		{{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
 																																</a>
-																																@break
+																															<div class="dropdown-secondary dropdown">
+																																<button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+																																<div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+																																	<a class="dropdown-item waves-light waves-effect" target="_blank" href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="ti-download text-success mr-2"></i> Download</a>
+																																	@if(Auth::user()->id == $post->user_id)
+																																		<a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal_{{$attach->id}}" data-directory="{{ $post->post_title ?? ''}}" data-file="{{$post->post_title ?? 'File name'}}" data-unique="{{$attach->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+																																	@endif
+																																</div>
+																															</div>
+																															<div class="modal fade" id="shareFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<form action="{{route('share-with-the-following')}}" method="post">
+																																		@csrf
+																																		<div class="modal-content">
+																																			<div class="modal-header bg-primary">
+																																				<h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> Share File</h6>
+																																				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																					<span aria-hidden="true" class="text-white">&times;</span>
+																																				</button>
+																																			</div>
+																																			<div class="modal-body">
+																																				<div class="container">
+																																					<div class="row">
+																																						<div class="col-md-12">
+																																							<p>Share <strong id="fileToShare"></strong> with...</p>
+																																							<hr>
+																																							<div class="form-group">
+																																								@foreach ($employees as $employee)
+																																									<div class="checkbox-fade fade-in-primary">
+																																										<label>
+																																											<input type="checkbox" value="{{$employee->id}}" name="employees[]" id="employee[]">
+																																											<span class="cr">
+																																											<i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+																																									</span>
+																																											<span>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</span>
+																																										</label>
+																																									</div>
+																																								@endforeach
+																																								<input type="hidden" name="file" value="{{$attach->id}}">
+																																							</div>
+
+																																						</div>
+																																					</div>
+																																				</div>
+																																			</div>
+																																			<div class="modal-footer d-flex justify-content-center">
+																																				<div class="btn-group">
+																																					<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																					<button type="submit" id="" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Share File</button>
+																																				</div>
+																																			</div>
+																																		</div>
+																																	</form>
+																																</div>
+																															</div>
+																															<div class="modal fade" id="deleteFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<div class="modal-content">
+																																		<div class="modal-header bg-danger">
+																																			<h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+																																			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																				<span aria-hidden="true" class="text-white">&times;</span>
+																																			</button>
+																																		</div>
+																																		<div class="modal-body">
+																																			<div class="container">
+																																				<div class="row">
+																																					<div class="col-md-12">
+																																						<p>This action cannot be undone. Are you sure you want to delete <strong id="fileToDelete"></strong> ?</p>
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
+																																		<div class="modal-footer d-flex justify-content-center">
+																																			<div class="btn-group">
+																																				<button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																				<button type="button" id="deleteFileBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete File</button>
+																																			</div>
+																																		</div>
+																																	</div>
+																																</div>
+																															</div>
+
+																															@break
 																																@case('xlsx')
 																																		<a href="/assets/uploads/attachments/{{$attach->attachment}}" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
 																																				<img src="/assets/formats/xls.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
 																																				{{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
 																																		</a>
-																																@break
+																															<div class="dropdown-secondary dropdown">
+																																<button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+																																<div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+																																	<a class="dropdown-item waves-light waves-effect" target="_blank" href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="ti-download text-success mr-2"></i> Download</a>
+																																	@if(Auth::user()->id == $post->user_id)
+																																		<a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal_{{$attach->id}}" data-directory="{{ $post->post_title ?? ''}}" data-file="{{$post->post_title ?? 'File name'}}" data-unique="{{$attach->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+																																	@endif
+																																</div>
+																															</div>
+																															<div class="modal fade" id="shareFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<form action="{{route('share-with-the-following')}}" method="post">
+																																		@csrf
+																																		<div class="modal-content">
+																																			<div class="modal-header bg-primary">
+																																				<h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> Share File</h6>
+																																				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																					<span aria-hidden="true" class="text-white">&times;</span>
+																																				</button>
+																																			</div>
+																																			<div class="modal-body">
+																																				<div class="container">
+																																					<div class="row">
+																																						<div class="col-md-12">
+																																							<p>Share <strong id="fileToShare"></strong> with...</p>
+																																							<hr>
+																																							<div class="form-group">
+																																								@foreach ($employees as $employee)
+																																									<div class="checkbox-fade fade-in-primary">
+																																										<label>
+																																											<input type="checkbox" value="{{$employee->id}}" name="employees[]" id="employee[]">
+																																											<span class="cr">
+																																											<i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+																																									</span>
+																																											<span>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</span>
+																																										</label>
+																																									</div>
+																																								@endforeach
+																																								<input type="hidden" name="file" value="{{$attach->id}}">
+																																							</div>
+
+																																						</div>
+																																					</div>
+																																				</div>
+																																			</div>
+																																			<div class="modal-footer d-flex justify-content-center">
+																																				<div class="btn-group">
+																																					<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																					<button type="submit" id="" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Share File</button>
+																																				</div>
+																																			</div>
+																																		</div>
+																																	</form>
+																																</div>
+																															</div>
+																															<div class="modal fade" id="deleteFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<div class="modal-content">
+																																		<div class="modal-header bg-danger">
+																																			<h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+																																			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																				<span aria-hidden="true" class="text-white">&times;</span>
+																																			</button>
+																																		</div>
+																																		<div class="modal-body">
+																																			<div class="container">
+																																				<div class="row">
+																																					<div class="col-md-12">
+																																						<p>This action cannot be undone. Are you sure you want to delete <strong id="fileToDelete"></strong> ?</p>
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
+																																		<div class="modal-footer d-flex justify-content-center">
+																																			<div class="btn-group">
+																																				<button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																				<button type="button" id="deleteFileBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete File</button>
+																																			</div>
+																																		</div>
+																																	</div>
+																																</div>
+																															</div>
+
+																															@break
 																																@case('pdf')
 																																		<a href="/assets/uploads/attachments/{{$attach->attachment}}" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
 																																				<img src="/assets/formats/pdf.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
 																																				{{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
 																																		</a>
+																															<div class="dropdown-secondary dropdown">
+																																<button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+																																<div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+																																	<a class="dropdown-item waves-light waves-effect" target="_blank" href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="ti-download text-success mr-2"></i> Download</a>
+																																	@if(Auth::user()->id == $post->user_id)
+																																	<a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal_{{$attach->id}}" data-directory="{{ $post->post_title ?? ''}}" data-file="{{$post->post_title ?? 'File name'}}" data-unique="{{$attach->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+																																	@endif
+																																</div>
+																															</div>
+																															<div class="modal fade" id="shareFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<form action="{{route('share-with-the-following')}}" method="post">
+																																		@csrf
+																																	<div class="modal-content">
+																																		<div class="modal-header bg-primary">
+																																			<h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> Share File</h6>
+																																			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																				<span aria-hidden="true" class="text-white">&times;</span>
+																																			</button>
+																																		</div>
+																																		<div class="modal-body">
+																																			<div class="container">
+																																				<div class="row">
+																																					<div class="col-md-12">
+																																						<p>Share <strong id="fileToShare"></strong> with...</p>
+																																						<hr>
+																																							<div class="form-group">
+																																								@foreach ($employees as $employee)
+																																									<div class="checkbox-fade fade-in-primary">
+																																										<label>
+																																											<input type="checkbox" value="{{$employee->id}}" name="employees[]" id="employee[]">
+																																											<span class="cr">
+																																											<i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+																																									</span>
+																																											<span>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</span>
+																																										</label>
+																																									</div>
+																																								@endforeach
+																																									<input type="hidden" name="file" value="{{$attach->id}}">
+																																							</div>
+
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
+																																		<div class="modal-footer d-flex justify-content-center">
+																																			<div class="btn-group">
+																																				<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																				<button type="submit" id="" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Share File</button>
+																																			</div>
+																																		</div>
+																																	</div>
+																																	</form>
+																																</div>
+																															</div>
+																															<div class="modal fade" id="deleteFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<div class="modal-content">
+																																		<div class="modal-header bg-danger">
+																																			<h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+																																			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																				<span aria-hidden="true" class="text-white">&times;</span>
+																																			</button>
+																																		</div>
+																																		<div class="modal-body">
+																																			<div class="container">
+																																				<div class="row">
+																																					<div class="col-md-12">
+																																						<p>This action cannot be undone. Are you sure you want to delete <strong id="fileToDelete"></strong> ?</p>
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
+																																		<div class="modal-footer d-flex justify-content-center">
+																																			<div class="btn-group">
+																																				<button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																				<button type="button" id="deleteFileBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete File</button>
+																																			</div>
+																																		</div>
+																																	</div>
+																																</div>
+																															</div>
 																																@break
 																																@case('doc')
 																																		<a href="/assets/uploads/attachments/{{$attach->attachment}}" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
 																																				<img src="/assets/formats/doc.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
 																																				{{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
 																																		</a>
-																																@break
+																															<div class="dropdown-secondary dropdown">
+																																<button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+																																<div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+																																	<a class="dropdown-item waves-light waves-effect" target="_blank" href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="ti-download text-success mr-2"></i> Download</a>
+																																	@if(Auth::user()->id == $post->user_id)
+																																		<a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal_{{$attach->id}}" data-directory="{{ $post->post_title ?? ''}}" data-file="{{$post->post_title ?? 'File name'}}" data-unique="{{$attach->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+																																	@endif
+																																</div>
+																															</div>
+																															<div class="modal fade" id="shareFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<form action="{{route('share-with-the-following')}}" method="post">
+																																		@csrf
+																																		<div class="modal-content">
+																																			<div class="modal-header bg-primary">
+																																				<h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> Share File</h6>
+																																				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																					<span aria-hidden="true" class="text-white">&times;</span>
+																																				</button>
+																																			</div>
+																																			<div class="modal-body">
+																																				<div class="container">
+																																					<div class="row">
+																																						<div class="col-md-12">
+																																							<p>Share <strong id="fileToShare"></strong> with...</p>
+																																							<hr>
+																																							<div class="form-group">
+																																								@foreach ($employees as $employee)
+																																									<div class="checkbox-fade fade-in-primary">
+																																										<label>
+																																											<input type="checkbox" value="{{$employee->id}}" name="employees[]" id="employee[]">
+																																											<span class="cr">
+																																											<i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+																																									</span>
+																																											<span>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</span>
+																																										</label>
+																																									</div>
+																																								@endforeach
+																																								<input type="hidden" name="file" value="{{$attach->id}}">
+																																							</div>
+
+																																						</div>
+																																					</div>
+																																				</div>
+																																			</div>
+																																			<div class="modal-footer d-flex justify-content-center">
+																																				<div class="btn-group">
+																																					<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																					<button type="submit" id="" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Share File</button>
+																																				</div>
+																																			</div>
+																																		</div>
+																																	</form>
+																																</div>
+																															</div>
+																															<div class="modal fade" id="deleteFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<div class="modal-content">
+																																		<div class="modal-header bg-danger">
+																																			<h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+																																			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																				<span aria-hidden="true" class="text-white">&times;</span>
+																																			</button>
+																																		</div>
+																																		<div class="modal-body">
+																																			<div class="container">
+																																				<div class="row">
+																																					<div class="col-md-12">
+																																						<p>This action cannot be undone. Are you sure you want to delete <strong id="fileToDelete"></strong> ?</p>
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
+																																		<div class="modal-footer d-flex justify-content-center">
+																																			<div class="btn-group">
+																																				<button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																				<button type="button" id="deleteFileBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete File</button>
+																																			</div>
+																																		</div>
+																																	</div>
+																																</div>
+																															</div>
+
+																															@break
 																																@case('docx')
 																																		<a href="/assets/uploads/attachments/{{$attach->attachment}}" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
 																																				<img src="/assets/formats/doc.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>
 																																				{{strlen($post->post_title ?? 'Download attachment') > 10 ? substr($post->post_title ?? 'No name',0,7).'...' : $post->post_title ?? 'Downlaod attachment'}}
 																																		</a>
-																																@break
+																															<div class="dropdown-secondary dropdown">
+																																<button class="btn btn-default btn-mini dropdown-toggle waves-light b-none txt-muted" type="button" id="dropdown6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="icofont icofont-navigation-menu"></i></button>
+																																<div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 24px, 0px); top: 0px; left: 0px; will-change: transform;">
+																																	<a class="dropdown-item waves-light waves-effect" target="_blank" href="/assets/uploads/attachments/{{$attach->attachment}}"><i class="ti-download text-success mr-2"></i> Download</a>
+																																	@if(Auth::user()->id == $post->user_id)
+																																		<a class="dropdown-item waves-light waves-effect shareFile" data-toggle="modal" data-target="#shareFileModal_{{$attach->id}}" data-directory="{{ $post->post_title ?? ''}}" data-file="{{$post->post_title ?? 'File name'}}" data-unique="{{$attach->id}}" href="javascript:void(0);"><i class="ti-sharethis text-warning mr-2"></i> Share</a>
+																																	@endif
+																																</div>
+																															</div>
+																															<div class="modal fade" id="shareFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<form action="{{route('share-with-the-following')}}" method="post">
+																																		@csrf
+																																		<div class="modal-content">
+																																			<div class="modal-header bg-primary">
+																																				<h6 class="modal-title"> <i class="ti-share text-white mr-2"></i> Share File</h6>
+																																				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																					<span aria-hidden="true" class="text-white">&times;</span>
+																																				</button>
+																																			</div>
+																																			<div class="modal-body">
+																																				<div class="container">
+																																					<div class="row">
+																																						<div class="col-md-12">
+																																							<p>Share <strong id="fileToShare"></strong> with...</p>
+																																							<hr>
+																																							<div class="form-group">
+																																								@foreach ($employees as $employee)
+																																									<div class="checkbox-fade fade-in-primary">
+																																										<label>
+																																											<input type="checkbox" value="{{$employee->id}}" name="employees[]" id="employee[]">
+																																											<span class="cr">
+																																											<i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+																																									</span>
+																																											<span>{{$employee->first_name ?? ''}} {{$employee->surname ?? ''}}</span>
+																																										</label>
+																																									</div>
+																																								@endforeach
+																																								<input type="hidden" name="file" value="{{$attach->id}}">
+																																							</div>
+
+																																						</div>
+																																					</div>
+																																				</div>
+																																			</div>
+																																			<div class="modal-footer d-flex justify-content-center">
+																																				<div class="btn-group">
+																																					<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																					<button type="submit" id="" class="btn btn-primary waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Share File</button>
+																																				</div>
+																																			</div>
+																																		</div>
+																																	</form>
+																																</div>
+																															</div>
+																															<div class="modal fade" id="deleteFileModal_{{$attach->id}}" tabindex="-1" role="dialog">
+																																<div class="modal-dialog " role="document">
+																																	<div class="modal-content">
+																																		<div class="modal-header bg-danger">
+																																			<h6 class="modal-title"> <i class="ti-trash text-white mr-2"></i> Are you sure?</h6>
+																																			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																																				<span aria-hidden="true" class="text-white">&times;</span>
+																																			</button>
+																																		</div>
+																																		<div class="modal-body">
+																																			<div class="container">
+																																				<div class="row">
+																																					<div class="col-md-12">
+																																						<p>This action cannot be undone. Are you sure you want to delete <strong id="fileToDelete"></strong> ?</p>
+																																					</div>
+																																				</div>
+																																			</div>
+																																		</div>
+																																		<div class="modal-footer d-flex justify-content-center">
+																																			<div class="btn-group">
+																																				<button type="button" class="btn btn-primary waves-effect btn-mini" data-dismiss="modal"><i class="ti-close mr-2"></i>Cancel</button>
+																																				<button type="button" id="deleteFileBtn" class="btn btn-danger waves-effect waves-light btn-mini"> <i class="ti-check mr-2"></i>Delete File</button>
+																																			</div>
+																																		</div>
+																																	</div>
+																																</div>
+																															</div>
+																															@break
 																																@default
 																																		<a href="/assets/uploads/attachments/{{$attach->attachment}}" data-toggle="tooltip" data-placement="top" title="{{$post->post_title ?? 'No name'}}" data-original-title="{{$post->post_title ?? 'Downlaod attachment'}}" style="cursor: pointer;">
 																																				<img src="/assets/formats/file.png" height="64" width="64" alt="{{$post->post_title ?? 'No name'}}"><br>

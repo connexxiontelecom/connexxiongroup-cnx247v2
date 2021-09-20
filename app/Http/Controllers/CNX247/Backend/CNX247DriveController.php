@@ -470,6 +470,22 @@ class CNX247DriveController extends Controller
 
     }
 
+    public function shareFileWithTheFollowing(Request $request){
+    	$this->validate($request,[
+    		'file'=>'required',
+			]);
+			foreach($request->employees as $employee){
+				$share = new SharedFile;
+				$share->owner = Auth::user()->id;
+				$share->file_id = $request->file;
+				$share->tenant_id = Auth::user()->tenant_id;
+				$share->shared_with = $employee;
+				$share->save();
+			}
+			session()->flash("message", "<strong>Success!</strong> File shared with the selected persons.");
+			return back();
+		}
+
     public function newFolder(Request $request){
         $this->validate($request,[
             //'employees'=>'required',
