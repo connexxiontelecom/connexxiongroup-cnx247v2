@@ -55,30 +55,28 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Birth Date</label>
-                        <input class="form-control" type="date" wire:model.debounce.90000ms="birth_date" placeholder="Birth Date">
+                        <input disabled class="form-control" type="date" wire:model.debounce.90000ms="birth_date" placeholder="Birth Date">
                         <label class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($birth_date))}}</label>
                         @error('birth_date')
                             <i class="text-danger mt-2">{{$message}}</i>
                         @enderror
                     </div>
-
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Position</label>
-                        <input class="form-control" type="text" wire:model.debounce.90000ms="position" placeholder="Position">
+                        <input disabled class="form-control" type="text" wire:model.debounce.90000ms="position" placeholder="Position">
                         @error('position')
                             <i class="text-danger mt-2">{{$message}}</i>
                         @enderror
                     </div>
-
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Hire Date</label>
-                        <input class="form-control" type="date" wire:model.debounce.90000ms="hire_date" placeholder="Hire Date">
+                        <input disabled class="form-control" type="date" wire:model.debounce.90000ms="hire_date" placeholder="Hire Date">
                         <label class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($hire_date))}}</label>
                         @error('hire_date')
                             <i class="text-danger mt-2">{{$message}}</i>
@@ -89,7 +87,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Start Date</label>
-                        <input class="form-control" type="date" wire:model.debounce.90000ms="start_date" placeholder="Start Date">
+                        <input disabled class="form-control" type="date" wire:model.debounce.90000ms="start_date" placeholder="Start Date">
                         <label class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($start_date))}}</label>
                         @error('start_date')
                             <i class="text-danger mt-2">{{$message}}</i>
@@ -100,7 +98,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Confirm Date</label>
-                        <input class="form-control" type="date" wire:model.debounce.90000ms="confirm_date" placeholder="Confirm Date">
+                        <input disabled class="form-control" type="date" wire:model.debounce.90000ms="confirm_date" placeholder="Confirm Date">
                         <label class="label label-primary">{{date(Auth::user()->tenant->dateFormat->format ?? 'd F, Y', strtotime($confirm_date))}}</label>
                         @error('confirm_date')
                             <i class="text-danger mt-2">{{$message}}</i>

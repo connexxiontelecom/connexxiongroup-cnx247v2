@@ -58,7 +58,7 @@ class PersonalInfo extends Component
     public function updateProfile(){
         $messages = [
             'required' => 'The :attribute is mandatory',
-            'mobile.regex' => 'The phone number must be in E.164 format(+234...)'
+            //'mobile.regex' => 'The phone number must be in E.164 format(+234...)'
         ];
 
 /*         $this->validate(
@@ -71,11 +71,11 @@ class PersonalInfo extends Component
         $this->validate([
             'first_name'=>'required',
             'surname'=>'required',
-            'mobile'=>'required|regex:/^\+[1-9]\d{1,14}$/',
-            'position'=>'required',
-            'hire_date'=>'required',
-            'confirm_date'=>'required',
-            'birth_date'=>'required',
+            'mobile'=>'required',
+            //'position'=>'required',
+            //'hire_date'=>'required',
+            //'confirm_date'=>'required',
+            //'birth_date'=>'required',
             'department'=>'required',
             'address'=>'required',
             'email'=>'required|email'
@@ -84,11 +84,11 @@ class PersonalInfo extends Component
         $user->first_name = $this->first_name;
         $user->surname = $this->surname;
         $user->mobile = $this->mobile;
-        $user->position = $this->position;
-        $user->hire_date = $this->hire_date;
-        $user->confirm_date = $this->confirm_date;
-        $user->start_date = $this->start_date;
-        $user->birth_date = $this->birth_date;
+        //$user->position = $this->position;
+        //$user->hire_date = $this->hire_date;
+        //$user->confirm_date = $this->confirm_date;
+        //$user->start_date = $this->start_date;
+        //$user->birth_date = $this->birth_date;
         $user->department_id = $this->department;
         $user->address = $this->address;
         $user->email = $this->email;
