@@ -62,7 +62,9 @@
                         @case('memo')
                                 <a href="{{route('view-internal-memo',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                                 @break
-                        @case('workgroup')
+                        @case('confirmation')
+																<a href="{{route('view-post-activity-stream',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
+																	@break
                         @default
                                 <a href="{{route('view-workgroup-invitation',$un->data['url'])}}" class="nav-link" wire:click="markNotificationAsRead">
                     @endswitch

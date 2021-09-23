@@ -133,6 +133,11 @@
 														<span class="pcoded-mtext">Termination</span>
 												</a>
 										</li>
+										<li class=" ">
+												<a href="{{ route('employment-confirmation') }}">
+														<span class="pcoded-mtext">Confirmation</span>
+												</a>
+										</li>
 										@endcan
 										@can('view ideabox')
 

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\CNX247\Backend;
 
+use App\ConfirmationLog;
 use App\Http\Controllers\Controller;
+use App\Notifications\NewPostNotification;
+use App\ResponsiblePerson;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -38,6 +41,8 @@ class HRController extends Controller
         $this->department = new Department();
         $this->supervisor = new Supervisor();
         $this->employee = new User();
+        $this->confirmationlog = new ConfirmationLog();
+        $this->post = new Post();
     }
 
     /*
@@ -68,9 +73,8 @@ class HRController extends Controller
     * Get list of all employees
     */
     public function index(){
-        $data['employeees'] = User::where('tenant_id', Auth::user()->tenant_id)->get();
-       //print_r($data);
-        return view('backend.hr.employees', $data);
+        $employees = User::where('tenant_id', Auth::user()->tenant_id)->orderBy('first_name', 'ASC')->get();
+        return view('backend.hr.employees', ['employees'=>$employees]);
     }
 
     /*
@@ -631,6 +635,79 @@ class HRController extends Controller
             return redirect()->back();
         }
     }
+
+    public function confirmEmployment(Request $request){
+    	$this->validate($request,[
+    		'confirmation_date'=>'required|date',
+				'effective_date'=>'required|date',
+				'position'=>'required',
+				'description'=>'required',
+				'user'=>'required'
+			],[
+				'confirmation.required'=>'Choose confirmation date',
+				'effective_date.required'=>'Choose effective date',
+				'position.required'=>'Enter position',
+				'description.required'=>'Enter a description here...'
+			]);
+    	#Register log
+    	$confirmation = $this->confirmationlog->setNewConfirmation($request);
+    	#Notify on activity stream
+			$message = new Post;
+			$message->post_content = $confirmation->description;
+			$message->post_title = "Employment Status";
+			$message->user_id = Auth::user()->id;
+			$message->post_url = $confirmation->slug;
+			$message->post_type = 'confirmation';
+			$message->tenant_id = Auth::user()->tenant_id;
+			$message->start_date = $confirmation->confirmation_date; //start date will serve as confirmation date
+			$message->end_date = $confirmation->effective_date; //end date will serve as effective date
+			$message->save();
+			#Responsible persons
+			$receiver = new ResponsiblePerson;
+			$receiver->user_id = $request->user;
+			$receiver->post_id = $message->id;
+			$receiver->post_type = 'confirmation';
+			$receiver->tenant_id = Auth::user()->tenant_id;
+			$receiver->save();
+			$rec = User::find($request->user);
+			$rec->notify(new NewPostNotification($message));
+			session()->flash("success", "<strong>Great!</strong> Action registered successfully.");
+			return back();
+		}
+
+		public function updateEmployeeConfirmationStatus(Request $request){
+    	$this->validate($request,[
+    		'user'=>'required',
+				'status'=>'required',
+				'post_id'=>'required',
+				'con_slug'=>'required'
+			]);
+    	$confirmation = $this->confirmationlog->getConfirmationLogBySlug($request->con_slug);
+    	if(!empty($confirmation)){
+    		$this->confirmationlog->updateConfirmationStatus($request, $confirmation->id);
+    		Post::updatePostStatus($request->post_id, $request->status);
+    		#Update employees profile
+				if($request->status == 'approved'){
+					$user = User::find(Auth::user()->id);
+					$user->confirm_date = $confirmation->effective_date;
+					$user->position = $confirmation->position ?? '';
+					$user->save();
+					#Update post
+					$post = $this->post->getPostById($request->post_id);
+					$post->post_status = 'approved';
+					$post->save();
+				}
+    		session()->flash("success", "<strong>Success!</strong> Action recorded.");
+    		return back();
+			}else{
+    		return back();
+			}
+
+		}
+
+		public function employmentConfirmation(){
+    	return view('backend.hr.confirmation-requests',['confirmations'=>$this->confirmationlog->getAllConfirmationRequests()]);
+		}
 
     public function terminatedEmployment(){
         $now = Carbon::now();

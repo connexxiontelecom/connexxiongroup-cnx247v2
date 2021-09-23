@@ -47,6 +47,9 @@
         <div class="col-md-12">
             <div class="btn-group ml-3">
                 <a href="{{route('chat-n-calls')}}" class="btn btn-mini btn-light"><i class="ti-comments"></i>  Chat</a>
+							@if(is_null($user->confirm_date))
+                <a href="javascript:void(0);" data-toggle="modal" data-target="#confirmationModal" class="btn btn-mini btn-success"><i class="ti-stamp"></i>  Confirm</a>
+							@endif
                 <a href="{{url()->previous()}}" class="btn btn-mini btn-secondary text-white"><i class="ti-back-left"></i>  Back</a>
             </div>
         </div>
@@ -122,7 +125,7 @@
                                     </tr>
                                     <tr>
                                         <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Confirm Date</th>
-                                        <td>{{date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime($user->confirm_date)) ?? '-'}}</td>
+                                        <td>{{!is_null($user->confirm_date) ? date(Auth::user()->tenant->dateFormat->format ?? 'd M, Y', strtotime($user->confirm_date)) : '-'}}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" class="tx-11 text-uppercase" style="font-size:12px;">Address</th>
@@ -268,6 +271,49 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header bg-success">
+				<h6 class="modal-title text-uppercase">Employee Confirmation</h6>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true" class="text-white">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form action="{{route('confirm-employment')}}" method="post">
+					@csrf
+					<div class="form-group">
+						<label for="">Confirmation Date</label>
+						<input type="date" class="form-control"  name="confirmation_date" placeholder="Confirmation Date">
+						@error('confirmation_date') <i class="text-danger">{{$message}}</i>@enderror
+					</div>
+					<div class="form-group">
+						<label for="">Effective Date</label>
+						<input type="date" class="form-control"  name="effective_date" placeholder="Effective Date">
+						@error('effective_date') <i class="text-danger">{{$message}}</i>@enderror
+					</div>
+					<div class="form-group">
+						<label for="">Position</label>
+						<input type="text" class="form-control" value="{{$user->position ?? ''}}"  name="position" placeholder="Position">
+						@error('position') <i class="text-danger">{{$message}}</i>@enderror
+					</div>
+					<div class="form-group">
+						<label for="">Description</label>
+						<textarea name="description"  placeholder="Type here..." style="resize: none;" class="form-control content">{{old('description')}}</textarea>
+						@error('description') <i class="text-danger">{{$message}}</i>@enderror
+					</div>
+					<div class="btn-group d-flex justify-content-center">
+						<input type="hidden" name="user" value="{{$user->id}}">
+						<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Cancel</button>
+						<button type="submit" class="btn btn-primary waves-effect btn-mini waves-light"><i class="mr-2 ti-check"></i>Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 @endsection
 

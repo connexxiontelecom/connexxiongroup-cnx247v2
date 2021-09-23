@@ -102,6 +102,9 @@ class Post extends Model
         return $this->hasMany(BudgetFinancial::class, 'project_id');
 		}
 
+		public function getConfirmation(){
+    	return $this->belongsTo(ConfirmationLog::class, 'slug');
+		}
 
 
 
@@ -128,6 +131,10 @@ class Post extends Model
 		$post = Post::find($post_id);
 		$post->post_status = $status;
 		$post->save();
+	}
+
+	public function getPostById($id){
+		return Post::find($id);
 	}
 
 

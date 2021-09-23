@@ -301,6 +301,166 @@
 																	@endforeach
 
 																@endif
+
+															@elseif($post->post_type == 'confirmation')
+																@foreach ($post->responsiblePersons as $person)
+																		@if ($post->user_id == Auth::user()->id || $person->user_id == Auth::user()->id)
+																			<div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
+																				<div class="row timeline-right p-t-35">
+																					<div class="col-2 col-sm-2 col-xl-1">
+																						<div class="social-timelines-left">
+																							<img class="img-radius timeline-icon" src="/assets/images/avatars/thumbnails/{{ $post->user->avatar ?? 'avatar.png' }}" alt="{{Auth::user()->first_name}}">
+																						</div>
+																					</div>
+																					<div class="col-10 col-sm-10 col-xl-11 p-l-5 p-b-35">
+																						<div class="card">
+
+																							<div class="card-block post-timelines">
+																								<div class="chat-header f-w-600">
+																									<a href="{{route('view-post-activity-stream', $post->post_url)}}">
+																										{{$post->user->first_name ?? ''}} {{$post->user->surname ?? ''}} {<i class="ti-stamp text-inverse mr-1 ml-1"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Confirmation"></i>} <i class="zmdi zmdi-long-arrow-right text-primary"></i>
+
+																										@foreach($post->responsiblePersons as $res)
+																											<small>{{ $res->user->first_name}} {{ $res->user->surname}}</small>,
+																										@endforeach
+
+																									</a>
+
+																								</div>
+																								<div class="social-time text-muted">{{date('d F, Y h:i a', strtotime($post->created_at))}} </div>
+																							</div>
+																							<div class="card-block">
+
+																								<div class="timeline-details">
+																									<p class="text-muted">{!! strlen(strip_tags($post->post_content)) > 339 ? substr(strip_tags($post->post_content), 0,339).'...<a href='.route('view-post-activity-stream', $post->post_url).'>Read more</a>' : strip_tags($post->post_content) !!}</p>
+																									<p>Confirmation Date: <span class="text-primary">{{date('d M, Y', strtotime($post->start_date))}}</span> | Effective Date: <span class="text-danger">{{date('d M, Y', strtotime($post->end_date))}}</span></p>
+																									@if($post->post_status == 'in-progress')
+																									<div class="btn-group d-flex justify-content-center mt-4">
+																										<a href="javascript:void(0);" data-toggle="modal" data-target="#confirmApproveModal_{{$post->id}}" class="btn btn-success btn-mini"> <i class="ti-check mr-2"></i> Accept</a>
+																										<a href="javascript:void(0);" data-toggle="modal" data-target="#confirmDeclineModal_{{$post->id}}" class="btn btn-danger btn-mini"> <i class="ti-close mr-2"></i> Decline</a>
+																									</div>
+
+																									<div class="modal fade" id="confirmApproveModal_{{$post->id}}" tabindex="-1" role="dialog">
+																										<div class="modal-dialog" role="document">
+																											<div class="modal-content">
+																												<div class="modal-header bg-success">
+																													<h6 class="modal-title text-uppercase">Employee Confirmation</h6>
+																													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																														<span aria-hidden="true" class="text-white">&times;</span>
+																													</button>
+																												</div>
+																												<div class="modal-body">
+																													<form action="{{route('update-confirm-employment')}}" method="post">
+																														@csrf
+																														<p>Are you sure you want to approve this request?</p>
+																														<input type="hidden" name="status" value="approved">
+																														<input type="hidden" name="post_id" value="{{$post->id}}">
+																														<div class="btn-group mt-4 d-flex justify-content-center">
+																															<input type="hidden" name="user" value="{{$person->user_id}}">
+																															<input type="hidden" name="con_slug" value="{{$post->post_url}}">
+																															<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Cancel</button>
+																															<button type="submit" class="btn btn-primary waves-effect btn-mini waves-light"><i class="mr-2 ti-check"></i>Yes, please</button>
+																														</div>
+																													</form>
+																												</div>
+																											</div>
+																										</div>
+																									</div>
+																									<div class="modal fade" id="confirmDeclineModal_{{$post->id}}" tabindex="-1" role="dialog">
+																										<div class="modal-dialog" role="document">
+																											<div class="modal-content">
+																												<div class="modal-header bg-danger">
+																													<h6 class="modal-title text-uppercase">Employee Confirmation</h6>
+																													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																														<span aria-hidden="true" class="text-white">&times;</span>
+																													</button>
+																												</div>
+																												<div class="modal-body">
+																													<form action="{{route('update-confirm-employment')}}" method="post">
+																														@csrf
+																														<p>Are you sure you want to decline this request?</p>
+																														<input type="hidden" name="status" value="declined">
+																														<input type="hidden" name="post_id" value="{{$post->id}}">
+																														<div class="btn-group mt-4 d-flex justify-content-center">
+																															<input type="hidden" name="user" value="{{$person->user_id}}">
+																															<input type="hidden" name="con_slug" value="{{$post->post_url}}">
+																															<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>Cancel</button>
+																															<button type="submit" class="btn btn-primary waves-effect btn-mini waves-light"><i class="mr-2 ti-check"></i>Yes, please</button>
+																														</div>
+																													</form>
+																												</div>
+																											</div>
+																										</div>
+																									</div>
+																									@endif
+																								</div>
+																							</div>
+																							<div class="card-block b-b-theme b-t-theme social-msg">
+
+																								@if(!empty($post->postLikes()->where('user_id', Auth::user()->id)->first()))
+																									<a href="javascript:void(0);" wire:click="unLike({{ $post->id }})"> <i class="icofont icofont-thumbs-down text-danger" ></i>
+																										<span class="b-r-muted">Unlike ({{ count($post->postLikes) }}) </span>
+																									</a>
+
+																								@elseif(empty($post->postLikes()->where('user_id', Auth::user()->id)->first()))
+																									<a href="javascript:void(0);" wire:click="addLike({{ $post->id }})"> <i class="icofont icofont-like text-success" ></i>
+																										<span class="b-r-muted">Like ({{ count($post->postLikes) }}) </span>
+																									</a>
+																								@endif
+																								<a href="javascript:void(0);"> <i class="icofont icofont-comment text-muted"></i> <span class="b-r-muted">Comments  ({{ count($post->postComments) }})</span></a>
+																								<a href="javascript:void(0);" class="viewers dropdown-toggle" type="button" id="dropdown-{{$post->id}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> <i class="ti-eye text-muted"></i> <span>View ({{number_format(count($post->postViews))}})</span>
+																									<div class="dropdown-menu" aria-labelledby="dropdown-{{$post->id}}" style="width:300px!important;" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+																										@foreach ($post->postViews()->orderBy('id', 'DESC')->take(10)->get() as $viewer)
+																											<a class="dropdown-item waves-light waves-effect" href="{{route('view-profile', $viewer->user->url)}}">
+																												<img src="/assets/images/avatars/thumbnails/{{$viewer->user->avatar ?? 'avatar.png'}}" class="img-30 mr-2" alt="{{$viewer->user->first_name ?? ''}}"> {{$viewer->user->first_name ?? ''}} {{$viewer->user->surname ?? ''}}</a>
+																										@endforeach
+																										<a class="dropdown-item waves-light waves-effect text-center" href="{{route('view-post-activity-stream', $post->post_url)}}">View all</a>
+																									</div>
+																								</a>
+																							</div>
+																							<div class="card-block user-box">
+																								<div class="p-b-10"> <span class="f-14"><a href="javascript:void(0);">Comments ({{ count($post->postComments) }})</a></span>
+																								</div>
+																								@foreach($post->postComments()->orderBy('id', 'DESC')->take(5)->get() as $comment)
+																									<div class="media m-b-2">
+																										<a class="media-left" href="{{ route('view-profile', $comment->user->url) }}">
+																											<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ $comment->user->avatar ?? 'avatar.png' }}" alt="{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }}">
+																										</a>
+																										<div class="media-body b-b-muted social-client-description">
+																											<div class="chat-header"><a href="{{ route('view-profile', $comment->user->url) }}">{{ $comment->user->first_name }} {{ $comment->user->surname ?? '' }} </a> <span class="text-muted">{{date('d M, Y h:i a', strtotime($comment->created_at)) }} </span></div>
+																											<p class="text-muted"> {!! $comment->comment !!} </p>
+																										</div>
+																									</div>
+																								@endforeach
+																								@if (count($post->postComments) > 5 )
+																									<a href="{{route('view-post-activity-stream', $post->post_url)}}">
+																										<p class="text-center">+{{count($post->postComments) - 5}} others</p>
+																									</a>
+																								@endif
+
+																								<div class="media">
+																									<a class="media-left" href="{{ route('view-profile', Auth::user()->url) }}">
+																										<img class="media-object img-radius m-r-20" src="/assets/images/avatars/thumbnails/{{ Auth::user()->avatar ?? 'avatar.png' }}" alt="Generic placeholder image">
+																									</a>
+																									<div class="media-body">
+
+																										<div class="">
+																											<textarea wire:model.debounce.50000ms="comment" rows="5" cols="5" class="form-control" placeholder="Leave comment"></textarea>
+
+																											<div class="text-right m-t-20">
+																												<button class="btn btn-out-dashed btn-primary btn-square btn-sm" type="button" wire:click="comment({{ $post->id }})">Comment</button>
+																											</div>
+																										</div>
+
+																									</div>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		@endif
+																@endforeach
 															@elseif($post->post_type == 'task')
 																	@if ($post->user_id == Auth::user()->id)
 																	<div class="social-timelines p-relative rollover" data-live="{{$post->id}}">
@@ -3672,9 +3832,6 @@
 																  @endforeach
 															@endif
 													@endforeach
-
-
-
 											</div>
 									</div>
 					</div>
