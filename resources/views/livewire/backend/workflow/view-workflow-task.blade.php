@@ -163,7 +163,7 @@
                                 <td>
                                     <i class="icofont icofont-id-card"></i> Created:
                                 </td>
-                                <td class="text-right">{{date('d F, Y', strtotime($request->created_at))}}</td>
+                                <td class="text-right">{{date('d F, Y h:ia', strtotime($request->created_at))}}</td>
                             </tr>
                             <tr>
                                 <td>
@@ -200,6 +200,44 @@
                     </table>
                 </div>
             </div>
+					<div class="card">
+						<div class="card-header">
+							<h5 class="card-header-text">
+								<i class="icofont icofont-ui-note m-r-10"></i> Process Log
+							</h5>
+						</div>
+						<div class="card-block task-details">
+							<table class="table table-border table-xs">
+								<tbody>
+								@foreach($request->responsiblePersons->where('is_seen',1) as $rp)
+									<tr>
+										<td>
+											<a href="#! "><img style="border-radius:50%; width:64px; height:64px;" src="/assets/images/avatars/thumbnails/{{$rp->user->avatar ?? 'avatar.png'}}" ></a>
+										</td>
+										<td class="text-right">
+											@switch($rp->status)
+												@case('in-progress')
+												<label for="" class="label label-warning special-badge">In-progress</label>
+												@break
+												@case('approved')
+												<label for="" class="label label-success special-badge">Approved</label>
+												@break
+												@case('declined')
+												<label for="" class="label label-danger special-badge">Declined</label>
+												@break
+												@default
+
+											@endswitch
+												<br>
+											<small>{{date('d M, Y h:ia', strtotime($rp->updated_at))}}</small>
+										</td>
+									</tr>
+								@endforeach
+
+								</tbody>
+							</table>
+						</div>
+					</div>
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-header-text">
