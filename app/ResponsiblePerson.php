@@ -39,6 +39,7 @@ class ResponsiblePerson extends Model
 	public static function updateStatus($post_id, $action){
 		$update = ResponsiblePerson::where('post_id', $post_id)->where('user_id', Auth::user()->id)->first();
 		$update->status = $action;
+		$update->updated_at = now();
 		$update->save();
 	}
 }
