@@ -635,6 +635,34 @@ class HRController extends Controller
             return redirect()->back();
         }
     }
+		public function suspendEmployment(Request $request){
+        $this->validate($request,[
+            'user'=>'required'
+        ]);
+        $user = User::where('id', $request->user)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($user)){
+            $user->account_status = 3;
+            $user->save();
+            return response()->json(["message"=>"Success! ".$user->first_name."'s employment suspended"],200);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Could not suspend employment");
+            return redirect()->back();
+        }
+    }
+		public function activateAccount(Request $request){
+        $this->validate($request,[
+            'user'=>'required'
+        ]);
+        $user = User::where('id', $request->user)->where('tenant_id', Auth::user()->tenant_id)->first();
+        if(!empty($user)){
+            $user->account_status = 1;
+            $user->save();
+            return response()->json(["message"=>"Success! ".$user->first_name."'s activated"],200);
+        }else{
+            session()->flash("error", "<strong>Ooops!</strong> Could not activate account.");
+            return redirect()->back();
+        }
+    }
 
     public function confirmEmployment(Request $request){
     	$this->validate($request,[

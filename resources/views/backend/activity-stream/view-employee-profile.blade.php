@@ -67,13 +67,19 @@
                     <div class="slide"></div>
                 </li>
                 <li class="nav-item">
-                    @if ($user->account_status != 2)
+
                         <div class="btn-group">
-                        <a href="{{route('query-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Query {{$user->first_name}}"> <i class="ti-help-alt mr-4 text-danger"></i></a>
-                        @can('assign permission')<a href="{{route('assign-permission-to-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Assign Role to {{$user->first_name}}"> <i class="icofont icofont-chart-flow-alt-1 mr-4 text-warning"></i></a> @endcan
-                            <a href="javascript:void(0);" data-toggle="modal" class="terminate-employment" data-user="{{$user->id}}" data-target="#terminateEmploymentModal" title="Terminate {{$user->first_name}}'s employement"> <i class="ti-na mr-4 text-danger"></i></a>
-                        </div>
-                    @endif
+													@if ($user->account_status == 2 || $user->account_status == 3)
+														<a href="javascript:void(0);" data-toggle="modal" class="activate-account" data-user="{{$user->id}}" data-target="#activateAccountModal" title="Activate {{$user->first_name}}'s account"> <i class="ti-check mr-4 text-success"></i></a>
+													@endif
+													@if($user->account_status == 1)
+															@can('assign permission')<a href="{{route('assign-permission-to-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Assign Role to {{$user->first_name}}"> <i class="icofont icofont-chart-flow-alt-1 mr-4 text-warning"></i></a> @endcan
+															<a href="{{route('query-employee', $user->url)}}" data-toggle="tooltip" data-placement="top" title="Query {{$user->first_name}}"> <i class="ti-help-alt mr-4 text-danger"></i></a>
+															<a href="javascript:void(0);" data-toggle="modal" class="terminate-employment" data-user="{{$user->id}}" data-target="#terminateEmploymentModal" title="Terminate {{$user->first_name}}'s employement"> <i class="ti-na mr-4 text-danger"></i></a>
+															<a href="javascript:void(0);" data-toggle="modal" class="suspend-employment" data-user="{{$user->id}}" data-target="#suspendEmploymentModal" title="Suspend {{$user->first_name}}'s employement"> <i class="ti-alarm-clock mr-4 text-warning"></i></a>
+														@endif
+												</div>
+
                 </li>
             </ul>
             <!-- Tab panes -->
@@ -247,6 +253,54 @@
 @endsection
 
 @section('dialog-section')
+	<div class="modal fade" id="suspendEmploymentModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-warning">
+					<h6 class="modal-title text-uppercase">Are you sure?</h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="text-white">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to suspend <i>{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</i>'s employment?</p>
+					<form action="">
+						<div class="form-group">
+							<input type="hidden"  id="selectedUser">
+						</div>
+						<div class="btn-group d-flex justify-content-center">
+							<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>No, cancel</button>
+							<button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="suspendEmploymentBtn"><i class="mr-2 ti-check"></i>Yes, please</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="activateAccountModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-success">
+					<h6 class="modal-title text-uppercase">Are you sure?</h6>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="text-white">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to activate <i>{{$user->first_name ?? ''}} {{$user->surname ?? ''}}</i>'s account?</p>
+					<form action="">
+						<div class="form-group">
+							<input type="hidden"  id="selectedUser">
+						</div>
+						<div class="btn-group d-flex justify-content-center">
+							<button type="button" class="btn btn-danger waves-effect btn-mini" data-dismiss="modal"><i class="mr-2 ti-close"></i>No, cancel</button>
+							<button type="button" class="btn btn-primary waves-effect btn-mini waves-light" id="activateAccountBtn"><i class="mr-2 ti-check"></i>Yes, please</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 <div class="modal fade" id="terminateEmploymentModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

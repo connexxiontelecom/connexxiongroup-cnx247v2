@@ -222,6 +222,8 @@ Route::get('/employee-supervisor-appraisal/{appraisal_id}', 'CNX247\Backend\HRCo
 Route::post('/employee-supervisor-appraisal', 'CNX247\Backend\HRController@storeSupervisorAppraisal')->name('store-supervisor-appraisal');
 Route::get('/appraisal-result/{appraisal_id}', 'CNX247\Backend\HRController@appraisalResult')->name('appraisal-result');
 Route::post('/terminate/employment', 'CNX247\Backend\HRController@terminateEmployment');
+Route::post('/activate/employment', 'CNX247\Backend\HRController@activateAccount');
+Route::post('/suspend/employment', 'CNX247\Backend\HRController@suspendEmployment');
 Route::get('/terminated-employment', 'CNX247\Backend\HRController@terminatedEmployment')->name('terminated-employment');
 Route::get('/employment-confirmation', 'CNX247\Backend\HRController@employmentConfirmation')->name('employment-confirmation');
 Route::post('/confirm-employment', 'CNX247\Backend\HRController@confirmEmployment')->name('confirm-employment');
