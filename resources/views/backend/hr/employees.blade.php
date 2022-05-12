@@ -84,6 +84,8 @@
 												<label for="" class="label label-success">Active</label>
 											@elseif($employee->account_status == 2)
 												<label for="" class="label label-danger">Terminated</label>
+											@elseif($employee->account_status == 3)
+												<label for="" class="label label-warning">Suspended</label>
 											@endif
 										</td>
 										<td>

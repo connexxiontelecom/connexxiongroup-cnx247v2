@@ -86,6 +86,12 @@
             var user = $(this).data('user');
             $('#selectedUser').val(user);
         });
+				//launch suspend employee
+				$(document).on('click', '.suspend-employment', function(e){
+            e.preventDefault();
+            var user = $(this).data('user');
+            $('#selectedUser').val(user);
+        });
 
         $(document).on('click', '#terminateEmploymentBtn', function(e){
             e.preventDefault();
@@ -100,4 +106,38 @@
                 $('#terminateEmploymentModal').modal('hide');
             });
         });
+				$(document).on('click', '#suspendEmploymentBtn', function(e){
+            e.preventDefault();
+            var id = $('#selectedUser').val();
+            axios.post('/suspend/employment', {user:id})
+            .then(response=>{
+                $.notify(response.data.message, 'success');
+                $('#suspendEmploymentModal').modal('hide');
+            })
+            .catch(error=>{
+                $.notify('Ooops! Could not suspend employment. Try again.', 'error');
+                $('#suspendEmploymentModal').modal('hide');
+            });
+        });
+
+			 //launch suspend employee
+			 $(document).on('click', '.activate-account', function(e){
+				 e.preventDefault();
+				 var user = $(this).data('user');
+				 $('#selectedUser').val(user);
+			 });
+
+			 $(document).on('click', '#activateAccountBtn', function(e){
+				 e.preventDefault();
+				 var id = $('#selectedUser').val();
+				 axios.post('/activate/employment', {user:id})
+					 .then(response=>{
+						 $.notify(response.data.message, 'success');
+						 $('#activateAccountModal').modal('hide');
+					 })
+					 .catch(error=>{
+						 $.notify('Ooops! Could not activate account. Try again.', 'error');
+						 $('#activateAccountModal').modal('hide');
+					 });
+			 });
      });

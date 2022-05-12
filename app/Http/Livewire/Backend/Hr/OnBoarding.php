@@ -74,6 +74,8 @@ class OnBoarding extends Component
         $user->hire_date = $this->hire_date;
         $user->start_date = $this->start_date;
         $user->birth_date = $this->birth_date;
+        $user->birth_day = date('d', strtotime($this->birth_date));
+        $user->birth_month = date('m', strtotime($this->birth_date));
         $user->mobile = $this->mobile_no;
         $user->position = $this->position;
         $user->tenant_id = Auth::user()->tenant_id;
