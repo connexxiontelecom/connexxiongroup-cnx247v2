@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.0.13",
+				"php": "^8.0.13",
         "arielmejiadev/larapex-charts": "^1.0",
         "berkayk/onesignal-laravel": "^1.0",
         "beyondcode/laravel-websockets": "^1.8",
