@@ -211,6 +211,7 @@ class Shortcut extends Component
                                 ->paginate(10),
                     							'announcements'=>Post::where('post_type', 'announcement')
                                 ->where('tenant_id', Auth::user()->tenant_id)
+																->whereIn('id', $mineIds)
                                 ->orderBy('id', 'DESC')->take(5)->get(),
                                 'events'=>$my_events,
 																	'storage_capacity' => $storage,
