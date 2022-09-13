@@ -320,7 +320,7 @@ Route::get('/feedbacks', 'CNX247\Backend\CRMController@feedbacks')->name('feedba
 Route::post('/feedback-status', 'CNX247\Backend\CRMController@feedbackStatus');
 #Activity stream routes
 Route::get('/activity-stream', 'CNX247\Backend\ActivityStreamController@index')->name('activity-stream');
-Route::get('/webmail', 'CNX247\Backend\ActivityStreamController@webmail')->name('webmail');
+Route::get('/access-webmail', 'CNX247\Backend\ActivityStreamController@webmail')->name('webmail');
 Route::get('/webmail/{path}', 'CNX247\Backend\ActivityStreamController@webMailDomain')->name('webmail-domain');
 /* Route::post('/activity-stream/like-unlike-post', 'CNX247\Backend\ActivityStreamShortcutController@likeUnlikePost'); */
 Route::post('/activity-stream/message', 'CNX247\Backend\ActivityStreamController@sendMessage');
