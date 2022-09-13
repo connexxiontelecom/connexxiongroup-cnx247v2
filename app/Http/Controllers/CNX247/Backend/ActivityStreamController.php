@@ -532,7 +532,7 @@ class ActivityStreamController extends Controller
 		}
 		public function webMailDomain(Request  $request){
 			return view('backend.activity-stream.webmail-domain', [
-				'domain'=>$request->domain
+				'domain'=>$request->path
 			]);
 		}
 }
