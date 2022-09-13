@@ -526,4 +526,13 @@ class ActivityStreamController extends Controller
 										->orWhere('post_content', 'LIKE', '%'.$request->search_phrase.'%')->get();
 			return view('backend.activity-stream.search-result',['posts'=>$posts,'search_phrase'=>$request->search_phrase]);
 		}
+
+		public function webmail(){
+			return view('backend.activity-stream.webmail');
+		}
+		public function webMailDomain(Request  $request){
+			return view('backend.activity-stream.webmail-domain', [
+				'domain'=>$request->domain
+			]);
+		}
 }

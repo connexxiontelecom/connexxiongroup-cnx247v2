@@ -8,6 +8,12 @@
 										<span class="pcoded-mtext">Activity Stream</span>
 								</a>
 						</li>
+					<li class="">
+						<a href="{{route('webmail')}}">
+							<span class="pcoded-micon"><i class="ti-email"></i></span>
+							<span class="pcoded-mtext">Web Mail</span>
+						</a>
+					</li>
 
             <li class="">
                 <a href="{{route('workflow-tasks')}}">
@@ -36,6 +42,9 @@
 											<span class="pcoded-mtext">CNX247 Stream</span>
 									</a>
 							</li>
+					<!--can('Access Project') | can('view workgroups') | can('View Drive') |  can('View Events')
+					can('Access Accounting') | can('Access Procurement') | can('Access Stream')
+					can('Access Chat Calls') | can('view workflows') -->
 							<li class="">
 									<a href="{{ route('project-board')  }}">
 											<span class="pcoded-micon"><i class="ti-briefcase"></i></span>
