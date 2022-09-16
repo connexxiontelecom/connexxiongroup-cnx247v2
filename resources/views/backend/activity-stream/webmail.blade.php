@@ -19,9 +19,10 @@
 	</div>
 	<div class="tab-pane active" id="timeline">
 		<div class="row">
-			<div class="col-md-12 timeline-dot">
+			<div class="col-md-12">
 				<div class="btn-group">
-					<a href="{{route('webmail-domain', 'connexxiongroup.com')}}" class="btn btn-primary">Connexxion Group Web Mail</a>
+					<a target="_blank" href="https://www.connexxiongroup.com/webmail" class="btn btn-primary">Connexxion Group Web Mail</a>
+					<a target="_blank" href="https://www.connexxiontelecom.com/webmail" class="btn btn-info">Connexxion Telecom Web Mail</a>
 				</div>
 			</div>
 		</div>
